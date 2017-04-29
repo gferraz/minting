@@ -5,7 +5,7 @@ class Mint
 
   def initialize(currency)
     @currency = Currency[currency]
-    raise KeyError, "No currency found" unless @currency
+    raise KeyError, 'No currency found' unless @currency
     @currency_code = @currency.code
   end
 

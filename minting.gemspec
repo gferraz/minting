@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     'allowed_push_host' => "TODO: Set to 'https://mygemserver.com'"
   }
 
-  s.required_ruby_version = '>= 2.3.0'
+  s.required_ruby_version = '>= 2.2.0'
 
   s.files = Dir.glob('{bin,doc,lib}/**/*')
   s.files += %w[minting.gemspec Rakefile README.md]

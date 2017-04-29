@@ -16,8 +16,8 @@ class Currency
 
   def self.register!(code, subunit:, symbol: nil)
     code = code.to_s
-    raise ArgumentError, "Currency code must be a 3 letter String or Symbol. Ex: 'USD', :EUR" unless code =~ /^[A-Z]{3}$/
-    raise IndexError, "Currency: #{code} already registered" if currencies[code]
+    raise ArgumentError, "Currency code must be a 3 letter String or Symbol ('USD', :EUR)" unless code =~ /^[A-Z]{3}$/
+    raise KeyError,      "Currency: #{code} already registered"                            if currencies[code]
     currencies[code] = Currency.new(code, subunit: subunit.to_i, symbol: symbol || code)
   end
 
