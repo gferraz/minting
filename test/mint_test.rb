@@ -1,22 +1,25 @@
 require 'test_helper'
 
 class MintTest < Minitest::Test
-  def test_mint_construction
-    Currency.register(:USD, subunit: 2, symbol: '$')
 
+  def test_mint_construction
     assert Mint.new('USD')
     assert_raises(KeyError) { Mint.new('---') }
   end
 
   def test_mint_accessors
-    Currency.register(:BRL, subunit: 2, symbol: 'R$')
-
     assert_equal 'BRL', Mint.new(:BRL).currency_code
   end
 
   def test_inspect
-    Currency.register(:USD, subunit: 2, symbol: '$')
+    assert_equal '<Mint:PEN>', Mint.new(:PEN).inspect
+  end
 
-    assert_equal '<Mint:USD>', Mint.new(:USD).inspect
+  def test_money_minting
+    mint = Mint.new(:PEN)
+
+    assert_equal Money.new(10.to_r,    mint.currency), mint.money(10)
+    assert_equal Money.new(10.01.to_r, mint.currency), mint.money(10.01)
+    assert_equal Money.new(10.to_r,    mint.currency), mint.money(9.999)
   end
 end

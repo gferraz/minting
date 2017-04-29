@@ -9,6 +9,10 @@ class Mint
     @currency_code = @currency.code
   end
 
+  def money(amount)
+    Money.new(amount.to_r, currency)
+  end
+
   def inspect
     "<Mint:#{currency_code}>"
   end
