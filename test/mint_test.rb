@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class MintTest < Minitest::Test
-
   def test_mint_construction
     assert Mint.new('USD')
     assert_raises(KeyError) { Mint.new('---') }
@@ -18,8 +17,12 @@ class MintTest < Minitest::Test
   def test_money_minting
     mint = Mint.new(:PEN)
 
-    assert_equal Money.new(10.to_r,    mint.currency), mint.money(10)
-    assert_equal Money.new(10.01.to_r, mint.currency), mint.money(10.01)
-    assert_equal Money.new(10.to_r,    mint.currency), mint.money(9.999)
+    assert_equal Mint::Money.new(10.to_r,    mint.currency), mint.money(10)
+    assert_equal Mint::Money.new(10.01.to_r, mint.currency), mint.money(10.01)
+    assert_equal Mint::Money.new(10.to_r,    mint.currency), mint.money(9.999)
+  end
+
+  def test_mint_currency
+    assert_equal Mint::Currency[:BRL], Mint.currency(:BRL)
   end
 end

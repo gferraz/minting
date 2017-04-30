@@ -29,7 +29,7 @@ require 'minting'
 usd = Mint.new(:USD)
 
 # EURO mint
-euro = Mint.new(:USD)
+euro = Mint.new(:EUR)
 
 # 10.00 USD
 money = usd.money(10) #=> [USD 10.00]

@@ -1,5 +1,9 @@
 
 class Mint
+  def self.currency(code)
+    Currency[code]
+  end
+
   attr_reader :currency
   attr_reader :currency_code
 
