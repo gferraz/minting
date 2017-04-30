@@ -22,10 +22,29 @@ Or install it yourself as:
 
 ## Usage
 
-There are three main classes:
-- Money
-- Currency
-- Mint
+```ruby
+require 'minting'
+
+# US dollar mint
+usd = Mint.new(:USD)
+
+# EURO mint
+euro = Mint.new(:USD)
+
+# 10.00 USD
+money = usd.money(10) #=> [USD 10.00]
+money.to_i            #=> 10
+money.currency_code   #=> "USD"
+
+# Comparisons
+ten_dollars = usd.money(10)
+
+ten_dollars == usd.money(10)  #=> true
+ten_dollars == usd.money(1)   #=> false
+ten_dollars == euro.money(10) #=> false
+ten_dollars != euro.money(10) #=> true
+
+```
 
 ## Contributing
 
