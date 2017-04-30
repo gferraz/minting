@@ -1,7 +1,8 @@
+require 'minting/money/coercion'
+require 'minting/money/comparable'
+
 class Mint
   class Money
-    include Comparable
-
     attr_reader :currency
     attr_reader :currency_code
 
@@ -25,14 +26,12 @@ class Mint
       @amount
     end
 
-    def zero?
-      @amount.zero?
+    def nonzero?
+      @amount.nonzero?
     end
 
-    # @return true if both are zero, or both have same amount and same currency
-    def ==(other)
-      @amount.zero? && other.respond_to?(:zero?) && other.zero? ||
-        @amount == other.to_r && @currency == other.currency
+    def zero?
+      @amount.zero?
     end
   end
 end
