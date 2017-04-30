@@ -7,7 +7,6 @@ class MintingTest < Minitest::Test
 
   def test_readme_usage
     usd = Mint.new(:USD)
-    euro = Mint.new(:EUR)
 
     ten_dollars = usd.money(10)
     assert_equal 10, ten_dollars.to_i
@@ -15,7 +14,7 @@ class MintingTest < Minitest::Test
 
     assert_equal ten_dollars, usd.money(10)
     refute_equal ten_dollars, usd.money(1)
-    refute_equal ten_dollars, euro.money(10)
-    refute_equal ten_dollars, euro.money(10)
+    refute_equal ten_dollars, Mint.money(10, :EUR)
+    refute_equal ten_dollars, Mint.money(10, :EUR)
   end
 end
