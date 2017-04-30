@@ -4,6 +4,10 @@ class Mint
     Currency[code]
   end
 
+  def self.money(amount, currency)
+    Money.new(amount.to_r, Currency[currency])
+  end
+
   attr_reader :currency
   attr_reader :currency_code
 

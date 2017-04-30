@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class CurrencyTest < Minitest::Test
+  def setup
+    @real ||= Mint::Currency[:BRL]
+    @dollar ||= Mint::Currency[:USD]
+  end
+
   def test_currency_construction
     assert Mint::Currency.register(:HKD, subunit: 2, symbol: '$')
     assert Mint::Currency.register!(:SGD, subunit: 2, symbol: '$')
@@ -10,26 +15,18 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_default_currencies
-    real = Mint::Currency[:BRL]
-    dollar = Mint::Currency[:USD]
-
-    assert_equal ['BRL', 2, 'R$'], [real.code, real.subunit, real.symbol]
-    assert_equal ['USD', 2, '$'],  [dollar.code, dollar.subunit, dollar.symbol]
+    assert @real
+    assert @dollar
   end
 
   def test_currency_accessors
-    real = Mint::Currency[:BRL]
-    dollar = Mint::Currency[:USD]
-
-    assert_equal ['BRL', 2, 'R$'], [real.code, real.subunit, real.symbol]
-    assert_equal ['USD', 2, '$'],  [dollar.code, dollar.subunit, dollar.symbol]
+    assert_equal ['BRL', 2, 'R$'], [@real.code, @real.subunit, @real.symbol]
+    assert_equal ['USD', 2, '$'],  [@dollar.code, @dollar.subunit, @dollar.symbol]
   end
 
   def test_inspect
-    real = Mint::Currency[:BRL]
-    dollar = Mint::Currency[:USD]
-    assert_equal '<Currency:(BRL R$ 2)>', real.inspect
-    assert_equal '<Currency:(USD $ 2)>',  dollar.inspect
+    assert_equal '<Currency:(BRL R$ 2)>', @real.inspect
+    assert_equal '<Currency:(USD $ 2)>',  @dollar.inspect
   end
 
   def test_finder

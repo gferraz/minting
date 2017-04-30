@@ -1,5 +1,4 @@
 class MoneyTest < Minitest::Test
-
   def usd
     @usd ||= Mint::Currency[:USD]
   end
@@ -30,5 +29,4 @@ class MoneyTest < Minitest::Test
     assert_raises(TypeError) { ten_dollars > 1 }
     assert_raises(TypeError) { ten_dollars < 100 }
   end
-
 end
