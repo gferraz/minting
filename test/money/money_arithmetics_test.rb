@@ -21,6 +21,7 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_equal @six, @ten - @two - @two
     assert_equal @ten, @ten - 0
     assert_equal(@negative_ten, 0 - @ten)
+    assert_equal(@negative_ten,  -@ten)
 
     assert_raises(TypeError) { @ten - 0.0023 }
     assert_raises(TypeError) { 1.23 - @ten }

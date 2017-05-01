@@ -23,6 +23,10 @@ class Mint
       end
     end
 
+    def -@
+      zero? ? self : mint(-to_r)
+    end
+
     private
 
     def coerced_operation(operation, object)
