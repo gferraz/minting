@@ -18,7 +18,11 @@ class Mint
   end
 
   def money(amount)
-    Money.new(amount.to_r, currency)
+    amount.zero? ? zero : Money.new(amount.to_r, currency)
+  end
+
+  def zero
+    @zero ||= Money.new(0r, currency)
   end
 
   def inspect

@@ -25,7 +25,7 @@ class Mint
 
     def self.register(code, subunit:, symbol: '')
       code = code.to_s
-      currencies[code] || register!(code, subunit: subunit.to_i, symbol: symbol)
+      currencies[code] || register!(code, subunit: subunit, symbol: symbol)
     end
 
     def self.register!(code, subunit:, symbol: '')

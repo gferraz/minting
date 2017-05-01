@@ -4,14 +4,16 @@ require 'minting/money/comparable'
 class Mint
   class Money
     attr_reader :currency
-    attr_reader :currency_code
 
     def initialize(amount, currency)
       raise ArgumentError, 'amount must be Rational'            unless amount.is_a?(Rational)
       raise ArgumentError, 'currency must be a Currency object' unless currency.is_a?(Currency)
-      @amount = amount.round(currency.subunit, half: :up) # TODO: review what wounding configuration to use
+      @amount = amount.round(currency.subunit)
       @currency = currency
-      @currency_code = currency.code
+    end
+
+    def currency_code
+      @currency.code
     end
 
     def inspect

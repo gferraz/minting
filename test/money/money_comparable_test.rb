@@ -1,19 +1,18 @@
-class MoneyTest < Minitest::Test
-  def usd
-    @usd ||= Mint::Currency[:USD]
-  end
+class MoneyComparableTest < Minitest::Test
+
+  USD = Mint::Currency[:USD]
 
   def test_equality
-    ten_dollars = Mint::Money.new(10r, usd)
+    ten_dollars = Mint::Money.new(10r, USD)
 
-    assert_equal ten_dollars, Mint::Money.new(10r, usd)
-    refute_equal ten_dollars, Mint::Money.new(11r, usd)
+    assert_equal ten_dollars, Mint::Money.new(10r, USD)
+    refute_equal ten_dollars, Mint::Money.new(11r, USD)
     refute_equal ten_dollars, Mint::Money.new(10r, Mint::Currency[:JPY])
   end
 
   def test_inequality
-    ten_dollars = Mint::Money.new(10r, usd)
-    two_dollars = Mint::Money.new(2r, usd)
+    ten_dollars = Mint::Money.new(10r, USD)
+    two_dollars = Mint::Money.new(2r, USD)
 
     refute_equal ten_dollars, two_dollars
 

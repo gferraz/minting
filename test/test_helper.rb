@@ -8,5 +8,6 @@ SimpleCov.start
 require 'minting'
 
 require 'minitest/autorun'
+require 'minitest/benchmark'
 
 Minitest.after_run {}
