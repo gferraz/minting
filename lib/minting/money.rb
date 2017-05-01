@@ -26,6 +26,14 @@ class Mint
       format "[#{currency_code} %0.#{currency.subunit}f]", @amount
     end
 
+    def to_d
+      @amount
+    end
+
+    def to_f
+      @amount.to_f
+    end
+
     def to_i
       @amount.to_i
     end

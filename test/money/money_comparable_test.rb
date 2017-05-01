@@ -28,5 +28,6 @@ class MoneyComparableTest < Minitest::Test
 
     assert_raises(TypeError) { ten_dollars > 1 }
     assert_raises(TypeError) { ten_dollars < 100 }
+    assert_raises(TypeError) { ten_dollars <= Object.new }
   end
 end

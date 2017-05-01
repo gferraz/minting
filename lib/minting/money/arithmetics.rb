@@ -30,7 +30,7 @@ class Mint
     def *(other)
       operation(:*, other) do
         if other.zero?
-          mint(0)
+          mint(0r)
         elsif other.is_a? Numeric
           mint(@amount * other.to_r)
         end

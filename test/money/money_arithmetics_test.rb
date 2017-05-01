@@ -34,6 +34,7 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_equal Mint::Money.new(16r, USD), @two * 8
 
     assert_equal @two, @ten * 0.2
+    assert_equal @zero, @ten * @zero
 
     assert_equal @ten, @ten * 1
     assert_equal @ten, 1 * @ten

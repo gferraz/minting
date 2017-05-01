@@ -3,6 +3,7 @@ require 'test_helper'
 class MintTest < Minitest::Test
   def test_mint_construction
     assert Mint.new('USD')
+    assert Mint.new('USD').zero.zero?
     assert_raises(KeyError) { Mint.new('---') }
   end
 
