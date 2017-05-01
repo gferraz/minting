@@ -6,6 +6,8 @@ class MoneyComparableTest < Minitest::Test
 
     assert_equal ten_dollars, Mint::Money.new(10r, USD)
     refute_equal ten_dollars, Mint::Money.new(11r, USD)
+    refute_equal ten_dollars, Object.new
+    refute_equal ten_dollars, 10
     refute_equal ten_dollars, Mint::Money.new(10r, Mint::Currency[:JPY])
   end
 

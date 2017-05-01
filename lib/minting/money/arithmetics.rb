@@ -8,7 +8,7 @@ class Mint
         elsif zero?
           other
         elsif currency == other.currency
-          mint(to_r + other.to_r)
+          mint(@amount + other.amount)
         end
       end
     end
@@ -18,13 +18,13 @@ class Mint
         if other.zero?
           self
         elsif currency == other.currency
-          mint(to_r - other.to_r)
+          mint(@amount - other.amount)
         end
       end
     end
 
     def -@
-      zero? ? self : mint(-to_r)
+      zero? ? self : mint(-@amount)
     end
 
     def *(other)
@@ -32,7 +32,7 @@ class Mint
         if other.zero?
           mint(0)
         elsif other.is_a? Numeric
-          mint(to_r * other.to_r)
+          mint(@amount * other.to_r)
         end
       end
     end

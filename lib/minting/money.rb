@@ -4,6 +4,7 @@ require 'minting/money/comparable'
 
 class Mint
   class Money
+    attr_reader :amount
     attr_reader :currency
 
     def initialize(amount, currency)

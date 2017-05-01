@@ -5,7 +5,7 @@ class Mint
     # @return true if both are zero, or both have same amount and same currency
     def ==(other)
       @amount.zero? && other.respond_to?(:zero?) && other.zero? ||
-        @amount == other.to_r && @currency == other.currency
+        other.is_a?(Money) && @amount == other.amount && @currency == other.currency
     end
 
     # @example
@@ -21,7 +21,7 @@ class Mint
         other_amount = other
         other_currency = nil
       when Mint::Money
-        other_amount = other.to_r
+        other_amount = other.amount
         other_currency = other.currency
       else
         raise TypeError, "#{other.class} can't be compared to #{self.class}"

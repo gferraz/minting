@@ -5,7 +5,6 @@ class Mint
     end
 
     private
-
     def raise_coercion_error(operation, operand)
       raise TypeError, "#{self} #{operation} #{operand} : incompatible operands"
     end
@@ -18,22 +17,22 @@ class Mint
       end
 
       def *(other)
-        other.mint(@value * other.to_r)
+        other.mint(@value * other.amount)
       end
 
       def +(other)
         raise_coercion_error(:+, other) unless @value.zero?
-        other.mint(@value + other.to_r)
+        other.mint(@value + other.amount)
       end
 
       def -(other)
         raise_coercion_error(:-, other) unless @value.zero?
-        other.mint(@value - other.to_r)
+        other.mint(@value - other.amount)
       end
 
       def <=>(other)
         raise_coercion_error(:<=>, other) unless @value.zero? || other.zero?
-        @value <=> other.to_r
+        @value <=> other.amount
       end
 
       def raise_coercion_error(operation, operand)

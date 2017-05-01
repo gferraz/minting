@@ -10,6 +10,12 @@ class MoneyTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.new(10r, Object.new) }
   end
 
+  def test_amount
+    assert_equal 100, Mint::Money.new(100r, USD).amount
+    assert_equal 1,   Mint::Money.new(1r, USD).amount
+    assert_equal 14,  Mint::Money.new(14r, Mint::Currency[:PEN]).amount
+  end
+
   def test_inspect
     assert_equal '[USD 10.34]', Mint::Money.new(10.34.to_r, USD).inspect
   end
