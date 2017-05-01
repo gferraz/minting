@@ -1,4 +1,5 @@
 class Mint
+  # :nodoc
   class Money
     def +(other)
       operation(:+, other) do
@@ -8,6 +9,16 @@ class Mint
           other
         elsif currency == other.currency
           mint(to_r + other.to_r)
+        end
+      end
+    end
+
+    def -(other)
+      operation(:-, other) do
+        if other.zero?
+          self
+        elsif currency == other.currency
+          mint(to_r - other.to_r)
         end
       end
     end
