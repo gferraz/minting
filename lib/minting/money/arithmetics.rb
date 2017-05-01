@@ -27,6 +27,16 @@ class Mint
       zero? ? self : mint(-to_r)
     end
 
+    def *(other)
+      operation(:*, other) do
+        if other.zero?
+          mint(0)
+        elsif other.is_a? Numeric
+          mint(to_r * other.to_r)
+        end
+      end
+    end
+
     private
 
     def coerced_operation(operation, object)
