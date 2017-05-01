@@ -1,8 +1,9 @@
 require 'bundler/gem_tasks'
-
+require 'rubocop/rake_task'
 require 'rubycritic/rake_task'
-
 require 'rake/testtask'
+
+CLOBBER.include %w[tmp]
 
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
@@ -14,6 +15,8 @@ Rake::TestTask.new(:bench) do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/**/*_benchmark.rb'
 end
+
+RuboCop::RakeTask.new(:cop)
 
 RubyCritic::RakeTask.new do |task|
   # Name of RubyCritic task. Defaults to :rubycritic.
