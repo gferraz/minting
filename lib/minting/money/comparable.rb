@@ -1,4 +1,5 @@
 class Mint
+  # :nodoc
   class Money
     include Comparable
 
