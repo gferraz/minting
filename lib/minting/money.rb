@@ -42,12 +42,10 @@ class Mint
       @amount
     end
 
-    def nonzero?
-      @amount.nonzero?
-    end
-
-    def zero?
-      @amount.zero?
+    def to_s(format: nil)
+      fmt = format || '%<symbol>s%<amount>f'
+      fmt = fmt.gsub('%<amount>f', "%<amount>0.#{currency.subunit}f")
+      Kernel.format(fmt, amount: @amount, currency: currency_code, symbol: currency.symbol)
     end
   end
 end

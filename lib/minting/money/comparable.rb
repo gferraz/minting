@@ -30,5 +30,13 @@ class Mint
       raise TypeError, "#{self} can't be compared to #{other}" unless zero? || other.zero? || currency == other_currency
       @amount <=> other_amount
     end
+
+    def nonzero?
+      @amount.nonzero?
+    end
+
+    def zero?
+      @amount.zero?
+    end
   end
 end
