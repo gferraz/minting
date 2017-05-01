@@ -1,5 +1,4 @@
 class MoneyComparableTest < Minitest::Test
-
   USD = Mint::Currency[:USD]
 
   def test_equality

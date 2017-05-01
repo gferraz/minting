@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class MintBenchmark < Minitest::Benchmark
   def self.bench_range
@@ -6,7 +6,7 @@ class MintBenchmark < Minitest::Benchmark
   end
 
   def bench_money_mint
-    assert_performance_constant 0.99 do |n|
+    assert_performance_constant 0.99 do |_n|
       Mint.money(0, :USD)
     end
   end
@@ -26,10 +26,9 @@ Benchmark.ips do |x|
     rand(-10.00..10.00)
   end
 
-  x.report("mint.money") { Mint.money(amount, :USD) }
-  x.report("Money.new") { Money.new(amount * 100, :USD) }
+  x.report('mint.money') { Mint.money(amount, :USD) }
+  x.report('Money.new') { Money.new(amount * 100, :USD) }
   x.compare!
-
 end
 
 TIMES = 1_000

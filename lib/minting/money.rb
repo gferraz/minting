@@ -1,3 +1,4 @@
+require 'minting/money/arithmetics'
 require 'minting/money/coercion'
 require 'minting/money/comparable'
 
@@ -14,6 +15,10 @@ class Mint
 
     def currency_code
       @currency.code
+    end
+
+    def mint(amount)
+      Money.new(amount, currency)
     end
 
     def inspect
