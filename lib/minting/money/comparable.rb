@@ -27,11 +27,8 @@ class Mint
       else
         raise TypeError, "#{other.class} can't be compared to #{self.class}"
       end
-      if zero? || other.zero? || currency == other_currency
-        @amount <=> other_amount
-      else
-        raise TypeError, "#{self} can't be compared to #{other}"
-      end
+      raise TypeError, "#{self} can't be compared to #{other}" unless zero? || other.zero? || currency == other_currency
+      @amount <=> other_amount
     end
   end
 end

@@ -30,18 +30,24 @@ class MoneyArithmeticsTest < Minitest::Test
   end
 
   def test_multiplication
-    assert_equal Mint::Money.new(20r, USD), 2.0001 * @ten
-    assert_equal Mint::Money.new(16r, USD), @two * 8
+    assert_equal @ten, 5.0001 * @two
+    assert_equal @six, @two * 3
 
     assert_equal @two, @ten * 0.2
     assert_equal @zero, @ten * @zero
 
     assert_equal @ten, @ten * 1
     assert_equal @ten, 1 * @ten
+  end
 
+  def test_multiplication_negatives
     assert_equal(-@ten, @ten * -1)
     assert_equal(-@ten, -1 * @ten)
+    assert_equal(-@six, -@two * 3)
+    assert_equal(-@six, -3 * @two)
+  end
 
+  def test_multiplication_exceptions
     assert_raises(TypeError) { @ten * @two }
     assert_raises(TypeError) { @ten * Object.new }
   end

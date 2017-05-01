@@ -1,33 +1,34 @@
 class MoneyComparableTest < Minitest::Test
   USD = Mint::Currency[:USD]
 
-  def test_equality
-    ten_dollars = Mint::Money.new(10r, USD)
+  def setup
+    @ten = Mint::Money.new(10r, USD)
+    @two = Mint::Money.new(2r, USD)
+  end
 
-    assert_equal ten_dollars, Mint::Money.new(10r, USD)
-    refute_equal ten_dollars, Mint::Money.new(11r, USD)
-    refute_equal ten_dollars, Object.new
-    refute_equal ten_dollars, 10
-    refute_equal ten_dollars, Mint::Money.new(10r, Mint::Currency[:JPY])
+  def test_equality
+    assert_equal @ten, Mint::Money.new(10r, USD)
+    refute_equal @ten, Mint::Money.new(11r, USD)
+    refute_equal @ten, Object.new
+    refute_equal @ten, 10
+    refute_equal @ten, Mint::Money.new(10r, Mint::Currency[:JPY])
+    refute_equal @ten, @two
   end
 
   def test_inequality
-    ten_dollars = Mint::Money.new(10r, USD)
-    two_dollars = Mint::Money.new(2r, USD)
+    assert @ten > @two
+    assert @two <= @ten
 
-    refute_equal ten_dollars, two_dollars
+    refute @ten <= @two
+    refute @two > @ten
 
-    assert ten_dollars > two_dollars
-    assert two_dollars <= ten_dollars
+    assert @ten > 0
+    assert 0 < @ten
+  end
 
-    refute ten_dollars <= two_dollars
-    refute two_dollars > ten_dollars
-
-    assert ten_dollars > 0
-    assert 0 < ten_dollars
-
-    assert_raises(TypeError) { ten_dollars > 1 }
-    assert_raises(TypeError) { ten_dollars < 100 }
-    assert_raises(TypeError) { ten_dollars <= Object.new }
+  def test_inequality_exceptions
+    assert_raises(TypeError) { @ten > 1 }
+    assert_raises(TypeError) { @ten < 100 }
+    assert_raises(TypeError) { @ten <= Object.new }
   end
 end

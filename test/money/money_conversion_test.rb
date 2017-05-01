@@ -9,5 +9,4 @@ class MoneyConversionTest < Minitest::Test
     assert_equal 999 / 100r, nine_nine_nine.to_r
     assert_equal 9.99,       nine_nine_nine.to_d
   end
-
 end

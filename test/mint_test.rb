@@ -17,12 +17,13 @@ class MintTest < Minitest::Test
 
   def test_money_minting
     mint = Mint.new(:PEN)
+    ten_reais = Mint::Money.new(10r, mint.currency)
 
-    assert_equal Mint::Money.new(10.to_r,    mint.currency), mint.money(10)
     assert_equal Mint::Money.new(10.01.to_r, mint.currency), mint.money(10.01)
-    assert_equal Mint::Money.new(10.to_r,    mint.currency), mint.money(9.999)
 
-    assert_equal Mint::Money.new(10.to_r,    mint.currency), Mint.money(10, :PEN)
+    assert_equal ten_reais, mint.money(10)
+    assert_equal ten_reais, mint.money(9.999)
+    assert_equal ten_reais, Mint.money(10, :PEN)
   end
 
   def test_mint_currency
