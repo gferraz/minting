@@ -27,7 +27,7 @@ class Mint
     end
 
     def to_d
-      @amount
+      @amount.to_d(0)
     end
 
     def to_f
