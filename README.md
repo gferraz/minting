@@ -44,6 +44,9 @@ ten_dollars == usd.money(1)   #=> false
 ten_dollars == euro.money(10) #=> false
 ten_dollars != euro.money(10) #=> true
 
+ten_dollars.eql? usd.money(10)         #=> true
+ten_dollars.hash == usd.money(10).hash #=> true
+
 ```
 
 ## Contributing
