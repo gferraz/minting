@@ -67,6 +67,13 @@ price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 ```
 
+## Release 1.0 Plan
+
+- Localization: I18n, Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
+- Arithmetics: div, mod
+- Allocate
+- Mint.parse
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/gferraz/minting.
