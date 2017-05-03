@@ -47,6 +47,24 @@ ten_dollars != euro.money(10) #=> true
 ten_dollars.eql? usd.money(10)         #=> true
 ten_dollars.hash == usd.money(10).hash #=> true
 
+# Format (uses Kernel.format internally)
+price = usd.money(9.99)
+
+price.to_s                                  #=> "$9.99",   
+price.to_s(format: '%<amount>d')            #=> "9",       
+price.to_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",   
+price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",  
+(-price).to_s(format: '%<amount>f')         #=> "-9.99",   
+
+# Format with padding
+price_in_euros = euro.money(12.34)
+
+usd.to_s(format: '--%<amount>7d')               #=> "--      9"
+usd.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
+(-usd).to_s(format: '  %<amount>10f')           #=> '       -9.99"
+
+price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
+
 ```
 
 ## Contributing
