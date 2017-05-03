@@ -17,8 +17,6 @@ class MoneyFormatTest < Minitest::Test
     brl = Mint::Money.new(1234 / 100r, BRL)
 
     assert_equal 'xx      9',        usd.to_s(format: 'xx%<amount>7d')
-    assert_equal ' $      9.99',     usd.to_s(format: '%<symbol>2s%<amount>10f')
-    assert_equal '        9.99',     usd.to_s(format: '  %<amount>10f')
     assert_equal '        9.99 USD', usd.to_s(format: '  %<amount>10f %<currency>s')
     assert_equal 'R$    +12.34',     brl.to_s(format: '%<symbol>2s%<amount>+10f')
     assert_equal '       -9.99',     (-usd).to_s(format: '  %<amount>10f')

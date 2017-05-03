@@ -31,6 +31,14 @@ class Mint
       @amount <=> other_amount
     end
 
+    def eql?(other)
+      self == other
+    end
+
+    def hash
+      zero? ? @amount.hash : [@amount, @currency].hash
+    end
+
     def nonzero?
       @amount.nonzero?
     end
