@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class CurrencyFormatTest < Minitest::Test
   USD = Mint::Currency[:USD]
   BRL = Mint::Currency[:BRL]

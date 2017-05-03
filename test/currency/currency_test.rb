@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class CurrencyTest < Minitest::Test
   def setup
     @real ||= Mint::Currency[:BRL]

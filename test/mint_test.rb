@@ -1,5 +1,3 @@
-require 'test_helper'
-
 class MintTest < Minitest::Test
   def test_mint_construction
     assert Mint.new('USD')
