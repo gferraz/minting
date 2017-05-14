@@ -49,6 +49,24 @@ class MoneyArithmeticsTest < Minitest::Test
 
   def test_multiplication_exceptions
     assert_raises(TypeError) { @ten * @two }
-    assert_raises(TypeError) { @ten * Object.new }
+    assert_raises(ZeroDivisionError) { @ten * Object.new }
+  end
+
+  def test_division
+    assert_equal @two, @ten / 5
+    assert_equal @two, @six / 3
+
+    assert_equal 5, @ten / @two
+    assert_equal 3, @six / @two
+
+    assert_raises(TypeError) { @ten / '2' }
+    assert_raises(TypeError) { @ten / 0 }
+  end
+
+  def test_abs
+    assert_equal @ten, @ten.abs
+    assert_equal @ten, (-@ten).abs
+    assert_equal @two, (-@two).abs
+    assert_equal @six, (-3 * @two).abs
   end
 end

@@ -1,6 +1,15 @@
 class Mint
   # :nodoc
   class Money
+
+    def abs
+      negative? ? mint(@amount.abs) : self
+    end
+
+    def negative?
+      @amount.negative?
+    end
+
     def +(other)
       operation(:+, other) do
         if other.zero?
@@ -34,6 +43,19 @@ class Mint
         elsif other.is_a? Numeric
           mint(@amount * other.to_r)
         end
+      end
+    end
+
+    def /(other)
+      operation(:/, other) do
+        raise ZeroDivisionError, "#{self} can't be divided by zero" if other.zero?
+        case other
+        when Numeric
+          mint(@amount / other.to_r)
+        when Money
+          @amount / other.amount if currency == other.currency
+        end
+        #raise TypeError, "#{self} can't be divided by #{other}"
       end
     end
 
