@@ -55,6 +55,7 @@ class MoneyArithmeticsTest < Minitest::Test
   def test_division
     assert_equal @two, @ten / 5
     assert_equal @two, @six / 3
+    assert_equal @two, 12 / @six
 
     assert_equal 5, @ten / @two
     assert_equal 3, @six / @two

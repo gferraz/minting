@@ -1,7 +1,6 @@
 class Mint
   # :nodoc
   class Money
-
     def abs
       negative? ? mint(@amount.abs) : self
     end
@@ -55,7 +54,7 @@ class Mint
         when Money
           @amount / other.amount if currency == other.currency
         end
-        #raise TypeError, "#{self} can't be divided by #{other}"
+        # raise TypeError, "#{self} can't be divided by #{other}"
       end
     end
 

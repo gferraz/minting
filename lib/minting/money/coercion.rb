@@ -19,10 +19,6 @@ class Mint
         @value = value.to_r
       end
 
-      def *(other)
-        other.mint(@value * other.amount)
-      end
-
       def +(other)
         raise_coercion_error(:+, other) unless @value.zero?
         other.mint(@value + other.amount)
@@ -31,6 +27,14 @@ class Mint
       def -(other)
         raise_coercion_error(:-, other) unless @value.zero?
         other.mint(@value - other.amount)
+      end
+
+      def *(other)
+        other.mint(@value * other.amount)
+      end
+
+      def /(other)
+        other.mint(@value / other.amount)
       end
 
       def <=>(other)
