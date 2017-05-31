@@ -9,16 +9,18 @@ Work in progress, please wait release 1.0.0
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'minting'
+gem 'minting', git: 'https://github.com/gferraz/minting.git'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
+Or install it yourself with:
 
-    $ gem install minting
+    $ git clone https://github.com/gferraz/minting.git
+    $ cd minting && gem build minting.gemspec
+    $ gem install minting-0.1.2.gem
 
 ## Usage
 
@@ -50,11 +52,11 @@ ten_dollars.hash == usd.money(10).hash #=> true
 # Format (uses Kernel.format internally)
 price = usd.money(9.99)
 
-price.to_s                                  #=> "$9.99",   
-price.to_s(format: '%<amount>d')            #=> "9",       
-price.to_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",   
-price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",  
-(-price).to_s(format: '%<amount>f')         #=> "-9.99",   
+price.to_s                                  #=> "$9.99",
+price.to_s(format: '%<amount>d')            #=> "9",
+price.to_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",
+price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
+(-price).to_s(format: '%<amount>f')         #=> "-9.99",
 
 # Format with padding
 price_in_euros = euro.money(12.34)
