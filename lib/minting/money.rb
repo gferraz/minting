@@ -45,5 +45,6 @@ class Mint
     def to_s(format: '')
       currency.format(@amount, format: format)
     end
+    alias_method :to_json, :to_s
   end
 end
