@@ -25,6 +25,6 @@ class MoneyFormatTest < Minitest::Test
   def test_numeric_json_format
     brl = Mint.new(:BRL).money(10)
 
-    assert_equal 'R$10.00', brl.to_json
+    assert_equal 10.00, brl.to_json
   end
 end
