@@ -33,7 +33,6 @@ class Mint
     def to_f
       @amount.to_f
     end
-    alias_method :to_json, :to_f
 
     def to_i
       @amount.to_i
@@ -45,6 +44,15 @@ class Mint
 
     def to_s(format: '')
       currency.format(@amount, format: format)
+    end
+
+    def to_json(opts = {})
+      case opts
+      when :amount
+        return {amount: to_s(format: '%<amount>.2f')}.to_json
+      else
+        return {currency: currency.code, amount: to_s(format: '%<amount>.2f')}.to_json
+      end
     end
   end
 end

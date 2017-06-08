@@ -10,6 +10,7 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '$9.99',    money.to_s(format: '%<symbol>s%<amount>f')
     assert_equal '$+9.99',   money.to_s(format: '%<symbol>s%<amount>+f')
     assert_equal '-9.99',    (-money).to_s(format: '%<amount>f')
+    assert_equal '9.99',     money.to_s(format: '%<amount>f')
   end
 
   def test_numeric_padding_format
@@ -25,6 +26,7 @@ class MoneyFormatTest < Minitest::Test
   def test_numeric_json_format
     brl = Mint.new(:BRL).money(10)
 
-    assert_equal 10.00, brl.to_json
+    assert_equal '{"currency":"BRL","amount":"10.00"}', brl.to_json
+    assert_equal '{"amount":"10.00"}', brl.to_json(:amount)
   end
 end
