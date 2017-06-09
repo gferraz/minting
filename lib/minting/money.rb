@@ -49,9 +49,9 @@ class Mint
     def to_json(opts = {})
       case opts
       when :amount
-        return {amount: to_s(format: '%<amount>.2f')}.to_json
+        return {amount: to_s(format: "%<amount>.#{currency.subunit}f")}.to_json
       else
-        return {currency: currency.code, amount: to_s(format: '%<amount>.2f')}.to_json
+        return {currency: currency.code, amount: to_s(format: "%<amount>.#{currency.subunit}f")}.to_json
       end
     end
   end
