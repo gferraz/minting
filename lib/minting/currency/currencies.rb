@@ -12,8 +12,8 @@ class Mint
 
     def self.register!(code, subunit:, symbol: '')
       code = code.to_s
-      raise ArgumentError, "Currency code must be a 3 letter String or Symbol ('USD', :EUR)" unless code =~ /^[A-Z]{3}$/
-      raise KeyError,      "Currency: #{code} already registered"                            if currencies[code]
+      raise ArgumentError, "Currency code must be String or Symbol ('USD', :EUR)" unless code.match?(/^[A-Z_]+$/)
+      raise KeyError,      "Currency: #{code} already registered" if currencies[code]
       currencies[code] = Currency.new(code, subunit: subunit.to_i, symbol: symbol.to_s).freeze
     end
 

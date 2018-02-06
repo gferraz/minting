@@ -35,6 +35,10 @@ class Mint
       @amount.to_i
     end
 
+    def to_json
+      format %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), @amount
+    end
+
     def to_r
       @amount
     end

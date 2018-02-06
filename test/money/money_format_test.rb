@@ -1,7 +1,7 @@
 class MoneyFormatTest < Minitest::Test
   USD   = Mint::Currency[:USD]
   BRL   = Mint::Currency[:BRL]
-  FUEL  = Mint::Currency.register(:BRF, subunit: 3, symbol: 'R$ ')
+  FUEL  = Mint::Currency.register(:BRL_FUEL, subunit: 3, symbol: 'R$ ')
 
   def test_numeric_simple_format
     money = Mint::Money.new(999 / 100r, USD)
@@ -31,13 +31,8 @@ class MoneyFormatTest < Minitest::Test
     jpy = Mint.new(:JPY).money(15)
     gas = Mint::Money.new(3457 / 1000r, FUEL)
 
-    assert_equal '{"currency":"BRL","amount":"10.00"}', brl.to_json
-    assert_equal '{"amount":"10.00"}', brl.to_json(:amount)
-
-    assert_equal '{"currency":"JPY","amount":"15"}', jpy.to_json
-    assert_equal '{"amount":"15"}', jpy.to_json(:amount)
-
-    assert_equal '{"currency":"BRF","amount":"3.457"}', gas.to_json
-    assert_equal '{"amount":"3.457"}', gas.to_json(:amount)
+    assert_equal '{"currency": "BRL", "amount": "10.00"}', brl.to_json
+    assert_equal '{"currency": "JPY", "amount": "15"}', jpy.to_json
+    assert_equal '{"currency": "BRL_FUEL", "amount": "3.457"}', gas.to_json
   end
 end

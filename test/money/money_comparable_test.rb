@@ -34,7 +34,7 @@ class MoneyComparableTest < Minitest::Test
     refute @two > @ten
 
     assert @ten > 0
-    assert 0 < @ten
+    assert @ten > 0
   end
 
   def test_inequality_exceptions

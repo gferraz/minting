@@ -67,11 +67,16 @@ usd.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
 
 price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
+# Json serialization
+
+usd.to_json # "{"currency": "USD", "amount": "9.99"}
+
 ```
 
 ## Release 1.0 Plan
 
-- Localization: I18n, Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
+- Localization: I18n 
+- Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
 - Arithmetics: div, mod
 - Allocate
 - Mint.parse

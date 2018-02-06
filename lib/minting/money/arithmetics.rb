@@ -23,7 +23,7 @@ class Mint
 
     def -(other)
       operation(:-, other) do
-        x = if other.zero?
+        if other.zero?
           self
         elsif zero?
           other.mint(-other.amount)
