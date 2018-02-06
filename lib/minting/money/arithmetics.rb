@@ -23,8 +23,10 @@ class Mint
 
     def -(other)
       operation(:-, other) do
-        if other.zero?
+        x = if other.zero?
           self
+        elsif zero?
+          other.mint(-other.amount)
         elsif currency == other.currency
           mint(@amount - other.amount)
         end

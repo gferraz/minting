@@ -1,8 +1,10 @@
 class MoneyArithmeticsTest < Minitest::Test
   USD = Mint::Currency[:USD]
+  BRL = Mint::Currency[:BRL]
 
   def setup
     @zero = Mint::Money.new(0r, USD)
+    @zero_brl = Mint::Money.new(0r, BRL)
     @two = Mint::Money.new(2r, USD)
     @six = Mint::Money.new(6r, USD)
     @ten = Mint::Money.new(10r, USD)
@@ -14,6 +16,7 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_equal @ten, @ten + 0
     assert_equal @ten, 0 + @ten
     assert_equal @ten, @zero + @ten
+    assert_equal @ten, @zero_brl + @ten
 
     assert_raises(TypeError) { @ten + 0.0023 }
     assert_raises(TypeError) { 1.23 + @ten }
@@ -22,7 +25,9 @@ class MoneyArithmeticsTest < Minitest::Test
   def test_subtraction
     assert_equal @six, @ten - @two - @two
     assert_equal @ten, @ten - 0
-    assert_equal(@negative_ten, 0 - @ten)
+    assert_equal @negative_ten, 0 - @ten
+    assert_equal(@negative_ten, @zero - @ten)
+    assert_equal(@negative_ten, @zero_brl - @ten)
     assert_equal(@negative_ten, -@ten)
 
     assert_raises(TypeError) { @ten - 0.0023 }
