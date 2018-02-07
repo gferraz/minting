@@ -4,10 +4,6 @@ class Mint
     Currency[code]
   end
 
-  def self.money(amount, currency)
-    Money.new(amount.to_r, Currency[currency])
-  end
-
   attr_reader :currency
   attr_reader :currency_code
 
@@ -23,6 +19,10 @@ class Mint
 
   def zero
     @zero ||= Money.new(0r, currency)
+  end
+
+  def minimum
+    @minimum ||= Money.new(10r**-currency.subunit, currency)
   end
 
   def inspect

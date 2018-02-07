@@ -21,7 +21,22 @@ class MintTest < Minitest::Test
 
     assert_equal ten_reais, mint.money(10)
     assert_equal ten_reais, mint.money(9.999)
-    assert_equal ten_reais, Mint.money(10, :PEN)
+  end
+
+  def test_mint_zero_amount
+    dollar = Mint.new('USD')
+    yen = Mint.new('JPY')
+
+    assert_equal dollar.money(0), dollar.zero
+    assert_equal yen.money(0), yen.zero
+  end
+
+  def test_mint_minimum_amount
+    dollar = Mint.new('USD')
+    yen = Mint.new('JPY')
+
+    assert_equal dollar.money(0.01), dollar.minimum
+    assert_equal yen.money(1),       yen.minimum
   end
 
   def test_mint_currency

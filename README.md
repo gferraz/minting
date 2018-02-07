@@ -71,6 +71,11 @@ price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 usd.to_json # "{"currency": "USD", "amount": "9.99"}
 
+# Allocation and split
+
+ten_dollars.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
+ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43]]
+
 ```
 
 ## Release 1.0 Plan
@@ -78,7 +83,7 @@ usd.to_json # "{"currency": "USD", "amount": "9.99"}
 - Localization: I18n 
 - Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
 - Arithmetics: div, mod
-- Allocate
+- Split/Allocate
 - Mint.parse
 
 ## Contributing
