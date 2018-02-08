@@ -76,6 +76,7 @@ usd.to_json # "{"currency": "USD", "amount": "9.99"}
 ten_dollars.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
 ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43]]
 
+ten_dollars.allocate([1, 2, 3]) #=> [usd.money(1.67), usd.money(3.33), usd.money(5)]
 ```
 
 ## Release 1.0 Plan
@@ -83,7 +84,6 @@ ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1
 - Localization: I18n 
 - Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
 - Arithmetics: div, mod
-- Split/Allocate
 - Mint.parse
 
 ## Contributing
