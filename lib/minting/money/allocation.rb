@@ -3,11 +3,12 @@ class Mint
   class Money
 
     def allocate(proportions)
+      raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
+
       whole = proportions.sum.to_r
       allocation = proportions.map {|rate| mint(amount * rate.to_r  / whole) }
-      difference = self - allocation.sum
 
-      allocate_left_over(allocation, difference)
+      allocate_left_over(allocation, self - allocation.sum)
     end
 
     def split(quantity)
@@ -15,18 +16,16 @@ class Mint
 
       fraction = self / quantity
       allocation = Array.new(quantity, fraction)
-      difference = self - fraction * quantity
 
-      allocate_left_over(allocation, difference)
+      allocate_left_over(allocation, self - fraction * quantity)
     end
 
     private
 
-    def allocate_left_over(allocation, difference)
-      remaining = self - allocation.sum
-      minimum = mint(remaining.positive? ? currency.minimum : -currency.minimum)
+    def allocate_left_over(allocation, left_over)
+      minimum = mint(left_over.positive? ? currency.minimum : -currency.minimum)
 
-      slots = (remaining / minimum).to_i - 1
+      slots = (left_over / minimum).to_i - 1
       (0..slots).each { |i| allocation[i] += minimum }
 
       allocation
