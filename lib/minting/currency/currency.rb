@@ -22,7 +22,7 @@ class Mint
     end
 
     def minimum
-      @minimum ||= 10r ** -subunit
+      @minimum ||= 10r**-subunit
     end
 
     private

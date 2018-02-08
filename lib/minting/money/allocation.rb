@@ -1,12 +1,11 @@
 
 class Mint
   class Money
-
     def allocate(proportions)
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
 
       whole = proportions.sum.to_r
-      allocation = proportions.map {|rate| mint(amount * rate.to_r  / whole) }
+      allocation = proportions.map { |rate| mint(amount * rate.to_r / whole) }
 
       allocate_left_over(allocation, self - allocation.sum)
     end
@@ -30,6 +29,5 @@ class Mint
 
       allocation
     end
-
   end
 end

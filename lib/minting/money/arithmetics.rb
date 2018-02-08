@@ -9,7 +9,6 @@ class Mint
       @amount.negative?
     end
 
-
     def positive?
       @amount.positive?
     end
