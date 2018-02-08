@@ -21,6 +21,10 @@ class Mint
       "<Currency:(#{code} #{symbol} #{subunit})>"
     end
 
+    def minimum
+      @minimum ||= 10r ** -subunit
+    end
+
     private
 
     def initialize(code, subunit:, symbol:)

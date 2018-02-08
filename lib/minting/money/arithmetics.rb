@@ -9,6 +9,11 @@ class Mint
       @amount.negative?
     end
 
+
+    def positive?
+      @amount.positive?
+    end
+
     def +(other)
       operation(:+, other) do
         if other.zero?

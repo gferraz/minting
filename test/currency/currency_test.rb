@@ -2,6 +2,7 @@ class CurrencyTest < Minitest::Test
   def setup
     @real ||= Mint::Currency[:BRL]
     @dollar ||= Mint::Currency[:USD]
+    @yen ||= Mint::Currency[:JPY]
   end
 
   def test_currency_construction
@@ -25,6 +26,12 @@ class CurrencyTest < Minitest::Test
   def test_inspect
     assert_equal '<Currency:(BRL R$ 2)>', @real.inspect
     assert_equal '<Currency:(USD $ 2)>',  @dollar.inspect
+  end
+
+  def test_minimum_amount
+    assert_equal 0.01, @dollar.minimum
+    assert_equal 0.01, @real.minimum
+    assert_equal 1,    @yen.minimum
   end
 
   def test_finder

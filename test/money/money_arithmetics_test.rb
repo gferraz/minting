@@ -75,4 +75,11 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_equal @two, (-@two).abs
     assert_equal @six, (-3 * @two).abs
   end
+
+  def test_sign
+    assert @ten.positive?
+    refute @ten.negative?
+    assert @negative_ten.negative?
+    refute @negative_ten.positive?
+  end
 end
