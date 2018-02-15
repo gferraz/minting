@@ -21,7 +21,7 @@ class Mint
       "<Currency:(#{code} #{symbol} #{subunit})>"
     end
 
-    def minimum
+    def minimum_amount
       @minimum ||= 10r**-subunit
     end
 

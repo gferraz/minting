@@ -1,4 +1,5 @@
 class Mint
+  # :nodoc
   class Currency
     def self.[](currency)
       return currency if currency.is_a? Currency

@@ -22,7 +22,7 @@ class Mint
   end
 
   def minimum
-    @minimum ||= Money.new(10r**-currency.subunit, currency)
+    @minimum ||= Money.new(currency.minimum_amount, currency)
   end
 
   def inspect

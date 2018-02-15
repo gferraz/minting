@@ -1,5 +1,6 @@
 
 class Mint
+  # :nodoc
   class Money
     def allocate(proportions)
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
@@ -22,7 +23,7 @@ class Mint
     private
 
     def allocate_left_over(allocation, left_over)
-      minimum = mint(left_over.positive? ? currency.minimum : -currency.minimum)
+      minimum = mint(left_over.positive? ? currency.minimum_amount : -currency.minimum_amount)
 
       slots = (left_over / minimum).to_i - 1
       (0..slots).each { |i| allocation[i] += minimum }

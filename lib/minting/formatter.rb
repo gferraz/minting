@@ -1,6 +1,7 @@
 
 class Mint
   class Formatter
+    # :nodoc
     Options = Struct.new(:delimiter, :precision, :separator, :symbol)
 
     def self.[](name)
