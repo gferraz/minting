@@ -37,7 +37,7 @@ class Mint
     end
 
     def hash
-      zero? ? @amount.hash : [@amount, @currency].hash
+      @hash ||= zero? ? 0.hash : [@amount, @currency].hash
     end
 
     def nonzero?
