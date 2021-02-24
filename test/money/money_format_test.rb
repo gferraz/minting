@@ -38,11 +38,11 @@ class MoneyFormatTest < Minitest::Test
 
   def test_numeric_html_format
     brl = Mint.new(:BRL).money(10)
-    jpy = Mint.new(:JPY).money(15)
+    jpy = Mint.new(:JPY).money(15_000)
     gas = Mint::Money.new(3457 / 1000r, FUEL)
 
     assert_equal "<abbr class='money' title='BRL 10.00'>R$ 10.00</abbr>", brl.to_html
-    assert_equal "<abbr class='money' title='JPY 15'>¥ 15</abbr>", jpy.to_html
+    assert_equal "<abbr class='money' title='JPY 15000'>¥ 15000</abbr>", jpy.to_html
     assert_equal "<abbr class='money' title='BRL_FUEL 3.457'>R$ 3.457</abbr>", gas.to_html
   end
 
