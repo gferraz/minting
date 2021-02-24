@@ -1,5 +1,7 @@
+
 AllCops:
-  TargetRubyVersion: 2.2
+  NewCops: enable
+  TargetRubyVersion: 3.0
 
 Metrics/LineLength:
   Max: 120
@@ -13,4 +15,3 @@ Style/FileName:
 
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never
-

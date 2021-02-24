@@ -54,6 +54,7 @@ class Mint
     def /(other)
       operation(:/, other) do
         raise ZeroDivisionError, "#{self} can't be divided by zero" if other.zero?
+
         case other
         when Numeric
           mint(@amount / other.to_r)

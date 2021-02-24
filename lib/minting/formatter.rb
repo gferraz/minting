@@ -1,4 +1,3 @@
-
 class Mint
   class Formatter
     # :nodoc
@@ -18,6 +17,7 @@ class Mint
 
     def self.register!(name, &block)
       raise KeyError, "#{name} formatter already registered" if formatters[name]
+
       formatters[name] = Formatter.new(&block)
     end
 

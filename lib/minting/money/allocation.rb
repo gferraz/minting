@@ -1,4 +1,3 @@
-
 class Mint
   # :nodoc
   class Money

@@ -1,4 +1,3 @@
-
 require 'minting/currency'
 require 'minting/formatter'
 require 'minting/mint'

@@ -1,8 +1,6 @@
 class Mint
   class Currency
-    attr_reader :code
-    attr_reader :subunit
-    attr_reader :symbol
+    attr_reader :code, :subunit, :symbol
 
     def format(amount, format: '')
       amount = amount.amount if amount.is_a?(Mint::Money)

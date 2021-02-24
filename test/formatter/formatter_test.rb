@@ -1,4 +1,3 @@
-
 class FormatterTest < Minitest::Test
   def test_formatter_constructor
     some_dollars = Mint.new(:USD).money(1.23)
