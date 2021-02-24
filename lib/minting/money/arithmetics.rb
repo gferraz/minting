@@ -42,6 +42,8 @@ class Mint
     end
 
     def *(other)
+      raise ArgumentError, "Can't multiply money times money"
+
       operation(:*, other) do
         if other.zero?
           mint(0r)
