@@ -30,6 +30,11 @@ class Mint
       @amount.to_f
     end
 
+    def to_html
+      template = %(<abbr class='money' title='#{currency_code} %0.#{currency.subunit}f'>#{currency.symbol} %0.#{currency.subunit}f</abbr>)
+      format template, @amount, @amount
+    end
+
     def to_i
       @amount.to_i
     end

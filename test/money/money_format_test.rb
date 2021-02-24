@@ -1,7 +1,7 @@
 class MoneyFormatTest < Minitest::Test
   USD   = Mint::Currency[:USD]
   BRL   = Mint::Currency[:BRL]
-  FUEL  = Mint::Currency.register(:BRL_FUEL, subunit: 3, symbol: 'R$ ')
+  FUEL  = Mint::Currency.register(:BRL_FUEL, subunit: 3, symbol: 'R$')
 
   def test_numeric_simple_format
     money = Mint::Money.new(999 / 100r, USD)
@@ -13,7 +13,7 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '$+9.99',   money.to_s(format: '%<symbol>s%<amount>+f')
     assert_equal '-9.99',    (-money).to_s(format: '%<amount>f')
     assert_equal '9.99',     money.to_s(format: '%<amount>f')
-    assert_equal 'R$ 3.457', gas.to_s
+    assert_equal 'R$3.457', gas.to_s
   end
 
   def test_numeric_padding_format
@@ -35,4 +35,15 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '{"currency": "JPY", "amount": "15"}', jpy.to_json
     assert_equal '{"currency": "BRL_FUEL", "amount": "3.457"}', gas.to_json
   end
+
+  def test_numeric_html_format
+    brl = Mint.new(:BRL).money(10)
+    jpy = Mint.new(:JPY).money(15)
+    gas = Mint::Money.new(3457 / 1000r, FUEL)
+
+    assert_equal "<abbr class='money' title='BRL 10.00'>R$ 10.00</abbr>", brl.to_html
+    assert_equal "<abbr class='money' title='JPY 15'>¥ 15</abbr>", jpy.to_html
+    assert_equal "<abbr class='money' title='BRL_FUEL 3.457'>R$ 3.457</abbr>", gas.to_html
+  end
+
 end
