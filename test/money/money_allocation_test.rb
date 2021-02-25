@@ -12,7 +12,6 @@ class MoneyAllocationTest < Minitest::Test
 
     installments = price.split(4)
     assert_equal [usd.money(2.50), usd.money(2.50), usd.money(2.50), usd.money(2.50)], installments
-
   end
 
   def test_money_allocation

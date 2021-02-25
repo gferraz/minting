@@ -45,5 +45,4 @@ class MoneyFormatTest < Minitest::Test
     assert_equal "<abbr class='money' title='JPY 15000'>¥ 15000</abbr>", jpy.to_html
     assert_equal "<abbr class='money' title='BRL_FUEL 3.457'>R$ 3.457</abbr>", gas.to_html
   end
-
 end

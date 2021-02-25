@@ -18,8 +18,8 @@ Gem::Specification.new do |s|
   raise 'RubyGems 2.0 or newer is required' unless s.respond_to?(:metadata)
 
   s.metadata = {
-    'bug_tracker_uri' => s.homepage + '/issues',
-    'changelog_uri' => s.homepage + '/blob/master/CHANGELOG.md',
+    'bug_tracker_uri' => "#{s.homepage}/issues",
+    'changelog_uri' => "#{s.homepage}/blob/master/CHANGELOG.md",
     'homepage_uri' => s.homepage,
     'source_code_uri' => s.homepage,
     'allowed_push_host' => "TODO: Set to 'https://mygemserver.com'"
