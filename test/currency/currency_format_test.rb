@@ -20,4 +20,8 @@ class CurrencyFormatTest < Minitest::Test
     assert_equal 'R$    +11.12',     BRL.format(11.12, format: '%<symbol>2s%<amount>+10f')
     assert_equal ' $    -13.14',     USD.format(-13.14, format: '%<symbol>2s%<amount>10f')
   end
+
+  def test_canonical_format
+    assert_equal 'USD 9.99',  USD.format(9.99, format: USD.canonical_format)
+  end
 end
