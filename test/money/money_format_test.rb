@@ -41,8 +41,8 @@ class MoneyFormatTest < Minitest::Test
     jpy = Mint.new(:JPY).money(15_000)
     gas = Mint::Money.new(3457 / 1000r, FUEL)
 
-    assert_equal "<abbr class='money' title='BRL 10.00'>R$10.00</abbr>", brl.to_html
-    assert_equal "<abbr class='money' title='JPY 15000'>¥15000</abbr>", jpy.to_html
-    assert_equal "<abbr class='money' title='BRL_FUEL 3.457'>R$3.457</abbr>", gas.to_html
+    assert_equal "<data class='money' title='BRL 10.00'>R$10.00</data>", brl.to_html
+    assert_equal "<data class='money' title='JPY 15000'>¥15000</data>", jpy.to_html
+    assert_equal "<data class='money' title='BRL_FUEL 3.457'>R$ +3.457</data>", gas.to_html('%<symbol>2s %<amount>+f')
   end
 end

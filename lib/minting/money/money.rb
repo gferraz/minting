@@ -15,7 +15,7 @@ class Mint
     end
 
     def mint(amount)
-      Money.new(amount, currency)
+      Money.new amount, currency
     end
 
     def inspect
@@ -23,15 +23,17 @@ class Mint
     end
 
     def to_d
-      @amount.to_d(0)
+      @amount.to_d 0
     end
 
     def to_f
       @amount.to_f
     end
 
-    def to_html
-      %(<abbr class='money' title='#{currency.format(@amount, format: currency.canonical_format)}'>#{currency.format(@amount)}</abbr>)
+    def to_html(format = nil)
+      title = currency.canonical_format(@amount)
+      content = currency.format(@amount, format: format)
+      %(<data class='money' title='#{title}'>#{content}</data>)
     end
 
     def to_i
