@@ -2,7 +2,6 @@ class Mint
   # :nodoc
   # String formating for money objects
   class Formatter
-
     def self.[](name)
       formatters[name]
     end

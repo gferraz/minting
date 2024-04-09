@@ -74,11 +74,9 @@ class Mint
     end
 
     def operation(operator, operand)
-      begin
-        yield || coerced_operation(operator, operand)
-      rescue NoMethodError
-        raise_coercion_error(operator, operand)
-      end
+      yield || coerced_operation(operator, operand)
+    rescue NoMethodError
+      raise_coercion_error(operator, operand)
     end
   end
 end

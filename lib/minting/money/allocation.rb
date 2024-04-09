@@ -16,7 +16,7 @@ class Mint
       fraction = self / quantity
       allocation = Array.new(quantity, fraction)
 
-      allocate_left_over(allocation, self - fraction * quantity)
+      allocate_left_over(allocation, self - (fraction * quantity))
     end
 
     private
