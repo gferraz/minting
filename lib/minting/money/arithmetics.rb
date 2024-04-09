@@ -1,91 +1,84 @@
 class Mint
   # :nodoc
+  # Arithmetic funcions for money ojects
   class Money
     def abs
-      negative? ? mint(@amount.abs) : self
+      positive? ? self : mint(amount.abs)
     end
 
     def negative?
-      @amount.negative?
+      amount.negative?
     end
 
     def positive?
-      @amount.positive?
+      amount.positive?
     end
 
-    def +(other)
-      operation(:+, other) do
-        if other.zero?
+    def +(addend)
+      operation(:+, addend) do
+        if addend.zero?
           self
         elsif zero?
-          other
-        elsif currency == other.currency
-          mint(@amount + other.amount)
+          addend
+        elsif currency == addend.currency
+          mint(amount + addend.amount)
         end
       end
     end
 
-    def -(other)
-      operation(:-, other) do
-        if other.zero?
+    def -(subtrahend)
+      operation(:-, subtrahend) do
+        if subtrahend.zero?
           self
-        elsif zero?
-          other.mint(-other.amount)
-        elsif currency == other.currency
-          mint(@amount - other.amount)
+        elsif currency == subtrahend.currency
+          mint(amount - subtrahend.amount)
         end
       end
     end
 
     def -@
-      zero? ? self : mint(-@amount)
+      zero? ? self : mint(-amount)
     end
 
-    def *(other)
-      operation(:*, other) do
-        if other.zero?
-          mint(0r)
-        elsif other.is_a? Numeric
-          mint(@amount * other.to_r)
+    def *(multiplicand)
+      operation(:*, multiplicand) do
+        return mint(0r) if multiplicand.zero?
+        case multiplicand
+        when Numeric        
+          mint(amount * multiplicand.to_r)
+        when Money
+          raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
         end
       end
     end
 
-    def /(other)
-      operation(:/, other) do
-        raise ZeroDivisionError, "#{self} can't be divided by zero" if other.zero?
-
-        case other
+    def /(divisor)
+      operation(:/, divisor) do
+        case divisor
         when Numeric
-          mint(@amount / other.to_r)
+          mint(amount / divisor)
         when Money
-          @amount / other.amount if currency == other.currency
+          amount / divisor.amount if currency == divisor.currency
+        else
+          raise TypeError, "#{self} can't be divided by #{divisor}"
         end
-        # raise TypeError, "#{self} can't be divided by #{other}"
       end
     end
 
     private
 
     def coerced_operation(operation, object)
-      result = nil
-      if !object.is_a?(Mint::Money) && object.respond_to?(:coerce)
-        op1, op2 = object.coerce(self)
-        result = op1&.send(operation, op2)
-      end
-      result
+      first_operand, second_operand = object.coerce(self)
+      result = first_operand&.send(operation, second_operand)
+      result || raise(TypeError, "#{operand} can't be coerced into #{self.class}")
     end
 
     def operation(operator, operand)
-      val = nil
       begin
-        val = yield
-        val ||= coerced_operation(operator, operand)
-        val || raise(TypeError, "#{operand.class} can't be coerced into #{self.class}")
+        yield || coerced_operation(operator, operand)
       rescue NoMethodError
         raise_coercion_error(operator, operand)
       end
-      val
     end
   end
 end
