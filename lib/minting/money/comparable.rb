@@ -1,12 +1,19 @@
 class Mint
   # :nodoc
+  # Comparision methods
   class Money
     include Comparable
 
     # @return true if both are zero, or both have same amount and same currency
     def ==(other)
-      @amount.zero? && other.respond_to?(:zero?) && other.zero? ||
-        other.is_a?(Money) && @amount == other.amount && @currency == other.currency
+      case other
+      when Numeric
+        return true if zero? && other.zero?
+      when Mint::Money
+        return false if nonzero? && currency != other.currency
+        return true if amount == other.amount
+      end
+      false
     end
 
     # @example
@@ -19,17 +26,11 @@ class Mint
     def <=>(other)
       case other
       when Numeric
-        other_amount = other
-        other_currency = nil
+        return 0 if zero? && other.zero?
       when Mint::Money
-        other_amount = other.amount
-        other_currency = other.currency
-      else
-        raise TypeError, "#{other.class} can't be compared to #{self.class}"
+        return amount <=> other.amount if currency == other.currency
       end
-      raise TypeError, "#{self} can't be compared to #{other}" unless zero? || other.zero? || currency == other_currency
-
-      @amount <=> other_amount
+      raise TypeError, "#{self} can't be compared to #{other}"
     end
 
     def eql?(other)
@@ -37,15 +38,15 @@ class Mint
     end
 
     def hash
-      @hash ||= zero? ? 0.hash : [@amount, @currency].hash
+      @hash ||= zero? ? 0.hash : [amount, currency].hash
     end
 
     def nonzero?
-      @amount.nonzero?
+      amount.nonzero?
     end
 
     def zero?
-      @amount.zero?
+      amount.zero?
     end
   end
 end
