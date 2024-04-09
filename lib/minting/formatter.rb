@@ -1,7 +1,7 @@
 class Mint
+  # :nodoc
+  # String formating for money objects
   class Formatter
-    # :nodoc
-    Options = Struct.new(:delimiter, :precision, :separator, :symbol)
 
     def self.[](name)
       formatters[name]
@@ -25,8 +25,8 @@ class Mint
       @block = block
     end
 
-    def format(money, delimiter: nil, precision: nil, separator: nil, symbol: nil)
-      options = Options.new(delimiter, precision, separator || '.', symbol || money.currency.symbol)
+    def format(money:, delimiter: nil, precision: nil, separator: '.', symbol: money.currency.symbol)
+      options = Data.define(:delimiter, :precision, :separator, :symbol).new(delimiter, precision, separator, symbol)
       @block.call(money, options)
     end
   end
