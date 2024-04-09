@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   # Prevent pushing this gem to RubyGems.org.
   # To allow pushes either set the 'allowed_push_host' to allow pushing to
   # a single host or delete this section to allow pushing to any host.
-  raise 'RubyGems 2.0 or newer is required' unless s.respond_to?(:metadata)
+  raise 'RubyGems 3.0 or newer is required' unless s.respond_to?(:metadata)
 
   s.metadata = {
     'bug_tracker_uri' => "#{s.homepage}/issues",
@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     'allowed_push_host' => "TODO: Set to 'https://mygemserver.com'"
   }
 
-  s.required_ruby_version = '>= 2.2.0'
+  s.required_ruby_version = '>= 3.0.0'
 
   s.files = Dir.glob('{bin,doc,lib}/**/*')
   s.files += %w[minting.gemspec Rakefile README.md]
