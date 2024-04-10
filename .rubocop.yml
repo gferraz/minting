@@ -3,13 +3,13 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
 Metrics/MethodLength:
   Max: 30
 
-Style/FileName:
+Naming/FileName:
   Exclude:
     - Gemfile
 
