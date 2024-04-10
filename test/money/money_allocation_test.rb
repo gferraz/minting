@@ -3,15 +3,17 @@ class MoneyAllocationTest < Minitest::Test
     usd = Mint.new(:USD)
     price = usd.money(10)
 
+    usd143 = usd.money(1.43)
+    usd250 = usd.money(2.50)
+
     installments = price.split(7)
-    assert_equal [usd.money(1.42), usd.money(1.43), usd.money(1.43), usd.money(1.43),
-                  usd.money(1.43), usd.money(1.43), usd.money(1.43)], installments
+    assert_equal [usd.money(1.42), usd143, usd143, usd143, usd143, usd143, usd143], installments
 
     installments = price.split(3)
     assert_equal [usd.money(3.34), usd.money(3.33), usd.money(3.33)], installments
 
     installments = price.split(4)
-    assert_equal [usd.money(2.50), usd.money(2.50), usd.money(2.50), usd.money(2.50)], installments
+    assert_equal [usd250, usd250, usd250, usd250], installments
   end
 
   def test_money_allocation

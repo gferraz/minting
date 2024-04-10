@@ -6,14 +6,11 @@ class Mint
 
     # @return true if both are zero, or both have same amount and same currency
     def ==(other)
-      case other
-      when Numeric
-        return true if zero? && other.zero?
-      when Mint::Money
-        return false if nonzero? && currency != other.currency
-        return true if amount == other.amount
-      end
-      false
+      return true if other.is_a?(Numeric) && zero? && other.zero?
+      return false unless other.is_a?(Mint::Money)
+      return false if nonzero? && currency != other.currency
+
+      amount == other.amount
     end
 
     # @example

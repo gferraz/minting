@@ -15,7 +15,7 @@ class FormatterTest < Minitest::Test
   def test_formatter_registration
     assert Mint::Formatter.register(:numeric) { |money| money.to_s(format: '%<amount>f') }
     assert_raises IndexError, 'numeric formatter already exists' do
-      Mint::Formatter.register!(:numeric) {}
+      Mint::Formatter.register!(:numeric) { |m| m.to_s }
     end
 
     # assert_equal '1.23', Mint.format(some_dollars, :numeric)

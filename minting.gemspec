@@ -32,12 +32,4 @@ Gem::Specification.new do |s|
 
   s.bindir        = 'bin'
   s.require_paths = ['lib']
-
-  s.add_development_dependency 'bundler'
-  s.add_development_dependency 'minitest'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'rubocop'
-  s.add_development_dependency 'rubycritic'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'yard'
 end

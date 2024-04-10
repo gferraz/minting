@@ -43,9 +43,9 @@ class Mint
     def *(multiplicand)
       operation(:*, multiplicand) do
         return mint(0r) if multiplicand.zero?
-        
+
         case multiplicand
-        when Numeric    
+        when Numeric
           mint(amount * multiplicand.to_r)
         when Money
           raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
