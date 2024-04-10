@@ -20,7 +20,7 @@ Or install it yourself with:
 
     $ git clone https://github.com/gferraz/minting.git
     $ cd minting && gem build minting.gemspec
-    $ gem install minting-0.1.2.gem
+    $ gem install minting-0.1.3.gem
 
 ## Usage
 
@@ -81,7 +81,7 @@ ten_dollars.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 
 ## Release 1.0 Plan
 
-- Localization: I18n 
+- Localization: I18n
 - Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
 - Arithmetics: div, mod
 - Mint.parse
