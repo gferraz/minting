@@ -1,2 +1,2 @@
-require 'minting/currency/currencies'
+require 'minting/currency/currency_directory'
 require 'minting/currency/currency'

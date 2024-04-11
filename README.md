@@ -27,30 +27,23 @@ Or install it yourself with:
 ```ruby
 require 'minting'
 
-# US dollar mint
-usd = Mint.new(:USD)
-
-# EURO mint
-euro = Mint.new(:EUR)
-
 # 10.00 USD
-money = usd.money(10) #=> [USD 10.00]
-money.to_i            #=> 10
-money.currency_code   #=> "USD"
+ten_dollars = Mint.money(10, 'USD') #=> [USD 10.00]
+ten_dollars.to_i            #=> 10
+ten_dollars.currency_code   #=> "USD"
 
 # Comparisons
-ten_dollars = usd.money(10)
+ten_dollars = Mint.money(10, 'USD')
 
-ten_dollars == usd.money(10)  #=> true
-ten_dollars == usd.money(1)   #=> false
-ten_dollars == euro.money(10) #=> false
-ten_dollars != euro.money(10) #=> true
+ten_dollars == Mint.money(10, 'USD')  #=> true
+ten_dollars == Mint.money(1, 'USD')   #=> false
+ten_dollars == Mint.money(10, 'EUR') #=> false
 
-ten_dollars.eql? usd.money(10)         #=> true
-ten_dollars.hash == usd.money(10).hash #=> true
+ten_dollars.eql? Mint.money(10, 'USD')         #=> true
+ten_dollars.hash == Mint.money(10, 'USD').hash #=> true
 
 # Format (uses Kernel.format internally)
-price = usd.money(9.99)
+price = Mint.money(9.99, 'USD')
 
 price.to_s                                  #=> "$9.99",
 price.to_s(format: '%<amount>d')            #=> "9",
@@ -59,7 +52,7 @@ price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
 (-price).to_s(format: '%<amount>f')         #=> "-9.99",
 
 # Format with padding
-price_in_euros = euro.money(12.34)
+price_in_euros = euro.money(12.34, 'EUR')
 
 price.to_s(format: '--%<amount>7d')               #=> "--      9"
 price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"

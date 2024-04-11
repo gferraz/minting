@@ -1,15 +1,19 @@
 class Mint
   def self.currency(code)
-    Currency[code]
+    CurrencyDirectory[code]
   end
 
   attr_reader :currency, :currency_code
 
   def initialize(currency)
-    @currency = Currency[currency]
+    @currency = CurrencyDirectory[currency]
     raise KeyError, 'No currency found' unless @currency
 
     @currency_code = @currency.code
+  end
+
+  def self.money(amount, currency)
+    Money.new(amount, CurrencyDirectory[currency])
   end
 
   def money(amount)
