@@ -1,5 +1,4 @@
 class MoneyComparableTest < Minitest::Test
-
   def setup
     @ten = Mint.money(10r, 'USD')
     @two = Mint.money(2r, 'USD')

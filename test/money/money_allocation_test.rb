@@ -29,7 +29,8 @@ class MoneyAllocationTest < Minitest::Test
 
     proportion = [0.25, 0.25, 0.25, 0.25]
     allocation = value.allocate(proportion)
-    assert_equal [Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD')], allocation
+    assert_equal [Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD')],
+                 allocation
     assert_equal value, allocation.sum
   end
 end

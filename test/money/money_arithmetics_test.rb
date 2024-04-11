@@ -1,5 +1,4 @@
 class MoneyArithmeticsTest < Minitest::Test
-
   def setup
     @zero = Mint.money(0, 'USD')
     @zero_brl = Mint.money(0, 'BRL')

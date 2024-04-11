@@ -2,7 +2,6 @@ require 'bigdecimal'
 require 'bigdecimal/util'
 
 class MoneyConversionTest < Minitest::Test
-
   def test_numeric_conversion
     nine_nine_nine = Mint.money(999 / 100r, 'USD')
 
