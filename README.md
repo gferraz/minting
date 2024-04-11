@@ -61,15 +61,15 @@ price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
 # Format with padding
 price_in_euros = euro.money(12.34)
 
-usd.to_s(format: '--%<amount>7d')               #=> "--      9"
-usd.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
-(-usd).to_s(format: '  %<amount>10f')           #=> "       -9.99"
+price.to_s(format: '--%<amount>7d')               #=> "--      9"
+price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
+(-price).to_s(format: '  %<amount>10f')           #=> "       -9.99"
 
 price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 # Json serialization
 
-usd.to_json # "{"currency": "USD", "amount": "9.99"}
+price.to_json # "{"currency": "USD", "amount": "9.99"}
 
 # Allocation and split
 
