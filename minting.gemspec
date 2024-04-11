@@ -4,7 +4,7 @@ require 'minting/version'
 
 Gem::Specification.new do |s|
   s.name          = 'minting'
-  s.summary       = 'Library to manipulate currency.'
+  s.summary       = 'Library to manipulate currency values'
   s.description   = s.summary
   s.homepage      = 'https://github.com/gferraz/minting'
   s.version       = Minting::VERSION
