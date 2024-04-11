@@ -1,10 +1,15 @@
 class Mint
   # :nodoc
-  class Currency
+  class CurrencyDirectory
     def self.[](currency)
-      return currency if currency.is_a? Currency
-
-      currencies[currency.to_s] || currencies[nil]
+      case currency
+      when Currency
+        currency
+      when Symbol
+        currencies[currency.to_s]
+      else
+        currencies[currency]
+      end
     end
 
     def self.register(code, subunit:, symbol: '')

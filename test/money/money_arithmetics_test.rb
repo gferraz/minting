@@ -1,14 +1,12 @@
 class MoneyArithmeticsTest < Minitest::Test
-  USD = Mint::Currency[:USD]
-  BRL = Mint::Currency[:BRL]
 
   def setup
-    @zero = Mint::Money.new(0r, USD)
-    @zero_brl = Mint::Money.new(0r, BRL)
-    @two = Mint::Money.new(2r, USD)
-    @six = Mint::Money.new(6r, USD)
-    @ten = Mint::Money.new(10r, USD)
-    @negative_ten = Mint::Money.new(-10r, USD)
+    @zero = Mint.money(0, 'USD')
+    @zero_brl = Mint.money(0, 'BRL')
+    @two = Mint.money(2, 'USD')
+    @six = Mint.money(6, 'USD')
+    @ten = Mint.money(10, 'USD')
+    @negative_ten = Mint.money(-10, 'USD')
   end
 
   def test_addition
