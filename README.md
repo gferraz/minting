@@ -35,8 +35,8 @@ ten_dollars.currency_code   #=> "USD"
 # Comparisons
 ten_dollars = Mint.money(10, 'USD')
 
-ten_dollars == Mint.money(10, 'USD')  #=> true
-ten_dollars == Mint.money(1, 'USD')   #=> false
+ten_dollars == Mint.money(10, 'USD') #=> true
+ten_dollars == Mint.money(11, 'USD') #=> false
 ten_dollars == Mint.money(10, 'EUR') #=> false
 
 ten_dollars.eql? Mint.money(10, 'USD')         #=> true
