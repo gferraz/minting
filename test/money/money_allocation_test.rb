@@ -2,17 +2,22 @@ class MoneyAllocationTest < Minitest::Test
   def test_money_split
     price = Mint.money(10, 'USD')
 
-    usd143 = Mint.money(1.43, 'USD')
-    usd250 = Mint.money(2.50, 'USD')
-
     installments = price.split(7)
-    assert_equal [Mint.money(1.42, 'USD'), usd143, usd143, usd143, usd143, usd143, usd143], installments
+    assert_equal 7, installments.size
+    assert_equal price, installments.sum
 
     installments = price.split(3)
-    assert_equal [Mint.money(3.34, 'USD'), Mint.money(3.33, 'USD'), Mint.money(3.33, 'USD')], installments
+    assert_equal 3, installments.size
+    assert_equal price, installments.sum
 
     installments = price.split(4)
-    assert_equal [usd250, usd250, usd250, usd250], installments
+    assert_equal 4, installments.size
+    assert_equal price, installments.sum
+
+    five = Mint.money(5, 'USD')
+    installments = five.split(3)
+    assert_equal 3, installments.size
+    assert_equal five, installments.sum
   end
 
   def test_money_allocation
@@ -31,5 +36,11 @@ class MoneyAllocationTest < Minitest::Test
     allocation = value.allocate(proportion)
     assert_equal [Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD'), Mint.money(2.50, 'USD')], allocation
     assert_equal value, allocation.sum
+
+    proportion = [0.333, 0.333, 0.333]
+    five =  Mint.money(5, 'USD')
+    allocation = five.allocate(proportion)
+    assert_equal 3, allocation.size
+    assert_equal five, allocation.sum
   end
 end

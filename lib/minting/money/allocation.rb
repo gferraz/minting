@@ -25,7 +25,7 @@ class Mint
       minimum = mint(left_over.positive? ? currency.minimum_amount : -currency.minimum_amount)
 
       slots = (left_over / minimum).to_i - 1
-      (0..slots).each { |i| allocation[i] += minimum }
+      (0..slots).each { |slot| allocation[slot] += minimum }
 
       allocation
     end
