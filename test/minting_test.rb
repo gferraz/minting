@@ -3,7 +3,6 @@ class MintingTest < Minitest::Test
     refute_nil ::Minting::VERSION
   end
 
-
   def test_readme_usage
     ten_dollars = Mint.money(10, 'USD')
 

@@ -9,7 +9,7 @@ class Mint
     def format(amount, format: '')
       amount = amount.amount if amount.is_a?(Mint::Money)
 
-      format = format.to_s.empty? ? '%<symbol>s%<amount>f' : format.dup
+      format = format.empty? ? '%<symbol>s%<amount>f' : format.dup
       format.gsub!(/%<amount>(\+?\d*)f/, "%<amount>\\1.#{subunit}f")
 
       Kernel.format(format, amount: amount, currency: code, symbol: symbol)

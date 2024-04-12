@@ -1,5 +1,4 @@
 class MoneyTest < Minitest::Test
-
   def test_its_contructors
     assert_instance_of Mint::Money, Mint.money(100, 'USD')
     assert_instance_of Mint::Money, Mint.money(1, 'USD')

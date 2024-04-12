@@ -30,7 +30,7 @@ class Mint
       @amount.to_f
     end
 
-    def to_html(format = nil)
+    def to_html(format = '')
       title = currency.canonical_format(@amount)
       content = currency.format(@amount, format: format)
       %(<data class='money' title='#{title}'>#{content}</data>)
