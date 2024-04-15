@@ -3,7 +3,7 @@ class Mint
     attr_reader :amount, :currency
 
     def initialize(amount, currency)
-      raise ArgumentError, 'amount must be Numeric'            unless amount.is_a?(Numeric)
+      raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
       raise ArgumentError, 'currency must be a Currency object' unless currency.is_a?(Currency)
 
       @amount = amount.to_r.round(currency.subunit)
