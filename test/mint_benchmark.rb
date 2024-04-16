@@ -7,7 +7,7 @@
 #
 #   def bench_money_mint
 #     assert_performance_constant 0.99 do |_n|
-#       Mint.money(0, :USD)
+#       Mint.money(0, 'USD')
 #     end
 #   end
 # end
@@ -17,16 +17,16 @@
 # require 'minting'
 #
 # Benchmark.ips do |x|
-#   # x.report("mint.money") { Mint.money(rand(-100.00..100.00)), :USD }
-#   # x.report("Money.new") { Money.new(rand(-100.00..100.00), :USD) }
+#   # x.report("mint.money") { Mint.money(rand(-100.00..100.00)), 'USD' }
+#   # x.report("Money.new") { Money.new(rand(-100.00..100.00), 'USD') }
 #   # x.compare!
 #
 #   def amount
 #     rand(-10.00..10.00)
 #   end
 #
-#   x.report('mint.money') { Mint.money(amount, :USD) }
-#   x.report('Money.new') { Money.new(amount * 100, :USD) }
+#   x.report('mint.money') { Mint.money(amount, 'USD') }
+#   x.report('Money.new') { Money.new(amount * 100, 'USD') }
 #   x.compare!
 # end
 #
@@ -67,8 +67,8 @@
 #   diff(base, final)
 # end
 #
-# mi = run { Mint.money(amount, :USD) }
-# mo = run { Money.new(amount * 100, :USD) }
+# mi = run { Mint.money(amount, 'USD') }
+# mo = run { Money.new(amount * 100, 'USD') }
 #
 # GC.start # clear GC before profiling
 # GC::Profiler.enable
@@ -83,7 +83,7 @@
 # # profile the code
 # result = RubyProf.profile do
 #   TIMES.times do
-#     Mint.money(amount, :USD)
+#     Mint.money(amount, 'USD')
 #   end
 # end
 #

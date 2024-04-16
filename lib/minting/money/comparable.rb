@@ -14,11 +14,11 @@ module Mint
     end
 
     # @example
-    #   two_usd == Mint.money(2r, Currency[:USD]) #=> [$ 2.00]
+    #   two_usd == Mint.money(2r, Currency['USD']) #=> [$ 2.00]
     #   two_usd > 0                                    #=> true
-    #   two_usd > Mint.money(1r, Currency[:USD])  #=> true
+    #   two_usd > Mint.money(1r, Currency['USD'])  #=> true
     #   two_usd > 1                                    #=> TypeError: [$ 2.00] can't be compared to 1
-    #   two_usd > Mint.money(2, Currency[:BRL])   #=> TypeError: [$ 2.00] can't be compared to [R$ 2.00]
+    #   two_usd > Mint.money(2, Currency['BRL'])   #=> TypeError: [$ 2.00] can't be compared to [R$ 2.00]
     #
     def <=>(other)
       case other
