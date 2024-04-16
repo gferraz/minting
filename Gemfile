@@ -8,6 +8,8 @@ group :development do
   gem 'minitest'
   gem 'rake'
   gem 'rubocop'
+  gem 'rubocop-minitest'
+  gem 'rubocop-rake'
   gem 'rubycritic'
   gem 'simplecov'
   gem 'yard'
