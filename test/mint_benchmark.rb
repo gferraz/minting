@@ -16,17 +16,45 @@ require 'benchmark/ips'
 require 'money'
 require 'minting'
 
+def random_amount
+  rand(-1000.00..1000.00)
+end
+
+Money.rounding_mode = ROUND_HALF_EVEN
+
 Benchmark.ips do |x|
-  # x.report("mint.money") { Mint.money(rand(-100.00..100.00)), 'USD' }
-  # x.report("Money.new") { Money.new(rand(-100.00..100.00), 'USD') }
-  # x.compare!
+  x.report('Mint.money') { Mint.money(random_amount, 'USD') }
+  x.report('Money.new') { Money.new(random_amount * 100, 'USD') }
+  x.compare!
+end
 
-  def amount
-    rand(-10.00..10.00)
+Benchmark.ips do |x|
+  x.report('Mint equals') do
+    m1 = Mint.money(random_amount, 'USD')
+    m2 = Mint.money(random_amount, 'USD')
+    m1 == m2
+    m1 == m1
   end
+  x.report('Money equals') do
+    m1 = Money.new(random_amount, 'USD')
+    m2 = Money.new(random_amount, 'USD')
+    m1 == m2
+    m1 == m1
+  end
+  x.compare!
+end
 
-  x.report('Mint.money') { Mint.money(amount, 'USD') }
-  x.report('Money.new') { Money.new(amount * 100, 'USD') }
+Benchmark.ips do |x|
+  x.report('Mint arithmetics') do
+    m1 = Mint.money(random_amount, 'USD')
+    m2 = Mint.money(random_amount, 'USD')
+    m1 + m2 + (m2 * 5) - (m2 / 2).abs
+  end
+  x.report('Money arithmetics') do
+    m1 = Money.new(random_amount, 'USD')
+    m2 = Money.new(random_amount, 'USD')
+    m1 + m2 + (m2 * 5) - (m2 / 2).abs
+  end
   x.compare!
 end
 
@@ -50,7 +78,7 @@ def run
   base = ObjectSpace.count_objects.dup
 
   TIMES.times do
-    yield(amount)
+    yield(random_amount)
   end
   final = ObjectSpace.count_objects.dup
   diff(base, final)
@@ -61,14 +89,14 @@ def run_stat
   base = GC.stat.dup
 
   TIMES.times do
-    yield(amount)
+    yield(random_amount)
   end
   final = GC.stat.dup
   diff(base, final)
 end
 
-mi = run { Mint.money(amount, 'USD') }
-mo = run { Money.new(amount * 100, 'USD') }
+mi = run { Mint.money(random_amount, 'USD') }
+mo = run { Money.new(random_amount * 100, 'USD') }
 
 GC.start # clear GC before profiling
 GC::Profiler.enable
@@ -76,14 +104,12 @@ GC.start
 puts GC::Profiler.report
 GC::Profiler.disable
 
-require 'money'
-require 'minting'
 require 'ruby-prof'
 
 # profile the code
 result = RubyProf::Profile.profile  do
   TIMES.times do
-    Mint.money(amount, 'USD')
+    Mint.money(random_amount, 'USD')
   end
 end
 

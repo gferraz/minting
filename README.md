@@ -14,13 +14,13 @@ gem 'minting', git: 'https://github.com/gferraz/minting.git'
 
 And then execute:
 
-    $ bundle
+$ bundle
 
 Or install it yourself with:
 
-    $ git clone https://github.com/gferraz/minting.git
-    $ cd minting && gem build minting.gemspec
-    $ gem install minting-0.1.3.gem
+$ git clone https://github.com/gferraz/minting.git
+$ cd minting && gem build minting.gemspec
+$ gem install minting-0.1.3.gem
 
 ## Usage
 
