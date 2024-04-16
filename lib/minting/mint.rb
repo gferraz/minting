@@ -6,20 +6,4 @@ module Mint
   def self.money(amount, currency)
     Money.new(amount, CurrencyDirectory[currency])
   end
-
-  def money(amount)
-    amount.zero? ? zero : Money.new(amount.to_r, currency)
-  end
-
-  def zero
-    @zero ||= Money.new(0r, currency)
-  end
-
-  def minimum
-    @minimum ||= Money.new(currency.minimum_amount, currency)
-  end
-
-  def inspect
-    "<Mint:#{currency_code}>"
-  end
 end
