@@ -14,6 +14,7 @@ class MoneyFormatTest < Minitest::Test
   def test_more_numeric_simple_format
     money = Mint.money(9.99, 'USD')
     gas = Mint.money(3.457, FUEL)
+
     assert_equal '-9.99',    (-money).to_s(format: '%<amount>f')
     assert_equal '9.99',     money.to_s(format: '%<amount>f')
     assert_equal 'R$3.457', gas.to_s

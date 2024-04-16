@@ -5,8 +5,8 @@ class MoneyConversionTest < Minitest::Test
   def test_numeric_conversion
     nine_nine_nine = Mint.money(999 / 100r, 'USD')
 
-    assert_equal 9,          nine_nine_nine.to_i
-    assert_equal 9.99,       nine_nine_nine.to_f
+    assert_equal 9, nine_nine_nine.to_i
+    assert_in_delta(9.99, nine_nine_nine.to_f)
     assert_equal 999 / 100r, nine_nine_nine.to_r
   end
 

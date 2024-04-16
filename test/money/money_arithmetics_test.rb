@@ -74,9 +74,9 @@ class MoneyArithmeticsTest < Minitest::Test
   end
 
   def test_sign
-    assert @ten.positive?
-    refute @ten.negative?
-    assert @negative_ten.negative?
-    refute @negative_ten.positive?
+    assert_predicate @ten, :positive?
+    refute_predicate @ten, :negative?
+    assert_predicate @negative_ten, :negative?
+    refute_predicate @negative_ten, :positive?
   end
 end

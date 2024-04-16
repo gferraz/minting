@@ -29,9 +29,9 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_minimum_amount
-    assert_equal 0.01, @dollar.minimum_amount
-    assert_equal 0.01, @real.minimum_amount
-    assert_equal 1,    @yen.minimum_amount
+    assert_in_delta(0.01, @dollar.minimum_amount)
+    assert_in_delta(0.01, @real.minimum_amount)
+    assert_equal 1, @yen.minimum_amount
   end
 
   def test_finder

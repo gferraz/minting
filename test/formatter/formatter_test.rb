@@ -3,6 +3,7 @@ class FormatterTest < Minitest::Test
     some_dollars = Mint.new(:USD).money(1.23)
 
     numeric_formatter = Mint::Formatter.new { |money| money.to_s(format: '%<amount>f') }
+
     assert_equal '1.23', numeric_formatter.format(money: some_dollars)
 
     formatter = Mint::Formatter.new do |money, options|

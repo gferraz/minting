@@ -18,20 +18,20 @@ class MoneyComparableTest < Minitest::Test
 
     assert       @ten.eql? ten_usd
     assert_equal @ten.hash, ten_usd.hash
-    refute       @ten.equal? ten_usd
+    refute_same @ten, ten_usd
 
     assert_equal Mint.money(0r, 'USD').hash, Mint.money(0r, 'BRL').hash
   end
 
   def test_inequality
-    assert @ten > @two
-    assert @two <= @ten
+    assert_operator @ten, :>, @two
+    assert_operator @two, :<=, @ten
 
-    refute @ten <= @two
-    refute @two > @ten
+    refute_operator @ten, :<=, @two
+    refute_operator @two, :>, @ten
 
-    assert @ten.positive?
-    assert @ten.positive?
+    assert_predicate @ten, :positive?
+    assert_predicate @ten, :positive?
   end
 
   def test_inequality_exceptions

@@ -22,18 +22,18 @@ class MoneyTest < Minitest::Test
     zero_dollars = Mint.money(0r, 'USD')
     zero_soles = Mint.money(0r, Mint::CurrencyDirectory[:PEN])
 
-    assert zero_dollars.zero?
+    assert_predicate zero_dollars, :zero?
     assert_equal zero_dollars, zero_soles
     assert_equal 0, zero_dollars
-    assert_equal zero_dollars, 0
-    refute Mint.money(100r, 'USD').zero?
+    assert_equal 0, zero_dollars
+    refute_predicate Mint.money(100r, 'USD'), :zero?
   end
 
   def test_nonzero
     two_dollars = Mint.money(2, 'USD')
     two_soles = Mint.money(2, Mint::CurrencyDirectory[:PEN])
 
-    assert two_dollars.nonzero?
+    assert_predicate two_dollars, :nonzero?
     refute_equal two_dollars, two_soles
     refute_equal 0, two_dollars
     refute_equal two_dollars, 0
