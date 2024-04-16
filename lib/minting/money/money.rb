@@ -15,7 +15,7 @@ class Mint
     end
 
     def mint(new_amount)
-      (new_amout.to_r == amount) ? self : Money.new(amount, currency)
+      new_amout.to_r == amount ? self : Money.new(new_amount, currency)
     end
 
     def inspect
