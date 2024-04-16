@@ -1,4 +1,4 @@
-class Mint
+module Mint
   # :nodoc
   # Comparision methods
   class Money

@@ -1,4 +1,4 @@
-class Mint
+module Mint
   class Currency
     attr_reader :code, :subunit, :symbol
 

@@ -1,4 +1,4 @@
-class Mint
+module Mint
   # :nodoc
   # String formating for money objects
   class Formatter

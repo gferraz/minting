@@ -1,15 +1,6 @@
-class Mint
+module Mint
   def self.currency(code)
     CurrencyDirectory[code]
-  end
-
-  attr_reader :currency, :currency_code
-
-  def initialize(currency)
-    @currency = CurrencyDirectory[currency]
-    raise KeyError, 'No currency found' unless @currency
-
-    @currency_code = @currency.code
   end
 
   def self.money(amount, currency)

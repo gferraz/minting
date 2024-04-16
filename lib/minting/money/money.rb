@@ -1,4 +1,4 @@
-class Mint
+module Mint
   class Money
     attr_reader :amount, :currency
 
@@ -15,7 +15,7 @@ class Mint
     end
 
     def mint(new_amount)
-      new_amout.to_r == amount ? self : Money.new(new_amount, currency)
+      new_amount.to_r == amount ? self : Money.new(new_amount, currency)
     end
 
     def inspect

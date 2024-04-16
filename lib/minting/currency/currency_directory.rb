@@ -1,4 +1,4 @@
-class Mint
+module Mint
   # :nodoc
   class CurrencyDirectory
     def self.[](currency)

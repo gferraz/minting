@@ -17,8 +17,7 @@
 # require 'minting'
 #
 # Benchmark.ips do |x|
-#   usd = Mint.new(:USD)
-#   # x.report("mint.money") { usd.money(rand(-100.00..100.00)) }
+#   # x.report("mint.money") { Mint.money(rand(-100.00..100.00)), :USD }
 #   # x.report("Money.new") { Money.new(rand(-100.00..100.00), :USD) }
 #   # x.compare!
 #

@@ -1,4 +1,4 @@
-class Mint
+module Mint
   # :nodoc
   # Arithmetic funcions for money ojects
   class Money

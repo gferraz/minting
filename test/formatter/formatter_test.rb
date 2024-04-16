@@ -1,6 +1,6 @@
 class FormatterTest < Minitest::Test
   def test_formatter_constructor
-    some_dollars = Mint.new(:USD).money(1.23)
+    some_dollars = Mint.money(1.23, :USD)
 
     numeric_formatter = Mint::Formatter.new { |money| money.to_s(format: '%<amount>f') }
 

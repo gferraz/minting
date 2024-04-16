@@ -31,9 +31,9 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_numeric_json_format
-    brl = Mint.new(:BRL).money(10)
-    jpy = Mint.new(:JPY).money(15)
-    gas = Mint.money(3457 / 1000r, FUEL)
+    brl = Mint.money(10, :BRL)
+    jpy = Mint.money(15, :JPY)
+    gas = Mint.money(3.457, FUEL)
 
     assert_equal '{"currency": "BRL", "amount": "10.00"}', brl.to_json
     assert_equal '{"currency": "JPY", "amount": "15"}', jpy.to_json
@@ -41,11 +41,11 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_numeric_html_format
-    brl = Mint.new(:BRL).money(10)
-    jpy = Mint.new(:JPY).money(15_000)
-    gas = Mint.money(3457 / 1000r, FUEL)
+    brl = Mint.money(10.05, 'BRL')
+    jpy = Mint.money(15_000, :JPY)
+    gas = Mint.money(3.457, FUEL)
 
-    assert_equal "<data class='money' title='BRL 10.00'>R$10.00</data>", brl.to_html
+    assert_equal "<data class='money' title='BRL 10.05'>R$10.05</data>", brl.to_html
     assert_equal "<data class='money' title='JPY 15000'>¥15000</data>", jpy.to_html
     assert_equal "<data class='money' title='BRL_FUEL 3.457'>R$ +3.457</data>", gas.to_html('%<symbol>2s %<amount>+f')
   end

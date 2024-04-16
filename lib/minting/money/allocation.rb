@@ -1,4 +1,4 @@
-class Mint
+module Mint
   # :nodoc
   class Money
     def allocate(proportions)
