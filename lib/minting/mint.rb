@@ -15,5 +15,13 @@ module Mint
     def dollars
       Mint.money(self, 'USD')
     end
+
+    def euros
+      Mint.money(self, 'EUR')
+    end
+
+    alias dollar dollars
+    alias real reais
+    alias euro euros
   end
 end

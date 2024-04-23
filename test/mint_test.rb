@@ -11,7 +11,11 @@ class MintTest < Minitest::Test
   end
 
   def test_mint_refinements
-    assert_equal 4.reais, Mint.money(4, 'BRL')
+    assert_equal 1.real, Mint.money(1, 'BRL')
+    assert_equal 1.dollar, Mint.money(1, 'USD')
+    assert_equal 1.euro, Mint.money(1, 'EUR')
+    assert_equal 3.reais, Mint.money(3, 'BRL')
     assert_equal 4.2.dollars, Mint.money(4.2, 'USD')
+    assert_equal 5.3.euros, Mint.money(5.3, 'EUR')
   end
 end
