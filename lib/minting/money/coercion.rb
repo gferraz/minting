@@ -38,7 +38,7 @@ module Mint
       end
 
       def <=>(other)
-        raise_coercion_error(:<=>, other) unless @value.zero? || other.zero?
+        raise_coercion_error(:<=>, other) if !@value.zero? && !other.zero?
         @value <=> other.amount
       end
 

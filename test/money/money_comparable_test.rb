@@ -39,4 +39,14 @@ class MoneyComparableTest < Minitest::Test
     assert_raises(TypeError) { @ten < 100 }
     assert_raises(TypeError) { @ten <= Object.new }
   end
+
+  def test_case_operator
+    assert_raises(TypeError) { Mint.money(1, 'BRL') <=> @two }
+    assert_raises(TypeError) { 2 <=> @two }
+    assert_equal(-1, @two <=> @ten)
+    assert_equal 0, @ten <=> Mint.money(10, 'USD')
+    assert_equal 1, @ten <=> @two
+    assert_equal 1, Mint.money(2, 'BRL') <=> 0
+    assert_equal(-1, 0 <=> Mint.money(2, 'BRL'))
+  end
 end

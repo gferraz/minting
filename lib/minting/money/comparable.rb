@@ -23,11 +23,11 @@ module Mint
     def <=>(other)
       case other
       when Numeric
-        return 0 if zero? && other.zero?
+        return amount <=> other if other.zero?
       when Mint::Money
         return amount <=> other.amount if currency == other.currency
       end
-      raise TypeError, "#{self} can't be compared to #{other}"
+      raise TypeError, "#{inspect} can't be compared to #{other.inspect}"
     end
 
     def eql?(other)
