@@ -18,8 +18,15 @@ module Mint
       new_amount.to_r == amount ? self : Money.new(new_amount, currency)
     end
 
+    def format(format: '')
+      format = format.blank? ? '%<symbol>s%<amount>f' : format.dup
+      format.gsub!(/%<amount>(\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+
+      Kernel.format(format, amount: amount, currency: code, symbol: symbol)
+    end
+
     def inspect
-      format "[#{currency_code} %0.#{currency.subunit}f]", @amount
+      Kernel.format "[#{currency_code} %0.#{currency.subunit}f]", @amount
     end
 
     def to_d
@@ -31,7 +38,7 @@ module Mint
     end
 
     def to_html(format = '')
-      title = currency.canonical_format(@amount)
+      title = Kernel.format("#{currency_code} %0.#{currency.subunit}f", amount)
       content = currency.format(@amount, format: format)
       %(<data class='money' title='#{title}'>#{content}</data>)
     end
@@ -41,7 +48,7 @@ module Mint
     end
 
     def to_json(*_args)
-      format %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), @amount
+      Kernel.format %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), @amount
     end
 
     def to_r
