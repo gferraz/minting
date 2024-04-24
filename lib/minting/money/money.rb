@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mint
   class Money
     attr_reader :amount, :currency

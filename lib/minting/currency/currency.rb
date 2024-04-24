@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mint
   class Currency
     attr_reader :code, :subunit, :symbol
