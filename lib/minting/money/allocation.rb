@@ -6,8 +6,8 @@ module Mint
 
       whole = proportions.sum.to_r
       allocation = proportions.map { |rate| mint(amount * rate.to_r / whole) }
-
-      allocate_left_over(allocation, self - allocation.sum)
+      left_over =  self - allocation.sum
+      allocate_left_over(allocation, left_over)
     end
 
     def split(quantity)
@@ -15,14 +15,15 @@ module Mint
 
       fraction = self / quantity
       allocation = Array.new(quantity, fraction)
-
-      allocate_left_over(allocation, self - (fraction * quantity))
+      left_over = self - (fraction * quantity)
+      allocate_left_over(allocation, left_over)
     end
 
     private
 
     def allocate_left_over(allocation, left_over)
-      minimum = mint(left_over.positive? ? currency.minimum_amount : -currency.minimum_amount)
+      minimum = currency.minimum_amount
+      minimum = mint(left_over.positive? ? minimum : -minimum)
 
       slots = (left_over / minimum).to_i - 1
       (0..slots).each { |slot| allocation[slot] += minimum }
