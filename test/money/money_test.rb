@@ -16,6 +16,12 @@ class MoneyTest < Minitest::Test
     assert_equal '[USD 10.34]', Mint.money(10.34, 'USD').inspect
   end
 
+  def test_same_currency
+    assert Mint.money(10.34, 'USD').same_currency?(Mint.money(100, 'USD'))
+    refute Mint.money(10.34, 'USD').same_currency?(30)
+    refute Mint.money(10.34, 'USD').same_currency?(Mint.money(10.34, 'BRL'))
+  end
+
   def test_zero
     zero_dollars = Mint.money(0r, 'USD')
     zero_soles = Mint.money(0r, Mint.currency('PEN'))

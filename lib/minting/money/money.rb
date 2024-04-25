@@ -30,6 +30,10 @@ module Mint
       Kernel.format "[#{currency_code} %0.#{currency.subunit}f]", amount
     end
 
+    def same_currency?(other)
+      other.respond_to?(:currency) && other.currency == currency
+    end
+
     def to_d
       @amount.to_d 0
     end
