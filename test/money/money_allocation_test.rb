@@ -1,6 +1,12 @@
 using Mint
 
 class MoneyAllocationTest < Minitest::Test
+  def test_money_allocate_errors
+    price = Mint.money(10.10, 'USD')
+    assert_raises(ArgumentError) { price.allocate([]) }
+    assert_raises(ArgumentError) { price.split(0) }
+  end
+
   def test_money_split
     price = Mint.money(10.10, 'USD')
 

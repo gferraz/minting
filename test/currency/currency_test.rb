@@ -11,6 +11,9 @@ class CurrencyTest < Minitest::Test
     assert_raises IndexError, 'Currency: USD already exists' do
       Mint::CurrencyDirectory.register!('USD', subunit: 2, symbol: '$')
     end
+    assert_raises ArgumentError, 'Currency: USD already exists' do
+      Mint::CurrencyDirectory.register!('USD4', subunit: 2, symbol: '$')
+    end
   end
 
   def test_default_currencies
