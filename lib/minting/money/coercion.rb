@@ -7,12 +7,6 @@ module Mint
       [CoercedNumber.new(other), self]
     end
 
-    private
-
-    def raise_coercion_error(operation, operand)
-      raise TypeError, "#{self} #{operation} #{operand} : incompatible operands"
-    end
-
     # :nodoc
     class CoercedNumber
       include Comparable

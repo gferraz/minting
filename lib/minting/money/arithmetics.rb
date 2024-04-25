@@ -17,25 +17,19 @@ module Mint
     end
 
     def +(addend)
-      operation(:+, addend) do
-        if addend.zero?
-          self
-        elsif zero?
-          addend
-        elsif currency == addend.currency
-          mint(amount + addend.amount)
-        end
-      end
+      return addend if zero?
+      return self if addend.zero?
+      return mint(amount + addend.amount) if same_currency?(addend)
+
+      raise TypeError, "#{addend} can't be added to #{self}"
     end
 
     def -(subtrahend)
-      operation(:-, subtrahend) do
-        if subtrahend.zero?
-          self
-        elsif currency == subtrahend.currency
-          mint(amount - subtrahend.amount)
-        end
-      end
+      return self if subtrahend.zero?
+      return -subtrahend if zero?
+      return mint(amount - subtrahend.amount) if same_currency?(subtrahend)
+
+      raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
 
     def -@
@@ -43,44 +37,17 @@ module Mint
     end
 
     def *(multiplicand)
-      operation(:*, multiplicand) do
-        return mint(0r) if multiplicand.zero?
+      return mint(amount * multiplicand.to_r) if multiplicand.is_a?(Numeric)
+      return mint(0r) if multiplicand.respond_to?(:zero?) && multiplicand.zero?
 
-        case multiplicand
-        when Numeric
-          mint(amount * multiplicand.to_r)
-        when Money
-          raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
-        end
-      end
+      raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
     end
 
     def /(divisor)
-      operation(:/, divisor) do
-        case divisor
-        when Numeric
-          mint(amount / divisor)
-        when Money
-          amount / divisor.amount if currency == divisor.currency
-        else
-          raise TypeError, "#{self} can't be divided by #{divisor}"
-        end
-      end
-    end
+      return mint(amount / divisor) if divisor.is_a?(Numeric)
+      return amount / divisor.amount if same_currency? divisor
 
-    private
-
-    def coerced_operation(operation, object)
-      first_operand, second_operand = object.coerce(self)
-      result = first_operand&.send(operation, second_operand)
-      result || raise(TypeError,
-                      "#{operand} can't be coerced into #{self.class}")
-    end
-
-    def operation(operator, operand)
-      yield || coerced_operation(operator, operand)
-    rescue NoMethodError
-      raise_coercion_error(operator, operand)
+      raise TypeError, "#{self} can't be divided by #{divisor}"
     end
   end
 end
