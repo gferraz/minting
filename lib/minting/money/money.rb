@@ -2,6 +2,8 @@
 
 module Mint
   class Money
+    DEFAULT_FORMAT = '%<symbol>s%<amount>f'
+
     attr_reader :amount, :currency
 
     def initialize(amount, currency)
@@ -32,7 +34,7 @@ module Mint
       amount.to_f
     end
 
-    def to_html(format = '')
+    def to_html(format = DEFAULT_FORMAT)
       title = Kernel.format("#{currency_code} %0.#{currency.subunit}f", amount)
       %(<data class='money' title='#{title}'>#{to_s(format: format)}</data>)
     end
@@ -49,9 +51,8 @@ module Mint
       @amount
     end
 
-    def to_s(format: '')
-      format = format.empty? ? '%<symbol>s%<amount>f' : format.dup
-      format.gsub!(/%<amount>(\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+    def to_s(format: '%<symbol>s%<amount>f')
+      format = format.gsub(/%<amount>(\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
 
       Kernel.format(format, amount: amount, currency: currency_code, symbol: currency.symbol)
     end

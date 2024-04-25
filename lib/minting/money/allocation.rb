@@ -29,7 +29,6 @@ module Mint
 
       slots = (left_over / minimum).to_i - 1
       (0..slots).each { |slot| allocation[slot] += minimum }
-
       allocation
     end
   end
