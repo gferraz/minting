@@ -11,14 +11,10 @@ AllCops:
   TargetRubyVersion: 3.0
 
 Layout/LineLength:
-  Max: 120
+  Max: 80
 
 Metrics/MethodLength:
   Max: 30
-
-Naming/FileName:
-  Exclude:
-    - Gemfile
 
 Style/FrozenStringLiteralComment:
   EnforcedStyle: never

@@ -21,10 +21,17 @@ module Mint
 
     def self.register!(code, subunit:, symbol: '')
       code = code.to_s
-      raise ArgumentError, "Currency code must be String or Symbol ('USD', :EUR)" unless code.match?(/^[A-Z_]+$/)
-      raise KeyError,      "Currency: #{code} already registered" if currencies[code]
+      unless code.match?(/^[A-Z_]+$/)
+        raise ArgumentError,
+              "Currency code must be String or Symbol ('USD', :EUR)"
+      end
+      if currencies[code]
+        raise KeyError,
+              "Currency: #{code} already registered"
+      end
 
-      currencies[code] = Currency.new(code, subunit: subunit.to_i, symbol: symbol.to_s).freeze
+      currencies[code] =
+        Currency.new(code, subunit: subunit.to_i, symbol: symbol.to_s).freeze
     end
 
     def self.currencies

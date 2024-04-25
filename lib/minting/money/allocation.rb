@@ -4,7 +4,10 @@ module Mint
   # :nodoc
   class Money
     def allocate(proportions)
-      raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
+      if proportions.empty?
+        raise ArgumentError,
+              'Need at least 1 proportion element'
+      end
 
       whole = proportions.sum.to_r
       allocation = proportions.map { |rate| mint(amount * rate.to_r / whole) }
@@ -13,7 +16,10 @@ module Mint
     end
 
     def split(quantity)
-      raise ArgumentError, 'quantitity must be an integer > 0' unless quantity.positive? && quantity.integer?
+      unless quantity.positive? && quantity.integer?
+        raise ArgumentError,
+              'quantitity must be an integer > 0'
+      end
 
       fraction = self / quantity
       allocation = Array.new(quantity, fraction)

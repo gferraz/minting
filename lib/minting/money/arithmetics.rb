@@ -73,7 +73,8 @@ module Mint
     def coerced_operation(operation, object)
       first_operand, second_operand = object.coerce(self)
       result = first_operand&.send(operation, second_operand)
-      result || raise(TypeError, "#{operand} can't be coerced into #{self.class}")
+      result || raise(TypeError,
+                      "#{operand} can't be coerced into #{self.class}")
     end
 
     def operation(operator, operand)

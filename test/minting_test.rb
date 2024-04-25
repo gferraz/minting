@@ -43,7 +43,8 @@ class MintingTest < Minitest::Test
     # Allocation and split
 
     ten_dollars.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
-    ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1.43]]
+
+    ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], ...
 
     ten_dollars.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
   end

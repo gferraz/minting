@@ -45,7 +45,8 @@ module Mint
       end
 
       def raise_coercion_error(operation, operand)
-        raise TypeError, "#{self} #{operation} #{operand} : incompatible operands"
+        raise TypeError,
+              "#{self} #{operation} #{operand} : incompatible operands"
       end
     end
   end

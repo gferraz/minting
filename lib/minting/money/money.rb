@@ -8,7 +8,11 @@ module Mint
 
     def initialize(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
-      raise ArgumentError, 'currency must be a Currency object' unless currency.is_a?(Currency)
+
+      unless currency.is_a?(Currency)
+        raise ArgumentError,
+              'currency must be a Currency object'
+      end
 
       @amount = amount.to_r.round(currency.subunit)
       @currency = currency
@@ -44,7 +48,11 @@ module Mint
     end
 
     def to_json(*_args)
-      Kernel.format %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), amount
+      subunit = currency.subunit
+      Kernel.format(
+        %({"currency": "#{currency_code}", "amount": "%0.#{subunit}f"}),
+        amount
+      )
     end
 
     def to_r
@@ -52,9 +60,11 @@ module Mint
     end
 
     def to_s(format: '%<symbol>s%<amount>f')
-      format = format.gsub(/%<amount>(\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+      format = format.gsub(/%<amount>(\+?\d*)f/,
+                           "%<amount>\\1.#{currency.subunit}f")
 
-      Kernel.format(format, amount: amount, currency: currency_code, symbol: currency.symbol)
+      Kernel.format(format, amount: amount, currency: currency_code,
+                            symbol: currency.symbol)
     end
   end
 end
