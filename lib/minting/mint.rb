@@ -1,3 +1,4 @@
+# Mint is a library to operate with monetary values
 module Mint
   def self.currency(code)
     CurrencyDirectory[code]

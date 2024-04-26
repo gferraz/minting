@@ -2,12 +2,14 @@
 
 module Mint
   # :nodoc
+  # Coercion logic
   class Money
     def coerce(other)
       [CoercedNumber.new(other), self]
     end
 
     # :nodoc
+    # Coerced Number contains the arithmetic logic for numeric compatible ops.
     class CoercedNumber
       include Comparable
 
@@ -16,12 +18,12 @@ module Mint
       end
 
       def +(other)
-        raise_coercion_error(:+, other) unless @value.zero?
+        raise_coercion_error(:+, other) if @value.nonzero?
         other.mint(@value + other.amount)
       end
 
       def -(other)
-        raise_coercion_error(:-, other) unless @value.zero?
+        raise_coercion_error(:-, other) if @value.nonzero?
         other.mint(@value - other.amount)
       end
 
@@ -34,7 +36,7 @@ module Mint
       end
 
       def <=>(other)
-        raise_coercion_error(:<=>, other) if !@value.zero? && !other.zero?
+        raise_coercion_error(:<=>, other) if !@value.zero? && other.nonzero?
         @value <=> other.amount
       end
 

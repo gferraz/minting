@@ -2,6 +2,7 @@
 
 module Mint
   # :nodoc
+  # List of currencies
   class CurrencyDirectory
     def self.[](currency)
       case currency

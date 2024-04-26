@@ -2,6 +2,7 @@
 
 module Mint
   # :nodoc
+  # split and allocation methods
   class Money
     def allocate(proportions)
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
