@@ -1,5 +1,6 @@
-require 'test_helper'
 
+require 'test_helper'
+require 'bigdecimal'
 class MintBenchmark < Minitest::Benchmark
   def self.bench_range
     bench_exp(10, 10_000) << 25_000
@@ -20,7 +21,7 @@ def random_amount
   rand(-1000.00..1000.00)
 end
 
-Money.rounding_mode = ROUND_HALF_EVEN
+Money.rounding_mode = BigDecimal::ROUND_HALF_EVEN
 
 Benchmark.ips do |x|
   x.report('Mint.money') { Mint.money(random_amount, 'USD') }
