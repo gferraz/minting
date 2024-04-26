@@ -20,7 +20,7 @@ Or install it yourself with:
 
 $ git clone https://github.com/gferraz/minting.git
 $ cd minting && gem build minting.gemspec
-$ gem install minting-0.1.3.gem
+$ gem install minting-0.2.0.gem
 
 ## Usage
 
