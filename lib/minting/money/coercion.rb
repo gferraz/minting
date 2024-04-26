@@ -23,8 +23,7 @@ module Mint
       end
 
       def -(other)
-        raise_coercion_error(:-, other) if @value.nonzero?
-        other.mint(@value - other.amount)
+        raise_coercion_error(:-, other)
       end
 
       def *(other)

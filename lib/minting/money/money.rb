@@ -35,7 +35,5 @@ module Mint
     def same_currency?(other)
       other.respond_to?(:currency) && other.currency == currency
     end
-
-
   end
 end
