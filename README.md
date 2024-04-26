@@ -74,14 +74,16 @@ ten_dollars.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 # Numeric refinements
 uning Mint
 
-1.dollar == Mint.money(1, 'USD')
-3.euros == Mint.money(2, 'EUR')
+1.dollar == Mint.money(1, 'USD') #=> true
+3.euros == Mint.money(2, 'EUR')  #=> true
+4.mint('USD') == 4.dollars #=> true
+4.to_money('USD') == 4.dollars #=> true
 ```
 
 ## Release 1.0 Plan
 
+- Rails
 - Localization: I18n
-- Money.to_s options: delimiter:, separator:, negative_format:, Mint::Formatter named formatters
 - Arithmetics: div, mod
 - Mint.parse
 

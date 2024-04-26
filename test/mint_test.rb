@@ -17,5 +17,7 @@ class MintTest < Minitest::Test
     assert_equal 3.reais, Mint.money(3, 'BRL')
     assert_equal 4.2.dollars, Mint.money(4.2, 'USD')
     assert_equal 5.3.euros, Mint.money(5.3, 'EUR')
+    assert_equal 5.3.to_money(:EUR), Mint.money(5.3, 'EUR')
+    assert_equal 5.3.mint(:EUR), Mint.money(5.3, 'EUR')
   end
 end
