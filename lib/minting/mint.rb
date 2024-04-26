@@ -21,6 +21,10 @@ module Mint
       Mint.money(self, 'EUR')
     end
 
+    def mint(currency)
+      Mint.money(self, currency)
+    end
+
     alias_method :dollar, :dollars
     alias_method :real, :reais
     alias_method :euro, :euros

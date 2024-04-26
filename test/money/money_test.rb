@@ -19,9 +19,9 @@ class MoneyTest < Minitest::Test
   end
 
   def test_same_currency
-    assert Mint.money(10.34, 'USD').same_currency?(Mint.money(100, 'USD'))
-    refute Mint.money(10.34, 'USD').same_currency?(30)
-    refute Mint.money(10.34, 'USD').same_currency?(Mint.money(10.34, 'BRL'))
+    assert 10.34.mint('USD').same_currency?(Mint.money(100, 'USD'))
+    refute 10.34.mint('USD').same_currency?(30)
+    refute 10.34.mint('USD').same_currency?(Mint.money(10.34, 'BRL'))
   end
 
   def test_zero

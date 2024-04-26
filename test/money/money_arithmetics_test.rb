@@ -9,7 +9,7 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_raises(TypeError) { 10.dollars + 0.0023 }
     assert_raises(TypeError) { 1.23 + 10.dollars }
     assert_raises(TypeError) { 10.dollars + 0.reais }
-    assert_raises(TypeError) { 0.reais + 10.dollars}
+    assert_raises(TypeError) { 0.reais + 10.dollars }
   end
 
   def test_subtraction
@@ -21,7 +21,6 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_raises(TypeError) { 0.reais - 10.dollars }
     assert_raises(TypeError) { 0 - 10.dollars }
     assert_raises(TypeError) { 10.dollars - 0 }
-
   end
 
   def test_multiplication
@@ -63,7 +62,7 @@ class MoneyArithmeticsTest < Minitest::Test
   def test_abs
     assert_equal 10.dollars, 10.dollars.abs
     assert_equal 10.dollars, -10.dollars.abs
-    assert_equal 2.dollars, (-2.dollars).abs
+    assert_equal 2.dollars, -2.dollars.abs
     assert_equal 6.dollars, (-3 * 2.dollars).abs
   end
 
