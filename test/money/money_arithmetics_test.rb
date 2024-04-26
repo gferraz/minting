@@ -36,10 +36,11 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_equal @six, @two * 3
 
     assert_equal @two, @ten * 0.2
-    assert_equal @zero, @ten * @zero
 
     assert_equal @ten, @ten * 1
     assert_equal @ten, 1 * @ten
+
+    assert_raises(TypeError) { @ten * @zero }
   end
 
   def test_multiplication_negatives

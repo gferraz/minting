@@ -26,19 +26,18 @@ module Mint
 
     def -(subtrahend)
       return self if subtrahend.zero?
-      return -subtrahend if zero?
       return mint(amount - subtrahend.amount) if same_currency?(subtrahend)
+      return -subtrahend if zero?
 
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
 
     def -@
-      zero? ? self : mint(-amount)
+      mint(-amount)
     end
 
     def *(multiplicand)
       return mint(amount * multiplicand.to_r) if multiplicand.is_a?(Numeric)
-      return mint(0r) if multiplicand.respond_to?(:zero?) && multiplicand.zero?
 
       raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
     end
