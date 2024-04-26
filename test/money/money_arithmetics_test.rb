@@ -1,83 +1,76 @@
+using Mint
+
 class MoneyArithmeticsTest < Minitest::Test
-  def setup
-    @zero = Mint.money(0, 'USD')
-    @zero_brl = Mint.money(0, 'BRL')
-    @two = Mint.money(2, 'USD')
-    @six = Mint.money(6, 'USD')
-    @ten = Mint.money(10, 'USD')
-    @negative_ten = Mint.money(-10, 'USD')
-  end
-
   def test_addition
-    assert_equal @ten, @two + @two + @six
-    assert_equal @ten, @ten + 0
-    assert_equal @ten, 0 + @ten
-    assert_equal @ten, @zero + @ten
-    assert_equal @ten, @zero_brl + @ten
+    assert_equal 10.dollars, 2.dollars + 2.dollars + 6.dollars
+    assert_equal 10.dollars, 0.dollars + 10.dollars
+    assert_equal 10.dollars, 0 + 10.dollars + 0
 
-    assert_raises(TypeError) { @ten + 0.0023 }
-    assert_raises(TypeError) { 1.23 + @ten }
+    assert_raises(TypeError) { 10.dollars + 0.0023 }
+    assert_raises(TypeError) { 1.23 + 10.dollars }
+    assert_raises(TypeError) { 10.dollars + 0.reais }
+    assert_raises(TypeError) { 0.reais + 10.dollars}
   end
 
   def test_subtraction
-    assert_equal @six, @ten - @two - @two
-    assert_equal @ten, @ten - 0
-    assert_equal @negative_ten, 0 - @ten
-    assert_equal(@negative_ten, @zero - @ten)
-    assert_equal(@negative_ten, @zero_brl - @ten)
-    assert_equal(@negative_ten, -@ten)
+    assert_equal 6.dollars, 10.dollars - 2.dollars - 2.dollars
+    assert_equal(-10.dollars, -10.dollars)
 
-    assert_raises(TypeError) { @ten - 0.0023 }
-    assert_raises(TypeError) { 1.23 - @ten }
+    assert_raises(TypeError) { 10.dollars - 0.0023 }
+    assert_raises(TypeError) { 10.dollars - 0.0023 }
+    assert_raises(TypeError) { 0.reais - 10.dollars }
+    assert_raises(TypeError) { 0 - 10.dollars }
+    assert_raises(TypeError) { 10.dollars - 0 }
+
   end
 
   def test_multiplication
-    assert_equal @ten, 5.0001 * @two
-    assert_equal @six, @two * 3
+    assert_equal 10.dollars, 5.0001 * 2.dollars
+    assert_equal 6.dollars, 2.dollars * 3
 
-    assert_equal @two, @ten * 0.2
+    assert_equal 2.dollars, 10.dollars * 0.2
 
-    assert_equal @ten, @ten * 1
-    assert_equal @ten, 1 * @ten
+    assert_equal 10.dollars, 10.dollars * 1
+    assert_equal 10.dollars, 1 * 10.dollars
 
-    assert_raises(TypeError) { @ten * @zero }
+    assert_raises(TypeError) { 10.dollars * 0.dollars }
   end
 
   def test_multiplication_negatives
-    assert_equal(-@ten, @ten * -1)
-    assert_equal(-@ten, -1 * @ten)
-    assert_equal(-@six, -@two * 3)
-    assert_equal(-@six, -3 * @two)
+    assert_equal(-10.dollars, 10.dollars * -1)
+    assert_equal(-10.dollars, -1 * 10.dollars)
+    assert_equal(-6.dollars, -2.dollars * 3)
+    assert_equal(-6.dollars, -3 * 2.dollars)
   end
 
   def test_multiplication_exceptions
-    assert_raises(TypeError) { @ten * @two }
-    assert_raises(TypeError) { @ten * Object.new }
+    assert_raises(TypeError) { 10.dollars * 2.dollars }
+    assert_raises(TypeError) { 10.dollars * Object.new }
   end
 
   def test_division
-    assert_equal @two, @ten / 5
-    assert_equal @two, @six / 3
-    assert_equal @two, 12 / @six
+    assert_equal 2.dollars, 10.dollars / 5
+    assert_equal 2.dollars, 6.dollars / 3
+    assert_equal 2.dollars, 12 / 6.dollars
 
-    assert_equal 5, @ten / @two
-    assert_equal 3, @six / @two
+    assert_equal 5, 10.dollars / 2.dollars
+    assert_equal 3, 6.dollars / 2.dollars
 
-    assert_raises(TypeError) { @ten / '2' }
-    assert_raises(ZeroDivisionError) { @ten / 0 }
+    assert_raises(TypeError) { 10.dollars / '2' }
+    assert_raises(ZeroDivisionError) { 10.dollars / 0 }
   end
 
   def test_abs
-    assert_equal @ten, @ten.abs
-    assert_equal @ten, (-@ten).abs
-    assert_equal @two, (-@two).abs
-    assert_equal @six, (-3 * @two).abs
+    assert_equal 10.dollars, 10.dollars.abs
+    assert_equal 10.dollars, -10.dollars.abs
+    assert_equal 2.dollars, (-2.dollars).abs
+    assert_equal 6.dollars, (-3 * 2.dollars).abs
   end
 
   def test_sign
-    assert_predicate @ten, :positive?
-    refute_predicate @ten, :negative?
-    assert_predicate @negative_ten, :negative?
-    refute_predicate @negative_ten, :positive?
+    assert_predicate 10.dollars, :positive?
+    refute_predicate 10.dollars, :negative?
+    assert_predicate(-10.dollars, :negative?)
+    refute_predicate(-10.dollars, :positive?)
   end
 end
