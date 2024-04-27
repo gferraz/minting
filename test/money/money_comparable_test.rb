@@ -45,5 +45,7 @@ class MoneyComparableTest < Minitest::Test
     assert_equal 1, 10.dollars <=> 2.dollars
     assert_equal 1, Mint.money(2, 'BRL') <=> 0
     assert_equal(-1, 0 <=> Mint.money(2, 'BRL'))
+    refute nil <=> 4.dollars
+    refute Object.new <=> 4.dollars
   end
 end

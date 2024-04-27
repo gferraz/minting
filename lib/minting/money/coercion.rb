@@ -14,7 +14,7 @@ module Mint
       include Comparable
 
       def initialize(value)
-        @value = value.to_r
+        @value = value&.to_r
       end
 
       def +(other)
@@ -35,6 +35,7 @@ module Mint
       end
 
       def <=>(other)
+        return nil if @value.nil? || other.nil?
         raise_coercion_error(:<=>, other) if !@value.zero? && other.nonzero?
         @value <=> other.amount
       end
