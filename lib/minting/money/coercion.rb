@@ -14,15 +14,18 @@ module Mint
       include Comparable
 
       def initialize(value)
-        @value = value&.to_r
+        @value = value
       end
 
       def +(other)
-        raise_coercion_error(:+, other) if @value.nonzero?
-        other.mint(@value + other.amount)
+        return other if @value.zero?
+
+        raise_coercion_error(:+, other)
       end
 
       def -(other)
+        return -other if @value.zero?
+
         raise_coercion_error(:-, other)
       end
 
@@ -31,13 +34,14 @@ module Mint
       end
 
       def /(other)
-        other.mint(@value / other.amount)
+        raise_coercion_error(:/, other)
       end
 
       def <=>(other)
         return nil if @value.nil? || other.nil?
-        raise_coercion_error(:<=>, other) if !@value.zero? && other.nonzero?
-        @value <=> other.amount
+        return @value <=> other.amount if @value.zero? || other.zero?
+
+        raise_coercion_error(:<=>, other)
       end
 
       def raise_coercion_error(operation, operand)
