@@ -31,4 +31,10 @@ module Mint
     alias_method :mint, :to_money
     alias_method :real, :reais
   end
+
+  refine String do
+    def to_money(currency)
+      Mint.money(self.to_r, currency)
+    end
+  end
 end
