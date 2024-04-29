@@ -34,7 +34,7 @@ module Mint
 
   refine String do
     def to_money(currency)
-      Mint.money(self.to_r, currency)
+      Mint.money(to_r, currency)
     end
   end
 end
