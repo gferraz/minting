@@ -10,6 +10,12 @@ class MintTest < Minitest::Test
     assert_equal ten_reais, ten_reais.mint(9.999)
   end
 
+  def test_register
+    sgx = Mint.register_currency(:SGX, subunit: 2, symbol: '^')
+
+    assert_equal Mint.currency(:SGX), sgx
+  end
+
   def test_mint_refinements
     assert_equal 1.real, Mint.money(1, 'BRL')
     assert_equal 1.dollar, Mint.money(1, 'USD')

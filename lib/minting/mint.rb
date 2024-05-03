@@ -8,6 +8,10 @@ module Mint
     Money.new(amount, CurrencyDirectory[currency])
   end
 
+  def self.register_currency(code, subunit: 2, symbol: '$')
+    CurrencyDirectory.register!(code, subunit: subunit, symbol: symbol)
+  end
+
   refine Numeric do
     def reais
       Mint.money(self, 'BRL')
