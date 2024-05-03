@@ -20,6 +20,20 @@ class MoneyFormatTest < Minitest::Test
     assert_equal 'R$3.457', gas.to_s
   end
 
+  def test_thousand_delimiter_format
+    money = Mint.money(123_456_789.01, 'USD')
+
+    assert_equal '123,456,789.01', money.to_s(format: '%<amount>f', delimiter: ',')
+    assert_equal '-123,456,789.01', (-money).to_s(format: '%<amount>f', delimiter: ',')
+  end
+
+  def test_decimal_separator_format
+    money = Mint.money(123_456_789.01, 'USD')
+
+    assert_equal '123-456-789|01', money.to_s(format: '%<amount>f', delimiter: '-', separator: '|')
+    assert_equal '-123456789,01', (-money).to_s(format: '%<amount>f', separator: ',')
+  end
+
   def test_numeric_padding_format
     usd = Mint.money(9.99, 'USD')
     brl = Mint.money(12.34, 'BRL')
