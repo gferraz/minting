@@ -13,7 +13,6 @@ group :development do
   gem 'rubocop-minitest'
   gem 'rubocop-performance'
   gem 'rubocop-rake'
-  gem 'rubycritic'
   gem 'ruby-prof'
   gem 'simplecov'
   gem 'yard'
