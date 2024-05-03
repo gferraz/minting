@@ -4,6 +4,10 @@ module Mint
     CurrencyDirectory[code]
   end
 
+  def self.currencies
+    CurrencyDirectory.currencies
+  end
+
   def self.money(amount, currency)
     Money.new(amount, CurrencyDirectory[currency])
   end
