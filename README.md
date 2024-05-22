@@ -6,21 +6,36 @@ Work in progress, please wait release 1.0.0
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Option 1: Via bundler command
+
+```shell
+bundle add minting
+bundle install
+```
+
+Option 2: add the line below to your application's Gemfile:
+
+```ruby
+gem 'minting'
+```
+
+or, if you want latest development version from Github
 
 ```ruby
 gem 'minting', git: 'https://github.com/gferraz/minting.git'
 ```
 
-And then execute:
+and execute:
 
-$ bundle
+```shell
+bundle install
+```
 
-Or install it yourself with:
+Option3: Install it yourself with:
 
-$ git clone https://github.com/gferraz/minting.git
-$ cd minting && gem build minting.gemspec
-$ gem install minting-0.2.0.gem
+```shell
+gem install minting
+````
 
 ## Usage
 
@@ -78,15 +93,15 @@ uning Mint
 3.euros == Mint.money(2, 'EUR')  #=> true
 4.mint('USD') == 4.dollars #=> true
 4.to_money('USD') == 4.dollars #=> true
+
 ```
 
 ## Release 1.0 Plan
 
-- Rails
 - Localization: I18n
 - Arithmetics: div, mod
 - Mint.parse
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/gferraz/minting.
+Bug reports and pull requests are welcome on GitHub at <https://github.com/gferraz/minting>.
