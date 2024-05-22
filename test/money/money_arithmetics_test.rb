@@ -21,6 +21,7 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_raises(TypeError) { 10.dollars - 0.0023 }
     assert_raises(TypeError) { 10.dollars - 0.0023 }
     assert_raises(TypeError) { 0.reais - 10.dollars }
+    assert_raises(TypeError) { 1 - 10.dollars }
   end
 
   def test_multiplication
