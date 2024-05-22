@@ -1,8 +1,5 @@
 # Mint is a library to operate with monetary values
 module Mint
-
-
-  
   refine Numeric do
     def reais
       Mint.money(self, 'BRL')

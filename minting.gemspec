@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     'changelog_uri' => "#{s.homepage}/blob/master/CHANGELOG.md",
     'homepage_uri' => s.homepage,
     'source_code_uri' => s.homepage,
-    'allowed_push_host' => "TODO: Set to 'https://mygemserver.com'",
+    'allowed_push_host' => 'https://mygemserver.com',
     'rubygems_mfa_required' => 'true'
   }
 
