@@ -3,7 +3,10 @@
 # :nodoc
 module Mint
   def self.money(amount, currency_code)
-    Money.new(amount, currency(currency_code))
+    currency = currency(currency_code)
+    raise ArgumentError, "Currency [#{currency_code}] no registered" unless currency
+
+    Money.new(amount, currency)
   end
 
   def self.currency(currency)
