@@ -67,7 +67,7 @@ price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
 (-price).to_s(format: '%<amount>f')         #=> "-9.99",
 
 # Format with padding
-price_in_euros = euro.money(12.34, 'EUR')
+price_in_euros = Mint.money(12.34, 'EUR')
 
 price.to_s(format: '--%<amount>7d')               #=> "--      9"
 price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
@@ -87,7 +87,7 @@ ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], [USD 1.43], [USD 1
 ten_dollars.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 
 # Numeric refinements
-uning Mint
+using Mint
 
 1.dollar == Mint.money(1, 'USD') #=> true
 3.euros == Mint.money(2, 'EUR')  #=> true

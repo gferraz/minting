@@ -67,7 +67,7 @@ Style/Documentation:
   Exclude:
     - 'spec/**/*'
     - 'test/**/*'
-    - 'lib/minting/currency/currency.rb'
+    - 'lib/minting/mint/currency.rb'
     - 'lib/minting/mint.rb'
     - 'lib/minting/money/money.rb'
 

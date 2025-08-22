@@ -44,7 +44,7 @@ module Mint
     @currencies ||= {
       'AUD' => Currency.new('AUD', subunit: 2, symbol: '$'),
       'BRL' => Currency.new('BRL', subunit: 2, symbol: 'R$'),
-      'CAD' => Currency.new('CAD', subunit: 2, symbol: 'R$'),
+      'CAD' => Currency.new('CAD', subunit: 2, symbol: '$'),
       'CHF' => Currency.new('CHF', subunit: 2, symbol: 'Fr'),
       'CNY' => Currency.new('CNY', subunit: 2, symbol: '¥'),
       'EUR' => Currency.new('EUR', subunit: 2, symbol: '€'),
