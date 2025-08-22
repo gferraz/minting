@@ -1,10 +1,12 @@
-require:
+inherit_from: .rubocop_todo.yml
+
+plugins:
   - rubocop-minitest
   - rubocop-performance
   - rubocop-rake
 
 
-inherit_from: .rubocop_todo.yml
+# inherit_from: .rubocop_todo.yml
 
 AllCops:
   NewCops: enable
