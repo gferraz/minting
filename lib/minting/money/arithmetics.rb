@@ -2,7 +2,7 @@
 
 module Mint
   # :nodoc
-  # Arithmetic functions for money ojects
+  # Arithmetic functions for money objects
   class Money
     def abs
       mint(amount.abs)
