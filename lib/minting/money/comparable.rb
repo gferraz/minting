@@ -2,7 +2,7 @@
 
 module Mint
   # :nodoc
-  # Comparision methods
+  # Comparison methods
   class Money
     include Comparable
 
@@ -16,9 +16,9 @@ module Mint
     end
 
     # @example
-    #   two_usd == Mint.money(2, 'USD']) #=> [$ 2.00]
-    #   two_usd > 0                      #=> true
-    #   two_usd > Mint.money(1r, 'USD']) #=> true
+    #   two_usd == Mint.money(2r, 'USD']) #=> [$ 2.00]
+    #   two_usd > 0                       #=> true
+    #   two_usd > Mint.money(2, 'USD'])  #=> true
     #   two_usd > 1
     #   => TypeError: [$ 2.00] can't be compared to 1
     #   two_usd > Mint.money(2, 'BRL'])

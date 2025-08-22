@@ -16,7 +16,7 @@ module Mint
     def split(quantity)
       unless quantity.positive? && quantity.integer?
         raise ArgumentError,
-              'quantitity must be an integer > 0'
+              'quantity must be an integer > 0'
       end
 
       fraction = self / quantity
