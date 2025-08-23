@@ -2,7 +2,7 @@
 
 Yet another Ruby library for dealing with money and currency.
 
-Work in progress, please wait release 1.0.0
+[![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 
 ## Installation
 

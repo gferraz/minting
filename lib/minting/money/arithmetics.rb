@@ -25,7 +25,9 @@ module Mint
 
     def -(subtrahend)
       return self if subtrahend.respond_to?(:zero?) && subtrahend.zero?
-      return mint(amount - subtrahend.amount) if subtrahend.is_a?(Money) && same_currency?(subtrahend)
+      if subtrahend.is_a?(Money) && same_currency?(subtrahend)
+        return mint(amount - subtrahend.amount)
+      end
 
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end

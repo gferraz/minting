@@ -97,7 +97,6 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test refinements performance
   def bench_refinements_constant
-
     assert_performance_constant 0.99 do |_n|
       100.dollars
       50.euros
