@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class RegressionBenchmark < Minitest::Benchmark
+  using Mint
   # Define the range of data sizes to test
   def self.bench_range
     bench_exp(1, 10_000)
@@ -96,7 +97,6 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test refinements performance
   def bench_refinements_constant
-    using Mint
 
     assert_performance_constant 0.99 do |_n|
       100.dollars
