@@ -14,6 +14,13 @@ class MoneyTest < Minitest::Test
     assert_equal 14,  Mint.money(14, Mint.currency('PEN')).amount
   end
 
+  def test_hash
+    assert_equal 0.hash, Mint.money(0, 'USD').hash
+    assert_equal Mint.money(2, 'USD').hash, Mint.money(2, 'USD').hash
+    refute_equal Mint.money(2, 'USD').hash, Mint.money(0, 'USD').hash
+    refute_equal Mint.money(2, 'USD').hash, Mint.money(2, 'BRL').hash
+  end
+
   def test_inspect
     assert_equal '[USD 10.34]', Mint.money(10.34, 'USD').inspect
   end
