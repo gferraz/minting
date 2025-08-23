@@ -49,4 +49,10 @@ class MoneyTest < Minitest::Test
     refute_equal 0, 2.dollars
     refute_equal 2.dollars, 0
   end
+
+  def test_creation
+    assert Mint::Money.new(3, Mint.currency('PEN'))
+    assert_raises(ArgumentError) { Mint::Money.new('334.2', Mint.currency('PEN')) }
+    assert_raises(ArgumentError) { Mint::Money.new(3, Object.new) }
+  end
 end

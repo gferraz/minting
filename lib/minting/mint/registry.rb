@@ -30,7 +30,7 @@ module Mint
     code = code.to_s
     unless code.match?(/^[A-Z_]+$/)
       raise ArgumentError,
-            "Currency code must be String or Symbol ('USD', :EUR)"
+            "Currency code must be String or Symbol ('USD', :EUR, 'FUEL', 'MY_COIN')"
     end
     if currencies[code]
       raise KeyError,
