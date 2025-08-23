@@ -38,10 +38,6 @@ module Mint
       self == other
     end
 
-    def hash
-      @hash ||= zero? ? 0.hash : [amount, currency].hash
-    end
-
     def nonzero?
       amount.nonzero?
     end

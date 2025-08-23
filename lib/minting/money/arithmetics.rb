@@ -17,15 +17,15 @@ module Mint
     end
 
     def +(addend)
-      return mint(amount + addend.amount) if same_currency?(addend)
-      return self unless addend.is_a?(Money) || addend.nonzero?
+      return self if addend.respond_to?(:zero?) && addend.zero?
+      return mint(amount + addend.amount) if addend.is_a?(Money) && same_currency?(addend)
 
       raise TypeError, "#{addend} can't be added to #{self}"
     end
 
     def -(subtrahend)
-      return self if subtrahend.zero?
-      return mint(amount - subtrahend.amount) if same_currency?(subtrahend)
+      return self if subtrahend.respond_to?(:zero?) && subtrahend.zero?
+      return mint(amount - subtrahend.amount) if subtrahend.is_a?(Money) && same_currency?(subtrahend)
 
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
