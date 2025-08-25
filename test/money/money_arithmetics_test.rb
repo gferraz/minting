@@ -74,4 +74,9 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_predicate(-10.dollars, :negative?)
     refute_predicate(-10.dollars, :positive?)
   end
+
+  def test_succ
+    assert_equal 10.00.dollars.succ, 10.01.dollars
+    assert_equal 10.99.dollars.succ, 11.00.dollars
+  end
 end

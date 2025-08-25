@@ -16,6 +16,10 @@ module Mint
       amount.positive?
     end
 
+    def succ
+      mint(amount + currency.minimum_amount)
+    end
+
     def +(addend)
       return self if addend.respond_to?(:zero?) && addend.zero?
       return mint(amount + addend.amount) if addend.is_a?(Money) && same_currency?(addend)
