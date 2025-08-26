@@ -4,6 +4,17 @@ Fast, precise, and developer-friendly money handling for Ruby.
 
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 
+## Why Minting?
+
+**Tired of floating-point errors in financial calculations?** Minting uses Rational numbers for perfect precision.
+
+**Need performance?** Minting is 2x faster than alternatives
+
+**Want a clean API?** Minting provides an intuitive interface with helpful error messages.
+
+**Want a good alternative with thousand of stars on github?** In this case, better checking on [Money gem](https://github.com/RubyMoney/money)
+
+
 ## Quick start
 
 ```ruby
@@ -113,6 +124,24 @@ Option3: Install it yourself with:
 gem install minting
 ```
 
+
+## Roadmap
+
+- Improve formatting fetaures
+- Localization (I18n-aware formatting)
+- `Mint.parse` for parsing human strings into money
+- Basic exchange-rate conversions
+
+## Contributing
+
+Bug reports and pull requests are welcome on GitHub at <https://github.com/gferraz/minting>.
+
+1. Fork and create a feature branch
+2. Run the test suite: `rake`
+3. Run performance suites as needed: `BENCH=true rake bench:performance`
+4. Open a PR with a clear description and benchmarks if relevant
+
+
 ## Performance
 
 This gem includes a performance suite under `test/performance`:
@@ -139,22 +168,6 @@ BENCH=true rake bench:competitive
 # Regression checks
 rake bench:regression
 ```
-
-## Roadmap
-
-- Improve formatting fetaures
-- Localization (I18n-aware formatting)
-- `Mint.parse` for parsing human strings into money
-- Basic exchange-rate conversions
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at <https://github.com/gferraz/minting>.
-
-1. Fork and create a feature branch
-2. Run the test suite: `rake`
-3. Run performance suites as needed: `BENCH=true rake bench:performance`
-4. Open a PR with a clear description and benchmarks if relevant
 
 ## License
 
