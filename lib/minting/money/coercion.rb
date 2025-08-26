@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Mint
   # :nodoc
   # Coercion logic

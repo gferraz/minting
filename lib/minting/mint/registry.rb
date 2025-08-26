@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # :nodoc
 module Mint
   def self.money(amount, currency_code)

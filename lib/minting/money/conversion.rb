@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Mint
   # Conversion logic
   class Money

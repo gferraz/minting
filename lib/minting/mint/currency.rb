@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Mint
   # Represents a specific currency unit, identified by ISO 4217 alphabetic code
   #

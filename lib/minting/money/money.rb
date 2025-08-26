@@ -1,8 +1,6 @@
-# frozen_string_literal: true
-
 module Mint
   class Money
-    DEFAULT_FORMAT = '%<symbol>s%<amount>f'
+    DEFAULT_FORMAT = '%<symbol>s%<amount>f'.freeze
 
     attr_reader :amount, :currency
 
