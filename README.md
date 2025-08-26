@@ -8,11 +8,11 @@ Fast, precise, and developer-friendly money handling for Ruby.
 
 **Tired of floating-point errors in financial calculations?** Minting uses Rational numbers for perfect precision.
 
-**Need performance?** Minting is 2x faster than alternatives
+**Need performance?** Minting is 2x faster than alternatives.
 
 **Want a clean API?** Minting provides an intuitive interface with helpful error messages.
 
-**Want a good alternative with thousand of stars on github?** In this case, better checking on [Money gem](https://github.com/RubyMoney/money)
+**Looking for a proven alternative?** Check out the established [Money gem](https://github.com/RubyMoney/money) with thousands of stars on GitHub.
 
 
 ## Quick start
@@ -26,6 +26,7 @@ total = price + tax                    #=> [USD 21.59]
 
 total.to_s                             #=> "$21.59"
 total.currency_code                    #=> "USD"
+```
 
 ## Features
 
@@ -50,7 +51,7 @@ using Mint
 
 1.dollar == Mint.money(1, 'USD') #=> true
 ten = 10.dollars                 #=> [USD 10.00]
-4.to_money('USD')                #=> [USD 10.00]
+4.to_money('USD')                #=> [USD 4.00]
 
 # Comparisons
 ten == 10.dollars                #=> true
@@ -77,9 +78,10 @@ price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 # Json serialization
 
-price.to_json # "{"currency": "USD", "amount": "9.99"}
+price.to_json # => "{ "currency": "USD", "amount": "9.99" }"
 
-# Proportiuonal allocation and split
+# Proportional allocation and split
+
 ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
 ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 
@@ -89,7 +91,6 @@ ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 (1.dollar..3.dollars).step(1.dollar).to_a #=> [[USD 1.00], [USD 2.00], [USD 3.00]]
 
 ```
-
 
 ## Installation
 
@@ -118,16 +119,15 @@ and execute:
 bundle install
 ```
 
-Option3: Install it yourself with:
+Option 3: Install it yourself with:
 
 ```shell
 gem install minting
 ```
 
-
 ## Roadmap
 
-- Improve formatting fetaures
+- Improve formatting features
 - Localization (I18n-aware formatting)
 - `Mint.parse` for parsing human strings into money
 - Basic exchange-rate conversions
