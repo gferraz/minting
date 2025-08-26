@@ -11,31 +11,31 @@
 # Configuration parameters: AllowForAlignment, AllowBeforeTrailingComments, ForceEqualSignAlignment.
 Layout/ExtraSpacing:
   Exclude:
-    - 'test/mint_benchmark.rb'
+    - "test/mint_benchmark.rb"
 
 # Offense count: 2
 Lint/BinaryOperatorWithIdenticalOperands:
   Exclude:
-    - 'test/mint_benchmark.rb'
+    - "test/mint_benchmark.rb"
 
 # Offense count: 1
 # Configuration parameters: AllowComments, AllowEmptyLambdas.
 Lint/EmptyBlock:
   Exclude:
-    - 'test/test_helper.rb'
+    - "test/test_helper.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 Lint/UselessAssignment:
   Exclude:
-    - 'test/mint_benchmark.rb'
+    - "test/mint_benchmark.rb"
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: CheckForMethodsWithNoSideEffects.
 Lint/Void:
   Exclude:
-    - 'test/mint_benchmark.rb'
+    - "test/mint_benchmark.rb"
 
 # Offense count: 29
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
@@ -56,8 +56,8 @@ Metrics/CyclomaticComplexity:
 # Configuration parameters: CountComments, Max, CountAsOne, AllowedMethods, AllowedPatterns.
 Metrics/MethodLength:
   Exclude:
-    - 'test/performance/algorithm_benchmark.rb'
-    - 'test/performance/competitive_benchmark.rb'
+    - "test/performance/algorithm_benchmark.rb"
+    - "test/performance/competitive_benchmark.rb"
 
 # Offense count: 2
 # Configuration parameters: AllowedMethods, AllowedPatterns.
@@ -72,7 +72,7 @@ Minitest/MultipleAssertions:
 # This cop supports safe autocorrection (--autocorrect).
 Naming/BinaryOperatorParameterName:
   Exclude:
-    - 'lib/minting/money/arithmetics.rb'
+    - "lib/minting/money/arithmetics.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
@@ -80,7 +80,7 @@ Naming/BinaryOperatorParameterName:
 # SupportedStylesForLeadingUnderscores: disallowed, required, optional
 Naming/MemoizedInstanceVariableName:
   Exclude:
-    - 'test/currency/currency_test.rb'
+    - "test/currency/currency_test.rb"
 
 # Offense count: 10
 # Configuration parameters: EnforcedStyle, CheckMethodNames, CheckSymbols, AllowedIdentifiers, AllowedPatterns.
@@ -88,40 +88,24 @@ Naming/MemoizedInstanceVariableName:
 # AllowedIdentifiers: TLS1_1, TLS1_2, capture3, iso8601, rfc1123_date, rfc822, rfc2822, rfc3339, x86_64
 Naming/VariableNumber:
   Exclude:
-    - 'test/performance/competitive_benchmark.rb'
+    - "test/performance/competitive_benchmark.rb"
 
 # Offense count: 1
 # Configuration parameters: MinSize.
 Performance/CollectionLiteralInLoop:
   Exclude:
-    - 'test/performance/algorithm_benchmark.rb'
+    - "test/performance/algorithm_benchmark.rb"
 
 # Offense count: 1
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
   Exclude:
-    - 'spec/**/*'
-    - 'test/**/*'
-    - 'lib/minting/money/money.rb'
-
-# Offense count: 8
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - '**/*.arb'
-    - 'lib/minting/mint/currency.rb'
-    - 'lib/minting/mint/registry.rb'
-    - 'lib/minting/money/allocation.rb'
-    - 'lib/minting/money/arithmetics.rb'
-    - 'lib/minting/money/coercion.rb'
-    - 'lib/minting/money/comparable.rb'
-    - 'lib/minting/money/conversion.rb'
-    - 'lib/minting/money/money.rb'
+    - "spec/**/*"
+    - "test/**/*"
+    - "lib/minting/money/money.rb"
 
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 Style/GlobalStdStream:
   Exclude:
-    - 'test/mint_benchmark.rb'
+    - "test/mint_benchmark.rb"
