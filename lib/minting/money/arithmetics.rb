@@ -2,21 +2,13 @@ module Mint
   # :nodoc
   # Arithmetic functions for money objects
   class Money
-    def abs
-      mint(amount.abs)
-    end
+    def abs =     mint(amount.abs)
 
-    def negative?
-      amount.negative?
-    end
+    def negative? = amount.negative?
 
-    def positive?
-      amount.positive?
-    end
+    def positive? = amount.positive?
 
-    def succ
-      mint(amount + currency.minimum_amount)
-    end
+    def succ = mint(amount + currency.minimum_amount)
 
     def +(addend)
       return self if addend.respond_to?(:zero?) && addend.zero?
