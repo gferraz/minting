@@ -14,6 +14,7 @@ Fast, precise, and developer-friendly money handling for Ruby.
 
 **Looking for a proven alternative?** Check out the established [Money gem](https://github.com/RubyMoney/money) with thousands of stars on GitHub.
 
+**Rails**? Use the [minting-rails](https://github.com/gferraz/minting-rails) companion gem
 
 ## Quick start
 
