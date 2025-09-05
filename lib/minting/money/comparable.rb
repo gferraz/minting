@@ -6,11 +6,10 @@ module Mint
 
     # @return true if both are zero, or both have same amount and same currency
     def ==(other)
-      return true if other.is_a?(Numeric) && zero? && other.zero?
+      return true if zero? && other.respond_to?(:zero?) && other.zero?
       return false unless other.is_a?(Mint::Money)
-      return false if nonzero? && currency != other.currency
 
-      amount == other.amount
+      amount == other.amount && currency == other.currency
     end
 
     # @example
