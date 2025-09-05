@@ -37,7 +37,7 @@ total.currency_code                    #=> "USD"
 - Serialization: `to_json`, `to_i`, `to_f`, `to_r`, `to_d`
 - Allocation utilities: `split(quantity)`, `allocate([ratios])`
 - Numeric Refinements for ergonomics: `10.dollars`, `3.euros`, `4.to_money('USD')`
-- Currency registry and custom registration
+- Currency registry with 117+ currencies and custom registration
 
 ## Usage
 
