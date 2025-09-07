@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'benchmark'
 require 'benchmark/ips'
 require 'money'
 require 'bigdecimal'
@@ -237,7 +238,6 @@ class CompetitiveBenchmark < Minitest::Test
     amounts = Array.new(transaction_count) { rand(1.00..1000.00) }
 
     puts "\nProcessing #{transaction_count} transactions..."
-
     # Minting performance
     mint_time = Benchmark.realtime do
       running_total = Mint.money(0, 'USD')

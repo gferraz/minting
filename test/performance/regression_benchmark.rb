@@ -121,7 +121,7 @@ class RegressionBenchmark < Minitest::Benchmark
       money.to_i
       money.to_f
       money.to_r
-      money.to_d if money.respond_to?(:to_d)
+      money.to_d if 1r.respond_to?(:to_d)
     end
   end
 
