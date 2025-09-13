@@ -41,19 +41,19 @@ class MoneyFormatTest < Minitest::Test
     assert_equal 'xx      9',
                  usd.to_s(format: 'xx%<amount>7d')
     assert_equal '        9.99 USD',
-                 usd.to_s(format: '  %<amount>10f %<currency>s')
+                 usd.to_s(format: '%<amount>f %<currency>s', width: 16)
     assert_equal 'R$    +12.34',
                  brl.to_s(format: '%<symbol>2s%<amount>+10f')
     assert_equal '       -9.99',
-                 (-usd).to_s(format: '  %<amount>10f')
+                 (-usd).to_s(format: '%<amount>f', width: 12)
   end
 
   def test_numeric_json_format
-    brl = Mint.money(10, 'BRL')
+    brl = Mint.money(134_120, 'BRL')
     jpy = Mint.money(15, 'JPY')
     gas = Mint.money(3.457, FUEL)
 
-    assert_equal '{"currency": "BRL", "amount": "10.00"}', brl.to_json
+    assert_equal '{"currency": "BRL", "amount": "134120.00"}', brl.to_json
     assert_equal '{"currency": "JPY", "amount": "15"}', jpy.to_json
     assert_equal '{"currency": "BRL_FUEL", "amount": "3.457"}', gas.to_json
   end
@@ -140,17 +140,12 @@ class MoneyFormatTest < Minitest::Test
     mxn = Mint.money(2345.67, 'MXN')
     cad = Mint.money(3456.78, 'CAD')
 
-    # US Dollar - standard format
-    assert_equal '$1,234.56', usd.to_s(format: '%<symbol>s%<amount>f')
-
-    # Brazilian Real - symbol before
-    assert_equal 'R$9,876.54', brl.to_s(format: '%<symbol>s%<amount>f')
-
-    # Mexican Peso
-    assert_equal '$2,345.67', mxn.to_s(format: '%<symbol>s%<amount>f')
+    assert_equal '$1,234.56', usd.to_s
+    assert_equal 'R$9,876.54', brl.to_s
+    assert_equal '$2,345.67', mxn.to_s
 
     # Canadian Dollar - sometimes shown as CAD prefix
-    assert_equal '$3,456.78', cad.to_s(format: '%<symbol>s%<amount>f')
+    assert_equal '$3,456.78', cad.to_s
     assert_equal 'CAD 3,456.78', cad.to_s(format: '%<currency>s %<amount>f')
   end
 
@@ -189,11 +184,10 @@ class MoneyFormatTest < Minitest::Test
     # Receipt/invoice style formatting
     assert_equal '$   1,299.99', total.to_s(format: '%<symbol>s%<amount>10.2f')
     assert_equal '$    104.00', tax.to_s(format: '%<symbol>s%<amount>10.2f')
-    #              1234567890
+
     # Right-aligned amounts
     assert_equal '   $1,299.99', total.to_s(width: 12)
     assert_equal '     $104.00', tax.to_s(width: 12)
-    #             123456789012
   end
 
   def test_web_display_formats
@@ -232,6 +226,7 @@ class MoneyFormatTest < Minitest::Test
 
     assert_equal '$1.23M', millions.to_s(format: '%<symbol>s%<amount>fM')
     assert_equal '$1,234.6K', thousands.to_s(format: '%<symbol>s%<amount>0.1fK')
+    assert_equal '--', Mint.money(0, 'BRL').to_s(format: {zero: '--'})
   end
 
   def test_international_space_conventions
