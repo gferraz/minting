@@ -24,54 +24,46 @@ module Mint
     #   money.to_s(format: '%<amount>10.2f')                #=> "   1234.56"
     #   money.to_s(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
     #
-    def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: false, negative: nil, zero: nil)
-      # Automatically adjust decimal places based on currency subunit
-      adjusted_format = format.gsub(/%<amount>(\+?\d*)f/,
-                                    "%<amount>\\1.#{currency.subunit}f")
+    def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
+      raise ArgumentError, 'Invalid format' unless format.is_a?(String) || format.is_a?(Hash)
 
-      # Apply format with available placeholders
-      formatted = Kernel.format(adjusted_format,
-                                amount: amount,
-                                currency: currency_code,
-                                symbol: currency.symbol)
+      formatted = format_amount(format)
 
       formatted.tr!('.', decimal) if decimal != '.'
 
-      if thousand
+      unless thousand.empty?
         # Regular expression courtesy of Money gem
         # Matches digits followed by groups of 3 digits until non-digit or end
         formatted.gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]{1}|$))/, "\\1#{thousand}")
       end
 
+      formatted = formatted.rjust(width) if width
       formatted
     end
 
-    def format_amount(format: '%<amount>f')
-      format = {default: format} if format.is_a?(String)
-      raise ArgumentError unless format.is_a?(Hash)
+    def format_amount(format)
+      # binding.irb if format.is_a? Hash
+      format = { positive: format } if format.is_a?(String)
+      value = amount
 
-      
-      if amount.positive?
-        format = format[:positive] || format[:default]
-      elsif amount.negative?
-        format = format[:negative] || format[:default]
+      if amount.negative? && format[:negative]
+        format = format[:negative]
+        value = -amount
+      elsif amount.zero? && format[:zero]
+        format = format[:zero]
       else
-        format = format[:zero] || format[:default]
+        format = format[:positive]
       end
+      format ||= '%<symbol>s%<amount>f'
 
-      raise ArgumentError unless format.is_a?(String)
-      
+      # Automatically adjust decimal places based on currency subunit
       adjusted_format = format.gsub(/%<amount>(\+?\d*)f/,
                                     "%<amount>\\1.#{currency.subunit}f")
-      
-      formatted = Kernel.format(adjusted_format,
-                                amount: amount,
-                                currency: currency_code,
-                                symbol: currency.symbol)
 
-      formatted.tr!('.', decimal) if decimal != '.'
-
-
+      Kernel.format(adjusted_format,
+                    amount: value,
+                    currency: currency_code,
+                    symbol: currency.symbol)
     end
   end
 end
