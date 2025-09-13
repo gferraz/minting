@@ -29,18 +29,5 @@ module Mint
     def to_r
       amount
     end
-
-    def to_s(format: '%<symbol>s%<amount>f', delimiter: false, separator: '.')
-      format = format.gsub(/%<amount>(\+?\d*)f/,
-                           "%<amount>\\1.#{currency.subunit}f")
-      formatted = Kernel.format(format, amount: amount, currency: currency_code,
-                                        symbol: currency.symbol)
-      if delimiter
-        # Thanks Money gem for the regular expression
-        formatted.gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]{1}|$))/, "\\1#{delimiter}")
-      end
-      formatted.tr!('.', separator) if separator != '.'
-      formatted
-    end
   end
 end

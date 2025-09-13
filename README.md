@@ -33,7 +33,7 @@ total.currency_code                    #=> "USD"
 
 - Arithmetic: `+ - * /`, unary minus, `abs`
 - Comparisons: `==`, `<=>`, `zero?`, `nonzero?`, `positive?`, `negative?`
-- Formatting: `to_s` with custom formats, delimiters, separators
+- Formatting: `to_s` with custom formats, thousand delimiters and decimal separators
 - Serialization: `to_json`, `to_i`, `to_f`, `to_r`, `to_d`
 - Allocation utilities: `split(quantity)`, `allocate([ratios])`
 - Numeric Refinements for ergonomics: `10.dollars`, `3.euros`, `4.to_money('USD')`
