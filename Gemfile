@@ -5,6 +5,7 @@ gemspec
 
 group :development do
   gem 'benchmark-ips'
+  gem 'bigdecimal'
   gem 'bundler'
   gem 'irb'
   gem 'minitest'
