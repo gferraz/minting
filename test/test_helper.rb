@@ -1,7 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 
-require 'minting'
-
 begin
   require 'simplecov'
   SimpleCov.coverage_dir 'tmp/simplecov'
@@ -17,3 +15,5 @@ begin
 rescue LoadError
   puts 'Minitest not available - using basic test framework'
 end
+
+require 'minting'
