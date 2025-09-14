@@ -2,7 +2,7 @@
 module Mint
   def self.money(amount, currency_code)
     currency = currency(currency_code)
-    return Money.new(amount, currency) if currency
+    return Money.new(amount, currency).freeze if currency
 
     available = currencies.keys.join(', ')
     raise ArgumentError, "Currency [#{currency_code}] not registered. Available: #{available}"

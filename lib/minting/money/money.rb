@@ -25,14 +25,14 @@ module Mint
     end
 
     def hash
-      @hash ||= zero? ? 0.hash : [amount, currency.code].hash
+      zero? ? 0.hash : [amount, currency.code].hash
     end
 
     # Returns a new Money object with the specified amount, or self if unchanged
     # @param new_amount [Numeric] The new amount
     # @return [Money] A new Money object or self
     def mint(new_amount)
-      new_amount.to_r == amount ? self : Money.new(new_amount, currency)
+      new_amount.to_r == amount ? self : Money.new(new_amount, currency).freeze
     end
 
     def inspect
