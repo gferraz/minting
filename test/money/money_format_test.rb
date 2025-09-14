@@ -226,7 +226,7 @@ class MoneyFormatTest < Minitest::Test
 
     assert_equal '$1.23M', millions.to_s(format: '%<symbol>s%<amount>fM')
     assert_equal '$1,234.6K', thousands.to_s(format: '%<symbol>s%<amount>0.1fK')
-    assert_equal '--', Mint.money(0, 'BRL').to_s(format: {zero: '--'})
+    assert_equal '--', Mint.money(0, 'BRL').to_s(format: { zero: '--' })
   end
 
   def test_international_space_conventions
