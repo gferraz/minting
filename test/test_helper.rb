@@ -3,7 +3,9 @@ $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 begin
   require 'simplecov'
   SimpleCov.coverage_dir 'tmp/simplecov'
-  SimpleCov.start
+  SimpleCov.start do
+    add_filter "test/"
+  end
 rescue LoadError
   puts 'SimpleCov not available - skipping coverage'
 end
