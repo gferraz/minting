@@ -10,9 +10,9 @@ module Mint
     #
     # @example Basic formatting
     #   money = Mint.money(1234.56, 'USD')
-    #   money.to_s                           #=> "$1234.56"
-    #   money.to_s(thousand: ',')           #=> "$1,234.56"
-    #   money.to_s(decimal: ',')           #=> "$1234,56"
+    #   money.to_s                               #=> "$1,234.56"
+    #   money.to_s(thousand: '.', decimal: ',')  #=> "$.1234,56"
+    #   money.to_s(decimal: ',', thousand: '')   #=> "$1234,56"
     #
     # @example Custom formats
     #   money.to_s(format: '%<amount>f')                    #=> "1234.56"
