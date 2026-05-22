@@ -59,6 +59,16 @@ ten == 10.dollars                #=> true
 ten == Mint.money(10, 'EUR')     #=> false
 ten > Mint.money(9.99, 'USD')    #=> true
 
+# Zero equality semantics
+# Any zero amount is treated as equal, regardless of currency 
+Mint.money(0, 'USD') == Mint.money(0, 'EUR')  #=> true
+Mint.money(0, 'USD') == 0                      #=> true
+Mint.money(0, 'USD') == 0.0                    #=> true
+Mint.money(0, 'USD') == 0r                     #=> true
+
+# Non-zero numerics are not equal to Money objects
+Mint.money(10, 'USD') == 10                    #=> false
+
 # Format (uses Kernel.format internally)
 price = Mint.money(9.99, 'USD')
 
