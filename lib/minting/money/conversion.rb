@@ -1,7 +1,9 @@
 module Mint
   # Conversion logic
   class Money
+
     def to_d
+      raise(NoMethodError, "decimal gem required") unless defined?(BigDecimal)
       amount.to_d 0
     end
 
