@@ -1,9 +1,11 @@
+require 'erb'
+
 module Mint
   # Conversion logic
   class Money
-
     def to_d
-      raise(NoMethodError, "decimal gem required") unless defined?(BigDecimal)
+      raise NoMethodError, 'decimal gem required' unless defined?(BigDecimal)
+
       amount.to_d 0
     end
 
@@ -13,7 +15,8 @@ module Mint
 
     def to_html(format = DEFAULT_FORMAT)
       title = Kernel.format("#{currency_code} %0.#{currency.subunit}f", amount)
-      %(<data class='money' title='#{title}'>#{to_s(format: format)}</data>)
+      body = to_s(format: format)
+      %(<data class='money' title='#{ERB::Util.html_escape(title)}'>#{ERB::Util.html_escape(body)}</data>)
     end
 
     def to_i

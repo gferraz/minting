@@ -3,12 +3,9 @@ module Mint
   # split and allocation methods
   class Money
     def allocate(proportions)
-
       whole = proportions.sum.to_r
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
       raise ArgumentError, 'Proportions total must not be zero' if whole.zero?
-    
-
 
       amounts = proportions.map { |rate| (amount * rate.to_r / whole).round(currency.subunit) }
       allocate_left_over!(amounts: amounts, left_over: amount - amounts.sum)
