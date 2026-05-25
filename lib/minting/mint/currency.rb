@@ -3,22 +3,20 @@ module Mint
   #
   # @see https://www.iso.org/iso-4217-currency-codes.html
   class Currency
-    attr_reader :code, :subunit, :symbol
+    attr_reader :code, :subunit, :symbol, :minimum_amount
 
     def inspect
       "<Currency:(#{code} #{symbol} #{subunit})>"
     end
 
-    def minimum_amount
-      10r**-subunit
-    end
-
     private
 
     def initialize(code, subunit:, symbol:)
-      @code = code
-      @subunit = subunit
-      @symbol = symbol
+      @code = code.to_s
+      @subunit = subunit.to_i
+      @symbol = symbol.to_s
+      @minimum_amount = 10r**-subunit
+      freeze
     end
   end
 end
