@@ -4,7 +4,18 @@ class MoneyAllocationTest < Minitest::Test
   def test_money_allocate_errors
     price = 10.10.dollars
     assert_raises(ArgumentError) { price.allocate([]) }
+    assert_raises(ArgumentError) { price.allocate([0, 0, 0]) }
     assert_raises(ArgumentError) { price.split(0) }
+  end
+
+  def test_allocate_does_not_mutate_proportions
+    price = 10.dollars
+    proportions = [1, 2, 3]
+    original = proportions.dup
+
+    price.allocate(proportions)
+
+    assert_equal original, proportions
   end
 
   def test_money_split
