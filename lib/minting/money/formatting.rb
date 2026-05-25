@@ -42,7 +42,6 @@ module Mint
     end
 
     def format_amount(format)
-      # binding.irb if format.is_a? Hash
       format = { positive: format } if format.is_a?(String)
       value = amount
 
