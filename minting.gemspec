@@ -29,7 +29,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.2.0'
 
   s.files = Dir.glob('{bin,doc,lib}/**/*')
-  s.files += %w[minting.gemspec Rakefile README.md]
+  s.files += %w[minting.gemspec Rakefile README.md LICENSE]
 
   s.bindir        = 'bin'
   s.require_paths = ['lib']
