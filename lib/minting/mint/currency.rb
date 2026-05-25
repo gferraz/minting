@@ -10,7 +10,7 @@ module Mint
     end
 
     def minimum_amount
-      @minimum_amount ||= 10r**-subunit
+      10r**-subunit
     end
 
     private

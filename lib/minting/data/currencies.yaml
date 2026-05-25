@@ -1,0 +1,352 @@
+---
+USD:
+  subunit: 2
+  symbol: "$"
+EUR:
+  subunit: 2
+  symbol: "€"
+GBP:
+  subunit: 2
+  symbol: "£"
+JPY:
+  subunit: 0
+  symbol: "¥"
+CHF:
+  subunit: 2
+  symbol: Fr
+CAD:
+  subunit: 2
+  symbol: "$"
+AUD:
+  subunit: 2
+  symbol: "$"
+CNY:
+  subunit: 2
+  symbol: "¥"
+SEK:
+  subunit: 2
+  symbol: kr
+NZD:
+  subunit: 2
+  symbol: "$"
+HKD:
+  subunit: 2
+  symbol: HK$
+SGD:
+  subunit: 2
+  symbol: S$
+KRW:
+  subunit: 0
+  symbol: "₩"
+INR:
+  subunit: 2
+  symbol: "₹"
+THB:
+  subunit: 2
+  symbol: "฿"
+MYR:
+  subunit: 2
+  symbol: RM
+IDR:
+  subunit: 2
+  symbol: Rp
+PHP:
+  subunit: 2
+  symbol: "₱"
+VND:
+  subunit: 0
+  symbol: "₫"
+TWD:
+  subunit: 2
+  symbol: NT$
+PKR:
+  subunit: 2
+  symbol: "₨"
+BDT:
+  subunit: 2
+  symbol: "৳"
+LKR:
+  subunit: 2
+  symbol: "₨"
+NPR:
+  subunit: 2
+  symbol: "₨"
+MMK:
+  subunit: 2
+  symbol: K
+KHR:
+  subunit: 2
+  symbol: "៛"
+LAK:
+  subunit: 2
+  symbol: "₭"
+BND:
+  subunit: 2
+  symbol: B$
+AED:
+  subunit: 2
+  symbol: د.إ
+SAR:
+  subunit: 2
+  symbol: "﷼"
+QAR:
+  subunit: 2
+  symbol: "﷼"
+KWD:
+  subunit: 3
+  symbol: د.ك
+BHD:
+  subunit: 3
+  symbol: ".د.ب"
+OMR:
+  subunit: 3
+  symbol: "﷼"
+JOD:
+  subunit: 3
+  symbol: د.ا
+ILS:
+  subunit: 2
+  symbol: "₪"
+TRY:
+  subunit: 2
+  symbol: "₺"
+IRR:
+  subunit: 2
+  symbol: "﷼"
+IQD:
+  subunit: 3
+  symbol: د.ع
+AFN:
+  subunit: 2
+  symbol: "؋"
+KZT:
+  subunit: 2
+  symbol: "₸"
+UZS:
+  subunit: 2
+  symbol: лв
+KGS:
+  subunit: 2
+  symbol: лв
+TJS:
+  subunit: 2
+  symbol: SM
+NOK:
+  subunit: 2
+  symbol: kr
+DKK:
+  subunit: 2
+  symbol: kr
+ISK:
+  subunit: 0
+  symbol: kr
+PLN:
+  subunit: 2
+  symbol: zł
+CZK:
+  subunit: 2
+  symbol: Kč
+HUF:
+  subunit: 2
+  symbol: Ft
+RON:
+  subunit: 2
+  symbol: lei
+BGN:
+  subunit: 2
+  symbol: лв
+HRK:
+  subunit: 2
+  symbol: kn
+RSD:
+  subunit: 2
+  symbol: Дин.
+RUB:
+  subunit: 2
+  symbol: "₽"
+UAH:
+  subunit: 2
+  symbol: "₴"
+BYN:
+  subunit: 2
+  symbol: Br
+MDL:
+  subunit: 2
+  symbol: L
+GEL:
+  subunit: 2
+  symbol: "₾"
+AMD:
+  subunit: 2
+  symbol: "֏"
+AZN:
+  subunit: 2
+  symbol: "₼"
+ZAR:
+  subunit: 2
+  symbol: R
+EGP:
+  subunit: 2
+  symbol: "£"
+NGN:
+  subunit: 2
+  symbol: "₦"
+KES:
+  subunit: 2
+  symbol: KSh
+GHS:
+  subunit: 2
+  symbol: "¢"
+UGX:
+  subunit: 0
+  symbol: USh
+TZS:
+  subunit: 2
+  symbol: TSh
+ETB:
+  subunit: 2
+  symbol: Br
+MAD:
+  subunit: 2
+  symbol: د.م.
+TND:
+  subunit: 3
+  symbol: د.ت
+DZD:
+  subunit: 2
+  symbol: د.ج
+LYD:
+  subunit: 3
+  symbol: ل.د
+AOA:
+  subunit: 2
+  symbol: Kz
+BWP:
+  subunit: 2
+  symbol: P
+NAD:
+  subunit: 2
+  symbol: N$
+SZL:
+  subunit: 2
+  symbol: L
+LSL:
+  subunit: 2
+  symbol: L
+MZN:
+  subunit: 2
+  symbol: MT
+ZMW:
+  subunit: 2
+  symbol: ZK
+MWK:
+  subunit: 2
+  symbol: MK
+RWF:
+  subunit: 0
+  symbol: R₣
+BIF:
+  subunit: 0
+  symbol: FBu
+MXN:
+  subunit: 2
+  symbol: "$"
+BRL:
+  subunit: 2
+  symbol: R$
+ARS:
+  subunit: 2
+  symbol: "$"
+CLP:
+  subunit: 0
+  symbol: "$"
+PEN:
+  subunit: 2
+  symbol: S/.
+COP:
+  subunit: 2
+  symbol: "$"
+VES:
+  subunit: 2
+  symbol: Bs.
+UYU:
+  subunit: 2
+  symbol: "$U"
+PYG:
+  subunit: 0
+  symbol: Gs
+BOB:
+  subunit: 2
+  symbol: "$b"
+CRC:
+  subunit: 2
+  symbol: "₡"
+GTQ:
+  subunit: 2
+  symbol: Q
+HNL:
+  subunit: 2
+  symbol: L
+NIO:
+  subunit: 2
+  symbol: C$
+PAB:
+  subunit: 2
+  symbol: B/.
+DOP:
+  subunit: 2
+  symbol: RD$
+HTG:
+  subunit: 2
+  symbol: G
+JMD:
+  subunit: 2
+  symbol: J$
+TTD:
+  subunit: 2
+  symbol: TT$
+BBD:
+  subunit: 2
+  symbol: Bds$
+BSD:
+  subunit: 2
+  symbol: B$
+BZD:
+  subunit: 2
+  symbol: BZ$
+GYD:
+  subunit: 2
+  symbol: G$
+SRD:
+  subunit: 2
+  symbol: Sr$
+FJD:
+  subunit: 2
+  symbol: FJ$
+PGK:
+  subunit: 2
+  symbol: K
+SBD:
+  subunit: 2
+  symbol: SI$
+VUV:
+  subunit: 0
+  symbol: VT
+TOP:
+  subunit: 2
+  symbol: T$
+WST:
+  subunit: 2
+  symbol: WS$
+XCD:
+  subunit: 2
+  symbol: EC$
+XOF:
+  subunit: 0
+  symbol: CFA
+XAF:
+  subunit: 0
+  symbol: FCFA
+XPF:
+  subunit: 0
+  symbol: "₣"
