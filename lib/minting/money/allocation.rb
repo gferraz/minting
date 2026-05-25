@@ -30,7 +30,7 @@ module Mint
         last_slot = (left_over / minimum).to_i - 1
         (0..last_slot).each { |slot| amounts[slot] += minimum }
       end
-      amounts.map { mint(it) }
+      amounts.map { mint it }
     end
   end
 end

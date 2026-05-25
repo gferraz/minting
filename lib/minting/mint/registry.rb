@@ -4,10 +4,9 @@ require 'yaml'
 module Mint
   def self.money(amount, currency_code)
     currency = currency(currency_code)
-    return Money.new(amount, currency).freeze if currency
+    return Money.new(amount, currency) if currency
 
-    available = currencies.keys.join(', ')
-    raise ArgumentError, "Currency [#{currency_code}] not registered. Available: #{available}"
+    raise ArgumentError, "Currency [#{currency_code}] not registered. Check Mint.currencies"
   end
 
   def self.currency(currency)
@@ -38,7 +37,7 @@ module Mint
     end
 
     currencies[code] =
-      Currency.new(code, subunit: subunit.to_i, symbol: symbol.to_s).freeze
+      Currency.new(code, subunit: subunit, symbol: symbol)
   end
 
   def self.currencies
@@ -52,7 +51,7 @@ module Mint
         code,
         subunit: attrs['subunit'],
         symbol: attrs['symbol']
-      ).freeze
+      )
     end
   end
   private_class_method :load_currencies

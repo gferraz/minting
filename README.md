@@ -152,11 +152,21 @@ Option 3: Install it yourself with:
 gem install minting
 ```
 
+## Parsing strings
+
+```ruby
+Mint::Money.parse('$19.99')           #=> [USD 19.99]
+Mint::Money.parse('19,99 €')          #=> [EUR 19.99]
+Mint::Money.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
+Mint::Money.parse('USD 1,234.56')     #=> [USD 1234.56]
+```
+
+Pass a currency code when the string has no symbol or code. Ambiguous symbols (e.g. `$`) default to USD.
+
 ## Roadmap
 
 - Improve formatting features
 - Localization (I18n-aware formatting)
-- `Mint.parse` for parsing human strings into money
 - Basic exchange-rate conversions
 
 ## Contributing
