@@ -3,9 +3,11 @@ using Mint
 class MoneyTest < Minitest::Test
   def test_its_contructors
     assert_instance_of Mint::Money, Mint.money(100, 'USD')
+    assert Mint.money(100, 'USD').frozen?
 
     assert_raises(ArgumentError) { Mint.money('b', 'USD') }
     assert_raises(ArgumentError) { Mint.money(10r, Object.new) }
+    assert_raises(ArgumentError) { Mint.money(1, 'NOT_A_CURRENCY') }
   end
 
   def test_amount
