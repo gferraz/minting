@@ -20,12 +20,12 @@ module Mint
     end
   end
 
-  def self.register_currency(code, subunit: 2, symbol: '$', users: 0)
+  def self.register_currency(code, subunit: 2, symbol: '$', priority: 0)
     code = code.to_s
-    currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol, users: users)
+    currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol, priority: priority)
   end
 
-  def self.register_currency!(code, subunit:, symbol: '', users: 0)
+  def self.register_currency!(code, subunit:, symbol: '', priority: 0)
     code = code.to_s
     unless code.match?(/^[A-Z_]+$/)
       raise ArgumentError,
@@ -37,7 +37,7 @@ module Mint
     end
 
     currencies[code] =
-      Currency.new(code, subunit: subunit, symbol: symbol, users: users)
+      Currency.new(code, subunit: subunit, symbol: symbol, priority: priority)
   end
 
   def self.currencies
@@ -51,7 +51,7 @@ module Mint
         code,
         subunit: attrs['subunit'],
         symbol: attrs['symbol'],
-        users: attrs['users']
+        priority: attrs['priority']
       )
     end
   end

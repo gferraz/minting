@@ -1,469 +1,469 @@
 ---
-INR:
-  subunit: 2
-  symbol: "₹"
-  users: 1430000000
-CNY:
-  subunit: 2
-  symbol: "¥"
-  users: 1410000000
 USD:
   subunit: 2
   symbol: "$"
-  users: 370000000
+  priority: 1000
 EUR:
   subunit: 2
   symbol: "€"
-  users: 350000000
-IDR:
-  subunit: 2
-  symbol: Rp
-  users: 280000000
-PKR:
-  subunit: 2
-  symbol: "₨"
-  users: 240000000
-NGN:
-  subunit: 2
-  symbol: "₦"
-  users: 230000000
-BRL:
-  subunit: 2
-  symbol: R$
-  users: 204000000
-BDT:
-  subunit: 2
-  symbol: "৳"
-  users: 173000000
-XOF:
-  subunit: 0
-  symbol: CFA
-  users: 150000000
-RUB:
-  subunit: 2
-  symbol: "₽"
-  users: 146000000
-MXN:
-  subunit: 2
-  symbol: "$"
-  users: 130000000
-ETB:
-  subunit: 2
-  symbol: Br
-  users: 126000000
+  priority: 950
 JPY:
   subunit: 0
   symbol: "¥"
-  users: 124000000
-PHP:
-  subunit: 2
-  symbol: "₱"
-  users: 115000000
-EGP:
-  subunit: 2
-  symbol: "£"
-  users: 112000000
-VND:
-  subunit: 0
-  symbol: "₫"
-  users: 100000000
-IRR:
-  subunit: 2
-  symbol: "﷼"
-  users: 89000000
-TRY:
-  subunit: 2
-  symbol: "₺"
-  users: 85000000
-THB:
-  subunit: 2
-  symbol: "฿"
-  users: 72000000
+  priority: 900
 GBP:
   subunit: 2
   symbol: "£"
-  users: 69000000
-TZS:
+  priority: 850
+CNY:
   subunit: 2
-  symbol: TSh
-  users: 67000000
-XAF:
-  subunit: 0
-  symbol: FCFA
-  users: 65000000
-ZAR:
+  symbol: "¥"
+  priority: 800
+INR:
   subunit: 2
-  symbol: R
-  users: 64000000
-KES:
-  subunit: 2
-  symbol: KSh
-  users: 56000000
-MMK:
-  subunit: 2
-  symbol: K
-  users: 55000000
-COP:
-  subunit: 2
-  symbol: "$"
-  users: 52000000
-KRW:
-  subunit: 0
-  symbol: "₩"
-  users: 52000000
-UGX:
-  subunit: 0
-  symbol: USh
-  users: 49000000
-ARS:
-  subunit: 2
-  symbol: "$"
-  users: 46000000
-DZD:
-  subunit: 2
-  symbol: د.ج
-  users: 46000000
-IQD:
-  subunit: 3
-  symbol: د.ع
-  users: 45000000
-AFN:
-  subunit: 2
-  symbol: "؋"
-  users: 42000000
+  symbol: "₹"
+  priority: 760
 CAD:
   subunit: 2
   symbol: "$"
-  users: 41000000
-MAD:
-  subunit: 2
-  symbol: د.م.
-  users: 38000000
-PLN:
-  subunit: 2
-  symbol: zł
-  users: 38000000
-SAR:
-  subunit: 2
-  symbol: "﷼"
-  users: 37000000
-UAH:
-  subunit: 2
-  symbol: "₴"
-  users: 37000000
-AOA:
-  subunit: 2
-  symbol: Kz
-  users: 36000000
-UZS:
-  subunit: 2
-  symbol: лв
-  users: 36000000
-GHS:
-  subunit: 2
-  symbol: "¢"
-  users: 34000000
-MYR:
-  subunit: 2
-  symbol: RM
-  users: 34000000
-MZN:
-  subunit: 2
-  symbol: MT
-  users: 34000000
-PEN:
-  subunit: 2
-  symbol: S/.
-  users: 34000000
-NPR:
-  subunit: 2
-  symbol: "₨"
-  users: 30000000
-VES:
-  subunit: 2
-  symbol: Bs.
-  users: 29000000
+  priority: 740
 AUD:
   subunit: 2
   symbol: "$"
-  users: 27000000
-TWD:
-  subunit: 2
-  symbol: NT$
-  users: 23500000
-LKR:
-  subunit: 2
-  symbol: "₨"
-  users: 22000000
-MWK:
-  subunit: 2
-  symbol: MK
-  users: 21000000
-CLP:
-  subunit: 0
-  symbol: "$"
-  users: 20000000
-KZT:
-  subunit: 2
-  symbol: "₸"
-  users: 20000000
-ZMW:
-  subunit: 2
-  symbol: ZK
-  users: 20000000
-RON:
-  subunit: 2
-  symbol: lei
-  users: 19000000
-GTQ:
-  subunit: 2
-  symbol: Q
-  users: 18000000
-KHR:
-  subunit: 2
-  symbol: "៛"
-  users: 17000000
-RWF:
-  subunit: 0
-  symbol: R₣
-  users: 14000000
-BIF:
-  subunit: 0
-  symbol: FBu
-  users: 13000000
-BOB:
-  subunit: 2
-  symbol: "$b"
-  users: 12000000
-HTG:
-  subunit: 2
-  symbol: G
-  users: 12000000
-TND:
-  subunit: 3
-  symbol: د.ت
-  users: 12000000
-CZK:
-  subunit: 2
-  symbol: Kč
-  users: 11000000
-DOP:
-  subunit: 2
-  symbol: RD$
-  users: 11000000
-HNL:
-  subunit: 2
-  symbol: L
-  users: 11000000
-JOD:
-  subunit: 3
-  symbol: د.ا
-  users: 11000000
-SEK:
-  subunit: 2
-  symbol: kr
-  users: 11000000
-AED:
-  subunit: 2
-  symbol: د.إ
-  users: 10000000
-AZN:
-  subunit: 2
-  symbol: "₼"
-  users: 10000000
-HUF:
-  subunit: 2
-  symbol: Ft
-  users: 10000000
-ILS:
-  subunit: 2
-  symbol: "₪"
-  users: 10000000
-PGK:
-  subunit: 2
-  symbol: K
-  users: 10000000
-TJS:
-  subunit: 2
-  symbol: SM
-  users: 10000000
-BYN:
-  subunit: 2
-  symbol: Br
-  users: 9000000
+  priority: 730
 CHF:
   subunit: 2
   symbol: Fr
-  users: 9000000
+  priority: 720
 HKD:
   subunit: 2
   symbol: HK$
-  users: 7500000
-LAK:
-  subunit: 2
-  symbol: "₭"
-  users: 7500000
-KGS:
-  subunit: 2
-  symbol: лв
-  users: 7000000
-LYD:
-  subunit: 3
-  symbol: ل.د
-  users: 7000000
-NIO:
-  subunit: 2
-  symbol: C$
-  users: 7000000
-PYG:
-  subunit: 0
-  symbol: Gs
-  users: 6800000
-RSD:
-  subunit: 2
-  symbol: Дин.
-  users: 6600000
-BGN:
-  subunit: 2
-  symbol: лв
-  users: 6500000
-DKK:
-  subunit: 2
-  symbol: kr
-  users: 6000000
+  priority: 710
 SGD:
   subunit: 2
   symbol: S$
-  users: 6000000
+  priority: 700
+KRW:
+  subunit: 0
+  symbol: "₩"
+  priority: 690
+SEK:
+  subunit: 2
+  symbol: kr
+  priority: 680
 NOK:
   subunit: 2
   symbol: kr
-  users: 5500000
-CRC:
+  priority: 670
+DKK:
   subunit: 2
-  symbol: "₡"
-  users: 5200000
+  symbol: kr
+  priority: 660
 NZD:
   subunit: 2
   symbol: "$"
-  users: 5200000
+  priority: 650
+MXN:
+  subunit: 2
+  symbol: "$"
+  priority: 640
+BRL:
+  subunit: 2
+  symbol: R$
+  priority: 630
+ZAR:
+  subunit: 2
+  symbol: R
+  priority: 620
+SAR:
+  subunit: 2
+  symbol: "﷼"
+  priority: 610
+AED:
+  subunit: 2
+  symbol: د.إ
+  priority: 600
+IDR:
+  subunit: 2
+  symbol: Rp
+  priority: 113
+PKR:
+  subunit: 2
+  symbol: "₨"
+  priority: 112
+NGN:
+  subunit: 2
+  symbol: "₦"
+  priority: 111
+BDT:
+  subunit: 2
+  symbol: "৳"
+  priority: 109
+XOF:
+  subunit: 0
+  symbol: CFA
+  priority: 108
+RUB:
+  subunit: 2
+  symbol: "₽"
+  priority: 107
+ETB:
+  subunit: 2
+  symbol: Br
+  priority: 105
+PHP:
+  subunit: 2
+  symbol: "₱"
+  priority: 103
+EGP:
+  subunit: 2
+  symbol: "£"
+  priority: 102
+VND:
+  subunit: 0
+  symbol: "₫"
+  priority: 101
+IRR:
+  subunit: 2
+  symbol: "﷼"
+  priority: 100
+TRY:
+  subunit: 2
+  symbol: "₺"
+  priority: 99
+THB:
+  subunit: 2
+  symbol: "฿"
+  priority: 98
+TZS:
+  subunit: 2
+  symbol: TSh
+  priority: 96
+XAF:
+  subunit: 0
+  symbol: FCFA
+  priority: 95
+KES:
+  subunit: 2
+  symbol: KSh
+  priority: 93
+MMK:
+  subunit: 2
+  symbol: K
+  priority: 92
+COP:
+  subunit: 2
+  symbol: "$"
+  priority: 91
+UGX:
+  subunit: 0
+  symbol: USh
+  priority: 89
+ARS:
+  subunit: 2
+  symbol: "$"
+  priority: 88
+DZD:
+  subunit: 2
+  symbol: د.ج
+  priority: 87
+IQD:
+  subunit: 3
+  symbol: د.ع
+  priority: 86
+AFN:
+  subunit: 2
+  symbol: "؋"
+  priority: 85
+MAD:
+  subunit: 2
+  symbol: د.م.
+  priority: 83
+PLN:
+  subunit: 2
+  symbol: zł
+  priority: 82
+UAH:
+  subunit: 2
+  symbol: "₴"
+  priority: 80
+AOA:
+  subunit: 2
+  symbol: Kz
+  priority: 79
+UZS:
+  subunit: 2
+  symbol: лв
+  priority: 78
+GHS:
+  subunit: 2
+  symbol: "¢"
+  priority: 77
+MYR:
+  subunit: 2
+  symbol: RM
+  priority: 76
+MZN:
+  subunit: 2
+  symbol: MT
+  priority: 75
+PEN:
+  subunit: 2
+  symbol: S/.
+  priority: 74
+NPR:
+  subunit: 2
+  symbol: "₨"
+  priority: 73
+VES:
+  subunit: 2
+  symbol: Bs.
+  priority: 72
+TWD:
+  subunit: 2
+  symbol: NT$
+  priority: 70
+LKR:
+  subunit: 2
+  symbol: "₨"
+  priority: 69
+MWK:
+  subunit: 2
+  symbol: MK
+  priority: 68
+CLP:
+  subunit: 0
+  symbol: "$"
+  priority: 67
+KZT:
+  subunit: 2
+  symbol: "₸"
+  priority: 66
+ZMW:
+  subunit: 2
+  symbol: ZK
+  priority: 65
+RON:
+  subunit: 2
+  symbol: lei
+  priority: 64
+GTQ:
+  subunit: 2
+  symbol: Q
+  priority: 63
+KHR:
+  subunit: 2
+  symbol: "៛"
+  priority: 62
+RWF:
+  subunit: 0
+  symbol: R₣
+  priority: 61
+BIF:
+  subunit: 0
+  symbol: FBu
+  priority: 60
+BOB:
+  subunit: 2
+  symbol: "$b"
+  priority: 59
+HTG:
+  subunit: 2
+  symbol: G
+  priority: 58
+TND:
+  subunit: 3
+  symbol: د.ت
+  priority: 57
+CZK:
+  subunit: 2
+  symbol: Kč
+  priority: 56
+DOP:
+  subunit: 2
+  symbol: RD$
+  priority: 55
+HNL:
+  subunit: 2
+  symbol: L
+  priority: 54
+JOD:
+  subunit: 3
+  symbol: د.ا
+  priority: 53
+AZN:
+  subunit: 2
+  symbol: "₼"
+  priority: 50
+HUF:
+  subunit: 2
+  symbol: Ft
+  priority: 49
+ILS:
+  subunit: 2
+  symbol: "₪"
+  priority: 48
+PGK:
+  subunit: 2
+  symbol: K
+  priority: 47
+TJS:
+  subunit: 2
+  symbol: SM
+  priority: 46
+BYN:
+  subunit: 2
+  symbol: Br
+  priority: 45
+LAK:
+  subunit: 2
+  symbol: "₭"
+  priority: 42
+KGS:
+  subunit: 2
+  symbol: лв
+  priority: 41
+LYD:
+  subunit: 3
+  symbol: ل.د
+  priority: 40
+NIO:
+  subunit: 2
+  symbol: C$
+  priority: 39
+PYG:
+  subunit: 0
+  symbol: Gs
+  priority: 38
+RSD:
+  subunit: 2
+  symbol: Дин.
+  priority: 37
+BGN:
+  subunit: 2
+  symbol: лв
+  priority: 36
+CRC:
+  subunit: 2
+  symbol: "₡"
+  priority: 32
 KWD:
   subunit: 3
   symbol: د.ك
-  users: 5000000
+  priority: 30
 OMR:
   subunit: 3
   symbol: "﷼"
-  users: 5000000
+  priority: 29
 PAB:
   subunit: 2
   symbol: B/.
-  users: 4500000
+  priority: 28
 HRK:
   subunit: 2
   symbol: kn
-  users: 3900000
+  priority: 27
 GEL:
   subunit: 2
   symbol: "₾"
-  users: 3700000
+  priority: 26
 UYU:
   subunit: 2
   symbol: "$U"
-  users: 3500000
+  priority: 25
 AMD:
   subunit: 2
   symbol: "֏"
-  users: 3000000
+  priority: 24
 JMD:
   subunit: 2
   symbol: J$
-  users: 3000000
+  priority: 23
 QAR:
   subunit: 2
   symbol: "﷼"
-  users: 3000000
+  priority: 22
 BWP:
   subunit: 2
   symbol: P
-  users: 2700000
+  priority: 21
 MDL:
   subunit: 2
   symbol: L
-  users: 2600000
+  priority: 20
 NAD:
   subunit: 2
   symbol: N$
-  users: 2600000
+  priority: 19
 LSL:
   subunit: 2
   symbol: L
-  users: 2300000
+  priority: 18
 BHD:
   subunit: 3
   symbol: ".د.ب"
-  users: 1500000
+  priority: 17
 TTD:
   subunit: 2
   symbol: TT$
-  users: 1500000
+  priority: 16
 SZL:
   subunit: 2
   symbol: L
-  users: 1200000
+  priority: 15
 FJD:
   subunit: 2
   symbol: FJ$
-  users: 900000
+  priority: 14
 GYD:
   subunit: 2
   symbol: G$
-  users: 800000
+  priority: 13
 SBD:
   subunit: 2
   symbol: SI$
-  users: 700000
+  priority: 12
 SRD:
   subunit: 2
   symbol: Sr$
-  users: 600000
+  priority: 11
 XCD:
   subunit: 2
   symbol: EC$
-  users: 600000
+  priority: 10
 BND:
   subunit: 2
   symbol: B$
-  users: 450000
+  priority: 9
 BSD:
   subunit: 2
   symbol: B$
-  users: 400000
+  priority: 8
 BZD:
   subunit: 2
   symbol: BZ$
-  users: 400000
+  priority: 7
 ISK:
   subunit: 0
   symbol: kr
-  users: 400000
+  priority: 6
 BBD:
   subunit: 2
   symbol: Bds$
-  users: 300000
+  priority: 5
 VUV:
   subunit: 0
   symbol: VT
-  users: 300000
+  priority: 4
 XPF:
   subunit: 0
   symbol: "₣"
-  users: 300000
+  priority: 3
 WST:
   subunit: 2
   symbol: WS$
-  users: 200000
+  priority: 2
 TOP:
   subunit: 2
   symbol: T$
-  users: 100000
+  priority: 1

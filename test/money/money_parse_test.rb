@@ -12,7 +12,7 @@ class MoneyParseTest < Minitest::Test
     assert_equal Mint.money(19.99, 'USD'), Mint::Money.parse('$19.99')
     assert_equal Mint.money(-19.99, 'USD'), Mint::Money.parse('-19.99 $')
     assert_equal Mint.money(12.34, 'EUR'), Mint::Money.parse('12,34 €')
-    assert_equal Mint.money(1500, 'CNY'), Mint::Money.parse('¥1500')
+    assert_equal Mint.money(1500, 'JPY'), Mint::Money.parse('¥1500')
   end
 
   def test_parse_with_code
