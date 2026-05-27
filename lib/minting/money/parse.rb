@@ -73,7 +73,7 @@ module Mint
       end
 
       # Fall back to registered symbols, longest first (HK$ before $).
-      symbol_index.each do |symbol, currency|
+      Mint.__send__(:currency_symbol_index).each do |symbol, currency|
         next if symbol.empty?
 
         return currency if input.include?(symbol)
@@ -83,19 +83,7 @@ module Mint
             'currency could not be detected; pass a currency code as the second argument'
     end
 
-    # Registered symbols sorted for detection: longest match wins, then parser priority.
-    def self.symbol_index
-      @symbol_index ||= Mint.currencies.values
-                            .map { |c| [c.symbol, c] }
-                            .reject { |symbol, _| symbol.empty? }
-                            .sort_by do |symbol, currency|
-                              [-symbol.length, -currency.priority, currency.code]
-                            end
-      @symbol_index
-    end
-
     private_class_method :parse_amount, :normalize_separators,
-                         :parse_currency,
-                         :symbol_index
+                         :parse_currency
   end
 end

@@ -20,6 +20,13 @@ class MoneyParseTest < Minitest::Test
     assert_equal Mint.money(10, 'BRL'), Mint::Money.parse('BRL 10')
   end
 
+  def test_parse_symbol_registered_after_symbol_index_is_cached
+    Mint::Money.parse('$1')
+    currency = Mint.register_currency!(:PARSE_TEST, subunit: 2, symbol: 'T$', priority: 2000)
+
+    assert_equal currency, Mint::Money.parse('T$1').currency
+  end
+
   def test_parse_us_thousands
     assert_equal Mint.money(1_234_567.89, 'USD'), Mint::Money.parse('$1,234,567.89')
     assert_equal Mint.money(1_234_567.00, 'USD'), Mint::Money.parse('$1,234,567')

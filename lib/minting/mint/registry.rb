@@ -22,7 +22,8 @@ module Mint
 
   def self.register_currency(code, subunit: 2, symbol: '$', priority: 0)
     code = code.to_s
-    currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol, priority: priority)
+    currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol,
+                                                 priority: priority)
   end
 
   def self.register_currency!(code, subunit:, symbol: '', priority: 0)
@@ -38,10 +39,22 @@ module Mint
 
     currencies[code] =
       Currency.new(code, subunit: subunit, symbol: symbol, priority: priority)
+    @currency_symbol_index = nil
+    currencies[code]
   end
 
   def self.currencies
     @currencies ||= load_currencies
+  end
+
+  # Registered symbols sorted for detection: longest match wins, then parser priority.
+  def self.currency_symbol_index
+    @currency_symbol_index ||= currencies.values
+                                      .map { |c| [c.symbol, c] }
+                                      .reject { |symbol, _| symbol.empty? }
+                                      .sort_by do |symbol, currency|
+                                        [-symbol.length, -currency.priority, currency.code]
+                                      end
   end
 
   def self.load_currencies
@@ -55,5 +68,5 @@ module Mint
       )
     end
   end
-  private_class_method :load_currencies
+  private_class_method :currency_symbol_index, :load_currencies
 end
