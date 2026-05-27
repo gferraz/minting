@@ -39,7 +39,7 @@ module Mint
 
     currencies[code] =
       Currency.new(code, subunit: subunit, symbol: symbol, priority: priority)
-    @currency_symbol_index = nil
+    @currency_symbols = nil
     currencies[code]
   end
 
@@ -48,13 +48,13 @@ module Mint
   end
 
   # Registered symbols sorted for detection: longest match wins, then parser priority.
-  def self.currency_symbol_index
-    @currency_symbol_index ||= currencies.values
-                                      .map { |c| [c.symbol, c] }
-                                      .reject { |symbol, _| symbol.empty? }
-                                      .sort_by do |symbol, currency|
-                                        [-symbol.length, -currency.priority, currency.code]
-                                      end
+  def self.currency_symbols
+    @currency_symbols ||= begin
+      currencies.values
+                .map { |currency| [currency.symbol, currency] }
+                .reject { |symbol, _| symbol.empty? }
+                .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
+    end.freeze
   end
 
   def self.load_currencies
@@ -68,5 +68,5 @@ module Mint
       )
     end
   end
-  private_class_method :currency_symbol_index, :load_currencies
+  private_class_method :load_currencies
 end

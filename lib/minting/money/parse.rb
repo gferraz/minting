@@ -22,15 +22,8 @@ module Mint
       input = input.strip
       raise ArgumentError, 'input cannot be empty' if input.empty?
 
-      if currency
-        currency = Mint.currency(currency)
-        unless currency
-          raise ArgumentError,
-                "Currency [#{currency}] not registered. Check Mint.currencies"
-        end
-      else
-        currency = parse_currency(input)
-      end
+      currency = currency ? Mint.currency(currency) : parse_currency(input)
+      raise ArgumentError, "Currency [#{currency}] not registered" unless currency
 
       amount = parse_amount(input)
       new(amount, currency)
@@ -73,7 +66,7 @@ module Mint
       end
 
       # Fall back to registered symbols, longest first (HK$ before $).
-      Mint.__send__(:currency_symbol_index).each do |symbol, currency|
+      Mint.currency_symbols.each do |symbol, currency|
         next if symbol.empty?
 
         return currency if input.include?(symbol)
