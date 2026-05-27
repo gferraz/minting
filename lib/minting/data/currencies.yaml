@@ -2,351 +2,468 @@
 USD:
   subunit: 2
   symbol: "$"
+  users: 370000000
 EUR:
   subunit: 2
   symbol: "€"
+  users: 350000000
 GBP:
   subunit: 2
   symbol: "£"
+  users: 69000000
 JPY:
   subunit: 0
   symbol: "¥"
+  users: 124000000
 CHF:
   subunit: 2
   symbol: Fr
+  users: 9000000
 CAD:
   subunit: 2
   symbol: "$"
+  users: 41000000
 AUD:
   subunit: 2
   symbol: "$"
+  users: 27000000
 CNY:
   subunit: 2
   symbol: "¥"
+  users: 1410000000
 SEK:
   subunit: 2
   symbol: kr
+  users: 11000000
 NZD:
   subunit: 2
   symbol: "$"
+  users: 5200000
 HKD:
   subunit: 2
   symbol: HK$
+  users: 7500000
 SGD:
   subunit: 2
   symbol: S$
+  users: 6000000
 KRW:
   subunit: 0
   symbol: "₩"
+  users: 52000000
 INR:
   subunit: 2
   symbol: "₹"
+  users: 1430000000
 THB:
   subunit: 2
   symbol: "฿"
+  users: 72000000
 MYR:
   subunit: 2
   symbol: RM
+  users: 34000000
 IDR:
   subunit: 2
   symbol: Rp
+  users: 280000000
 PHP:
   subunit: 2
   symbol: "₱"
+  users: 115000000
 VND:
   subunit: 0
   symbol: "₫"
+  users: 100000000
 TWD:
   subunit: 2
   symbol: NT$
+  users: 23500000
 PKR:
   subunit: 2
   symbol: "₨"
+  users: 240000000
 BDT:
   subunit: 2
   symbol: "৳"
+  users: 173000000
 LKR:
   subunit: 2
   symbol: "₨"
+  users: 22000000
 NPR:
   subunit: 2
   symbol: "₨"
+  users: 30000000
 MMK:
   subunit: 2
   symbol: K
+  users: 55000000
 KHR:
   subunit: 2
   symbol: "៛"
+  users: 17000000
 LAK:
   subunit: 2
   symbol: "₭"
+  users: 7500000
 BND:
   subunit: 2
   symbol: B$
+  users: 450000
 AED:
   subunit: 2
   symbol: د.إ
+  users: 10000000
 SAR:
   subunit: 2
   symbol: "﷼"
+  users: 37000000
 QAR:
   subunit: 2
   symbol: "﷼"
+  users: 3000000
 KWD:
   subunit: 3
   symbol: د.ك
+  users: 5000000
 BHD:
   subunit: 3
   symbol: ".د.ب"
+  users: 1500000
 OMR:
   subunit: 3
   symbol: "﷼"
+  users: 5000000
 JOD:
   subunit: 3
   symbol: د.ا
+  users: 11000000
 ILS:
   subunit: 2
   symbol: "₪"
+  users: 10000000
 TRY:
   subunit: 2
   symbol: "₺"
+  users: 85000000
 IRR:
   subunit: 2
   symbol: "﷼"
+  users: 89000000
 IQD:
   subunit: 3
   symbol: د.ع
+  users: 45000000
 AFN:
   subunit: 2
   symbol: "؋"
+  users: 42000000
 KZT:
   subunit: 2
   symbol: "₸"
+  users: 20000000
 UZS:
   subunit: 2
   symbol: лв
+  users: 36000000
 KGS:
   subunit: 2
   symbol: лв
+  users: 7000000
 TJS:
   subunit: 2
   symbol: SM
+  users: 10000000
 NOK:
   subunit: 2
   symbol: kr
+  users: 5500000
 DKK:
   subunit: 2
   symbol: kr
+  users: 6000000
 ISK:
   subunit: 0
   symbol: kr
+  users: 400000
 PLN:
   subunit: 2
   symbol: zł
+  users: 38000000
 CZK:
   subunit: 2
   symbol: Kč
+  users: 11000000
 HUF:
   subunit: 2
   symbol: Ft
+  users: 10000000
 RON:
   subunit: 2
   symbol: lei
+  users: 19000000
 BGN:
   subunit: 2
   symbol: лв
+  users: 6500000
 HRK:
   subunit: 2
   symbol: kn
+  users: 3900000
 RSD:
   subunit: 2
   symbol: Дин.
+  users: 6600000
 RUB:
   subunit: 2
   symbol: "₽"
+  users: 146000000
 UAH:
   subunit: 2
   symbol: "₴"
+  users: 37000000
 BYN:
   subunit: 2
   symbol: Br
+  users: 9000000
 MDL:
   subunit: 2
   symbol: L
+  users: 2600000
 GEL:
   subunit: 2
   symbol: "₾"
+  users: 3700000
 AMD:
   subunit: 2
   symbol: "֏"
+  users: 3000000
 AZN:
   subunit: 2
   symbol: "₼"
+  users: 10000000
 ZAR:
   subunit: 2
   symbol: R
+  users: 64000000
 EGP:
   subunit: 2
   symbol: "£"
+  users: 112000000
 NGN:
   subunit: 2
   symbol: "₦"
+  users: 230000000
 KES:
   subunit: 2
   symbol: KSh
+  users: 56000000
 GHS:
   subunit: 2
   symbol: "¢"
+  users: 34000000
 UGX:
   subunit: 0
   symbol: USh
+  users: 49000000
 TZS:
   subunit: 2
   symbol: TSh
+  users: 67000000
 ETB:
   subunit: 2
   symbol: Br
+  users: 126000000
 MAD:
   subunit: 2
   symbol: د.م.
+  users: 38000000
 TND:
   subunit: 3
   symbol: د.ت
+  users: 12000000
 DZD:
   subunit: 2
   symbol: د.ج
+  users: 46000000
 LYD:
   subunit: 3
   symbol: ل.د
+  users: 7000000
 AOA:
   subunit: 2
   symbol: Kz
+  users: 36000000
 BWP:
   subunit: 2
   symbol: P
+  users: 2700000
 NAD:
   subunit: 2
   symbol: N$
+  users: 2600000
 SZL:
   subunit: 2
   symbol: L
+  users: 1200000
 LSL:
   subunit: 2
   symbol: L
+  users: 2300000
 MZN:
   subunit: 2
   symbol: MT
+  users: 34000000
 ZMW:
   subunit: 2
   symbol: ZK
+  users: 20000000
 MWK:
   subunit: 2
   symbol: MK
+  users: 21000000
 RWF:
   subunit: 0
   symbol: R₣
+  users: 14000000
 BIF:
   subunit: 0
   symbol: FBu
+  users: 13000000
 MXN:
   subunit: 2
   symbol: "$"
+  users: 130000000
 BRL:
   subunit: 2
   symbol: R$
+  users: 204000000
 ARS:
   subunit: 2
   symbol: "$"
+  users: 46000000
 CLP:
   subunit: 0
   symbol: "$"
+  users: 20000000
 PEN:
   subunit: 2
   symbol: S/.
+  users: 34000000
 COP:
   subunit: 2
   symbol: "$"
+  users: 52000000
 VES:
   subunit: 2
   symbol: Bs.
+  users: 29000000
 UYU:
   subunit: 2
   symbol: "$U"
+  users: 3500000
 PYG:
   subunit: 0
   symbol: Gs
+  users: 6800000
 BOB:
   subunit: 2
   symbol: "$b"
+  users: 12000000
 CRC:
   subunit: 2
   symbol: "₡"
+  users: 5200000
 GTQ:
   subunit: 2
   symbol: Q
+  users: 18000000
 HNL:
   subunit: 2
   symbol: L
+  users: 11000000
 NIO:
   subunit: 2
   symbol: C$
+  users: 7000000
 PAB:
   subunit: 2
   symbol: B/.
+  users: 4500000
 DOP:
   subunit: 2
   symbol: RD$
+  users: 11000000
 HTG:
   subunit: 2
   symbol: G
+  users: 12000000
 JMD:
   subunit: 2
   symbol: J$
+  users: 3000000
 TTD:
   subunit: 2
   symbol: TT$
+  users: 1500000
 BBD:
   subunit: 2
   symbol: Bds$
+  users: 300000
 BSD:
   subunit: 2
   symbol: B$
+  users: 400000
 BZD:
   subunit: 2
   symbol: BZ$
+  users: 400000
 GYD:
   subunit: 2
   symbol: G$
+  users: 800000
 SRD:
   subunit: 2
   symbol: Sr$
+  users: 600000
 FJD:
   subunit: 2
   symbol: FJ$
+  users: 900000
 PGK:
   subunit: 2
   symbol: K
+  users: 10000000
 SBD:
   subunit: 2
   symbol: SI$
+  users: 700000
 VUV:
   subunit: 0
   symbol: VT
+  users: 300000
 TOP:
   subunit: 2
   symbol: T$
+  users: 100000
 WST:
   subunit: 2
   symbol: WS$
+  users: 200000
 XCD:
   subunit: 2
   symbol: EC$
+  users: 600000
 XOF:
   subunit: 0
   symbol: CFA
+  users: 150000000
 XAF:
   subunit: 0
   symbol: FCFA
+  users: 65000000
 XPF:
   subunit: 0
   symbol: "₣"
+  users: 300000

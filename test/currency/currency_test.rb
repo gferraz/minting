@@ -22,9 +22,10 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_currency_accessors
-    assert_equal ['BRL', 2, 'R$'], [@real.code, @real.subunit, @real.symbol]
-    assert_equal ['USD', 2, '$'],
-                 [@dollar.code, @dollar.subunit, @dollar.symbol]
+    assert_equal ['BRL', 2, 'R$', 204_000_000],
+                 [@real.code, @real.subunit, @real.symbol, @real.users]
+    assert_equal ['USD', 2, '$', 370_000_000],
+                 [@dollar.code, @dollar.subunit, @dollar.symbol, @dollar.users]
   end
 
   def test_inspect
