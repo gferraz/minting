@@ -115,4 +115,4 @@ end
 
 # print a graph profile to text
 printer = RubyProf::GraphPrinter.new(result)
-printer.print(STDOUT, {})
+printer.print
