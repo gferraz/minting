@@ -1,5 +1,7 @@
 module Mint
   class Money
+    # The default display format pattern for formatting monetary values.
+    # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.
     DEFAULT_FORMAT = '%<symbol>s%<amount>f'.freeze
 
     attr_reader :amount, :currency
@@ -21,10 +23,17 @@ module Mint
       freeze
     end
 
+    # Returns the ISO 3-letter currency code string.
+    #
+    # @return [String] the ISO currency code
     def currency_code
       currency.code
     end
 
+    # Generates a stable hash key for Money instances.
+    # Ensures zero amounts have identical hash keys across all currencies.
+    #
+    # @return [Integer] the calculated hash value
     def hash
       zero? ? 0.hash : [amount, currency.code].hash
     end
@@ -36,10 +45,17 @@ module Mint
       new_amount.to_r == amount ? self : Money.new(new_amount, currency)
     end
 
+    # Returns a standard developer-oriented string inspection of the Money object.
+    #
+    # @return [String] the formatted inspect representation
     def inspect
       Kernel.format "[#{currency_code} %0.#{currency.subunit}f]", amount
     end
 
+    # Helper method to verify if another object has the identical currency.
+    #
+    # @param other [Object] the target object to compare
+    # @return [Boolean] true if currencies match, false otherwise
     def same_currency?(other)
       other.respond_to?(:currency) && other.currency == currency
     end

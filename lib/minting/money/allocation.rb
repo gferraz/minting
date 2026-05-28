@@ -1,7 +1,15 @@
 module Mint
-  # :nodoc
-  # split and allocation methods
   class Money
+    # Proportionally allocates the monetary amount among a list of ratios.
+    # Disperses any subunit rounding errors across the initial slots using the largest remainder method.
+    #
+    # @param proportions [Array<Numeric>] a list of numeric proportions/ratios to allocate by
+    # @return [Array<Money>] the list of newly allocated Money objects
+    # @raise [ArgumentError] if the proportions list is empty or sums to zero
+    #
+    # @example Proportional allocation
+    #   money = Mint.money(10.00, 'USD')
+    #   money.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
     def allocate(proportions)
       whole = proportions.sum.to_r
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
@@ -11,6 +19,16 @@ module Mint
       allocate_left_over!(amounts: amounts, left_over: amount - amounts.sum)
     end
 
+    # Splits the monetary amount into a given quantity of equal parts.
+    # Disperses any fractional subunit rounding errors across the initial slots so that the sum is preserved.
+    #
+    # @param quantity [Integer] the number of equal parts to divide the money into (must be > 0)
+    # @return [Array<Money>] the list of newly split Money objects
+    # @raise [ArgumentError] if quantity is not a positive integer
+    #
+    # @example Even split
+    #   money = Mint.money(10.00, 'USD')
+    #   money.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
     def split(quantity)
       unless  quantity.positive? && quantity.integer?
         raise ArgumentError,

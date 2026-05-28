@@ -1,7 +1,12 @@
 require 'yaml'
 
-# :nodoc
 module Mint
+  # Creates a new {Money} instance with the given amount and currency code.
+  #
+  # @param amount [Numeric] the financial value
+  # @param currency_code [String, Symbol] the ISO currency code or symbol
+  # @return [Money] the instantiated Money object
+  # @raise [ArgumentError] if the currency code is not registered
   def self.money(amount, currency_code)
     currency = currency(currency_code)
     return Money.new(amount, currency) if currency
@@ -9,6 +14,10 @@ module Mint
     raise ArgumentError, "Currency [#{currency_code}] not registered. Check Mint.currencies"
   end
 
+  # Finds a registered currency by its code, symbol, or retrieves it directly if already a Currency object.
+  #
+  # @param currency [String, Symbol, Currency] the currency identifier or object
+  # @return [Currency, nil] the registered Currency instance or nil if not found
   def self.currency(currency)
     case currency
     when Currency
@@ -20,12 +29,29 @@ module Mint
     end
   end
 
+  # Registers a new currency if not already registered.
+  #
+  # @param code [String, Symbol] the unique currency code (e.g. 'USD', :EUR)
+  # @param subunit [Integer] the decimal subunit precision (defaults to 2)
+  # @param symbol [String] the display symbol (defaults to '$')
+  # @param priority [Integer] parser precedence priority (defaults to 0)
+  # @return [Currency] the registered or existing Currency instance
+  # @raise [ArgumentError] if the code layout is invalid or register throws an error
   def self.register_currency(code, subunit: 2, symbol: '$', priority: 0)
     code = code.to_s
     currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol,
                                                  priority: priority)
   end
 
+  # Strictly registers a new currency, raising a KeyError if already registered.
+  #
+  # @param code [String, Symbol] the unique currency code
+  # @param subunit [Integer] the decimal subunit precision
+  # @param symbol [String] the display symbol
+  # @param priority [Integer] parser precedence priority
+  # @return [Currency] the newly registered Currency instance
+  # @raise [ArgumentError] if the code contains invalid characters
+  # @raise [KeyError] if the currency code is already registered
   def self.register_currency!(code, subunit:, symbol: '', priority: 0)
     code = code.to_s
     unless code.match?(/^[A-Z_]+$/)
@@ -43,6 +69,9 @@ module Mint
     currencies[code]
   end
 
+  # Returns the hash of all registered currencies.
+  #
+  # @return [Hash{String => Currency}] registered currencies mapped by code
   def self.currencies
     @currencies ||= load_currencies
   end

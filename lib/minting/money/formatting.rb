@@ -41,6 +41,8 @@ module Mint
       formatted
     end
 
+    private
+    
     def format_amount(format)
       format = { positive: format } if format.is_a?(String)
       value = amount
