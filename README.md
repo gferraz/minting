@@ -161,7 +161,11 @@ Mint::Money.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
 Mint::Money.parse('USD 1,234.56')     #=> [USD 1234.56]
 ```
 
-Pass a currency code when the string has no symbol or code. Ambiguous symbols (e.g. `$`) default to USD.
+- Pass a currency code when the string has no symbol or code. 
+- 1,234 means 1.234, not 1234, because one comma is treated as decimal.
+- 1,234.00 is unambiguous thousands-plus-decimal.
+- accounting negatives like ($1.23) are unsupported.
+- ambiguous symbols like $ resolve by priority, currently USD.
 
 ## Roadmap
 
