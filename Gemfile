@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
+  gem 'benchmark'
   gem 'benchmark-ips'
   gem 'bigdecimal'
   gem 'bundler'
