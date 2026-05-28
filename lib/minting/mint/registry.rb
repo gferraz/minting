@@ -68,5 +68,6 @@ module Mint
       )
     end
   end
+
   private_class_method :load_currencies
 end
