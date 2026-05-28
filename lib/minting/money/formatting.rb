@@ -11,7 +11,7 @@ module Mint
     # @example Basic formatting
     #   money = Mint.money(1234.56, 'USD')
     #   money.to_s                               #=> "$1,234.56"
-    #   money.to_s(thousand: '.', decimal: ',')  #=> "$.1234,56"
+    #   money.to_s(thousand: '.', decimal: ',')  #=> "$1.234,56"
     #   money.to_s(decimal: ',', thousand: '')   #=> "$1234,56"
     #
     # @example Custom formats
