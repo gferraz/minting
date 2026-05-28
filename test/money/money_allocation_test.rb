@@ -6,6 +6,9 @@ class MoneyAllocationTest < Minitest::Test
     assert_raises(ArgumentError) { price.allocate([]) }
     assert_raises(ArgumentError) { price.allocate([0, 0, 0]) }
     assert_raises(ArgumentError) { price.split(0) }
+    assert_raises(ArgumentError) { price.split(-1) }
+    assert_raises(ArgumentError) { price.split(1.5) }
+    assert_raises(TypeError) { price.allocate([1, '2']) }
   end
 
   def test_allocate_does_not_mutate_proportions
@@ -47,6 +50,25 @@ class MoneyAllocationTest < Minitest::Test
     assert_equal five, installments.sum
   end
 
+  def test_split_negative_money
+    debt = Mint.money(-10, 'USD')
+
+    installments = debt.split(3)
+
+    assert_equal [-3.34.dollars, -3.33.dollars, -3.33.dollars], installments
+    assert_equal debt, installments.sum
+  end
+
+  def test_split_zero_subunit_currency
+    price = Mint.money(10, 'JPY')
+
+    installments = price.split(3)
+
+    assert_equal [Mint.money(4, 'JPY'), Mint.money(3, 'JPY'), Mint.money(3, 'JPY')],
+                 installments
+    assert_equal price, installments.sum
+  end
+
   def test_money_allocation
     value = Mint.money(10.0, 'USD')
     proportions = [1, 2, 3]
@@ -74,5 +96,33 @@ class MoneyAllocationTest < Minitest::Test
 
     assert_equal 3, allocation.size
     assert_equal five, allocation.sum
+  end
+
+  def test_allocate_negative_money
+    debt = Mint.money(-10, 'USD')
+
+    allocation = debt.allocate([1, 2, 3])
+
+    assert_equal [-1.67.dollars, -3.33.dollars, -5.dollars], allocation
+    assert_equal debt, allocation.sum
+  end
+
+  def test_allocate_with_negative_proportions
+    price = 10.dollars
+
+    allocation = price.allocate([-1, 2])
+
+    assert_equal [-10.dollars, 20.dollars], allocation
+    assert_equal price, allocation.sum
+  end
+
+  def test_allocate_conserves_awkward_remainders
+    price = Mint.money(0.05, 'USD')
+
+    allocation = price.allocate([1, 1, 1, 1])
+
+    assert_equal [0.02.dollars, 0.01.dollars, 0.01.dollars, 0.01.dollars],
+                 allocation
+    assert_equal price, allocation.sum
   end
 end
