@@ -105,15 +105,16 @@ ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 
 ## API notes
 
-**Module names** — Require the `minting` gem; the public API lives under `Mint` (the gem module is `Minting::VERSION`).
+**Module names** — Require the `minting` gem; the public API lives under `Mint`.
 
-**Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit. Prefer rationals or decimal strings for exact literals (`Mint.money(1999/100r, 'USD')`, `'19.99'.to_r`) instead of binary floats when precision matters.
+**Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
 
 **Refinements** — `10.dollars` and similar helpers require `using Mint` in the current scope (see Usage above).
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
 
-**Zero equality** — `Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`. Non-zero amounts must match currency and value.
+**Zero equality** — Any zero amount is considered equal across currencies and to numeric zero `Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`. Non-zero amounts must match currency and value.
+Hashing follows the same principle: zero amounts produce the same stable hash of `0.hash`.
 
 **Custom currencies** — `Mint.register_currency` returns the existing entry if the code is already registered; use `register_currency!` to detect duplicates.
 
