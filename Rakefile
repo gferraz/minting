@@ -3,7 +3,8 @@ require 'rubocop/rake_task'
 require 'rake/testtask'
 require 'yard'
 
-CLOBBER.include %w[tmp]
+CLOBBER.include %w[doc tmp .yardoc]
+
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
   t.libs << 'lib'
