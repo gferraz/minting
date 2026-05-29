@@ -1,9 +1,9 @@
 require 'bundler/gem_tasks'
 require 'rubocop/rake_task'
 require 'rake/testtask'
+require 'yard'
 
 CLOBBER.include %w[tmp]
-
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'
   t.libs << 'lib'
@@ -38,5 +38,11 @@ end
 task 'bench:all' => ['bench', 'bench:performance']
 
 RuboCop::RakeTask.new(:cop)
+
+YARD::Rake::YardocTask.new do |t|
+  t.files   = ['lib/**/*.rb'] # optional
+  t.options = [] # optional
+  t.stats_options = ['--list-undoc'] # optional
+end
 
 task default: :test
