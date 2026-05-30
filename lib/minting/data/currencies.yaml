@@ -1,548 +1,548 @@
 ---
 # Currency registry. Each item contains:
 # code: ISO 4217 alphabetic code
-# country_alpha3: primary ISO 3166-1 alpha-3 country code (when applicable/known)
+# country: primary ISO 3166-1 alpha-3 country code (when applicable/known)
 # subunit: decimal places
 # symbol: display symbol
 # priority: parser/display priority
 # name: English name of the currency
 
 - code: USD
-  country_alpha3: USA
+  country: USA
   subunit: 2
   symbol: "$"
   name: United States Dollar
   priority: 1000
 - code: EUR
-  country_alpha3: null
+  country: null
   subunit: 2
   symbol: "€"
   name: Euro
   priority: 950
 - code: JPY
-  country_alpha3: JPN
+  country: JPN
   subunit: 0
   symbol: "¥"
   name: Japanese Yen
   priority: 900
 - code: GBP
-  country_alpha3: GBR
+  country: GBR
   subunit: 2
   symbol: "£"
   name: Pound Sterling
   priority: 850
 - code: CNY
-  country_alpha3: CHN
+  country: CHN
   subunit: 2
   symbol: "¥"
   name: Chinese Yuan
   priority: 800
 - code: INR
-  country_alpha3: IND
+  country: IND
   subunit: 2
   symbol: "₹"
   name: Indian Rupee
   priority: 760
 - code: CAD
-  country_alpha3: CAN
+  country: CAN
   subunit: 2
   symbol: "$"
   name: Canadian Dollar
   priority: 740
 - code: AUD
-  country_alpha3: AUS
+  country: AUS
   subunit: 2
   symbol: "$"
   name: Australian Dollar
   priority: 730
 - code: CHF
-  country_alpha3: CHE
+  country: CHE
   subunit: 2
   symbol: Fr
   name: Swiss Franc
   priority: 720
 - code: HKD
-  country_alpha3: HKG
+  country: HKG
   subunit: 2
   symbol: HK$
   name: Hong Kong Dollar
   priority: 710
 - code: SGD
-  country_alpha3: SGP
+  country: SGP
   subunit: 2
   symbol: S$
   name: Singapore Dollar
   priority: 700
 - code: KRW
-  country_alpha3: KOR
+  country: KOR
   subunit: 0
   symbol: "₩"
   name: South Korean Won
   priority: 690
 - code: SEK
-  country_alpha3: SWE
+  country: SWE
   subunit: 2
   symbol: kr
   name: Swedish Krona
   priority: 680
 - code: NOK
-  country_alpha3: NOR
+  country: NOR
   subunit: 2
   symbol: kr
   name: Norwegian Krone
   priority: 670
 - code: DKK
-  country_alpha3: DNK
+  country: DNK
   subunit: 2
   symbol: kr
   name: Danish Krone
   priority: 660
 - code: NZD
-  country_alpha3: NZL
+  country: NZL
   subunit: 2
   symbol: "$"
   name: New Zealand Dollar
   priority: 650
 - code: MXN
-  country_alpha3: MEX
+  country: MEX
   subunit: 2
   symbol: "$"
   name: Mexican Peso
   priority: 640
 - code: BRL
-  country_alpha3: BRA
+  country: BRA
   subunit: 2
   symbol: R$
   name: Brazilian Real
   priority: 630
 - code: ZAR
-  country_alpha3: ZAF
+  country: ZAF
   subunit: 2
   symbol: R
   name: South African Rand
   priority: 620
 - code: SAR
-  country_alpha3: SAU
+  country: SAU
   subunit: 2
   symbol: "﷼"
   name: Saudi Riyal
   priority: 610
 - code: AED
-  country_alpha3: ARE
+  country: ARE
   subunit: 2
   symbol: د.إ
   name: United Arab Emirates Dirham
   priority: 600
 - code: IDR
-  country_alpha3: IDN
+  country: IDN
   subunit: 2
   symbol: Rp
   name: Indonesian Rupiah
   priority: 113
 - code: PKR
-  country_alpha3: PAK
+  country: PAK
   subunit: 2
   symbol: "₨"
   name: Pakistani Rupee
   priority: 112
 - code: NGN
-  country_alpha3: NGA
+  country: NGA
   subunit: 2
   symbol: "₦"
   name: Nigerian Naira
   priority: 111
 - code: BDT
-  country_alpha3: BGD
+  country: BGD
   subunit: 2
   symbol: "৳"
   name: Bangladeshi Taka
   priority: 109
 - code: XOF
-  country_alpha3: null
+  country: null
   subunit: 0
   symbol: CFA
   name: West African CFA franc
   priority: 108
 - code: RUB
-  country_alpha3: RUS
+  country: RUS
   subunit: 2
   symbol: "₽"
   name: Russian Ruble
   priority: 107
 - code: ETB
-  country_alpha3: ETH
+  country: ETH
   subunit: 2
   symbol: Br
   name: Ethiopian Birr
   priority: 105
 - code: PHP
-  country_alpha3: PHL
+  country: PHL
   subunit: 2
   symbol: "₱"
   name: Philippine Peso
   priority: 103
 - code: EGP
-  country_alpha3: EGY
+  country: EGY
   subunit: 2
   symbol: "£"
   name: Egyptian Pound
   priority: 102
 - code: VND
-  country_alpha3: VNM
+  country: VNM
   subunit: 0
   symbol: "₫"
   name: Vietnamese Dong
   priority: 101
 - code: IRR
-  country_alpha3: IRN
+  country: IRN
   subunit: 2
   symbol: "﷼"
   name: Iranian Rial
   priority: 100
 - code: TRY
-  country_alpha3: TUR
+  country: TUR
   subunit: 2
   symbol: "₺"
   name: Turkish Lira
   priority: 99
 - code: THB
-  country_alpha3: THA
+  country: THA
   subunit: 2
   symbol: "฿"
   name: Thai Baht
   priority: 98
 - code: TZS
-  country_alpha3: TZA
+  country: TZA
   subunit: 2
   symbol: TSh
   name: Tanzanian Shilling
   priority: 96
 - code: XAF
-  country_alpha3: null
+  country: null
   subunit: 0
   symbol: FCFA
   name: Central African CFA franc
   priority: 95
 - code: KES
-  country_alpha3: KEN
+  country: KEN
   subunit: 2
   symbol: KSh
   name: Kenyan Shilling
   priority: 93
 - code: MMK
-  country_alpha3: MMR
+  country: MMR
   subunit: 2
   symbol: K
   name: Myanmar Kyat
   priority: 92
 - code: COP
-  country_alpha3: COL
+  country: COL
   subunit: 2
   symbol: "$"
   name: Colombian Peso
   priority: 91
 - code: UGX
-  country_alpha3: UGA
+  country: UGA
   subunit: 0
   symbol: USh
   name: Ugandan Shilling
   priority: 89
 - code: ARS
-  country_alpha3: ARG
+  country: ARG
   subunit: 2
   symbol: "$"
   name: Argentine Peso
   priority: 88
 - code: DZD
-  country_alpha3: DZA
+  country: DZA
   subunit: 2
   symbol: د.ج
   name: Algerian Dinar
   priority: 87
 - code: IQD
-  country_alpha3: IRQ
+  country: IRQ
   subunit: 3
   symbol: د.ع
   name: Iraqi Dinar
   priority: 86
 - code: AFN
-  country_alpha3: AFG
+  country: AFG
   subunit: 2
   symbol: "؋"
   name: Afghan Afghani
   priority: 85
 - code: MAD
-  country_alpha3: MAR
+  country: MAR
   subunit: 2
   symbol: د.م.
   name: Moroccan Dirham
   priority: 83
 - code: PLN
-  country_alpha3: POL
+  country: POL
   subunit: 2
   symbol: zł
   name: Polish Zloty
   priority: 82
 - code: UAH
-  country_alpha3: UKR
+  country: UKR
   subunit: 2
   symbol: "₴"
   name: Ukrainian Hryvnia
   priority: 80
 - code: AOA
-  country_alpha3: AGO
+  country: AGO
   subunit: 2
   symbol: Kz
   name: Angolan Kwanza
   priority: 79
 - code: UZS
-  country_alpha3: UZB
+  country: UZB
   subunit: 2
   symbol: лв
   name: Uzbekistani Som
   priority: 78
 - code: GHS
-  country_alpha3: GHA
+  country: GHA
   subunit: 2
   symbol: "¢"
   name: Ghanaian Cedi
   priority: 77
 - code: MYR
-  country_alpha3: MYS
+  country: MYS
   subunit: 2
   symbol: RM
   name: Malaysian Ringgit
   priority: 76
 - code: MZN
-  country_alpha3: MOZ
+  country: MOZ
   subunit: 2
   symbol: MT
   name: Mozambican Metical
   priority: 75
 - code: PEN
-  country_alpha3: PER
+  country: PER
   subunit: 2
   symbol: S/.
   name: Peruvian Sol
   priority: 74
 - code: NPR
-  country_alpha3: NPL
+  country: NPL
   subunit: 2
   symbol: "₨"
   name: Nepalese Rupee
   priority: 73
 - code: VES
-  country_alpha3: VEN
+  country: VEN
   subunit: 2
   symbol: Bs.
   name: Venezuelan Bolívar
   priority: 72
 - code: TWD
-  country_alpha3: TWN
+  country: TWN
   subunit: 2
   symbol: NT$
   name: New Taiwan Dollar
   priority: 70
 - code: LKR
-  country_alpha3: LKA
+  country: LKA
   subunit: 2
   symbol: "₨"
   name: Sri Lankan Rupee
   priority: 69
 - code: MWK
-  country_alpha3: MWI
+  country: MWI
   subunit: 2
   symbol: MK
   name: Malawian Kwacha
   priority: 68
 - code: CLP
-  country_alpha3: CHL
+  country: CHL
   subunit: 0
   symbol: "$"
   name: Chilean Peso
   priority: 67
 - code: KZT
-  country_alpha3: KAZ
+  country: KAZ
   subunit: 2
   symbol: "₸"
   name: Kazakhstani Tenge
   priority: 66
 - code: ZMW
-  country_alpha3: ZMB
+  country: ZMB
   subunit: 2
   symbol: ZK
   name: Zambian Kwacha
   priority: 65
 - code: RON
-  country_alpha3: ROU
+  country: ROU
   subunit: 2
   symbol: lei
   name: Romanian Leu
   priority: 64
 - code: GTQ
-  country_alpha3: GTM
+  country: GTM
   subunit: 2
   symbol: Q
   name: Guatemalan Quetzal
   priority: 63
 - code: KHR
-  country_alpha3: KHM
+  country: KHM
   subunit: 2
   symbol: "៛"
   name: Cambodian Riel
   priority: 62
 - code: RWF
-  country_alpha3: RWA
+  country: RWA
   subunit: 0
   symbol: R₣
   name: Rwandan Franc
   priority: 61
 - code: BIF
-  country_alpha3: BDI
+  country: BDI
   subunit: 0
   symbol: FBu
   name: Burundian Franc
   priority: 60
 - code: BOB
-  country_alpha3: BOL
+  country: BOL
   subunit: 2
   symbol: "$b"
   name: Bolivian Boliviano
   priority: 59
 - code: HTG
-  country_alpha3: HTI
+  country: HTI
   subunit: 2
   symbol: G
   name: Haitian Gourde
   priority: 58
 - code: TND
-  country_alpha3: TUN
+  country: TUN
   subunit: 3
   symbol: د.ت
   name: Tunisian Dinar
   priority: 57
 - code: CZK
-  country_alpha3: CZE
+  country: CZE
   subunit: 2
   symbol: Kč
   name: Czech Koruna
   priority: 56
 - code: DOP
-  country_alpha3: DOM
+  country: DOM
   subunit: 2
   symbol: RD$
   name: Dominican Peso
   priority: 55
 - code: HNL
-  country_alpha3: HND
+  country: HND
   subunit: 2
   symbol: L
   name: Honduran Lempira
   priority: 54
 - code: JOD
-  country_alpha3: JOR
+  country: JOR
   subunit: 3
   symbol: د.ا
   name: Jordanian Dinar
   priority: 53
 - code: AZN
-  country_alpha3: AZE
+  country: AZE
   subunit: 2
   symbol: "₼"
   name: Azerbaijani Manat
   priority: 50
 - code: HUF
-  country_alpha3: HUN
+  country: HUN
   subunit: 2
   symbol: Ft
   name: Hungarian Forint
   priority: 49
 - code: ILS
-  country_alpha3: ISR
+  country: ISR
   subunit: 2
   symbol: "₪"
   name: Israeli New Shekel
   priority: 48
 - code: PGK
-  country_alpha3: PNG
+  country: PNG
   subunit: 2
   symbol: K
   name: Papua New Guinean Kina
   priority: 47
 - code: TJS
-  country_alpha3: TJK
+  country: TJK
   subunit: 2
   symbol: SM
   name: Tajikistani Somoni
   priority: 46
 - code: BYN
-  country_alpha3: BLR
+  country: BLR
   subunit: 2
   symbol: Br
   name: Belarusian Ruble
   priority: 45
 - code: LAK
-  country_alpha3: LAO
+  country: LAO
   subunit: 2
   symbol: "₭"
   name: Lao Kip
   priority: 42
 - code: KGS
-  country_alpha3: KGZ
+  country: KGZ
   subunit: 2
   symbol: лв
   name: Kyrgyzstani Som
   priority: 41
 - code: LYD
-  country_alpha3: LBY
+  country: LBY
   subunit: 3
   symbol: ل.د
   name: Libyan Dinar
   priority: 40
 - code: NIO
-  country_alpha3: NIC
+  country: NIC
   subunit: 2
   symbol: C$
   name: Nicaraguan Córdoba
   priority: 39
 - code: PYG
-  country_alpha3: PRY
+  country: PRY
   subunit: 0
   symbol: Gs
   name: Paraguayan Guarani
   priority: 38
 - code: RSD
-  country_alpha3: SRB
+  country: SRB
   subunit: 2
   symbol: Дин.
   name: Serbian Dinar
   priority: 37
 - code: BGN
-  country_alpha3: BGR
+  country: BGR
   subunit: 2
   symbol: лв
   name: Bulgarian Lev
   priority: 36
 - code: CRC
-  country_alpha3: CRI
+  country: CRI
   subunit: 2
   symbol: "₡"
   name: Costa Rican Colón
   priority: 32
 - code: KWD
-  country_alpha3: KWT
+  country: KWT
   subunit: 3
   symbol: د.ك
   name: Kuwaiti Dinar
   priority: 30
 - code: OMR
-  country_alpha3: OMN
+  country: OMN
   subunit: 3
   symbol: "﷼"
   name: Omani Rial
   priority: 29
 - code: PAB
-  country_alpha3: PAN
+  country: PAN
   subunit: 2
   symbol: B/.
   name: Panamanian Balboa
