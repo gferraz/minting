@@ -32,7 +32,7 @@ end
 
 Rake::TestTask.new('bench:competitive') do |t|
   t.libs = %w[lib test]
-  t.pattern = 'test/performance/competitive_benchmark.rb'
+  t.pattern = 'test/performance/competitive_performance_benchmark.rb'
   t.ruby_opts << '-r test_helper.rb'
 end
 

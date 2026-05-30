@@ -34,7 +34,7 @@ module BenchmarkHelper
     end
   end
 
-  def run(times: 1_000)
+  def run_object_space_profile(times: 1_000)
     GC.start
     before = ObjectSpace.count_objects.dup
     times.times { yield(random_amount) }
@@ -42,7 +42,7 @@ module BenchmarkHelper
     diff(before, after)
   end
 
-  def run_stat(times: 1_000)
+  def run_gc_stat(times: 1_000)
     GC.start
     before = GC.stat.dup
     times.times { yield(random_amount) }
@@ -128,6 +128,6 @@ module BenchmarkHelper
   end
 
   module_function :configure_money_gem, :test_amounts, :random_amounts, :random_amount,
-                  :diff, :run, :run_stat, :with_bench, :measure_object_space,
+                  :diff, :run_object_space_profile, :run_gc_stat, :with_bench, :measure_object_space,
                   :measure_memory_usage, :measure_allocations, :measure_gc_stats
 end

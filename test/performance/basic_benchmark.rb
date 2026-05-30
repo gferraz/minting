@@ -53,8 +53,8 @@ Benchmark.ips do |x|
   x.compare!
 end
 
-BenchmarkHelper.run { |amount| Mint.money(amount, 'USD') }
-BenchmarkHelper.run { |amount| Money.new(amount * 100, 'USD') }
+BenchmarkHelper.run_object_space_profile { |amount| Mint.money(amount, 'USD') }
+BenchmarkHelper.run_object_space_profile { |amount| Money.new(amount * 100, 'USD') }
 
 GC.start # clear GC before profiling
 GC::Profiler.enable
