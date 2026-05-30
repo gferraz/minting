@@ -2,9 +2,9 @@ require_relative 'benchmark_helper'
 
 class AlgorithmBenchmark < Minitest::Test
   def setup
-    @small_amounts = [1.00, 5.50, 10.99, 25.33, 50.01]
-    @medium_amounts = [100.00, 250.75, 500.50, 750.25, 999.99]
-    @large_amounts = [10_000.00, 50_000.50, 100_000.99, 500_000.25, 999_999.99]
+    @small_amounts = [1.00, 5.50, 10.99, 50.01]
+    @medium_amounts = [100.00, 250.75, 500.50, 999.99]
+    @large_amounts = [10_000.00, 50_000.50, 100_000.99, 999_999.99]
     @currencies = %w[USD EUR JPY] # Different subunit currencies
   end
 
@@ -23,10 +23,10 @@ class AlgorithmBenchmark < Minitest::Test
 
         Benchmark.ips do |x|
           x.report("split(2) - #{amount}") { money.split(2) }
-          x.report("split(3) - #{amount}") { money.split(3) }
-          x.report("split(7) - #{amount}") { money.split(7) }
-          x.report("split(13) - #{amount}") { money.split(13) }
-          x.report("split(100) - #{amount}") { money.split(100) }
+          x.report("split(30) - #{amount}") { money.split(30) }
+          x.report("split(70) - #{amount}") { money.split(70) }
+          x.report("split(130) - #{amount}") { money.split(130) }
+          x.report("split(360) - #{amount}") { money.split(360) }
           x.compare!
         end
       end
