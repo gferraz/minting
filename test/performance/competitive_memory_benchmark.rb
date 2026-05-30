@@ -1,15 +1,11 @@
-require 'test_helper'
-require 'benchmark'
-require 'money'
-require 'bigdecimal'
-
-using Mint
+require_relative 'benchmark_helper'
 
 class CompetitiveMemoryBenchmark < Minitest::Test
+  include BenchmarkHelper
+
   def setup
-    Money.rounding_mode = BigDecimal::ROUND_HALF_UP
-    Money.default_currency = Money::Currency.new('USD')
-    @random_amounts = Array.new(1000) { rand(-1000.00..1000.00) }
+    configure_money_gem
+    @random_amounts = random_amounts
   end
 
   def test_memory_usage_comparison

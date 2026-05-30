@@ -1,10 +1,10 @@
-require_relative 'performance/benchmark_helper'
-require 'bigdecimal'
+require_relative 'benchmark_helper'
+
 class MintBenchmark < Minitest::Benchmark
   include BenchmarkHelper
 
   def setup
-    configure_money_gem(rounding: BigDecimal::ROUND_HALF_EVEN)
+    configure_money_gem
   end
 
   def self.bench_range
@@ -18,34 +18,27 @@ class MintBenchmark < Minitest::Benchmark
   end
 end
 
-require 'benchmark/ips'
-require 'money'
-require 'minting'
-
 def random_amount
   rand(-1000.00..1000.00)
 end
 
-Money.rounding_mode = BigDecimal::ROUND_HALF_EVEN
-
+amount = random_amount
 Benchmark.ips do |x|
-  x.report('Mint.money') { Mint.money(random_amount, 'USD') }
-  x.report('Money.new') { Money.new(random_amount * 100, 'USD') }
+  x.report('Mint.money') { Mint.money(amount, 'USD') }
+  x.report('Money.new') { Money.new(amount * 100, 'USD') }
   x.compare!
 end
 
 Benchmark.ips do |x|
   x.report('Mint equals') do
-    m1 = Mint.money(random_amount, 'USD')
-    m2 = Mint.money(random_amount, 'USD')
+    m1 = Mint.money(amount, 'USD')
+    m2 = Mint.money(amount, 'USD')
     m1 == m2
-    m1 == m1
   end
   x.report('Money equals') do
-    m1 = Money.new(random_amount, 'USD')
-    m2 = Money.new(random_amount, 'USD')
+    m1 = Money.new(amount * 100, 'USD')
+    m2 = Money.new(amount * 100, 'USD')
     m1 == m2
-    m1 == m1
   end
   x.compare!
 end
@@ -101,8 +94,8 @@ def run_stat
   diff(base, final)
 end
 
-mi = run { Mint.money(random_amount, 'USD') }
-mo = run { Money.new(random_amount * 100, 'USD') }
+run { Mint.money(random_amount, 'USD') }
+run { Money.new(random_amount * 100, 'USD') }
 
 GC.start # clear GC before profiling
 GC::Profiler.enable
@@ -113,7 +106,7 @@ GC::Profiler.disable
 require 'ruby-prof'
 
 # profile the code
-result = RubyProf::Profile.profile  do
+result = RubyProf::Profile.profile do
   TIMES.times do
     Mint.money(random_amount, 'USD')
   end

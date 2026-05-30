@@ -1,5 +1,4 @@
-require 'test_helper'
-require 'benchmark/ips'
+require_relative 'benchmark_helper'
 
 class AlgorithmBenchmark < Minitest::Test
   def setup

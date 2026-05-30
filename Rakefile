@@ -14,14 +14,7 @@ end
 
 Rake::TestTask.new(:bench) do |t|
   t.libs = %w[lib test]
-  t.pattern = 'test/**/*_benchmark.rb'
-end
-
-# Performance benchmark tasks
-Rake::TestTask.new('bench:performance') do |t|
-  t.libs = %w[lib test]
   t.pattern = 'test/performance/*_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
 end
 
 Rake::TestTask.new('bench:regression') do |t|
@@ -35,8 +28,6 @@ Rake::TestTask.new('bench:competitive') do |t|
   t.pattern = 'test/performance/competitive_benchmark.rb'
   t.ruby_opts << '-r test_helper.rb'
 end
-
-task 'bench:all' => ['bench', 'bench:performance']
 
 RuboCop::RakeTask.new(:cop)
 

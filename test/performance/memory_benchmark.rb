@@ -1,8 +1,10 @@
-require 'test_helper'
-require 'benchmark/ips'
+require_relative 'benchmark_helper'
 
 class MemoryBenchmark < Minitest::Test
+  include BenchmarkHelper
+
   def setup
+    configure_money_gem
     @amounts = Array.new(10_000) { rand(-10_000.00..10_000.00) }
     @currencies = %w[USD EUR GBP JPY BRL CAD AUD CHF]
   end

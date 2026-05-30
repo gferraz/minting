@@ -149,12 +149,6 @@ If benchmarks are being skipped, ensure `BENCH=true` is set:
 BENCH=true ruby -Ilib:test test/performance/core_operations_benchmark.rb
 ```
 
-### Missing Dependencies
-Some benchmarks require additional gems:
-```bash
-gem install benchmark-ips ruby-prof money bigdecimal
-```
-
 ### Ruby Version Compatibility  
 Performance characteristics may vary between Ruby versions. Current testing focuses on Ruby 3.2+.
 

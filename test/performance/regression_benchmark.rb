@@ -1,7 +1,13 @@
-require 'test_helper'
+require_relative 'benchmark_helper'
 
 class RegressionBenchmark < Minitest::Benchmark
   using Mint
+  include BenchmarkHelper
+
+  def setup
+    configure_money_gem
+  end
+
   # Define the range of data sizes to test
   def self.bench_range
     bench_exp(1, 10_000)

@@ -1,8 +1,10 @@
-require 'test_helper'
-require 'benchmark/ips'
+require_relative 'benchmark_helper'
 
 class CoreOperationsBenchmark < Minitest::Test
+  include BenchmarkHelper
+
   def setup
+    configure_money_gem
     @amounts = Array.new(1000) { rand(-10_000.00..10_000.00) }
     @currencies = %w[USD EUR GBP JPY BRL]
     @money_objects = @amounts.map { |amt| Mint.money(amt, @currencies.sample) }

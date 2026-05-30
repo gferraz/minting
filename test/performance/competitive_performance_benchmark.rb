@@ -1,19 +1,12 @@
-require 'test_helper'
-require 'benchmark'
-require 'benchmark/ips'
-require 'money'
-require 'bigdecimal'
-
-using Mint
+require_relative 'benchmark_helper'
 
 class CompetitivePerformanceBenchmark < Minitest::Test
-  def setup
-    # Configure Money gem for fair comparison
-    Money.rounding_mode = BigDecimal::ROUND_HALF_UP
-    Money.default_currency = Money::Currency.new('USD')
+  include BenchmarkHelper
 
-    @test_amounts = [1.00, 10.50, 123.45, 999.99, 1234.56]
-    @random_amounts = Array.new(1000) { rand(-1000.00..1000.00) }
+  def setup
+    configure_money_gem
+    @test_amounts = test_amounts
+    @random_amounts = random_amounts
   end
 
   def test_object_creation_comparison
@@ -86,7 +79,7 @@ class CompetitivePerformanceBenchmark < Minitest::Test
     comparisons.each do |comp_name, comparison|
       skip unless ENV['BENCH']
 
-      puts "\n--- #{comp_name.humanize} ---"
+      puts "\n--- #{comp_name} ---"
 
       Benchmark.ips do |x|
         x.report("Mint #{comp_name}") { comparison.call(mint_money_1, mint_money_2, mint_money_3) }
@@ -173,7 +166,7 @@ class CompetitivePerformanceBenchmark < Minitest::Test
     ]
 
     test_scenarios.each do |scenario|
-      puts "\n--- #{scenario[:desc].humanize} (#{scenario[:amount]}) ---"
+      puts "\n--- #{scenario[:desc]} (#{scenario[:amount]}) ---"
 
       mint_money = Mint.money(scenario[:amount], 'USD')
       money = Money.from_amount(scenario[:amount], 'USD')
@@ -233,12 +226,5 @@ class CompetitivePerformanceBenchmark < Minitest::Test
     puts "  Mint ops/sec: #{(transaction_count / mint_time).round(0)}"
     puts "  Money ops/sec: #{(transaction_count / money_time).round(0)}"
     puts "  Performance ratio: #{(money_time / mint_time).round(2)}x"
-  end
-end
-
-# Helper method for string formatting
-class String
-  def humanize
-    tr('_', ' ').split.map(&:capitalize).join(' ')
   end
 end
