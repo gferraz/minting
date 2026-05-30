@@ -39,46 +39,4 @@ class CompetitiveMemoryBenchmark < Minitest::Test
       end
     end
   end
-
-  private
-
-  def measure_memory_usage(description)
-    puts "\n--- #{description} ---"
-
-    # Measure Mint
-    GC.start
-    before_mint = ObjectSpace.count_objects.dup
-    yield(:mint)
-    GC.start
-    after_mint = ObjectSpace.count_objects.dup
-
-    # Measure Money gem
-    GC.start
-    before_money = ObjectSpace.count_objects.dup
-    yield(:money)
-    GC.start
-    after_money = ObjectSpace.count_objects.dup
-
-    # Calculate differences
-    mint_diff = after_mint.merge(before_mint) do |_key, after_val, before_val|
-      after_val - before_val
-    end
-    money_diff = after_money.merge(before_money) do |_key, after_val, before_val|
-      after_val - before_val
-    end
-
-    # Show significant allocations
-    significant_types = (mint_diff.keys + money_diff.keys).uniq.select do |k|
-      (mint_diff[k] || 0) > 10 || (money_diff[k] || 0) > 10
-    end
-
-    significant_types.each do |type|
-      mint_alloc = mint_diff[type] || 0
-      money_alloc = money_diff[type] || 0
-      puts "  #{type}:"
-      puts "    Mint: #{mint_alloc}"
-      puts "    Money: #{money_alloc}"
-      puts "    Ratio: #{money_alloc.zero? ? 'N/A' : (mint_alloc.to_f / money_alloc).round(2)}x"
-    end
-  end
 end

@@ -127,49 +127,4 @@ class MemoryBenchmark < Minitest::Test
       x.compare!
     end
   end
-
-  private
-
-  def measure_allocations(description)
-    puts "\n--- #{description} ---"
-
-    GC.start
-    before = ObjectSpace.count_objects.dup
-
-    yield
-
-    GC.start
-    after = ObjectSpace.count_objects.dup
-
-    diff = after.merge(before) { |_key, after_val, before_val| after_val - before_val }
-    significant_diff = diff.select { |_key, val| val.positive? && val > 10 }
-
-    if significant_diff.any?
-      puts 'Allocated objects:'
-      significant_diff.sort_by { |_k, v| -v }.each do |type, count|
-        puts "  #{type}: #{count}"
-      end
-    else
-      puts 'Minimal allocation detected'
-    end
-  end
-
-  def measure_gc_stats(description)
-    puts "\n--- #{description} ---"
-
-    GC.start
-    before_stats = GC.stat.dup
-
-    yield
-
-    after_stats = GC.stat.dup
-
-    relevant_stats = %i[count major_gc_count minor_gc_count total_allocated_objects]
-    relevant_stats.each do |stat|
-      before_val = before_stats[stat] || 0
-      after_val = after_stats[stat] || 0
-      diff = after_val - before_val
-      puts "  #{stat}: #{diff}" if diff.positive?
-    end
-  end
 end
