@@ -25,6 +25,7 @@ class CompetitivePerformanceBenchmark < Minitest::Test
   end
 
   def test_arithmetic_operations_comparison
+
     with_bench('Arithmetic Operations: Minting vs Money Gem') do
       mint_money_1 = Mint.money(100.50, 'USD')
       mint_money_2 = Mint.money(50.25, 'USD')
@@ -33,13 +34,13 @@ class CompetitivePerformanceBenchmark < Minitest::Test
       money_2 = Money.from_amount(50.25, 'USD')
 
       operations = {
-        'addition' => proc { |m1, m2| m1 + m2 },
-        'subtraction' => proc { |m1, m2| m1 - m2 },
-        'multiplication' => proc { |m1, _m2| m1 * 3.5 },
-        'scalar division' => proc { |m1, _m2| m1 / 2.5 },
-        'ratio division' => proc { |m1, m2| m1 / m2 },
-        'negation' => proc { |m1, _m2| -m1 },
-        'absolute' => proc { |m1, _m2| (-m1).abs }
+        addition: ->(m1, m2) { m1 + m2 },
+        subtraction: ->(m1, m2) { m1 - m2 },
+        multiplication: ->(m1, _m2) { m1 * 3.5 },
+        scalar_division: ->(m1, _m2) { m1 / 2.5 },
+        ratio_division: ->(m1, m2) { m1 / m2 },
+        negation: ->(m1, _m2) { -m1 },
+        absolute: ->(m1, _m2) { (-m1).abs }
       }
 
       operations.each do |op_name, operation|
@@ -65,11 +66,11 @@ class CompetitivePerformanceBenchmark < Minitest::Test
       money_3 = Money.from_amount(50.00, 'USD')
 
       comparisons = {
-        'equality_same' => proc { |m1, m2, _m3| m1 == m2 },
-        'equality_different' => proc { |m1, _m2, m3| m1 == m3 },
-        'spaceship' => proc { |m1, _m2, m3| m1 <=> m3 },
-        'greater_than' => proc { |m1, _m2, m3| m1 > m3 },
-        'hash_generation' => proc { |m1, _m2, _m3| m1.hash }
+        equality_same: ->(m1, m2, _m3) { m1 == m2 },
+        equality_different: ->(m1, _m2, m3) { m1 == m3 },
+        spaceship: ->(m1, _m2, m3) { m1 <=> m3 },
+        greater_than: ->(m1, _m2, m3) { m1 > m3 },
+        hash_generation: ->(m1, _m2, _m3) { m1.hash }
       }
 
       comparisons.each do |comp_name, comparison|
