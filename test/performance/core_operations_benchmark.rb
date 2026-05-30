@@ -7,7 +7,6 @@ class CoreOperationsBenchmark < Minitest::Test
     configure_money_gem
     @amounts = Array.new(1000) { rand(-10_000.00..10_000.00) }
     @currencies = %w[USD EUR GBP JPY BRL]
-    @money_objects = @amounts.map { |amt| Mint.money(amt, @currencies.sample) }
   end
 
   def test_money_creation_performance
