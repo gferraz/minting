@@ -36,6 +36,10 @@ Build, test and lint commands
 - Documentation:
   - bundle exec rake yard
 
+- README verification:
+  - README examples are exercised by `test/minting_test.rb#test_readme_usage`.
+  - Prefer the README as the authoritative usage guide for feature behavior and examples.
+
 High-level architecture (big picture)
 
 - Top-level: lib/minting.rb requires the Mint module and Money implementation.
