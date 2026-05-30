@@ -1,8 +1,7 @@
 module Mint
   class Money
     # Proportionally allocates the monetary amount among a list of ratios.
-    # Disperses any subunit rounding errors across the initial slots using the largest remainder method.
-    #
+    # Disperses any subunit rounding amounts across the initial slots
     # @param proportions [Array<Numeric>] a list of numeric proportions/ratios to allocate by
     # @return [Array<Money>] the list of newly allocated Money objects
     # @raise [ArgumentError] if the proportions list is empty or sums to zero
@@ -20,7 +19,8 @@ module Mint
     end
 
     # Splits the monetary amount into a given quantity of equal parts.
-    # Disperses any fractional subunit rounding errors across the initial slots so that the sum is preserved.
+    # Disperses any fractional subunit rounding differences across the initial slots
+    # so that the sum is preserved.
     #
     # @param quantity [Integer] the number of equal parts to divide the money into (must be > 0)
     # @return [Array<Money>] the list of newly split Money objects

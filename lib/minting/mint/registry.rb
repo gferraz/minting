@@ -14,7 +14,8 @@ module Mint
     raise ArgumentError, "Currency [#{currency_code}] not registered. Check Mint.currencies"
   end
 
-  # Finds a registered currency by its code, symbol, or retrieves it directly if already a Currency object.
+  # Finds a registered currency by its code, symbol,
+  # or retrieves it directly if already a Currency object.
   #
   # @param currency [String, Symbol, Currency] the currency identifier or object
   # @return [Currency, nil] the registered Currency instance or nil if not found
@@ -37,10 +38,9 @@ module Mint
   # @param priority [Integer] parser precedence priority (defaults to 0)
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
-  def self.register_currency(code, subunit: 2, symbol: '$', priority: 0)
+  def self.register_currency(code:, subunit: 2, symbol: '$', priority: 0)
     code = code.to_s
-    currencies[code] || register_currency!(code, subunit: subunit, symbol: symbol,
-                                                 priority: priority)
+    currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
   end
 
   # Strictly registers a new currency, raising a KeyError if already registered.
@@ -52,7 +52,7 @@ module Mint
   # @return [Currency] the newly registered Currency instance
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
-  def self.register_currency!(code, subunit:, symbol: '', priority: 0)
+  def self.register_currency!(code:, subunit:, symbol: '', priority: 0)
     code = code.to_s
     unless code.match?(/^[A-Z_]+$/)
       raise ArgumentError,
@@ -63,8 +63,7 @@ module Mint
             "Currency: #{code} already registered"
     end
 
-    currencies[code] =
-      Currency.new(code, subunit: subunit, symbol: symbol, priority: priority)
+    currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
     @currency_symbols = nil
     currencies[code]
   end
@@ -73,7 +72,10 @@ module Mint
   #
   # @return [Hash{String => Currency}] registered currencies mapped by code
   def self.currencies
-    @currencies ||= load_currencies
+    @currencies ||= begin
+      registry = { 'XXX' => Currency.new(code: 'XXX', name: 'No currency', symbol: '¤') }
+      load_currencies(registry)
+    end
   end
 
   # Registered symbols sorted for detection: longest match wins, then parser priority.
@@ -86,16 +88,23 @@ module Mint
     end.freeze
   end
 
-  def self.load_currencies
-    path = File.expand_path('../data/currencies.yaml', __dir__)
-    YAML.load_file(path).each_with_object({}) do |(code, attrs), registry|
+  def self.load_currencies(registry)
+    base = File.expand_path('../data', __dir__)
+    path = File.join(base, 'currencies.yaml')
+
+    data = YAML.load_file(path)
+    data.each do |entry|
+      code = entry['code']
       registry[code] = Currency.new(
-        code,
-        subunit: attrs['subunit'],
-        symbol: attrs['symbol'],
-        priority: attrs['priority']
+        code: code,
+        subunit: entry['subunit'],
+        symbol: entry['symbol'],
+        priority: entry['priority'],
+        country: entry['country'],
+        name: entry['name']
       )
     end
+    registry
   end
 
   private_class_method :load_currencies

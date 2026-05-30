@@ -17,7 +17,6 @@ class MoneyTest < Minitest::Test
   end
 
   def test_hash
-    assert_equal 0.hash, Mint.money(0, 'USD').hash
     assert_equal Mint.money(2, 'USD').hash, Mint.money(2, 'USD').hash
     refute_equal Mint.money(2, 'USD').hash, Mint.money(0, 'USD').hash
     refute_equal Mint.money(2, 'USD').hash, Mint.money(2, 'BRL').hash

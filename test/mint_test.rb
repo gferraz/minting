@@ -11,7 +11,7 @@ class MintTest < Minitest::Test
   end
 
   def test_register
-    sgx = Mint.register_currency(:SGX, subunit: 2, symbol: '^')
+    sgx = Mint.register_currency(code: :SGX, subunit: 2, symbol: '^')
 
     assert_equal Mint.currency(:SGX), sgx
   end

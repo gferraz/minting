@@ -12,11 +12,7 @@ module Mint
     # @raise [ArgumentError] If amount is not numeric or currency is invalid
     def initialize(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
-
-      unless currency.is_a?(Currency)
-        raise ArgumentError,
-              'currency must be a Currency object'
-      end
+      raise ArgumentError, 'currency must be a Currency object' unless currency.is_a?(Currency)
 
       @amount = amount.to_r.round(currency.subunit)
       @currency = currency
@@ -26,17 +22,12 @@ module Mint
     # Returns the ISO 3-letter currency code string.
     #
     # @return [String] the ISO currency code
-    def currency_code
-      currency.code
-    end
+    def currency_code = currency.code
 
     # Generates a stable hash key for Money instances.
-    # Ensures zero amounts have identical hash keys across all currencies.
     #
     # @return [Integer] the calculated hash value
-    def hash
-      zero? ? 0.hash : [amount, currency.code].hash
-    end
+    def hash = [amount, currency_code].hash
 
     # Returns a new Money object with the specified amount, or self if unchanged
     # @param new_amount [Numeric] The new amount
@@ -56,8 +47,10 @@ module Mint
     #
     # @param other [Object] the target object to compare
     # @return [Boolean] true if currencies match, false otherwise
-    def same_currency?(other)
-      other.respond_to?(:currency) && other.currency == currency
-    end
+    def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
+
+    # Returns default zero no currency money
+    def self.zero = @zero ||= new(0, Mint.currencies('XXX'))
+
   end
 end

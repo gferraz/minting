@@ -68,7 +68,7 @@ module Mint
     # Performs division of the monetary value by a scalar Numeric or identical currency {Money}.
     #
     # @param divisor [Numeric, Money] the divisor
-    # @return [Money, Numeric] a new Money instance (if scalar division) or a numeric ratio (if Money division)
+    # @return [Money, Numeric] a new Money (scalar division) or a numeric ratio (Money division)
     # @raise [TypeError] if divisor is of incompatible type or different currency
     # @raise [ZeroDivisionError] if division by zero is attempted
     def /(divisor)
