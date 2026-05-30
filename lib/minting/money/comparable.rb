@@ -36,13 +36,8 @@ module Mint
       raise TypeError, "#{inspect} can't be compared to #{other.inspect}"
     end
 
+    def nonzero? = amount.nonzero?
 
-    def nonzero?
-      amount.nonzero?
-    end
-
-    def zero?
-      amount.zero?
-    end
+    def zero? = amount.zero?
   end
 end

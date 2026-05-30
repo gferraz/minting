@@ -51,6 +51,5 @@ module Mint
 
     # Returns default zero no currency money
     def self.zero = @zero ||= new(0, Mint.currencies('XXX'))
-
   end
 end
