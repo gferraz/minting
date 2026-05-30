@@ -31,6 +31,6 @@ class MintTest < Minitest::Test
 
   def test_money_range_step
     assert_equal [1.dollar, 2.dollars, 3.dollars],
-                 (1.dollar..3.dollars).step(1.dollar).to_a
+                 ((1.dollar)..(3.dollars)).step(1.dollar).to_a
   end
 end
