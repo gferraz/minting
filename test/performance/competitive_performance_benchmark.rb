@@ -127,24 +127,18 @@ class CompetitivePerformanceBenchmark < Minitest::Test
     amount = 22_123_678.232
 
     mint_money = Mint.money(amount, 'USD')
-    gem_money = Money.from_amount(amount, 'USD')
+    money = Money.from_amount(amount, 'USD')
 
     puts "\nAmount: #{amount}"
 
     Benchmark.ips do |x|
       x.report('Mint to_i') { mint_money.to_i }
-      x.report('Money to_i') { gem_money.to_i }
+      x.report('Money to_i') { money.to_i }
       x.report('Mint to_f') { mint_money.to_f }
-      x.report('Money to_f') { gem_money.to_f }
+      x.report('Money to_f') { money.to_f }
       x.report('Mint to_r') { mint_money.to_r }
-      if gem_money.respond_to?(:to_r)
-        x.report('Money to_r') { gem_money.to_r }
-      else
-        denom = 10 ** (gem_money.currency.respond_to?(:exponent) ? gem_money.currency.exponent : 2)
-        x.report('Money to_r (from fractional)') { gem_money.fractional.to_r / denom }
-      end
       x.report('Mint to_d') { mint_money.to_d }
-      x.report('Money to_d') { gem_money.to_d }
+      x.report('Money to_d') { money.to_d }
 
       x.compare!
     end
