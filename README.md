@@ -114,7 +114,6 @@ ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero `Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`. Non-zero amounts must match currency and value.
-Hashing follows the same principle: zero amounts produce the same stable hash of `0.hash`.
 
 **Custom currencies** — `Mint.register_currency` returns the existing entry if the code is already registered; use `register_currency!` to detect duplicates.
 
