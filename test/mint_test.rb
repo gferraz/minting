@@ -23,8 +23,14 @@ class MintTest < Minitest::Test
     assert_equal 4.2.dollars, Mint.money(4.2, 'USD')
     assert_equal 5.3.euros, Mint.money(5.3, 'EUR')
     assert_equal 5.3.to_money(:EUR), Mint.money(5.3, 'EUR')
+    assert_equal 4.to_money('USD'), Mint.money(4, 'USD')
     assert_equal 5.3.mint(:EUR), Mint.money(5.3, 'EUR')
     assert_equal '5.30'.to_money(:EUR), Mint.money(5.30, 'EUR')
     assert_equal '6.30'.to_money(:USD), Mint.money(6.30, 'USD')
+  end
+
+  def test_money_range_step
+    assert_equal [1.dollar, 2.dollars, 3.dollars],
+                 (1.dollar..3.dollars).step(1.dollar).to_a
   end
 end
