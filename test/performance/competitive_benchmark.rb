@@ -7,7 +7,7 @@ require 'bigdecimal'
 class CompetitiveBenchmark < Minitest::Test
   def setup
     # Configure Money gem for fair comparison
-    Money.rounding_mode = BigDecimal::ROUND_HALF_EVEN
+    Money.rounding_mode = BigDecimal::ROUND_HALF_UP
     Money.default_currency = Money::Currency.new('USD')
 
     @test_amounts = [1.00, 10.50, 123.45, 999.99, 1234.56]
@@ -112,8 +112,52 @@ class CompetitiveBenchmark < Minitest::Test
         x.report('Money inspect') { gem_money.inspect }
         x.report('Mint to_json') { mint_money.to_json }
         x.report('Money to_json') { gem_money.to_json }
+        x.report('Mint to_d') { mint_money.to_d }
+        x.report('Money to_d') { gem_money.to_d }
+        x.report('Mint to_f') { mint_money.to_f }
+        x.report('Money to_f') { gem_money.to_f }
         x.compare!
       end
+    end
+  end
+
+  def test_numeric_conversion_comparison
+    skip unless ENV['BENCH']
+
+    puts "\n=== Numeric Conversion: Minting vs Money Gem ==="
+
+    mint_money = Mint.money(123.45, 'USD')
+    gem_money = Money.from_amount(123.45, 'USD')
+
+    Benchmark.ips do |x|
+      x.report('Mint to_i') { mint_money.to_i }
+      x.report('Money to_i') { gem_money.to_i }
+      x.report('Mint to_f') { mint_money.to_f }
+      x.report('Money to_f') { gem_money.to_f }
+      x.report('Mint to_r') { mint_money.to_r }
+      if gem_money.respond_to?(:to_r)
+        x.report('Money to_r') { gem_money.to_r }
+      else
+        denom = 10**(gem_money.currency.respond_to?(:exponent) ? gem_money.currency.exponent : 2)
+        x.report('Money to_r (from fractional)') { gem_money.fractional.to_r / denom }
+      end
+      x.report('Mint to_d') { mint_money.to_d }
+      x.report('Money to_d') { gem_money.to_d }
+      x.compare!
+    end
+  end
+
+  def test_currency_lookup_comparison
+    skip unless ENV['BENCH']
+
+    puts "\n=== Currency Lookup: Minting vs Money Gem ==="
+
+    Benchmark.ips do |x|
+      x.report('Mint currency(string)') { Mint.currency('USD') }
+      x.report('Mint currency(symbol)') { Mint.currency(:USD) }
+      x.report('Money currency(iso_code)') { Money::Currency.find('USD') }
+      x.report('Money currency(new)') { Money::Currency.new('USD') }
+      x.compare!
     end
   end
 
@@ -146,12 +190,20 @@ class CompetitiveBenchmark < Minitest::Test
 
         Benchmark.ips do |x|
           x.report('Mint allocate') { mint_money.allocate(pattern) }
-          x.report('Money allocate') { gem_money.allocate(pattern) }
+          if gem_money.respond_to?(:allocate)
+            x.report('Money allocate') { gem_money.allocate(pattern) }
+          else
+            x.report('Money allocate (unsupported)') { nil }
+          end
 
           if pattern.all? { |p| p.is_a?(Integer) || p == p.to_i }
             splits = pattern.sum
             x.report('Mint split') { mint_money.split(splits) } if mint_money.respond_to?(:split)
-            x.report('Money split') { gem_money.split(splits) } if gem_money.respond_to?(:split)
+            if gem_money.respond_to?(:split)
+              x.report('Money split') { gem_money.split(splits) }
+            else
+              x.report('Money split (unsupported)') { nil }
+            end
           end
 
           x.compare!
