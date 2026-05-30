@@ -17,6 +17,13 @@ Rake::TestTask.new(:bench) do |t|
   t.pattern = 'test/performance/*_benchmark.rb'
 end
 
+Rake::TestTask.new('bench:edge') do |t|
+  t.libs = %w[lib test]
+  t.pattern = 'test/performance/algorithm_benchmark.rb'
+  t.ruby_opts << '-r test_helper.rb'
+end
+
+
 Rake::TestTask.new('bench:regression') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/regression_benchmark.rb'
