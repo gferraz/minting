@@ -548,163 +548,163 @@
   name: Panamanian Balboa
   priority: 28
 - code: HRK
-  country_numeric: 191
+  country: HRV
   subunit: 2
   symbol: kn
   name: Croatian Kuna
   priority: 27
 - code: GEL
-  country_numeric: 268
+  country: GEO
   subunit: 2
   symbol: "₾"
   name: Georgian Lari
   priority: 26
 - code: UYU
-  country_numeric: 858
+  country: URY
   subunit: 2
   symbol: "$U"
   name: Uruguayan Peso
   priority: 25
 - code: AMD
-  country_numeric: 051
+  country: ARM
   subunit: 2
   symbol: "֏"
   name: Armenian Dram
   priority: 24
 - code: JMD
-  country_numeric: 388
+  country: JAM
   subunit: 2
   symbol: J$
   name: Jamaican Dollar
   priority: 23
 - code: QAR
-  country_numeric: 634
+  country: QAT
   subunit: 2
   symbol: "﷼"
   name: Qatari Riyal
   priority: 22
 - code: BWP
-  country_numeric: 072
+  country: BWA
   subunit: 2
   symbol: P
   name: Botswana Pula
   priority: 21
 - code: MDL
-  country_numeric: 498
+  country: MDA
   subunit: 2
   symbol: L
   name: Moldovan Leu
   priority: 20
 - code: NAD
-  country_numeric: 516
+  country: NAM
   subunit: 2
   symbol: N$
   name: Namibian Dollar
   priority: 19
 - code: LSL
-  country_numeric: 426
+  country: LSO
   subunit: 2
   symbol: L
   name: Lesotho Loti
   priority: 18
 - code: BHD
-  country_numeric: 048
+  country: BHR
   subunit: 3
   symbol: ".د.ب"
   name: Bahraini Dinar
   priority: 17
 - code: TTD
-  country_numeric: 780
+  country: TTO
   subunit: 2
   symbol: TT$
   name: Trinidad and Tobago Dollar
   priority: 16
 - code: SZL
-  country_numeric: 748
+  country: SWZ
   subunit: 2
   symbol: L
   name: Eswatini Lilangeni
   priority: 15
 - code: FJD
-  country_numeric: 242
+  country: FJI
   subunit: 2
   symbol: FJ$
   name: Fijian Dollar
   priority: 14
 - code: GYD
-  country_numeric: 328
+  country: GUY
   subunit: 2
   symbol: G$
   name: Guyanese Dollar
   priority: 13
 - code: SBD
-  country_numeric: 090
+  country: SLB
   subunit: 2
   symbol: SI$
   name: Solomon Islands Dollar
   priority: 12
 - code: SRD
-  country_numeric: 968
+  country: SUR
   subunit: 2
   symbol: Sr$
   name: Surinamese Dollar
   priority: 11
 - code: XCD
-  country_numeric: 951
+  country: null
   subunit: 2
   symbol: EC$
   name: East Caribbean Dollar
   priority: 10
 - code: BND
-  country_numeric: 096
+  country: BRN
   subunit: 2
   symbol: B$
   name: Brunei Dollar
   priority: 9
 - code: BSD
-  country_numeric: 044
+  country: BHS
   subunit: 2
   symbol: B$
   name: Bahamian Dollar
   priority: 8
 - code: BZD
-  country_numeric: 084
+  country: BLZ
   subunit: 2
   symbol: BZ$
   name: Belize Dollar
   priority: 7
 - code: ISK
-  country_numeric: 352
+  country: ISL
   subunit: 0
   symbol: kr
   name: Icelandic Króna
   priority: 6
 - code: BBD
-  country_numeric: 052
+  country: BRB
   subunit: 2
   symbol: Bds$
   name: Barbadian Dollar
   priority: 5
 - code: VUV
-  country_numeric: 548
+  country: VUT
   subunit: 0
   symbol: VT
   name: Vanuatu Vatu
   priority: 4
 - code: XPF
-  country_numeric: 953
+  country: null
   subunit: 0
   symbol: "₣"
   name: CFP Franc
   priority: 3
 - code: WST
-  country_numeric: 882
+  country: WSM
   subunit: 2
   symbol: WS$
   name: Samoan Tala
   priority: 2
 - code: TOP
-  country_numeric: 776
+  country: TON
   subunit: 2
   symbol: T$
   name: Tongan Paʻanga
