@@ -16,7 +16,6 @@ class MoneyComparableTest < Minitest::Test
     assert       10.dollars.eql? ten_usd
     assert_equal 10.dollars.hash, ten_usd.hash
     refute_same 10.dollars, ten_usd
-
   end
 
   def test_inequality

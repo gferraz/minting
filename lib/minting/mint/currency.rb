@@ -11,7 +11,7 @@ module Mint
 
     private
 
-    def initialize(code:, subunit: 0, symbol:, priority: 0, country: nil, name: nil)
+    def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil)
       @code = code.to_s
       @subunit = subunit.to_i
       @symbol = symbol
