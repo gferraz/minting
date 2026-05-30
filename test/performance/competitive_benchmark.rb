@@ -17,11 +17,10 @@ class CompetitiveBenchmark < Minitest::Test
   end
 
   def test_object_creation_comparison
-    # skip unless ENV['BENCH']
+    skip unless ENV['BENCH']
 
     puts "\n=== Object Creation: Minting vs Money Gem ==="
     amount = 1234.56
-    puts "\nAmount: #{amount}"
 
     Benchmark.ips do |x|
       x.report('Mint.money') { Mint.money(amount, 'USD') }
@@ -35,20 +34,20 @@ class CompetitiveBenchmark < Minitest::Test
 
   def test_arithmetic_operations_comparison
     skip unless ENV['BENCH']
-
     puts "\n=== Arithmetic Operations: Minting vs Money Gem ==="
 
     mint_money_1 = Mint.money(100.50, 'USD')
     mint_money_2 = Mint.money(50.25, 'USD')
 
-    gem_money_1 = Money.from_amount(100.50, 'USD')
-    gem_money_2 = Money.from_amount(50.25, 'USD')
+    money_1 = Money.from_amount(100.50, 'USD')
+    money_2 = Money.from_amount(50.25, 'USD')
 
     operations = {
       'addition' => proc { |m1, m2| m1 + m2 },
       'subtraction' => proc { |m1, m2| m1 - m2 },
       'multiplication' => proc { |m1, _m2| m1 * 3.5 },
-      'division' => proc { |m1, _m2| m1 / 2.5 },
+      'scalar division' => proc { |m1, _m2| m1 / 2.5 },
+      'ratio division' => proc { |m1, m2| m1 / m2 },
       'negation' => proc { |m1, _m2| -m1 },
       'absolute' => proc { |m1, _m2| (-m1).abs }
     }
@@ -58,7 +57,7 @@ class CompetitiveBenchmark < Minitest::Test
 
       Benchmark.ips do |x|
         x.report("Mint #{op_name}") { operation.call(mint_money_1, mint_money_2) }
-        x.report("Money #{op_name}") { operation.call(gem_money_1, gem_money_2) }
+        x.report("Money #{op_name}") { operation.call(money_1, money_2) }
         x.compare!
       end
     end
@@ -66,16 +65,15 @@ class CompetitiveBenchmark < Minitest::Test
 
   def test_comparison_operations_comparison
     skip unless ENV['BENCH']
-
     puts "\n=== Comparison Operations: Minting vs Money Gem ==="
 
     mint_money_1 = Mint.money(100.00, 'USD')
     mint_money_2 = Mint.money(100.00, 'USD')
     mint_money_3 = Mint.money(50.00, 'USD')
 
-    gem_money_1 = Money.from_amount(100.00, 'USD')
-    gem_money_2 = Money.from_amount(100.00, 'USD')
-    gem_money_3 = Money.from_amount(50.00, 'USD')
+    money_1 = Money.from_amount(100.00, 'USD')
+    money_2 = Money.from_amount(100.00, 'USD')
+    money_3 = Money.from_amount(50.00, 'USD')
 
     comparisons = {
       'equality_same' => proc { |m1, m2, _m3| m1 == m2 },
@@ -86,98 +84,86 @@ class CompetitiveBenchmark < Minitest::Test
     }
 
     comparisons.each do |comp_name, comparison|
+      skip unless ENV['BENCH']
+
       puts "\n--- #{comp_name.humanize} ---"
 
       Benchmark.ips do |x|
         x.report("Mint #{comp_name}") { comparison.call(mint_money_1, mint_money_2, mint_money_3) }
-        x.report("Money #{comp_name}") { comparison.call(gem_money_1, gem_money_2, gem_money_3) }
+        x.report("Money #{comp_name}") { comparison.call(money_1, money_2, money_3) }
         x.compare!
       end
     end
   end
 
   def test_formatting_comparison
-    skip unless ENV['BENCH']
-
+    skip
     puts "\n=== String Formatting: Minting vs Money Gem ==="
+    amount = 22_123_678.232
+    mint_money = Mint.money(amount, 'USD')
+    money = Money.from_amount(amount, 'USD')
 
-    @test_amounts.each do |amount|
-      mint_money = Mint.money(amount, 'USD')
-      gem_money = Money.from_amount(amount, 'USD')
+    puts "\nAmount: #{amount}"
 
-      puts "\nAmount: #{amount}"
-
-      Benchmark.ips do |x|
-        x.report('Mint to_s') { mint_money.to_s }
-        x.report('Money to_s') { gem_money.to_s }
-        x.report('Mint inspect') { mint_money.inspect }
-        x.report('Money inspect') { gem_money.inspect }
-        x.report('Mint to_json') { mint_money.to_json }
-        x.report('Money to_json') { gem_money.to_json }
-        x.report('Mint to_d') { mint_money.to_d }
-        x.report('Money to_d') { gem_money.to_d }
-        x.report('Mint to_f') { mint_money.to_f }
-        x.report('Money to_f') { gem_money.to_f }
-        x.compare!
-      end
+    Benchmark.ips do |x|
+      x.report('Mint to_s') { mint_money.to_s }
+      x.report('Money to_s') { money.to_s }
+      x.report('Mint inspect') { mint_money.inspect }
+      x.report('Money inspect') { money.inspect }
+      x.report('Mint to_json') { mint_money.to_json }
+      x.report('Money to_json') { money.to_json }
+      x.compare!
     end
   end
 
   def test_numeric_comparison
     skip unless ENV['BENCH']
-
     puts "\n=== Numeric conversion: Minting vs Money ==="
+    amount = 22_123_678.232
 
-    @test_amounts.each do |amount|
-      mint_money = Mint.money(amount, 'USD')
-      money = Money.from_amount(amount, 'USD')
+    mint_money = Mint.money(amount, 'USD')
+    money = Money.from_amount(amount, 'USD')
 
-      puts "\nAmount: #{amount}"
+    puts "\nAmount: #{amount}"
 
-      Benchmark.ips do |x|
-        x.report('Mint to_r') { mint_money.to_r }
-        x.report('Mint to_i') { mint_money.to_d }
-        x.report('Money to_i') { money.to_d }
-        x.report('Mint to_f') { mint_money.to_f }
-        x.report('Money to_f') { money.to_f }
-        x.report('Mint to_d') { mint_money.to_d }
-        x.report('Money to_d') { money.to_d }
+    Benchmark.ips do |x|
+      x.report('Mint to_r') { mint_money.to_r }
+      x.report('Mint to_i') { mint_money.to_d }
+      x.report('Money to_i') { money.to_d }
+      x.report('Mint to_f') { mint_money.to_f }
+      x.report('Money to_f') { money.to_f }
+      x.report('Mint to_d') { mint_money.to_d }
+      x.report('Money to_d') { money.to_d }
 
-        x.compare!
-        x.json! 'numeric-comparison.json'
-      end
+      x.compare!
     end
   end
 
   def test_currency_lookup_comparison
     skip unless ENV['BENCH']
-
     puts "\n=== Currency Lookup: Minting vs Money Gem ==="
 
     Benchmark.ips do |x|
       x.report('Mint currency(string)') { Mint.currency('USD') }
       x.report('Mint currency(symbol)') { Mint.currency(:USD) }
-      x.report('Money currency(iso_code)') { Money::Currency.find('USD') }
       x.report('Money currency(new)') { Money::Currency.new('USD') }
+      x.report('Money currency(iso_code)') { Money::Currency.find('USD') }
       x.compare!
     end
   end
 
   def test_allocation_comparison
     skip unless ENV['BENCH']
-
     puts "\n=== Allocation Algorithms: Minting vs Money Gem ==="
 
     test_scenarios = [
-      { amount: 10.00, desc: 'small_amount' },
-      { amount: 100.00, desc: 'medium_amount' },
-      { amount: 1000.00, desc: 'large_amount' }
+      { amount: 15.01, desc: 'small_amount' },
+      { amount: 12_343.47, desc: 'large_amount' }
     ]
 
     allocation_patterns = [
       [1, 2, 3],
-      [1, 1, 1, 1, 1],
-      [0.25, 0.25, 0.25, 0.25],
+      [0.25, 1.25, 2.25, 3.25],
       (1..10).to_a
     ]
 
@@ -185,28 +171,19 @@ class CompetitiveBenchmark < Minitest::Test
       puts "\n--- #{scenario[:desc].humanize} (#{scenario[:amount]}) ---"
 
       mint_money = Mint.money(scenario[:amount], 'USD')
-      gem_money = Money.from_amount(scenario[:amount], 'USD')
+      money = Money.from_amount(scenario[:amount], 'USD')
 
-      allocation_patterns.each_with_index do |pattern, idx|
-        puts "\nPattern #{idx + 1}: #{pattern.first(3)}#{'...' if pattern.size > 3}"
+      allocation_patterns.each_with_index do |pattern, index|
+        splits = pattern.sum.to_i
+        puts "\nPattern #{index + 1}: #{pattern} Splits: #{splits}"
 
         Benchmark.ips do |x|
           x.report('Mint allocate') { mint_money.allocate(pattern) }
-          if gem_money.respond_to?(:allocate)
-            x.report('Money allocate') { gem_money.allocate(pattern) }
-          else
-            x.report('Money allocate (unsupported)') { nil }
-          end
+          x.report('Money allocate') { money.allocate(pattern) }
 
-          if pattern.all? { |p| p.is_a?(Integer) || p == p.to_i }
-            splits = pattern.sum
-            x.report('Mint split') { mint_money.split(splits) } if mint_money.respond_to?(:split)
-            if gem_money.respond_to?(:split)
-              x.report('Money split') { gem_money.split(splits) }
-            else
-              x.report('Money split (unsupported)') { nil }
-            end
-          end
+          splits = pattern.sum.to_i
+          x.report('Mint split') { mint_money.split(splits) }
+          x.report('Money split') { money.split(splits) }
 
           x.compare!
         end
@@ -264,21 +241,21 @@ class CompetitiveBenchmark < Minitest::Test
       puts "\nTesting amount: #{amount}"
 
       mint_money = Mint.money(amount, 'USD')
-      gem_money = Money.from_amount(amount, 'USD')
+      money = Money.from_amount(amount, 'USD')
 
       puts "  Mint internal: #{mint_money.amount} (#{mint_money.amount.class})"
-      puts "  Money internal: #{gem_money.fractional} cents (#{gem_money.fractional.class})"
+      puts "  Money internal: #{money.fractional} cents (#{money.fractional.class})"
       puts "  Mint display: #{mint_money}"
-      puts "  Money display: #{gem_money}"
+      puts "  Money display: #{money}"
 
       # Test arithmetic precision
       result_mint = (mint_money * 3) / 3
-      result_money = (gem_money * 3) / 3
+      result_money = (money * 3) / 3
 
       puts "  (amount * 3) / 3 - Mint: #{result_mint}"
       puts "  (amount * 3) / 3 - Money: #{result_money}"
       puts "  Precision maintained - Mint: #{result_mint == mint_money}"
-      puts "  Precision maintained - Money: #{result_money == gem_money}"
+      puts "  Precision maintained - Money: #{result_money == money}"
     end
   end
 
