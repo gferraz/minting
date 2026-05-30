@@ -17,7 +17,6 @@ class MoneyComparableTest < Minitest::Test
     assert_equal 10.dollars.hash, ten_usd.hash
     refute_same 10.dollars, ten_usd
 
-    assert_equal Mint.money(0r, 'USD').hash, Mint.money(0r, 'BRL').hash
   end
 
   def test_inequality

@@ -1,5 +1,5 @@
 class MoneyFormatTest < Minitest::Test
-  FUEL = Mint.register_currency('BRL_FUEL', subunit: 3, symbol: 'R$')
+  FUEL = Mint.register_currency(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
   def test_numeric_simple_format
     money = Mint.money(9.99, 'USD')

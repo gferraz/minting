@@ -31,9 +31,6 @@ module Mint
       raise TypeError, "#{inspect} can't be compared to #{other.inspect}"
     end
 
-    def eql?(other)
-      self == other
-    end
 
     def nonzero?
       amount.nonzero?
