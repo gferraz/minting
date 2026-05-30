@@ -4,6 +4,8 @@ require 'benchmark/ips'
 require 'money'
 require 'bigdecimal'
 
+using Mint
+
 class CompetitiveBenchmark < Minitest::Test
   def setup
     # Configure Money gem for fair comparison
@@ -15,19 +17,19 @@ class CompetitiveBenchmark < Minitest::Test
   end
 
   def test_object_creation_comparison
-    skip unless ENV['BENCH']
+    # skip unless ENV['BENCH']
 
     puts "\n=== Object Creation: Minting vs Money Gem ==="
+    amount = 1234.56
+    puts "\nAmount: #{amount}"
 
-    @test_amounts.each do |amount|
-      puts "\nAmount: #{amount}"
-
-      Benchmark.ips do |x|
-        x.report('Mint.money') { Mint.money(amount, 'USD') }
-        x.report('Money.new') { Money.new((amount * 100).to_i, 'USD') }
-        x.report('Money.from_amount') { Money.from_amount(amount, 'USD') }
-        x.compare!
-      end
+    Benchmark.ips do |x|
+      x.report('Mint.money') { Mint.money(amount, 'USD') }
+      x.report('Mint some.dollars') { amount.dollars }
+      x.report('Money.new') { Money.new((amount * 100).to_i, 'USD') }
+      x.report('Money.us_dollar') { Money.us_dollar(amount) }
+      x.report('Money.from_amount') { Money.from_amount(amount, 'USD') }
+      x.compare!
     end
   end
 
@@ -121,29 +123,29 @@ class CompetitiveBenchmark < Minitest::Test
     end
   end
 
-  def test_numeric_conversion_comparison
+  def test_numeric_comparison
     skip unless ENV['BENCH']
 
-    puts "\n=== Numeric Conversion: Minting vs Money Gem ==="
+    puts "\n=== Numeric conversion: Minting vs Money ==="
 
-    mint_money = Mint.money(123.45, 'USD')
-    gem_money = Money.from_amount(123.45, 'USD')
+    @test_amounts.each do |amount|
+      mint_money = Mint.money(amount, 'USD')
+      money = Money.from_amount(amount, 'USD')
 
-    Benchmark.ips do |x|
-      x.report('Mint to_i') { mint_money.to_i }
-      x.report('Money to_i') { gem_money.to_i }
-      x.report('Mint to_f') { mint_money.to_f }
-      x.report('Money to_f') { gem_money.to_f }
-      x.report('Mint to_r') { mint_money.to_r }
-      if gem_money.respond_to?(:to_r)
-        x.report('Money to_r') { gem_money.to_r }
-      else
-        denom = 10**(gem_money.currency.respond_to?(:exponent) ? gem_money.currency.exponent : 2)
-        x.report('Money to_r (from fractional)') { gem_money.fractional.to_r / denom }
+      puts "\nAmount: #{amount}"
+
+      Benchmark.ips do |x|
+        x.report('Mint to_r') { mint_money.to_r }
+        x.report('Mint to_i') { mint_money.to_d }
+        x.report('Money to_i') { money.to_d }
+        x.report('Mint to_f') { mint_money.to_f }
+        x.report('Money to_f') { money.to_f }
+        x.report('Mint to_d') { mint_money.to_d }
+        x.report('Money to_d') { money.to_d }
+
+        x.compare!
+        x.json! 'numeric-comparison.json'
       end
-      x.report('Mint to_d') { mint_money.to_d }
-      x.report('Money to_d') { gem_money.to_d }
-      x.compare!
     end
   end
 
