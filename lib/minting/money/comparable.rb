@@ -7,9 +7,14 @@ module Mint
     # @return true if both are zero, or both have same amount and same currency
     def ==(other)
       return true if zero? && other.respond_to?(:zero?) && other.zero?
-      return false unless other.is_a?(Mint::Money)
 
-      amount == other.amount && currency == other.currency
+      eql?(other)
+    end
+
+    def eql?(other)
+      other.is_a?(Mint::Money) &&
+        amount == other.amount &&
+        currency == other.currency
     end
 
     # @example
