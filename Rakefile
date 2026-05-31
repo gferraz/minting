@@ -12,9 +12,15 @@ Rake::TestTask.new(:test) do |t|
   t.ruby_opts << '-rtest_helper.rb'
 end
 
-Rake::TestTask.new(:bench) do |t|
+Rake::TestTask.new('bench') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/*_benchmark.rb'
+end
+
+Rake::TestTask.new('bench:parse') do |t|
+  t.libs = %w[lib test]
+  t.pattern = 'test/performance/parse_benchmark.rb'
+  t.ruby_opts << '-r test_helper.rb'
 end
 
 Rake::TestTask.new('bench:edge') do |t|

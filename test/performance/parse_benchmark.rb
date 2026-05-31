@@ -25,7 +25,7 @@ class ParseBenchmark < Minitest::Test
       when 0 then "$#{amt}"
       when 1 then "USD #{amt}"
       when 2 then "#{amt} €"
-      else amt
+      else "#{amt} XXX"
       end
     end
   end
@@ -33,11 +33,11 @@ class ParseBenchmark < Minitest::Test
   def test_parse_performance
     with_bench('Money.parse performance') do
       Benchmark.ips do |x|
-        x.report('parse plain numeric') { Mint::Money.parse(@samples[0], 'USD') }
-        x.report('parse with symbol') { Mint::Money.parse(@samples[2]) }
-        x.report('parse with code') { Mint::Money.parse(@samples[3]) }
-        x.report('parse european') { Mint::Money.parse(@samples[4]) }
-        x.report('parse random sample') { Mint::Money.parse(@random.sample) }
+        x.report('Mint parse plain numeric') { Mint::Money.parse(@samples[0], 'USD') }
+        x.report('Mint parse with symbol') { Mint::Money.parse(@samples[2]) }
+        x.report('Mint parse with code') { Mint::Money.parse(@samples[3]) }
+        x.report('Mint parse european') { Mint::Money.parse(@samples[4]) }
+        x.report('Mint parse random sample') { Mint::Money.parse(@random.sample) }
         x.compare!
       end
     end
@@ -45,15 +45,9 @@ class ParseBenchmark < Minitest::Test
 
   def test_parse_allocations
     with_bench('Money.parse allocations') do
-      result = measure_allocations('parse random 1000') do |mode|
-        if mode == :mint
-          1000.times { Mint::Money.parse(@random.sample) }
-        else
-          # Compare against the money gem where available
-          1000.times { ::Money.parse(@random.sample) rescue nil }
-        end
+      result = measure_allocations('parse random 1000') do
+        1000.times { Mint::Money.parse(@random.sample) }
       end
-
       puts result.inspect
     end
   end
