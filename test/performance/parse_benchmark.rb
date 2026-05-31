@@ -1,0 +1,60 @@
+require_relative 'benchmark_helper'
+
+class ParseBenchmark < Minitest::Test
+  include BenchmarkHelper
+
+  def setup
+    configure_money_gem
+
+    @samples = [
+      '19.99',
+      '1,234.56',
+      '$19.99',
+      'USD 1,234.56',
+      '19,99 €',
+      'HK$1,234.56',
+      'JPY 1000',
+      '1.234,56',
+      '€1.234,56',
+      '1,234,567.89'
+    ]
+
+    @random = Array.new(1000) do
+      amt = format('%.2f', rand(-10_000.0..10_000.0))
+      case rand(4)
+      when 0 then "$#{amt}"
+      when 1 then "USD #{amt}"
+      when 2 then "#{amt} €"
+      else amt
+      end
+    end
+  end
+
+  def test_parse_performance
+    with_bench('Money.parse performance') do
+      Benchmark.ips do |x|
+        x.report('parse plain numeric') { Mint::Money.parse(@samples[0], 'USD') }
+        x.report('parse with symbol') { Mint::Money.parse(@samples[2]) }
+        x.report('parse with code') { Mint::Money.parse(@samples[3]) }
+        x.report('parse european') { Mint::Money.parse(@samples[4]) }
+        x.report('parse random sample') { Mint::Money.parse(@random.sample) }
+        x.compare!
+      end
+    end
+  end
+
+  def test_parse_allocations
+    with_bench('Money.parse allocations') do
+      result = measure_allocations('parse random 1000') do |mode|
+        if mode == :mint
+          1000.times { Mint::Money.parse(@random.sample) }
+        else
+          # Compare against the money gem where available
+          1000.times { ::Money.parse(@random.sample) rescue nil }
+        end
+      end
+
+      puts result.inspect
+    end
+  end
+end
