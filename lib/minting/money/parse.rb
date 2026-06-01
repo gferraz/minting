@@ -32,7 +32,7 @@ module Mint
     # Extracts a numeric value from input that should only contain an amount.
     def self.parse_amount(input)
       # Remove any charater that is not a digit, comma or period
-      numeric = input.scan(/[\d.\-,]/).join
+      numeric = input.scan(/[\d.,-]/).join
       numeric = normalize_separators(numeric)
       Rational(numeric)
     end

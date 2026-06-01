@@ -3,7 +3,7 @@ module Mint
     # Returns the absolute value of the monetary amount as a new {Money} instance.
     #
     # @return [Money] the absolute value
-    def abs =     mint(amount.abs)
+    def abs = mint(amount.abs)
 
     # Returns true if the monetary amount is less than zero.
     #
