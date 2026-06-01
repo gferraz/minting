@@ -37,7 +37,7 @@ module Mint
   #
   # @param code [String, Symbol] the unique currency code (e.g. 'USD', :EUR)
   # @param subunit [Integer] the decimal subunit precision (defaults to 2)
-  # @param symbol [String] the display symbol (defaults to 's')
+  # @param symbol [String] the display symbol (defaults to '')
   # @param priority [Integer] parser precedence priority (defaults to 0)
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
