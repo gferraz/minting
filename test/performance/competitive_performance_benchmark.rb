@@ -25,13 +25,12 @@ class CompetitivePerformanceBenchmark < Minitest::Test
   end
 
   def test_arithmetic_operations_comparison
-
     with_bench('Arithmetic Operations: Minting vs Money Gem') do
-      mint_money_1 = Mint.money(100.50, 'USD')
-      mint_money_2 = Mint.money(50.25, 'USD')
+      mint_money1 = Mint.money(100.50, 'USD')
+      mint_money2 = Mint.money(50.25, 'USD')
 
-      money_1 = Money.from_amount(100.50, 'USD')
-      money_2 = Money.from_amount(50.25, 'USD')
+      money1 = Money.from_amount(100.50, 'USD')
+      money2 = Money.from_amount(50.25, 'USD')
 
       operations = {
         addition: ->(m1, m2) { m1 + m2 },
@@ -47,8 +46,8 @@ class CompetitivePerformanceBenchmark < Minitest::Test
         puts "\n--- #{op_name.capitalize} ---"
 
         Benchmark.ips do |x|
-          x.report("Mint #{op_name}") { operation.call(mint_money_1, mint_money_2) }
-          x.report("Money #{op_name}") { operation.call(money_1, money_2) }
+          x.report("Mint #{op_name}") { operation.call(mint_money1, mint_money2) }
+          x.report("Money #{op_name}") { operation.call(money1, money2) }
           x.compare!
         end
       end
@@ -57,13 +56,13 @@ class CompetitivePerformanceBenchmark < Minitest::Test
 
   def test_comparison_operations_comparison
     with_bench('Comparison Operations: Minting vs Money Gem') do
-      mint_money_1 = Mint.money(100.00, 'USD')
-      mint_money_2 = Mint.money(100.00, 'USD')
-      mint_money_3 = Mint.money(50.00, 'USD')
+      mint_money1 = Mint.money(100.00, 'USD')
+      mint_money2 = Mint.money(100.00, 'USD')
+      mint_money3 = Mint.money(50.00, 'USD')
 
-      money_1 = Money.from_amount(100.00, 'USD')
-      money_2 = Money.from_amount(100.00, 'USD')
-      money_3 = Money.from_amount(50.00, 'USD')
+      money1 = Money.from_amount(100.00, 'USD')
+      money2 = Money.from_amount(100.00, 'USD')
+      money3 = Money.from_amount(50.00, 'USD')
 
       comparisons = {
         equality_same: ->(m1, m2, _m3) { m1 == m2 },
@@ -78,9 +77,9 @@ class CompetitivePerformanceBenchmark < Minitest::Test
 
         Benchmark.ips do |x|
           x.report("Mint #{comp_name}") do
-            comparison.call(mint_money_1, mint_money_2, mint_money_3)
+            comparison.call(mint_money1, mint_money2, mint_money3)
           end
-          x.report("Money #{comp_name}") { comparison.call(money_1, money_2, money_3) }
+          x.report("Money #{comp_name}") { comparison.call(money1, money2, money3) }
           x.compare!
         end
       end

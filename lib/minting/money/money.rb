@@ -48,6 +48,5 @@ module Mint
     # @param other [Object] the target object to compare
     # @return [Boolean] true if currencies match, false otherwise
     def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
-
   end
 end
