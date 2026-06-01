@@ -33,7 +33,7 @@ module Mint
     # @param new_amount [Numeric] The new amount
     # @return [Money] A new Money object or self
     def mint(new_amount)
-      new_amount.to_r == amount ? self : Money.new(new_amount, currency)
+      new_amount == amount ? self : Money.new(new_amount, currency)
     end
 
     # Returns a standard developer-oriented string inspection of the Money object.
