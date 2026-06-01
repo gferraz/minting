@@ -91,6 +91,11 @@ price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 price.to_json # => "{ "currency": "USD", "amount": "9.99" }"
 
+# Hash conversion
+
+price.to_hash #=> {currency: "USD", amount: "9.99"}
+
+
 # Proportional allocation and split
 
 ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]

@@ -40,7 +40,7 @@ module Mint
     end
 
     def to_hash
-      { amount: amount, currency: currency_code }
+      { currency: currency_code, amount: Kernel.format("%0.#{currency.subunit}f", amount) }
     end
 
     # Serializes the money instance to a standard JSON object containing the amount and currency.
@@ -48,10 +48,8 @@ module Mint
     #
     # @return [String] the JSON serialized string representation
     def to_json(*_args)
-      subunit = currency.subunit
       Kernel.format(
-        %({"currency": "#{currency_code}", "amount": "%0.#{subunit}f"}),
-        amount
+        %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), amount
       )
     end
 

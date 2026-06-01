@@ -40,6 +40,9 @@ class MintingTest < Minitest::Test
 
     price.to_json # "{"currency": "USD", "amount": "9.99"}
 
+    # Hash conversiob
+    price.to_hash # {currency: "USD", amount: "9.99"}
+
     # Allocation and split
 
     ten_dollars.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
