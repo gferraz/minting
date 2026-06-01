@@ -39,6 +39,10 @@ module Mint
       amount.to_i
     end
 
+    def to_hash
+      { amount: amount, currency: currency_code }
+    end
+
     # Serializes the money instance to a standard JSON object containing the amount and currency.
     # Highly optimized to run without external dependencies.
     #
