@@ -3,7 +3,10 @@ module Mint
   #
   # @see https://www.iso.org/iso-4217-currency-codes.html
   class Currency
-    attr_reader :code, :subunit, :symbol, :priority, :minimum_amount, :country, :name
+    attr_reader :code, :subunit, :symbol,
+                :country,
+                :fractional_multiplier, :minimum_amount,
+                :name, :priority
 
     def inspect
       "<Currency:(#{code} #{symbol} #{subunit})>"
@@ -18,7 +21,8 @@ module Mint
       @priority = priority.to_i
       @country = country
       @name = name
-      @minimum_amount = 10r**-@subunit
+      @fractional_multiplier = 10**@subunit
+      @minimum_amount = 1r / fractional_multiplier
       freeze
     end
   end

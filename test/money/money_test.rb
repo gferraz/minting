@@ -58,4 +58,10 @@ class MoneyTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.new('334.2', Mint.currency('PEN')) }
     assert_raises(ArgumentError) { Mint::Money.new(3, Object.new) }
   end
+
+  def test_fractional
+    assert_equal 123_456, Mint.money(1234.56, 'USD').fractional
+    assert_equal 123_00, Mint.money(123, 'USD').fractional
+    assert_equal 123_99, Mint.money(123.9912, 'USD').fractional
+  end
 end

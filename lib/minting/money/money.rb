@@ -24,6 +24,8 @@ module Mint
     # @return [String] the ISO currency code
     def currency_code = currency.code
 
+    def fractional = (amount * currency.fractional_multiplier).to_i
+
     # Generates a stable hash key for Money instances.
     #
     # @return [Integer] the calculated hash value
