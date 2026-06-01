@@ -33,12 +33,14 @@ class MoneyTest < Minitest::Test
   end
 
   def test_zero
+    zero = Mint.zero
     zero_soles = Mint.money(0r, Mint.currency('PEN'))
 
     assert_predicate 0.dollars, :zero?
     assert_equal 0.dollars, zero_soles
     assert_equal 0, 0.dollars
     assert_equal 0, 0.dollars
+    assert_equal zero, 0.dollars
     refute_predicate Mint.money(100r, 'USD'), :zero?
   end
 

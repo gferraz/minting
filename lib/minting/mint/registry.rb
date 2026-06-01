@@ -14,6 +14,9 @@ module Mint
     raise ArgumentError, "Currency [#{currency_code}] not registered. Check Mint.currencies"
   end
 
+  # Returns default zero, no currency money
+  def self.zero = @zero ||= Money.new(0, Mint.currency('XXX'))
+
   # Finds a registered currency by its code, symbol,
   # or retrieves it directly if already a Currency object.
   #
@@ -38,7 +41,7 @@ module Mint
   # @param priority [Integer] parser precedence priority (defaults to 0)
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
-  def self.register_currency(code:, subunit: 2, symbol: '$', priority: 0)
+  def self.register_currency(code:, subunit: 2, symbol: '', priority: 0)
     code = code.to_s
     currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
   end

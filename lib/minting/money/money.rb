@@ -49,7 +49,5 @@ module Mint
     # @return [Boolean] true if currencies match, false otherwise
     def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
 
-    # Returns default zero no currency money
-    def self.zero = @zero ||= new(0, Mint.currencies('XXX'))
   end
 end
