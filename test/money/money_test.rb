@@ -64,4 +64,50 @@ class MoneyTest < Minitest::Test
     assert_equal 123_00, Mint.money(123, 'USD').fractional
     assert_equal 123_99, Mint.money(123.9912, 'USD').fractional
   end
+
+  def test_from_fractional
+    # Subunit 2: USD cents
+    assert_equal Mint.money(1234.56, 'USD'),
+                 Mint::Money.from_fractional(123_456, 'USD')
+    assert_equal Mint.money(0, 'USD'),
+                 Mint::Money.from_fractional(0, 'USD')
+    assert_equal Mint.money(0.01, 'USD'),
+                 Mint::Money.from_fractional(1, 'USD')
+
+    # Subunit 0: JPY yen (multiplier == 1)
+    assert_equal Mint.money(1234, 'JPY'),
+                 Mint::Money.from_fractional(1234, 'JPY')
+    assert_equal Mint.money(0, 'JPY'),
+                 Mint::Money.from_fractional(0, 'JPY')
+
+    # Subunit 3: IQD fils (multiplier == 1000)
+    assert_equal Mint.money(123.456, 'IQD'),
+                 Mint::Money.from_fractional(123_456, 'IQD')
+
+    # Accepts Symbol and Currency
+    assert_equal Mint.money(1, 'USD'),
+                 Mint::Money.from_fractional(100, :USD)
+    assert_equal Mint.money(1, 'USD'),
+                 Mint::Money.from_fractional(100, Mint.currency('USD'))
+  end
+
+  def test_from_fractional_round_trip
+    [9.99, 100, 0, 0.01, 1_234_567.89].each do |amount|
+      m = Mint.money(amount, 'USD')
+
+      assert_equal m, Mint::Money.from_fractional(m.fractional, 'USD'),
+                   "round trip failed for #{amount}"
+    end
+  end
+
+  def test_from_fractional_rejects_non_integer
+    assert_raises(ArgumentError) { Mint::Money.from_fractional(1.5, 'USD') }
+    assert_raises(ArgumentError) { Mint::Money.from_fractional('100', 'USD') }
+    assert_raises(ArgumentError) { Mint::Money.from_fractional(100r, 'USD') }
+  end
+
+  def test_from_fractional_rejects_unknown_currency
+    assert_raises(ArgumentError) { Mint::Money.from_fractional(100, 'ZZZ') }
+    assert_raises(ArgumentError) { Mint::Money.from_fractional(100, Object.new) }
+  end
 end

@@ -22,6 +22,37 @@ module Mint
       new(checked_currency.normalize_amount(amount), checked_currency)
     end
 
+    # Builds a Money from a fractional (smallest-unit) Integer amount.
+    # This is the inverse of {#fractional}: for USD, the fractional unit is
+    # 1 cent; for JPY it is 1 yen; for IQD it is 1 dinar (subunit 3).
+    #
+    # @param fractional [Integer] the amount expressed in the currency's
+    #   smallest unit (e.g. cents). Must be an Integer to preserve exactness.
+    # @param currency [String, Symbol, Currency] the currency identifier
+    # @return [Money] the resulting Money instance
+    # @raise [ArgumentError] if +fractional+ is not an Integer or +currency+
+    #   is not registered
+    #
+    # @example USD cents
+    #   Money.from_fractional(123_456, 'USD') #=> [USD 1234.56]
+    # @example JPY (subunit 0)
+    #   Money.from_fractional(1234, 'JPY')    #=> [JPY 1234]
+    # @example Round trip
+    #   m = Mint.money(9.99, 'USD')
+    #   Money.from_fractional(m.fractional, 'USD') == m #=> true
+    def self.from_fractional(fractional, currency)
+      raise ArgumentError, 'fractional must be an Integer' unless fractional.is_a?(Integer)
+
+      checked_currency = Mint.currency(currency)
+      unless checked_currency
+        raise ArgumentError,
+              "Currency not found (#{currency}). Check Mint.currencies"
+      end
+
+      amount = Rational(fractional, checked_currency.fractional_multiplier)
+      new(checked_currency.normalize_amount(amount), checked_currency)
+    end
+
     # Returns the ISO 3-letter currency code string.
     #
     # @return [String] the ISO currency code

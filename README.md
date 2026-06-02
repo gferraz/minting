@@ -96,6 +96,13 @@ price.to_json # => "{\"currency\": \"USD\", \"amount\": \"9.99\"}"
 price.to_hash #=> {currency: "USD", amount: "9.99"}
 
 
+# Fractional units (inverse of #fractional) - exact integer arithmetic
+
+price.fractional                        #=> 999
+Mint::Money.from_fractional(999, 'USD') #=> [USD 9.99]
+Mint::Money.from_fractional(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
+
+
 # Proportional allocation and split
 
 ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
