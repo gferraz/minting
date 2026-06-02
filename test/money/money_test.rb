@@ -86,7 +86,7 @@ class MoneyTest < Minitest::Test
 
     # Accepts Symbol and Currency
     assert_equal Mint.money(1, 'USD'),
-                 Mint::Money.from_fractional(100, :USD)
+                 Mint::Money.from_fractional(100, 'USD')
     assert_equal Mint.money(1, 'USD'),
                  Mint::Money.from_fractional(100, Mint.currency('USD'))
   end

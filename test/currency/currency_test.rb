@@ -2,12 +2,12 @@ class CurrencyTest < Minitest::Test
   def setup
     @real ||= Mint.currency('BRL')
     @dollar ||= Mint.currency('USD')
-    @yen ||= Mint.currency(:JPY)
+    @yen ||= Mint.currency('JPY')
   end
 
   def test_currency_construction
-    assert Mint.register_currency(code: :HKD, subunit: 2, symbol: '$')
-    assert Mint.register_currency!(code: :SGDA, subunit: 2, symbol: '^')
+    assert Mint.register_currency(code: 'HKD', subunit: 2, symbol: '$')
+    assert Mint.register_currency!(code: 'SGDA', subunit: 2, symbol: '^')
     assert_raises IndexError, 'Currency: USD already exists' do
       Mint.register_currency!(code: 'USD', subunit: 2, symbol: '$')
     end
@@ -40,6 +40,6 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_finder
-    assert_equal 'BRL', Mint.currency(:BRL).code
+    assert_equal 'BRL', Mint.currency('BRL').code
   end
 end

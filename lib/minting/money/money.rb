@@ -63,7 +63,7 @@ module Mint
     # @param new_amount [Numeric] The new amount
     # @return [Money] A new Money object or self
     def mint(new_amount)
-      new_amount = new_amount.to_r.round(currency.subunit)
+      new_amount = currency.normalize_amount(new_amount)
       new_amount == amount ? self : Money.new(new_amount, currency)
     end
 
@@ -79,6 +79,59 @@ module Mint
     # @param other [Object] the target object to compare
     # @return [Boolean] true if currencies match, false otherwise
     def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
+
+    # Constrains +self+ to the inclusive range [+min+, +max+].
+    #
+    # Both bounds may be either a same-currency {Money} or a {Numeric}. A
+    # Numeric is interpreted as an amount in +self+'s currency, so the common
+    # pricing idiom +price.clamp(0, 100)+ reads as "0 to 100 in the same
+    # currency as +price+".
+    #
+    # When +self+ is already in range the receiver is returned (no new object
+    # allocated). When out of range, the nearest bound is returned as a new
+    # frozen {Money} in +self+'s currency.
+    #
+    # @param min [Money, Numeric] lower bound (inclusive)
+    # @param max [Money, Numeric] upper bound (inclusive)
+    # @return [Money] +self+ if in range, otherwise the nearer bound
+    # @raise [ArgumentError] if +min+ or +max+ is not a Money or Numeric; if
+    #   a Money operand has a different currency; if +min+ > +max+
+    #
+    # @example In range
+    #   Mint.money(5, 'USD').clamp(0, 10) #=> [USD 5.00]  (returns self)
+    #
+    # @example Out of range, with Numeric bounds
+    #   Mint.money(50, 'USD').clamp(0, 10) #=> [USD 10.00]
+    #
+    # @example Out of range, with Money bounds
+    #   loss  = Mint.money(-5, 'USD')
+    #   floor = Mint.money(0,  'USD')
+    #   ceil  = Mint.money(10, 'USD')
+    #   loss.clamp(floor, ceil) #=> [USD 0.00]
+    #
+    # @example Subunit-0 currency (JPY)
+    #   Mint.money(500, 'JPY').clamp(0, 100) #=> [JPY 100]
+    def clamp(min, max)
+      case min
+      when Numeric
+      when Money
+        raise(ArgumentError, "min currency must be: #{currency_code}") unless same_currency?(min)
+
+        min = min.amount
+      else raise(ArgumentError, 'min must be Numeric or Money')
+      end
+
+      case max
+      when Numeric
+      when Money
+        raise(ArgumentError, "max currency must be: #{currency_code}") unless same_currency?(max)
+
+        max = max.amount
+      else raise(ArgumentError, 'max must be Numeric or Money')
+      end
+
+      mint(amount.clamp(min, max))
+    end
 
     private
 

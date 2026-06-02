@@ -11,8 +11,10 @@
 - `Money.from_fractional(integer, currency)` — inverse of `#fractional`.
   Builds a `Money` from an exact Integer count of the currency's
   smallest unit (cents for USD, yen for JPY, fils for IQD, etc.).
-  Accepts String, Symbol, or Currency as the currency argument.
+  Accepts String, or Currency as the currency argument.
   Raises `ArgumentError` for non-Integer input or unregistered currency.
+
+- `Money.clamp(min, max)` — amalogous a Numeric clamp method
 
 ### Improvements
 
@@ -22,6 +24,11 @@
   `:negative`, `:zero`). Previously these were silently ignored and
   fell through to the module default. Existing behaviour for
   partially-filled hashes is preserved.
+
+### Breaking Changes
+
+- Currency constructors **do not accept symbols** anymore. 
+  Only String with letters and underline character ('_').
 
 ### Documentation
 
