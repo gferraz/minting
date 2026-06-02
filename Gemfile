@@ -12,6 +12,7 @@ group :development do
   gem 'minitest'
   gem 'money'
   gem 'rake'
+  gem 'reek'
   gem 'rubocop'
   gem 'rubocop-minitest'
   gem 'rubocop-performance'
