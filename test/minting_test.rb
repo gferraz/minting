@@ -3,7 +3,7 @@ class MintingTest < Minitest::Test
     refute_nil ::Minting::VERSION
   end
 
-  def test_readme_usage
+  def test_readme_usage # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
     ten_dollars = Mint.money(10, 'USD')
 
     assert_equal 10, ten_dollars.to_i
@@ -21,34 +21,44 @@ class MintingTest < Minitest::Test
     # Format (uses Kernel.format internally)
     price = Mint.money(9.99, 'USD')
 
-    price.to_s
-    price.to_s(format: '%<amount>d')            #=> "9",
-    price.to_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",
-    price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
-    (-price).to_s(format: '%<amount>f')         #=> "-9.99",
+    assert_equal '$9.99',  price.to_s
+    assert_equal '9',      price.to_s(format: '%<amount>d')
+    assert_equal '$9.99',  price.to_s(format: '%<symbol>s%<amount>f')
+    assert_equal '$+9.99', price.to_s(format: '%<symbol>s%<amount>+f')
+    assert_equal '-9.99',  (-price).to_s(format: '%<amount>f')
 
     # Format with padding
     price_in_euros = Mint.money(12.34, 'EUR')
 
-    price.to_s(format: '--%<amount>7d')               #=> "--      9"
-    price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
-    (-price).to_s(format: '  %<amount>10f')           #=> "       -9.99"
+    assert_equal '--      9',        price.to_s(format: '--%<amount>7d')
+    assert_equal '        9.99 USD', price.to_s(format: '  %<amount>10f %<currency>s')
+    assert_equal '       -9.99',     (-price).to_s(format: '  %<amount>10f')
 
-    price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f') #=> " €    +12.34"
+    assert_equal ' €    +12.34',
+                 price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')
 
     # Json serialization
 
-    price.to_json # "{"currency": "USD", "amount": "9.99"}
+    assert_equal '{"currency": "USD", "amount": "9.99"}', price.to_json
 
-    # Hash conversiob
-    price.to_hash # {currency: "USD", amount: "9.99"}
+    # Hash conversion
+    assert_equal({ currency: 'USD', amount: '9.99' }, price.to_hash)
 
     # Allocation and split
 
-    ten_dollars.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
+    assert_equal(
+      [3.34, 3.33, 3.33].map { |a| Mint.money(a, 'USD') },
+      ten_dollars.split(3)
+    )
 
-    ten_dollars.split(7) #=> [[USD 1.42], [USD 1.43], [USD 1.43], ...
+    assert_equal(
+      [1.42, 1.43, 1.43, 1.43, 1.43, 1.43, 1.43].map { |a| Mint.money(a, 'USD') },
+      ten_dollars.split(7)
+    )
 
-    ten_dollars.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
+    assert_equal(
+      [1.67, 3.33, 5.00].map { |a| Mint.money(a, 'USD') },
+      ten_dollars.allocate([1, 2, 3])
+    )
   end
 end
