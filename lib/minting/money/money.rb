@@ -63,7 +63,7 @@ module Mint
     # @param new_amount [Numeric] The new amount
     # @return [Money] A new Money object or self
     def mint(new_amount)
-      new_amount = normalize_amount(currency.subunit)
+      new_amount = currency.normalize_amount(new_amount)
       new_amount == amount ? self : Money.new(new_amount, currency)
     end
 
@@ -115,19 +115,19 @@ module Mint
       case min
       when Numeric
       when Money
-        raise(ArgumentError) unless same_currency?(min)
+        raise(ArgumentError, "min currency must be: #{currency_code}") unless same_currency?(min)
 
         min = min.amount
-      else raise(ArgumentError)
+      else raise(ArgumentError, 'min must be Numeric or Money')
       end
 
       case max
       when Numeric
       when Money
-        raise(ArgumentError) unless same_currency?(max)
+        raise(ArgumentError, "max currency must be: #{currency_code}") unless same_currency?(max)
 
         max = max.amount
-      else raise(ArgumentError)
+      else raise(ArgumentError, 'max must be Numeric or Money')
       end
 
       mint(amount.clamp(min, max))
