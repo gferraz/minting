@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+## [v1.4.0](https://github.com/gferraz/minting/releases/tag/v1.4.0) (2026-06-02)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.3.0...v1.4.0)
+
+
+
 ### New methods
 
 - `Money.from_fractional(integer, currency)` — inverse of `#fractional`.
@@ -36,9 +42,9 @@
 - README: tweaked the "2x faster" headline to point at the Performance
   section, where the measured ratios live.
 
-## [v1.3.0](https://github.com/gferraz/minting/releases/tag/v1.2.0) (2026-06-01)
+## [v1.3.0](https://github.com/gferraz/minting/releases/tag/v1.3.0) (2026-06-01)
 
-[Full Changelog](https://github.com/gferraz/minting/compare/v1.1.2...v1.2.0)
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.2.0...v1.3.0)
 
 ### Summary
 
