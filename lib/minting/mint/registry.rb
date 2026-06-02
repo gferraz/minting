@@ -66,9 +66,9 @@ module Mint
             "Currency: #{code} already registered"
     end
 
-    currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
+    currency = currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
     @currency_symbols = nil
-    currencies[code]
+    currency
   end
 
   # Returns the hash of all registered currencies.

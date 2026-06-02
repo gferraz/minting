@@ -45,7 +45,8 @@ module Mint
 
     def allocate_left_over!(amounts:, left_over:)
       if left_over.nonzero?
-        minimum = left_over.positive? ? currency.minimum_amount : -currency.minimum_amount
+        minimum = currency.minimum_amount
+        minimum = -minimum if left_over.negative?
         last_slot = (left_over / minimum).to_i - 1
         (0..last_slot).each { |slot| amounts[slot] += minimum }
       end
