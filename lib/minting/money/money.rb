@@ -80,6 +80,50 @@ module Mint
     # @return [Boolean] true if currencies match, false otherwise
     def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
 
+    # Constrains +self+ to the inclusive range [+min+, +max+].
+    #
+    # Both bounds may be either a same-currency {Money} or a {Numeric}. A
+    # Numeric is interpreted as an amount in +self+'s currency, so the common
+    # pricing idiom +price.clamp(0, 100)+ reads as "0 to 100 in the same
+    # currency as +price+".
+    #
+    # When +self+ is already in range the receiver is returned (no new object
+    # allocated). When out of range, the nearest bound is returned as a new
+    # frozen {Money} in +self+'s currency.
+    #
+    # @param min [Money, Numeric] lower bound (inclusive)
+    # @param max [Money, Numeric] upper bound (inclusive)
+    # @return [Money] +self+ if in range, otherwise the nearer bound
+    # @raise [ArgumentError] if +min+ or +max+ is not a Money or Numeric; if
+    #   a Money operand has a different currency; if +min+ > +max+
+    #
+    # @example In range
+    #   Mint.money(5, 'USD').clamp(0, 10) #=> [USD 5.00]  (returns self)
+    #
+    # @example Out of range, with Numeric bounds
+    #   Mint.money(50, 'USD').clamp(0, 10) #=> [USD 10.00]
+    #
+    # @example Out of range, with Money bounds
+    #   loss  = Mint.money(-5, 'USD')
+    #   floor = Mint.money(0,  'USD')
+    #   ceil  = Mint.money(10, 'USD')
+    #   loss.clamp(floor, ceil) #=> [USD 0.00]
+    #
+    # @example Subunit-0 currency (JPY)
+    #   Mint.money(500, 'JPY').clamp(0, 100) #=> [JPY 100]
+    def clamp(min, max)
+      # TODO: implement per the YARD contract above and the spec in
+      # test/money/money_test.rb (test_clamp_*). Key points:
+      #
+      #   * min/max must be Money or Numeric, else ArgumentError.
+      #   * If Money, currency must match self.currency, else ArgumentError.
+      #   * If Numeric, treat as an amount in self.currency (Rational).
+      #   * No allocation when self is in range: return self.
+      #   * Otherwise return the nearer bound as a frozen Money in
+      #     self.currency (use self.class.new(amount, currency)).
+      raise NotImplementedError, 'Money#clamp: body to be filled in'
+    end
+
     private
 
     # Initializes a new Money object with the given amount and currency.
