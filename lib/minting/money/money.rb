@@ -14,10 +14,7 @@ module Mint
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
 
       checked_currency = Mint.currency(currency)
-      unless checked_currency
-        raise ArgumentError,
-              "Currency not found (#{currency}). Check Mint.currencies"
-      end
+      raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
 
       new(checked_currency.normalize_amount(amount), checked_currency)
     end
@@ -44,13 +41,10 @@ module Mint
       raise ArgumentError, 'fractional must be an Integer' unless fractional.is_a?(Integer)
 
       checked_currency = Mint.currency(currency)
-      unless checked_currency
-        raise ArgumentError,
-              "Currency not found (#{currency}). Check Mint.currencies"
-      end
+      raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
 
       amount = Rational(fractional, checked_currency.fractional_multiplier)
-      new(checked_currency.normalize_amount(amount), checked_currency)
+      new(amount, checked_currency)
     end
 
     # Returns the ISO 3-letter currency code string.
