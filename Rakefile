@@ -44,9 +44,9 @@ end
 RuboCop::RakeTask.new(:cop)
 
 YARD::Rake::YardocTask.new do |t|
-  t.files   = ['lib/**/*.rb'] # optional
-  t.options = [] # optional
-  t.stats_options = ['--list-undoc'] # optional
+  t.files   = ['lib/**/*.rb']
+  t.options = ['-o doc/api'] # Place the documentos in doc/api
+  t.stats_options = ['--list-undoc']
 end
 
 task default: :test
