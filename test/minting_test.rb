@@ -3,7 +3,7 @@ class MintingTest < Minitest::Test
     refute_nil ::Minting::VERSION
   end
 
-  def test_readme_usage
+  def test_readme_usage # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
     ten_dollars = Mint.money(10, 'USD')
 
     assert_equal 10, ten_dollars.to_i
@@ -36,6 +36,23 @@ class MintingTest < Minitest::Test
 
     assert_equal ' €    +12.34',
                  price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')
+
+    # Per-sign Hash format (accounting parentheses, zero placeholder)
+    loss = Mint.money(-1234.56, 'USD')
+
+    assert_equal '($1,234.56)',
+                 loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
+
+    assert_equal '--',
+                 Mint.money(0, 'BRL').to_s(format: { zero: '--' })
+
+    fmt = {
+      positive: '%<symbol>s%<amount>f',
+      negative: '(%<symbol>s%<amount>f)',
+      zero: '--'
+    }
+
+    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').to_s(format: fmt)
 
     # Json serialization
 
