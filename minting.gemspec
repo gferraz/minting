@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   }
 
   s.required_ruby_version = '>= 3.2.0'
+  s.add_dependency 'bigdecimal', '>= 4.0'
 
   s.files = Dir.glob('{bin,doc,lib}/**/*')
   s.files += %w[minting.gemspec Rakefile README.md LICENSE]
