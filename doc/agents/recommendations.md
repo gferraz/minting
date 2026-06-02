@@ -113,6 +113,8 @@ This makes the table *defensible* rather than aspirational.
   matching `Mint.money` / `Money.create`.
 - 4 new tests + 3 new README-spec asserts; 100% coverage maintained.
 
+**To do** Add benchmark tests
+
 ### P1-2 Add `Money#clamp(min, max)`, `Money#min(other)`, `Money#max(other)`
 
 `Comparable` is already mixed in (`lib/minting/money/comparable.rb`),
