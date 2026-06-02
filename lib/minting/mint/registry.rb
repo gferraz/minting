@@ -23,7 +23,7 @@ module Mint
   # @param currency [String, Currency] the currency identifier or object
   # @return [Currency, nil] the registered Currency instance or nil if not found
   def self.currency(currency)
-     currency.is_a?(Currency) ? currency : currencies[currency]
+    currency.is_a?(Currency) ? currency : currencies[currency]
   end
 
   # Registers a new currency if not already registered.
@@ -48,8 +48,12 @@ module Mint
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
   def self.register_currency!(code:, subunit:, symbol: '', priority: 0)
-    raise ArgumentError, "Currency code must be String" unless code.is_a? String
-    raise ArgumentError, "Currency code must only letters or '_' ('USD', 'EUR', 'MY_COIN')" unless code.match?(/^[A-Z_]+$/)
+    raise ArgumentError, 'Currency code must be String' unless code.is_a? String
+    unless code.match?(/^[A-Z_]+$/)
+      raise ArgumentError,
+            "Currency code must only letters or '_' ('USD',, 'MY_COIN')"
+    end
+
     currency = currencies[code]
     raise KeyError, "Currency: #{code} already registered" if currency
 
