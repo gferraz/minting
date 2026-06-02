@@ -1,6 +1,8 @@
 require_relative 'benchmark_helper'
 
 class AlgorithmBenchmark < Minitest::Test
+  include BenchmarkHelper
+
   def setup
     @small_amounts = [1.00, 5.50, 10.99, 50.01]
     @medium_amounts = [100.00, 250.75, 500.50, 999.99]

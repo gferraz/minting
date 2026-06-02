@@ -74,7 +74,7 @@ The gem exhibits top-tier Ruby development practices:
   ```ruby
   def initialize(amount, currency)
     # ...
-    @amount = amount.to_r.round(currency.subunit)
+    @amount = currency.normalize_amount(amount)
     @currency = currency
     freeze
   end

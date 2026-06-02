@@ -12,6 +12,10 @@ module Mint
       "<Currency:(#{code} #{symbol} #{subunit})>"
     end
 
+    def normalize_amount(amount)
+      amount.to_r.round(subunit)
+    end
+
     private
 
     def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil)

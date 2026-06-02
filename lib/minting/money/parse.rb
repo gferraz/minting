@@ -25,7 +25,7 @@ module Mint
       currency = currency ? Mint.currency(currency) : parse_currency(input)
       raise ArgumentError, "Currency [#{currency}] not registered" unless currency
 
-      amount = parse_amount(input)
+      amount = currency.normalize_amount(parse_amount(input))
       new(amount, currency)
     end
 

@@ -60,7 +60,7 @@ module Mint
     # @return [Money] the multiplied Money instance
     # @raise [TypeError] if multiplier is not Numeric or is a Money object
     def *(multiplicand)
-      return mint(amount * multiplicand.to_r) if multiplicand.is_a?(Numeric)
+      return mint(amount * multiplicand) if multiplicand.is_a?(Numeric)
 
       raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
     end

@@ -21,7 +21,7 @@ module BenchmarkHelper
   end
 
   def random_amount
-    rand(-1000.00..1000.00)
+    @amount = rand(-1000.00..1000.00)
   end
 
   def diff(base, final)

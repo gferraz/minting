@@ -55,8 +55,8 @@ class MoneyTest < Minitest::Test
 
   def test_creation
     assert Mint::Money.new(3, Mint.currency('PEN'))
-    assert_raises(ArgumentError) { Mint::Money.new('334.2', Mint.currency('PEN')) }
-    assert_raises(ArgumentError) { Mint::Money.new(3, Object.new) }
+    assert_raises(ArgumentError) { Mint::Money.create('334.2', Mint.currency('PEN')) }
+    assert_raises(ArgumentError) { Mint::Money.create(3, Object.new) }
   end
 
   def test_fractional

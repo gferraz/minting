@@ -9,9 +9,9 @@ module Mint
   # @raise [ArgumentError] if the currency code is not registered
   def self.money(amount, currency_code)
     currency = currency(currency_code)
-    return Money.new(amount, currency) if currency
+    return Money.create(amount, currency) if currency
 
-    raise ArgumentError, "Currency [#{currency_code}] not registered. Check Mint.currencies"
+    raise ArgumentError, "[#{currency.inspect}] is not a registered currency. Check Mint.currencies"
   end
 
   # Returns default zero, no currency money
