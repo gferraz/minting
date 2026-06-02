@@ -20,35 +20,27 @@ module Mint
   # Finds a registered currency by its code, symbol,
   # or retrieves it directly if already a Currency object.
   #
-  # @param currency [String, Symbol, Currency] the currency identifier or object
+  # @param currency [String, Currency] the currency identifier or object
   # @return [Currency, nil] the registered Currency instance or nil if not found
   def self.currency(currency)
-    case currency
-    when Currency
-      currency
-    when Symbol
-      currencies[currency.to_s]
-    else
-      currencies[currency]
-    end
+     currency.is_a?(Currency) ? currency : currencies[currency]
   end
 
   # Registers a new currency if not already registered.
   #
-  # @param code [String, Symbol] the unique currency code (e.g. 'USD', :EUR)
+  # @param code [String] the unique currency code (e.g. 'USD', 'EUR')
   # @param subunit [Integer] the decimal subunit precision (defaults to 2)
   # @param symbol [String] the display symbol (defaults to '')
   # @param priority [Integer] parser precedence priority (defaults to 0)
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
   def self.register_currency(code:, subunit: 2, symbol: '', priority: 0)
-    code = code.to_s
     currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
   end
 
   # Strictly registers a new currency, raising a KeyError if already registered.
   #
-  # @param code [String, Symbol] the unique currency code
+  # @param code [String] the unique currency code
   # @param subunit [Integer] the decimal subunit precision
   # @param symbol [String] the display symbol
   # @param priority [Integer] parser precedence priority
@@ -56,15 +48,10 @@ module Mint
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
   def self.register_currency!(code:, subunit:, symbol: '', priority: 0)
-    code = code.to_s
-    unless code.match?(/^[A-Z_]+$/)
-      raise ArgumentError,
-            "Currency code must be String or Symbol ('USD', :EUR, 'FUEL', 'MY_COIN')"
-    end
-    if currencies[code]
-      raise KeyError,
-            "Currency: #{code} already registered"
-    end
+    raise ArgumentError, "Currency code must be String" unless code.is_a? String
+    raise ArgumentError, "Currency code must only letters or '_' ('USD', 'EUR', 'MY_COIN')" unless code.match?(/^[A-Z_]+$/)
+    currency = currencies[code]
+    raise KeyError, "Currency: #{code} already registered" if currency
 
     currency = currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
     @currency_symbols = nil
