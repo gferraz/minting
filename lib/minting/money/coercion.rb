@@ -13,8 +13,6 @@ module Mint
     # Coerced Number contains the arithmetic logic for numeric compatible ops.
     # @private
     class CoercedNumber
-      include Comparable
-
       # @private
       def initialize(value)
         @value = value
@@ -44,19 +42,21 @@ module Mint
         raise_coercion_error(:/, other)
       end
 
-      # @private
+      # Only zero is dimensionless and comparable to Money.
+      # e.g. 0 < price is meaningful; 0.5 < price is not (what currency is 0.5?).
       def <=>(other)
-        return nil if @value.nil? || other.nil?
         return @value <=> other.amount if @value.zero? || other.zero?
 
         raise_coercion_error(:<=>, other)
       end
 
-      # @private
+      private
+
       def raise_coercion_error(operation, operand)
         raise TypeError,
-              "#{self} #{operation} #{operand} : incompatible operands"
+              "#{@value} #{operation} #{operand} : incompatible operands"
       end
     end
+    private_constant :CoercedNumber
   end
 end

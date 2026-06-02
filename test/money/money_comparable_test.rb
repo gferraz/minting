@@ -40,6 +40,7 @@ class MoneyComparableTest < Minitest::Test
     assert_raises(TypeError) { 2 <=> 2.dollars }
     assert_equal(-1, 2.dollars <=> 10.dollars)
     assert_equal 0, 10.dollars <=> Mint.money(10, 'USD')
+    assert_equal 0, 0 <=> Mint.zero
     assert_equal 1, 10.dollars <=> 2.dollars
     assert_equal 1, Mint.money(2, 'BRL') <=> 0
     assert_equal(-1, 0 <=> Mint.money(2, 'BRL'))
