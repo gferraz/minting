@@ -45,7 +45,7 @@ class MoneyClampTest < Minitest::Test
   def test_clamp_accepts_numeric_bounds
     # The common "price.clamp(0, 100)" idiom: Numeric is interpreted
     # as an amount in self's currency.
-    money = Mint.money(50, 'USD')
+    money = Mint.money(500, 'USD')
 
     assert_equal Mint.money(100, 'USD'), money.clamp(0, 100)
   end
@@ -65,7 +65,7 @@ class MoneyClampTest < Minitest::Test
     money = Mint.money(500, 'JPY')
 
     assert_equal Mint.money(100, 'JPY'), money.clamp(0, 100)
-    assert_equal Mint.money(0, 'JPY'), money.clamp(0, 1000)
+    assert_equal Mint.money(0, 'JPY'), (-money).clamp(0, 1000)
     assert_equal Mint.money(500, 'JPY'), money.clamp(100, 1000)
   end
 
