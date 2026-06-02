@@ -87,6 +87,14 @@ price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
 
 price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
+# Per-sign Hash format (e.g. accounting parentheses for losses)
+loss = Mint.money(-1234.56, 'USD')
+loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
+Mint.money(0, 'BRL').to_s(format: { zero: '--' })          #=> "--"
+# All three keys at once:
+fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
+Mint.money(1234.56, 'USD').to_s(format: fmt)               #=> "$1,234.56"
+
 # Json serialization
 
 price.to_json # => "{\"currency\": \"USD\", \"amount\": \"9.99\"}"

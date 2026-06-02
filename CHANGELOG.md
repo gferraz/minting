@@ -10,6 +10,15 @@
   Accepts String, Symbol, or Currency as the currency argument.
   Raises `ArgumentError` for non-Integer input or unregistered currency.
 
+### Improvements
+
+- `Money#to_s` now validates the per-sign Hash form of `format:`.
+  Empty hashes, unknown keys, and string keys raise `ArgumentError`
+  with a clear message listing the valid keys (`:positive`,
+  `:negative`, `:zero`). Previously these were silently ignored and
+  fell through to the module default. Existing behaviour for
+  partially-filled hashes is preserved.
+
 ### Documentation
 
 - `test_readme_usage` now actually asserts the README's formatting, JSON,

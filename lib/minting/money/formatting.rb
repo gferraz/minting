@@ -1,12 +1,27 @@
 module Mint
   # Formatting functionality for Money objects
   class Money
+    # Keys accepted in the per-sign Hash form of `to_s(format:)`.
+    SIGN_FORMAT_KEYS = %i[positive negative zero].freeze
+
     # Formats money as a string with customizable format, thousand delimiter, and decimal
     #
-    # @param format [String] Format string with placeholders: %<symbol>s, %<amount>f, %<currency>s
+    # @param format [String, Hash] Either a Format string with placeholders
+    #   (%<symbol>s, %<amount>f, %<currency>s), or a Hash with per-sign keys
+    #   (:positive, :negative, :zero) each holding a format string. A Hash
+    #   is convenient for sign-aware formats such as accounting parentheses:
+    #
+    #     money.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
+    #
+    #   Missing keys fall back to the module default, so a Hash with only
+    #   :negative will still format positives sensibly. The valid keys are
+    #   :positive, :negative, :zero; anything else raises ArgumentError.
     # @param thousand [String, false] Thousands delimiter (e.g., ',' for 1,000)
     # @param decimal [String] Decimal separator (e.g., '.' or ',')
     # @return [String] Formatted money string
+    #
+    # @raise [ArgumentError] if +format+ is not a String or Hash, the Hash
+    #   is empty, or the Hash contains an unrecognised key.
     #
     # @example Basic formatting
     #   money = Mint.money(1234.56, 'USD')
@@ -20,12 +35,19 @@ module Mint
     #   money.to_s(format: '%<amount>f %<symbol>s')         #=> "1234.56 $"
     #   money.to_s(format: '%<symbol>s%<amount>+f')         #=> "$+1234.56"
     #
+    # @example Per-sign Hash format (accounting parentheses)
+    #   loss = Mint.money(-1234.56, 'USD')
+    #   loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' }) #=> "($1,234.56)"
+    #   Mint.money(0, 'BRL').to_s(format: { zero: '--' })        #=> "--"
+    #
     # @example Padding and alignment
     #   money.to_s(format: '%<amount>10.2f')                #=> "   1234.56"
     #   money.to_s(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
     #
     def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
       raise ArgumentError, 'Invalid format' unless format.is_a?(String) || format.is_a?(Hash)
+
+      validate_format_hash!(format) if format.is_a?(Hash)
 
       formatted = format_amount(format)
 
@@ -42,6 +64,17 @@ module Mint
     end
 
     private
+
+    def validate_format_hash!(format)
+      raise ArgumentError, 'format Hash must not be empty' if format.empty?
+
+      unknown = format.keys - SIGN_FORMAT_KEYS
+      return if unknown.empty?
+
+      raise ArgumentError,
+            "Unknown format Hash key(s): #{unknown.inspect}. " \
+            "Valid keys are #{SIGN_FORMAT_KEYS.inspect}"
+    end
 
     def format_amount(format)
       format = { positive: format } if format.is_a?(String)
