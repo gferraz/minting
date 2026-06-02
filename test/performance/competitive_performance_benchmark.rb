@@ -138,7 +138,7 @@ class CompetitivePerformanceBenchmark < Minitest::Test
     with_bench('Currency Lookup: Minting vs Money Gem') do
       Benchmark.ips do |x|
         x.report('Mint currency(string)') { Mint.currency('USD') }
-        x.report('Mint currency(symbol)') { Mint.currency(:USD) }
+        x.report('Mint currency(symbol)') { Mint.currency('USD') }
         x.report('Money currency(new)') { Money::Currency.new('USD') }
         x.report('Money currency(iso_code)') { Money::Currency.find('USD') }
         x.compare!

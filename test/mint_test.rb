@@ -11,9 +11,9 @@ class MintTest < Minitest::Test
   end
 
   def test_register
-    sgx = Mint.register_currency(code: :SGX, subunit: 2, symbol: '^')
+    sgx = Mint.register_currency(code: 'SGX', subunit: 2, symbol: '^')
 
-    assert_equal Mint.currency(:SGX), sgx
+    assert_equal Mint.currency('SGX'), sgx
   end
 
   def test_mint_refinements
@@ -23,10 +23,10 @@ class MintTest < Minitest::Test
     assert_equal 4.to_money('USD'), Mint.money(4, 'USD')
     assert_equal 4.2.dollars, Mint.money(4.2, 'USD')
     assert_equal 5.3.euros, Mint.money(5.3, 'EUR')
-    assert_equal 5.4.to_money(:EUR), Mint.money(5.4, 'EUR')
-    assert_equal 5.5.mint(:EUR), Mint.money(5.5, 'EUR')
-    assert_equal '5.61'.to_money(:EUR), Mint.money(5.61, 'EUR')
-    assert_equal '6.30'.to_money(:USD), Mint.money(6.30, 'USD')
+    assert_equal 5.4.to_money('EUR'), Mint.money(5.4, 'EUR')
+    assert_equal 5.5.mint('EUR'), Mint.money(5.5, 'EUR')
+    assert_equal '5.61'.to_money('EUR'), Mint.money(5.61, 'EUR')
+    assert_equal '6.30'.to_money('USD'), Mint.money(6.30, 'USD')
   end
 
   def test_money_range_step
