@@ -17,6 +17,8 @@
 
 **Other**
 - Fix broken benchmarks
+- Coercion, small improvements
+- reek suggestions implemented
 
 ## [v1.2.0](https://github.com/gferraz/minting/releases/tag/v1.2.0) (2026-06-01)
 
