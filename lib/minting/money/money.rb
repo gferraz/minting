@@ -63,7 +63,7 @@ module Mint
     # @param new_amount [Numeric] The new amount
     # @return [Money] A new Money object or self
     def mint(new_amount)
-      new_amount = new_amount.to_r.round(currency.subunit)
+      new_amount = normalize_amount(currency.subunit)
       new_amount == amount ? self : Money.new(new_amount, currency)
     end
 
@@ -112,16 +112,25 @@ module Mint
     # @example Subunit-0 currency (JPY)
     #   Mint.money(500, 'JPY').clamp(0, 100) #=> [JPY 100]
     def clamp(min, max)
-      # TODO: implement per the YARD contract above and the spec in
-      # test/money/money_test.rb (test_clamp_*). Key points:
-      #
-      #   * min/max must be Money or Numeric, else ArgumentError.
-      #   * If Money, currency must match self.currency, else ArgumentError.
-      #   * If Numeric, treat as an amount in self.currency (Rational).
-      #   * No allocation when self is in range: return self.
-      #   * Otherwise return the nearer bound as a frozen Money in
-      #     self.currency (use self.class.new(amount, currency)).
-      raise NotImplementedError, 'Money#clamp: body to be filled in'
+      case min
+      when Numeric
+      when Money
+        raise(ArgumentError) unless same_currency?(min)
+
+        min = min.amount
+      else raise(ArgumentError)
+      end
+
+      case max
+      when Numeric
+      when Money
+        raise(ArgumentError) unless same_currency?(max)
+
+        max = max.amount
+      else raise(ArgumentError)
+      end
+
+      mint(amount.clamp(min, max))
     end
 
     private
