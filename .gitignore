@@ -1,7 +1,8 @@
 /.bundle/
 /.yardoc
+doc/*
+!doc/agents/
 /Gemfile.lock
 /_yardoc/
-/doc/
 /pkg/
 /tmp/
