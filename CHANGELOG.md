@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### New methods
+
+- `Money.from_fractional(integer, currency)` — inverse of `#fractional`.
+  Builds a `Money` from an exact Integer count of the currency's
+  smallest unit (cents for USD, yen for JPY, fils for IQD, etc.).
+  Accepts String, Symbol, or Currency as the currency argument.
+  Raises `ArgumentError` for non-Integer input or unregistered currency.
+
 ### Documentation
 
 - `test_readme_usage` now actually asserts the README's formatting, JSON,
