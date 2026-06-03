@@ -13,10 +13,12 @@ group :development do
   gem 'money'
   gem 'rake'
   gem 'reek'
-  gem 'rubocop'
+  gem 'rubocop', require: false
   gem 'rubocop-minitest'
+  gem 'rubocop-packaging'
   gem 'rubocop-performance'
   gem 'rubocop-rake'
+  gem 'rubocop-thread_safety'
   gem 'ruby-prof'
   gem 'simplecov'
   gem 'yard'

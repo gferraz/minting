@@ -1,22 +1,13 @@
-inherit_from: .rubocop_todo.yml
-
 plugins:
   - rubocop-minitest
+  - rubocop-packaging
   - rubocop-performance
   - rubocop-rake
-
-
-# inherit_from: .rubocop_todo.yml
+  - rubocop-thread_safety
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.2
+  TargetRubyVersion: 4.1
 
-Layout/LineLength:
-  Max: 100
-
-Metrics/MethodLength:
-  Max: 30
-
-Style/FrozenStringLiteralComment:
-  EnforcedStyle: never
+Naming/BinaryOperatorParameterName:
+  Enabled: false

@@ -40,9 +40,7 @@ module Mint
     # @raise [TypeError] if subtraction involves a different currency or incompatible types
     def -(subtrahend)
       return self if subtrahend.respond_to?(:zero?) && subtrahend.zero?
-      if subtrahend.is_a?(Money) && same_currency?(subtrahend)
-        return mint(amount - subtrahend.amount)
-      end
+      return mint(amount - subtrahend.amount) if subtrahend.is_a?(Money) && same_currency?(subtrahend)
 
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
@@ -84,7 +82,7 @@ module Mint
     # @return [Money] reult of amount ** exponent
     # @raise [TypeError] if exponent is not Numeric
     def **(exponent)
-      return mint(amount ** exponent) if exponent.is_a?(Numeric)
+      return mint(amount**exponent) if exponent.is_a?(Numeric)
 
       raise TypeError, "#{self} can't be powered by #{exponent}"
     end
