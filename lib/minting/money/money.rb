@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 module Mint
+  # Money constructors
   class Money
     # The default display format pattern for formatting monetary values.
     # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.
-    DEFAULT_FORMAT = '%<symbol>s%<amount>f'.freeze
+    DEFAULT_FORMAT = '%<symbol>s%<amount>f'
 
     attr_reader :amount, :currency
 

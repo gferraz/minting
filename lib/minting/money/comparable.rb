@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 module Mint
-  # :nodoc
   # Comparison methods
   class Money
     include Comparable

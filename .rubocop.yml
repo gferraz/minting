@@ -11,3 +11,6 @@ AllCops:
 
 Naming/BinaryOperatorParameterName:
   Enabled: false
+
+Style/NumericPredicate:
+  Enabled: false

@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 module Mint
+  # Money Arithmetics
   class Money
     # Returns the absolute value of the monetary amount as a new {Money} instance.
     #

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module Mint
-  # nodoc
+  # Money parser
   class Money
     # Parses a human-readable money string into a {Money} object.
     #
