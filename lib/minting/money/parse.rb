@@ -24,7 +24,7 @@ module Mint
       input = input.strip
       raise ArgumentError, 'input cannot be empty' if input.empty?
 
-      currency = currency ? Mint.currency(currency) : parse_currency(input)
+      currency = parse_currency(currency) || parse_currency(input)
       raise ArgumentError, "Currency [#{currency}] not registered" unless currency
 
       amount = currency.normalize_amount(parse_amount(input))
@@ -60,22 +60,19 @@ module Mint
     end
 
     def self.parse_currency(input)
-      # Prefer an explicit ISO 4217 code (e.g. "USD 1,234.56") over symbol matching.
-      code = input[/\b([A-Z]{3})\b/, 1]
-      if code
-        currency = Mint.currency(code)
+      case input
+      when NilClass, Mint::Currency then return input
+      when String
+        # Prefer an explicit ISO 4217 code (e.g. "USD 1,234.56") over symbol matching.
+        currency = Mint.currency(input[/\b([A-Z]+)\b/, 1])
         return currency if currency
+
+        # Fall back to registered symbols, longest first (HK$ before $).
+        Mint.currency_symbols.each do |symbol, currency|
+          return currency if input.include?(symbol)
+        end
       end
-
-      # Fall back to registered symbols, longest first (HK$ before $).
-      Mint.currency_symbols.each do |symbol, currency|
-        next if symbol.empty?
-
-        return currency if input.include?(symbol)
-      end
-
-      raise ArgumentError,
-            'currency could not be detected; pass a currency code as the second argument'
+      raise ArgumentError, 'currency could not be detected; pass a currency code as the second argument'
     end
 
     private_class_method :parse_amount, :normalize_separators,
