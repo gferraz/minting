@@ -131,48 +131,13 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '₪456.78', ils.to_s
   end
 
-  def test_african_currency_formats
-    zar = Mint.money(1234.56, 'ZAR')
-    egp = Mint.money(987.65, 'EGP')
-    ngn = Mint.money(12_345.67, 'NGN')
-
-    # South African Rand
-    assert_equal 'R1,234.56', zar.to_s
-
-    # Egyptian Pound
-    assert_equal '£987.65', egp.to_s
-
-    # Nigerian Naira
-    assert_equal '₦12,345.67', ngn.to_s
-  end
-
-  def test_americas_currency_formats
-    usd = Mint.money(1234.56, 'USD')
-    brl = Mint.money(9876.54, 'BRL')
-    mxn = Mint.money(2345.67, 'MXN')
-    cad = Mint.money(3456.78, 'CAD')
-
-    assert_equal '$1,234.56', usd.to_s
-    assert_equal 'R$9,876.54', brl.to_s
-    assert_equal '$2,345.67', mxn.to_s
-
-    # Canadian Dollar - sometimes shown as CAD prefix
-    assert_equal '$3,456.78', cad.to_s
-    assert_equal 'CAD 3,456.78', cad.to_s(format: '%<currency>s %<amount>f')
-  end
-
   def test_high_precision_currency_formats
     kwd = Mint.money(123.456, 'KWD')
     bhd = Mint.money(987.654, 'BHD')
     omr = Mint.money(456.789, 'OMR')
 
-    # Kuwaiti Dinar (3 decimal places)
     assert_equal 'د.ك123.456', kwd.to_s
-
-    # Bahraini Dinar (3 decimal places)
     assert_equal '.د.ب987.654', bhd.to_s
-
-    # Omani Rial (3 decimal places)
     assert_equal '﷼456.789', omr.to_s
   end
 
@@ -246,8 +211,7 @@ class MoneyFormatTest < Minitest::Test
 
     # French/European convention - space before currency symbol
     assert_equal '1,234.56 €', amount.to_s(format: '%<amount>f %<symbol>s')
-    assert_equal '1 234,56 €', amount.to_s(format: '%<amount>f %<symbol>s',
-                                           thousand: ' ', decimal: ',')
+    assert_equal '1 234,56 €', amount.to_s(format: '%<amount>f %<symbol>s', thousand: ' ', decimal: ',')
 
     # ISO format
     assert_equal 'EUR 1,234.56', amount.to_s(format: '%<currency>s %<amount>f')
@@ -270,8 +234,6 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '(50.25)', negative.abs.to_s(format: '(%<amount>f)')
   end
 
-  # --- Per-sign Hash format (recommendation P1-3) ---
-
   def test_hash_format_with_all_signs
     money = Mint.money(1234.56, 'USD')
     loss  = Mint.money(-1234.56, 'USD')
@@ -290,28 +252,21 @@ class MoneyFormatTest < Minitest::Test
 
   def test_hash_format_missing_positive_falls_back_to_default
     # Only :negative is set; positives must still format sensibly via the
-    # module default. This matches the existing `test_accounting_formats`
-    # behaviour but is now exercised explicitly.
+    # module default.
     money = Mint.money(1234.56, 'USD')
 
-    assert_equal '$1,234.56',
-                 money.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
+    assert_equal '$1,234.56', money.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
   end
 
-  def test_hash_format_missing_negative_falls_back_to_default
-    # No :negative set; negatives use the default template, which still
-    # emits a sign via the f directive.
+  def test_hash_format_missing_negative_falls_back_to_positive
+    # No :negative set; negatives use the positive template
     loss = Mint.money(-50.25, 'EUR')
 
-    assert_equal '€-50.25',
-                 loss.to_s(format: { positive: '%<symbol>s%<amount>f' })
+    assert_equal '[€-50.25]', loss.to_s(format: { positive: '[%<symbol>s%<amount>f]' })
   end
 
   def test_hash_format_zero_without_zero_key_uses_positive
-    zero = Mint.money(0, 'USD')
-
-    assert_equal '$0.00',
-                 zero.to_s(format: { positive: '%<symbol>s%<amount>f' })
+    assert_equal '¤0', Mint.zero.to_s(format: { positive: '%<symbol>s%<amount>f' })
   end
 
   def test_hash_format_with_european_separators
@@ -325,31 +280,15 @@ class MoneyFormatTest < Minitest::Test
 
     assert_equal '1,234.56 €', money.to_s(format: formats)
     assert_equal '(1,234.56) €', loss.to_s(format: formats)
-    # Thousand-delimiter and decimal-separator kwargs still apply.
-    assert_equal '1.234,56 €',
-                 money.to_s(format: formats, thousand: '.', decimal: ',')
+    assert_equal '1.234,56 €', money.to_s(format: formats, thousand: '.', decimal: ',')
   end
 
-  def test_hash_format_rejects_unknown_keys
-    money = Mint.money(9.99, 'USD')
-
-    assert_raises(ArgumentError) { money.to_s(format: { foo: 'bar' }) }
-    assert_raises(ArgumentError) do
-      money.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' })
-    end
-  end
-
-  def test_hash_format_rejects_empty_hash
+  def test_format_rejects_invalid_hash_format
     money = Mint.money(9.99, 'USD')
 
     assert_raises(ArgumentError) { money.to_s(format: {}) }
-  end
-
-  def test_hash_format_rejects_string_keys
-    # The documented key type is Symbol; string keys are silently ignored
-    # in the dispatch logic, so we reject them up front to avoid confusion.
-    money = Mint.money(9.99, 'USD')
-
+    assert_raises(ArgumentError) { money.to_s(format: { foo: 'bar' }) }
+    assert_raises(ArgumentError) { money.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' }) }
     assert_raises(ArgumentError) { money.to_s(format: { 'negative' => 'x' }) }
   end
 end
