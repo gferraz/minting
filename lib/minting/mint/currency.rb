@@ -10,13 +10,12 @@ module Mint
                 :fractional_multiplier, :minimum_amount,
                 :name, :priority
 
-    def inspect
-      "<Currency:(#{code} #{symbol} #{subunit})>"
-    end
+    def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
 
-    def normalize_amount(amount)
-      amount.to_r.round(subunit)
-    end
+    # Normalizes numeric amounts for this currency
+    # 1. Converts to Rational
+    # 2. Rounds to respect currency subunit
+    def normalize_amount(amount) = amount.to_r.round(subunit)
 
     private
 
@@ -28,7 +27,7 @@ module Mint
       @country = country
       @name = name
       @fractional_multiplier = 10**@subunit
-      @minimum_amount = 1r / fractional_multiplier
+      @minimum_amount = Rational(1, fractional_multiplier)
       freeze
     end
   end
