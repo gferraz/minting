@@ -100,7 +100,7 @@ This makes the table *defensible* rather than aspirational.
 
 ## 🟠 P1 — Correctness, clarity, small ergonomics
 
-### P1-1 ✅ `Money.from_fractional(integer, currency)`
+### P1-1 🟡 `Money.from_fractional(integer, currency)`
 
 **Status:** Merged on branch `feature/money-from-fractional` (commit
 `150a2d0`).
