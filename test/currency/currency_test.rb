@@ -33,7 +33,7 @@ class CurrencyTest < Minitest::Test
 
   def test_inspect
     assert_equal '<Currency:(BRL R$ 2 Brazilian Real)>', @real.inspect
-    assert_equal '<Currency:(USD $ 2 United States Dollar)>',  @dollar.inspect
+    assert_equal '<Currency:(USD $ 2 United States Dollar)>', @dollar.inspect
   end
 
   def test_minimum_amount

@@ -84,8 +84,8 @@ module Mint
         raise(ArgumentError, "min currency must be: #{currency_code}") unless same_currency?(min)
 
         min = min.amount
-      when NilClass
-      when Numeric
+      when NilClass # noop
+      when Numeric # noop
       else
         raise(ArgumentError, "min must be Numeric or Money #{min}")
       end
@@ -95,8 +95,8 @@ module Mint
         raise(ArgumentError, "max currency must be: #{currency_code}") unless same_currency?(max)
 
         max = max.amount
-      when NilClass
-      when Numeric
+      when NilClass # noop
+      when Numeric # noop
       else
         raise(ArgumentError, "max must be Numeric or Money #{max}")
       end
