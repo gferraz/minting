@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Mint is a library to operate with monetary values
+# Mint refinements
 module Mint
   refine Numeric do
     def reais
