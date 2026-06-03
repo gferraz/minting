@@ -7,6 +7,13 @@ plugins:
 
 AllCops:
   NewCops: enable
+  Include:
+    - "lib/**/*.rb"
+    - "test/**/*.rb"
+  Exclude:
+    - "bin/**/*"
+    - "doc/**/*"
+    - "tmp/**/*"
 
 Layout/LineLength:
   Max: 120

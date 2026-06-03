@@ -15,7 +15,7 @@ end
 begin
   require 'minitest/autorun'
   require 'minitest/benchmark'
-  Minitest.after_run {}
+  Minitest.after_run { :nop }
 rescue LoadError
   puts 'Minitest not available - using basic test framework'
 end

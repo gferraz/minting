@@ -5,6 +5,7 @@ class CurrencyTest < Minitest::Test
     @real ||= Mint.currency('BRL')
     @dollar ||= Mint.currency('USD')
     @yen ||= Mint.currency('JPY')
+    nil
   end
 
   def test_currency_construction
