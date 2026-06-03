@@ -7,7 +7,6 @@ plugins:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 4.1
 
 Layout/LineLength:
   Max: 120

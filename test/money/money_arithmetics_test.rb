@@ -61,18 +61,16 @@ class MoneyArithmeticsTest < Minitest::Test
     assert_raises(ZeroDivisionError) { 10.dollars / 0 }
   end
 
-
-  def test_multiplication
+  def test_exponentiation
     assert_equal 8.dollars, 2.dollars**3
-    assert_equal 27.dollars, 3.dollars ** 3
+    assert_equal 27.dollars, 3.dollars**3
 
-    assert_equal 0.50.dollars, 2.dollars **(-1)
-    assert_equal 2.dollars, 4.dollars **0.5
+    assert_equal 0.50.dollars, 2.dollars**-1
+    assert_equal 2.dollars, 4.dollars**0.5
 
-    assert_raises(TypeError) { 10.dollars ** 0.dollars }
-    assert_raises(TypeError) { 10.dollars ** '1'}
+    assert_raises(TypeError) { 10.dollars**0.dollars }
+    assert_raises(TypeError) { 10.dollars**'1' }
   end
-
 
   def test_abs
     assert_equal 10.dollars, 10.dollars.abs

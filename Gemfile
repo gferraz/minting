@@ -14,11 +14,11 @@ group :development do
   gem 'rake'
   gem 'reek'
   gem 'rubocop', require: false
-  gem 'rubocop-minitest'
-  gem 'rubocop-packaging'
-  gem 'rubocop-performance'
-  gem 'rubocop-rake'
-  gem 'rubocop-thread_safety'
+  gem 'rubocop-minitest', require: false
+  gem 'rubocop-packaging', require: false
+  gem 'rubocop-performance', require: false
+  gem 'rubocop-rake', require: false
+  gem 'rubocop-thread_safety', require: false
   gem 'ruby-prof'
   gem 'simplecov'
   gem 'yard'
