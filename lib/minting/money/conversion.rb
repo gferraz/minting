@@ -1,4 +1,4 @@
-require 'decimal'
+require 'bigdecimal'
 require 'erb'
 
 module Mint
