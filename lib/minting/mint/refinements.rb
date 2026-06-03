@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Mint is a library to operate with monetary values
 module Mint
   refine Numeric do

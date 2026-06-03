@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
+# Mint currency registration
 module Mint
   # Creates a new {Money} instance with the given amount and currency code.
   #

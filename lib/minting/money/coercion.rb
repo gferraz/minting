@@ -3,7 +3,6 @@
 module Mint
   # Implements the standard Ruby coercion protocol.
   class Money
-
     # Allows {Money} to interact seamlessly as the right-hand operand in Numeric arithmetic.
     #
     # @param other [Numeric] the left-hand operand to coerce
