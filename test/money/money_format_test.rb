@@ -3,22 +3,21 @@
 class MoneyFormatTest < Minitest::Test
   FUEL = Mint.register_currency(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
-  def test_numeric_simple_format
-    money = Mint.money(9.99, 'USD')
+  def usd_9_99 = Mint.money(9.99, 'USD')
 
-    assert_equal '$9.99',    money.to_s
-    assert_equal '9',        money.to_s(format: '%<amount>d')
-    assert_equal '$9.99',    money.to_s(format: '%<symbol>s%<amount>f')
-    assert_equal '$+9.99',   money.to_s(format: '%<symbol>s%<amount>+f')
-    assert_equal '-9.99',    (-money).to_s(format: '%<amount>f')
+  def test_numeric_simple_format
+    assert_equal '$9.99',    usd_9_99.to_s
+    assert_equal '9',        usd_9_99.to_s(format: '%<amount>d')
+    assert_equal '$9.99',    usd_9_99.to_s(format: '%<symbol>s%<amount>f')
+    assert_equal '$+9.99',   usd_9_99.to_s(format: '%<symbol>s%<amount>+f')
+    assert_equal '-9.99',    (-usd_9_99).to_s(format: '%<amount>f')
   end
 
   def test_more_numeric_simple_format
-    money = Mint.money(9.99, 'USD')
     gas = Mint.money(3.457, FUEL)
 
-    assert_equal '-9.99',    (-money).to_s(format: '%<amount>f')
-    assert_equal '9.99',     money.to_s(format: '%<amount>f')
+    assert_equal '-9.99',    (-usd_9_99).to_s(format: '%<amount>f')
+    assert_equal '9.99',     usd_9_99.to_s(format: '%<amount>f')
     assert_equal 'R$3.457', gas.to_s
   end
 
@@ -37,17 +36,16 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_numeric_padding_format
-    usd = Mint.money(9.99, 'USD')
     brl = Mint.money(12.34, 'BRL')
 
     assert_equal 'xx      9',
-                 usd.to_s(format: 'xx%<amount>7d')
+                 usd_9_99.to_s(format: 'xx%<amount>7d')
     assert_equal '        9.99 USD',
-                 usd.to_s(format: '%<amount>f %<currency>s', width: 16)
+                 usd_9_99.to_s(format: '%<amount>f %<currency>s', width: 16)
     assert_equal 'R$    +12.34',
                  brl.to_s(format: '%<symbol>2s%<amount>+10f')
     assert_equal '       -9.99',
-                 (-usd).to_s(format: '%<amount>f', width: 12)
+                 (-usd_9_99).to_s(format: '%<amount>f', width: 12)
   end
 
   def test_numeric_json_format
@@ -75,12 +73,9 @@ class MoneyFormatTest < Minitest::Test
     jpy = Mint.money(15_000, 'JPY')
     gas = Mint.money(3.457, FUEL)
 
-    assert_equal "<data class='money' title='BRL 10.05'>R$10.05</data>",
-                 brl.to_html
-    assert_equal "<data class='money' title='JPY 15000'>¥15,000</data>",
-                 jpy.to_html
-    assert_equal "<data class='money' title='BRL_FUEL 3.457'>R$ +3.457</data>",
-                 gas.to_html('%<symbol>2s %<amount>+f')
+    assert_equal "<data class='money' title='BRL 10.05'>R$10.05</data>", brl.to_html
+    assert_equal "<data class='money' title='JPY 15000'>¥15,000</data>", jpy.to_html
+    assert_equal "<data class='money' title='BRL_FUEL 3.457'>R$ +3.457</data>", gas.to_html('%<symbol>2s %<amount>+f')
   end
 
   # Real-world currency formatting tests
@@ -95,8 +90,7 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '456.78 Fr', chf.to_s(format: '%<amount>f %<symbol>s')
 
     # European style with comma separator and dot delimiter
-    assert_equal '1.234,56 €', eur.to_s(format: '%<amount>f %<symbol>s',
-                                        thousand: '.', decimal: ',')
+    assert_equal '1.234,56 €', eur.to_s(format: '%<amount>f %<symbol>s', thousand: '.', decimal: ',')
     assert_equal '987,65 £', gbp.to_s(format: '%<amount>f %<symbol>s', decimal: ',')
   end
 
@@ -284,11 +278,9 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_format_rejects_invalid_hash_format
-    money = Mint.money(9.99, 'USD')
-
-    assert_raises(ArgumentError) { money.to_s(format: {}) }
-    assert_raises(ArgumentError) { money.to_s(format: { foo: 'bar' }) }
-    assert_raises(ArgumentError) { money.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' }) }
-    assert_raises(ArgumentError) { money.to_s(format: { 'negative' => 'x' }) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(format: {}) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(format: { foo: 'bar' }) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' }) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(format: { 'negative' => 'x' }) }
   end
 end
