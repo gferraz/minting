@@ -77,5 +77,16 @@ module Mint
 
       raise TypeError, "#{self} can't be divided by #{divisor}"
     end
+
+    # Performs exponentiation of the monetary value by a standard scalar Numeric.
+    #
+    # @param exponent [Numeric]
+    # @return [Money] reult of amount ** exponent
+    # @raise [TypeError] if exponent is not Numeric
+    def **(exponent)
+      return mint(amount ** exponent) if exponent.is_a?(Numeric)
+
+      raise TypeError, "#{self} can't be powered by #{exponent}"
+    end
   end
 end
