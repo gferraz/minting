@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MoneyConversionTest < Minitest::Test
   def test_numeric_conversion
     nine_nine_nine = Mint.money(999 / 100r, 'USD')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'benchmark_helper'
 
 class BasicIpsBenchmark < Minitest::Test

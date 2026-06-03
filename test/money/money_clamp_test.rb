@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MoneyClampTest < Minitest::Test
   def test_clamp_in_range_returns_self
     money = Mint.money(5, 'USD')
@@ -76,7 +78,6 @@ class MoneyClampTest < Minitest::Test
     assert_equal Mint.money(0, 'USD'), money.clamp(-5, 0)
   end
 
-
   def test_clamp_with_nil_bound
     money = Mint.money(5, 'USD')
 
@@ -106,7 +107,7 @@ class MoneyClampTest < Minitest::Test
   def test_clamp_rejects_invalid_min_argument
     money = Mint.money(5, 'USD')
 
-    assert_raises(ArgumentError) { money.clamp('0',    Mint.money(10, 'USD')) }
+    assert_raises(ArgumentError) { money.clamp('0', Mint.money(10, 'USD')) }
     assert_raises(ArgumentError) { money.clamp(Object.new, Mint.money(10, 'USD')) }
   end
 

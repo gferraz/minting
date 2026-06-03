@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CurrencyTest < Minitest::Test
   def setup
     @real ||= Mint.currency('BRL')

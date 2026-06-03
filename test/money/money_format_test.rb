@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MoneyFormatTest < Minitest::Test
   FUEL = Mint.register_currency(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 

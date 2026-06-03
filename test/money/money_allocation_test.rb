@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 using Mint
 
 class MoneyAllocationTest < Minitest::Test
