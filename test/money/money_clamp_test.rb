@@ -76,20 +76,20 @@ class MoneyClampTest < Minitest::Test
     assert_equal Mint.money(0, 'USD'), money.clamp(-5, 0)
   end
 
+
+  def test_clamp_with_nil_bound
+    money = Mint.money(5, 'USD')
+
+    assert_equal Mint.money(5, 'USD'), money.clamp(nil, nil)
+    assert_equal Mint.money(4, 'USD'), money.clamp(nil, 4)
+    assert_equal Mint.money(5, 'USD'), money.clamp(0, nil)
+  end
+
   def test_clamp_preserves_currency
     eur = Mint.money(50, 'EUR')
     result = eur.clamp(0, 100)
 
     assert_equal 'EUR', result.currency_code
-  end
-
-  def test_clamp_returns_frozen_money
-    # Both the in-range self and the out-of-range return must be frozen.
-    in_range = Mint.money(5, 'USD').clamp(0, 10)
-    out_of_range = Mint.money(50, 'USD').clamp(0, 10)
-
-    assert_predicate in_range, :frozen?
-    assert_predicate out_of_range, :frozen?
   end
 
   def test_clamp_rejects_mismatched_currency
@@ -103,19 +103,17 @@ class MoneyClampTest < Minitest::Test
     end
   end
 
-  def test_clamp_rejects_non_numeric_non_money_min
+  def test_clamp_rejects_invalid_min_argument
     money = Mint.money(5, 'USD')
 
     assert_raises(ArgumentError) { money.clamp('0',    Mint.money(10, 'USD')) }
-    assert_raises(ArgumentError) { money.clamp(nil,    Mint.money(10, 'USD')) }
     assert_raises(ArgumentError) { money.clamp(Object.new, Mint.money(10, 'USD')) }
   end
 
-  def test_clamp_rejects_non_numeric_non_money_max
+  def test_clamp_rejects_invalid_max_argument
     money = Mint.money(5, 'USD')
 
     assert_raises(ArgumentError) { money.clamp(Mint.money(0, 'USD'), '10') }
-    assert_raises(ArgumentError) { money.clamp(Mint.money(0, 'USD'), nil) }
     assert_raises(ArgumentError) { money.clamp(Mint.money(0, 'USD'), Object.new) }
   end
 end

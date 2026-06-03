@@ -1,9 +1,10 @@
+require 'decimal'
 require 'erb'
 
 module Mint
   # Conversion and serialization logic for {Money} instances.
   class Money
-    # Converts the monetary amount to a {BigDecimal} object.
+    # Converts the monetary amount to a BigDecimal object.
     #
     # @return [BigDecimal] the decimal representation of the money amount
     def to_d = amount.to_d 0
