@@ -35,7 +35,8 @@ total.currency_code                    #=> "USD"
 - Comparisons: `==`, `<=>`, `zero?`, `nonzero?`, `positive?`, `negative?`
 - Formatting: `to_s` with custom formats, thousand delimiters and decimal separators
 - Serialization: `to_json`, `to_i`, `to_f`, `to_r`, `to_d`
-- Allocation utilities: `split(quantity)`, `allocate([ratios])`
+- Allocation utilities: `split(quantity)`, `allocate([ratios])`, 
+- Utilities: `clamp(min, max)`
 - Numeric Refinements for ergonomics: `10.dollars`, `3.euros`, `4.to_money('USD')`
 - Currency registry with 117+ currencies and custom registration
 
@@ -115,6 +116,18 @@ Mint::Money.from_fractional(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scali
 
 ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
 ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
+
+# Clamping to a range
+
+price = Mint.money(50, 'USD')
+min_price = Mint.money(75, 'USD')
+
+price.clamp(0, 100)                    #=> [USD 50.00]  (returns self, no new object)
+price.clamp(0, 25)                     #=> [USD 25.00]  (clamped to max)
+price.clamp(min_price, 100)                   #=> [USD 75.00]  (clamped to min)
+
+# Clamp accepts Money bounds or Numeric amounts
+price.clamp(min_price, 100) #=> [USD 75.00]
 
 # Ranges and enumeration are supported
 

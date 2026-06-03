@@ -1,4 +1,6 @@
 class MintingTest < Minitest::Test
+  using Mint
+
   def test_that_it_has_a_version_number
     refute_nil ::Minting::VERSION
   end
@@ -84,5 +86,16 @@ class MintingTest < Minitest::Test
       [1.67, 3.33, 5.00].map { |a| Mint.money(a, 'USD') },
       ten_dollars.allocate([1, 2, 3])
     )
+
+    # Clamping to a range
+
+    price = 50.dollars
+
+    assert_equal 50.dollars, price.clamp(0, 100)
+    assert_equal 25.dollars, price.clamp(0, 25)
+    assert_equal 75.dollars, price.clamp(75, 100)
+
+    # Clamp accepts Money bounds or Numeric amounts
+    assert_equal 75.dollars, price.clamp(75.dollars, 100.dollars) #=> [USD 75.00]
   end
 end
