@@ -42,10 +42,8 @@ module Mint
     # Converts locale-specific decimal/thousand separators into a plain decimal string.
     def self.normalize_separators(numeric)
       case [numeric.count(','), numeric.count('.')]
-      in [0, 0] | [0, 1] # Nothing to normalize (e.g. "1500" or "34.21").
-        numeric
-      in [1, 0] # Only one comma: decimal (e.g. 19,99 or 1,234).
-        numeric.tr(',', '.')
+      in [0, 0] | [0, 1] then numeric              # Nothing to normalize (e.g. "1500" or "34.21").
+      in [1, 0]          then numeric.tr(',', '.') # Only one comma: decimal (e.g. 19,99 or 1,234).
       in [c, p] if c > 1 && p > 1 # Both separators appear multiple times
         raise ArgumentError, "could not distinguish decimal and thousand separators in '#{numeric}'"
       in [c, p] if c > 0 && p > 0 # Commas and dots: the rightmost one is the decimal separator.
