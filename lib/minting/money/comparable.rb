@@ -29,9 +29,9 @@ module Mint
     #
     def <=>(other)
       case other
-      in 0                                    then return amount <=> other
-      in Mint::Money if same_currency?(other) then return amount <=> other.amount
-      else                                         raise TypeError, "#{inspect} can't be compared to #{other.inspect}"
+      in 0                                    then amount <=> other
+      in Mint::Money if same_currency?(other) then amount <=> other.amount
+      else                                    raise TypeError, "#{inspect} can't be compared to #{other.inspect}"
       end
     end
 

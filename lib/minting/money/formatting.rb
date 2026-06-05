@@ -47,8 +47,8 @@ module Mint
       case format
       when {}, '', nil then raise ArgumentError, 'format must not be empty or null'
       when Hash        then validate_format_hash!(format)
-      when String      # noop
-      else             raise ArgumentError, 'Invalid format'
+      when String # noop
+      else raise ArgumentError, 'Invalid format'
       end
 
       formatted = format_amount(format)
