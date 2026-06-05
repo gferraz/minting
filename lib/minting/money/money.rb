@@ -78,30 +78,18 @@ module Mint
       else
         min = min_or_range
       end
+      mint(amount.clamp(normalize_boundary(min), normalize_boundary(max)))
+    end
 
-      case min
-      when Money
-        raise(ArgumentError, "min currency must be: #{currency_code}") unless same_currency?(min)
+    private
 
-        min = min.amount
-      when NilClass # noop
-      when Numeric # noop
-      else
-        raise(ArgumentError, "min must be Numeric or Money #{min}")
+    def normalize_boundary(boundary)
+      case boundary
+      in NilClass | Numeric                then boundary
+      in Money if same_currency?(boundary) then boundary.amount
+      in Money                             then raise ArgumentError, "oundary currency must be: #{currency_code}"
+      else                                 raise ArgumentError, "Boundary must be Numeric or Money #{boundary}"
       end
-
-      case max
-      when Money
-        raise(ArgumentError, "max currency must be: #{currency_code}") unless same_currency?(max)
-
-        max = max.amount
-      when NilClass # noop
-      when Numeric # noop
-      else
-        raise(ArgumentError, "max must be Numeric or Money #{max}")
-      end
-
-      mint(amount.clamp(min, max))
     end
   end
 end
