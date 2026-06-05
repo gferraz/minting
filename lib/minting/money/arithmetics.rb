@@ -30,9 +30,10 @@ module Mint
     # @return [Money] the sum of the addition
     # @raise [TypeError] if addition involves a different currency or incompatible types
     def +(addend)
-      return self if addend.respond_to?(:zero?) && addend.zero?
-      return mint(amount + addend.amount) if addend.is_a?(Money) && same_currency?(addend)
-
+      case addend
+      when 0     then return self
+      when Money then return mint(amount + addend.amount) if same_currency?(addend)
+      end
       raise TypeError, "#{addend} can't be added to #{self}"
     end
 
@@ -42,9 +43,10 @@ module Mint
     # @return [Money] the difference of the subtraction
     # @raise [TypeError] if subtraction involves a different currency or incompatible types
     def -(subtrahend)
-      return self if subtrahend.respond_to?(:zero?) && subtrahend.zero?
-      return mint(amount - subtrahend.amount) if subtrahend.is_a?(Money) && same_currency?(subtrahend)
-
+      case subtrahend
+      when 0     then return self
+      when Money then return mint(amount - subtrahend.amount) if same_currency?(subtrahend)
+      end
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
 
@@ -73,9 +75,10 @@ module Mint
     # @raise [TypeError] if divisor is of incompatible type or different currency
     # @raise [ZeroDivisionError] if division by zero is attempted
     def /(divisor)
-      return mint(amount / divisor) if divisor.is_a?(Numeric)
-      return amount / divisor.amount if same_currency? divisor
-
+      case divisor
+      when Numeric then return mint(amount / divisor)
+      when Money   then return amount / divisor.amount if same_currency? divisor
+      end
       raise TypeError, "#{self} can't be divided by #{divisor}"
     end
 

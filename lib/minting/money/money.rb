@@ -30,9 +30,9 @@ module Mint
 
     # Helper method to verify if another object has the identical currency.
     #
-    # @param other [Object] the target object to compare
+    # @param other [Currency] the target currency to compare
     # @return [Boolean] true if currencies match, false otherwise
-    def same_currency?(other) = other.respond_to?(:currency) && other.currency == currency
+    def same_currency?(other) = other.currency == currency
 
     # Constrains +self+ to the inclusive range [+min+, +max+].
     #

@@ -48,6 +48,7 @@ module Mint
     #
     def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
       raise ArgumentError, 'Invalid format' unless format.is_a?(String) || format.is_a?(Hash)
+      raise ArgumentError, 'Format must not be empty' if format.empty?
 
       validate_format_hash!(format) if format.is_a?(Hash)
 
@@ -68,8 +69,6 @@ module Mint
     private
 
     def validate_format_hash!(format)
-      raise ArgumentError, 'format Hash must not be empty' if format.empty?
-
       unknown = format.keys - SIGN_FORMAT_KEYS
       return if unknown.empty?
 
@@ -80,15 +79,19 @@ module Mint
 
     def format_amount(format)
       format = { positive: format } if format.is_a?(String)
-      value = amount
+      positive_format = format[:positive]
+      negative_format = format[:negative]
+      zero_format = format[:zero]
 
-      if amount.negative? && format[:negative]
-        format = format[:negative]
+      if amount.negative? && negative_format
+        format = negative_format
         value = -amount
-      elsif amount.zero? && format[:zero]
-        format = format[:zero]
+      elsif amount.zero? && zero_format
+        format = zero_format
+        value = amount
       else
-        format = format[:positive]
+        format = positive_format
+        value = amount
       end
       format ||= '%<symbol>s%<amount>f'
 
