@@ -7,14 +7,14 @@ module Mint
   # Creates a new {Money} instance with the given amount and currency code.
   #
   # @param amount [Numeric] the financial value
-  # @param currency_code [String, Symbol] the ISO currency code or symbol
+  # @param currency_code [String] the ISO currency code
   # @return [Money] the instantiated Money object
   # @raise [ArgumentError] if the currency code is not registered
   def self.money(amount, currency_code)
     currency = currency(currency_code)
     return Money.create(amount, currency) if currency
 
-    raise ArgumentError, "[#{currency.inspect}] is not a registered currency. Check Mint.currencies"
+    raise ArgumentError, "[#{currency.inspect}] is not a registered currency."
   end
 
   # Returns default zero, no currency money
@@ -104,5 +104,5 @@ module Mint
     registry
   end
 
-  private_class_method :load_currencies
+  private_class_method :load_currencies, :currencies
 end
