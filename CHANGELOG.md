@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+
+## [v1.5.1](https://github.com/gferraz/minting/releases/tag/v1.5.1) (2026-06-05)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.5.0...v1.5.1)
+
+### Fixes
+- Fix 1.5.0 missing removal of Mint.zero as advertised
+
+
 ## [v1.5.0](https://github.com/gferraz/minting/releases/tag/v1.5.0) (2026-06-05)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.4.0...v1.5.0)
