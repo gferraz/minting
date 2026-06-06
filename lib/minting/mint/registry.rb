@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require 'yaml'
-
-# Mint currency registration
+# Mint currency registration and factory (public API)
 module Mint
   # Creates a new {Money} instance with the given amount and currency code.
   #
@@ -26,7 +24,7 @@ module Mint
   # @param currency [String, Currency] the currency identifier or object
   # @return [Currency, nil] the registered Currency instance or nil if not found
   def self.currency(currency)
-    currency.is_a?(Currency) ? currency : currencies[currency]
+    currency.is_a?(Currency) ? currency : CurrencyStore.currencies[currency]
   end
 
   # Registers a new currency if not already registered.
@@ -38,7 +36,7 @@ module Mint
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
   def self.register_currency(code:, subunit: 2, symbol: '', priority: 0)
-    currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
+    CurrencyStore.currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
   end
 
   # Strictly registers a new currency, raising a KeyError if already registered.
@@ -57,52 +55,20 @@ module Mint
             "Currency code must only letters or '_' ('USD',, 'MY_COIN')"
     end
 
-    currency = currencies[code]
-    raise KeyError, "Currency: #{code} already registered" if currency
+    currencies = CurrencyStore.currencies
+    raise KeyError, "Currency: #{code} already registered" if currencies[code]
 
     currency = currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
-    @currency_symbols = nil
+    CurrencyStore.invalidate_symbols_cache
     currency
   end
 
-  # Returns the hash of all registered currencies.
-  #
-  # @return [Hash{String => Currency}] registered currencies mapped by code
-  def self.currencies
-    @currencies ||= begin
-      registry = { 'XXX' => Currency.new(code: 'XXX', name: 'No currency', symbol: '¤') }
-      load_currencies(registry)
-    end
-  end
-
   # Registered symbols sorted for detection: longest match wins, then parser priority.
+  # Internal API - used by Money parser.
+  #
+  # @return [Array<Array<String, Currency>>] sorted symbol-to-currency mappings
+  # @api private
   def self.currency_symbols
-    @currency_symbols ||= begin
-      currencies.values
-                .reject { |currency| currency.symbol.empty? }
-                .map { |currency| [currency.symbol, currency] }
-                .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
-    end.freeze
+    CurrencyStore.currency_symbols
   end
-
-  def self.load_currencies(registry)
-    base = File.expand_path('../data', __dir__)
-    path = File.join(base, 'currencies.yaml')
-
-    data = YAML.load_file(path)
-    data.each do |entry|
-      code = entry['code']
-      registry[code] = Currency.new(
-        code: code,
-        subunit: entry['subunit'],
-        symbol: entry['symbol'],
-        priority: entry['priority'],
-        country: entry['country'],
-        name: entry['name']
-      )
-    end
-    registry
-  end
-
-  private_class_method :load_currencies, :currencies
 end

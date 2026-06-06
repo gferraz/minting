@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+- Add Range and Null support to `Money#clamp(min, max` method
+- Implment exponentiation operator (**)
+- Lots of Rubcop/Reek code cleanup
+- `Money#same_currency?` now accepts ony `Currency` objects
+- Refactor Currency
+  - New internal module for currency storage and YAML loading
+  - Moved currencies(), currency_symbols(), load_currencies() from registry
+  - Isolates class instance variables and thread-safety violations
+
 ## [v1.4.0](https://github.com/gferraz/minting/releases/tag/v1.4.0) (2026-06-02)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.3.0...v1.4.0)
