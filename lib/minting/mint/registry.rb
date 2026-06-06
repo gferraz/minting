@@ -15,9 +15,6 @@ module Mint
     raise ArgumentError, "[#{currency.inspect}] is not a registered currency."
   end
 
-  # Returns default zero, no currency money
-  def self.zero = @zero ||= Money.new(0, Mint.currency('XXX'))
-
   # Finds a registered currency by its code, symbol,
   # or retrieves it directly if already a Currency object.
   #

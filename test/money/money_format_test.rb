@@ -260,7 +260,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_hash_format_zero_without_zero_key_uses_positive
-    assert_equal '¤0', Mint.zero.to_s(format: { positive: '%<symbol>s%<amount>f' })
+    assert_equal '¤0', Mint.money(0, 'XXX').to_s(format: { positive: '%<symbol>s%<amount>f' })
   end
 
   def test_hash_format_with_european_separators
