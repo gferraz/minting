@@ -35,7 +35,7 @@ module Mint
   # @param priority [Integer] parser precedence priority (defaults to 0)
   # @return [Currency] the registered or existing Currency instance
   # @raise [ArgumentError] if the code layout is invalid or register throws an error
-  def self.register_currency(code:, subunit: 2, symbol: '', priority: 0)
+  def self.register_currency(code:, subunit: 0, symbol: '', priority: 0)
     CurrencyStore.currencies[code] || register_currency!(code:, subunit:, symbol:, priority:)
   end
 
