@@ -17,9 +17,7 @@ module Mint
 
     def ==(other) = code == other.code
 
-    def inspect
-      "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
-    end
+    def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
 
     # Normalizes numeric amounts for this currency
     # 1. Converts to Rational
