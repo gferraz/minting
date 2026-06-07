@@ -15,8 +15,6 @@ module Mint
             fractional_multiplier:, minimum_amount:)
     end
 
-    def ==(other) = code == other.code
-
     def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
 
     # Normalizes numeric amounts for this currency

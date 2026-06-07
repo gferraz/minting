@@ -12,10 +12,7 @@ module Mint
     # @return [Hash{String => Currency}] registered currencies mapped by code
     # @api private
     def self.currencies
-      @currencies ||= begin
-        registry = { 'XXX' => Currency.new(code: 'XXX', name: 'No currency', symbol: '¤') }
-        load_currencies(registry)
-      end
+      @currencies ||= Mint.world_currencies.dup
     end
 
     # Registered symbols sorted for detection: longest match wins, then parser priority.
@@ -39,30 +36,5 @@ module Mint
       @currency_symbols = nil
     end
 
-    # Loads currencies from YAML file into the registry.
-    #
-    # @param registry [Hash] the registry hash to populate
-    # @return [Hash] the populated registry
-    # @api private
-    def self.load_currencies(registry)
-      base = File.expand_path('../data', __dir__)
-      path = File.join(base, 'currencies.yaml')
-
-      data = YAML.load_file(path)
-      data.each do |entry|
-        code = entry['code']
-        registry[code] = Currency.new(
-          code: code,
-          subunit: entry['subunit'],
-          symbol: entry['symbol'],
-          priority: entry['priority'],
-          country: entry['country'],
-          name: entry['name']
-        )
-      end
-      registry
-    end
-
-    private_class_method :load_currencies
   end
 end
