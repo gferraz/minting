@@ -35,6 +35,5 @@ module Mint
     def self.invalidate_symbols_cache
       @currency_symbols = nil
     end
-
   end
 end
