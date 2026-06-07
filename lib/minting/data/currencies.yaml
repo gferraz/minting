@@ -709,3 +709,9 @@
   symbol: T$
   name: Tongan Paʻanga
   priority: 1
+- code: XXX
+  country:
+  subunit: 0
+  symbol: ¤
+  name: No Currency
+  priority: 0
