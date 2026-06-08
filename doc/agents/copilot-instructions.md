@@ -21,9 +21,9 @@ Build, test and lint commands
 - Run a single test method by name (Minitest -n regexp):
   - ruby -Ilib:test -r ./test/test_helper.rb test/money/money_test.rb -n /test_creation/
 
-- Performance suites (set BENCH=true as in README):
-  - BENCH=true rake bench:performance
-  - BENCH=true rake bench:competitive
+- Performance suites:
+  - rake bench:performance
+  - rake bench:competitive
   - rake bench:regression
 
 - Linting:
@@ -56,7 +56,7 @@ Key conventions and repo-specific rules
 - Currency registration: use Mint.register_currency for idempotent registration; Mint.register_currency! raises on duplicates. Codes must match /^[A-Z_]+$/.
 - Symbol parsing: parser resolves symbols by longest match then currency priority (see Mint.currency_symbols sorting).
 - Tests: test_helper.rb configures coverage (SimpleCov) and loads minitest; when running tests outside rake, require test_helper (-r ./test/test_helper.rb).
-- Benchmarks: set BENCH=true to enable benchmark-heavy tasks; benchmarks use Minitest::Benchmark patterns.
+- Benchmarks: set to enable benchmark-heavy tasks; benchmarks use Minitest::Benchmark patterns.
 - Formatting: Money.to_s uses Kernel.format patterns; take care with %<amount>f vs %<amount>d depending on desired rounding/formatting.
 
 Files and places to check first during edits

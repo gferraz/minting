@@ -87,7 +87,7 @@ Qwen run on 2026-05-30 and aren't reproducible from CI.
 **Concrete action:** in CI, run
 
 ```sh
-BENCH=true rake bench:regression
+ake bench:regression
 ```
 
 and fail the build if any benchmark regresses by more than (e.g.)
