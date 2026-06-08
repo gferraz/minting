@@ -53,7 +53,6 @@ module BenchmarkHelper
   end
 
   def with_bench(title)
-    skip unless ENV['BENCH']
     puts "\n=== #{title} ==="
     yield
   end

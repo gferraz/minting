@@ -20,6 +20,6 @@ Project highlights & conventions:
 - Amounts stored as Rational; prefer rationals or decimal strings for precision
 - Zero-equality: zeros equal across currencies; non-zero comparisons require same currency
 - Currency codes must match /^[A-Z_]+$/
-- Tests: Minitest; performance benches under test/performance (use BENCH=true)
+- Tests: Minitest; performance benches under test/performance 
 
 Edit guidance: keep this file minimal and link to existing docs; add repo-specific agent tips here.

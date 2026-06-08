@@ -5,34 +5,51 @@ This directory contains comprehensive performance benchmarks for the Minting gem
 ## Quick Start
 
 ```bash
-# Run all performance tests  
-BENCH=true rake bench:performance
+# Run competitive tests 
+rake bench:competitive
 
-# Run specific benchmark categories
-BENCH=true ruby -Ilib:test -r ./test/test_helper test/performance/core_operations_benchmark.rb
-BENCH=true ruby -Ilib:test -r ./test/test_helper test/performance/memory_benchmark.rb
-BENCH=true ruby -Ilib:test -r ./test/test_helper test/performance/algorithm_benchmark.rb
-BENCH=true ruby -Ilib:test -r ./test/test_helper test/performance/competitive_benchmark.rb
+# Run all performance tests  
+rake bench:performance
+
+
 
 # Run regression tests (Minitest::Benchmark)
 rake bench:regression
 
 # Run competitive analysis against Money gem
-BENCH=true rake bench:competitive
+ake bench:competitive
 ```
 
-## Test Categories
+## Benchhmark Categories
 
-### 1. Core Operations Benchmark (`core_operations_benchmark.rb`)
-**Purpose**: Measures basic operation performance
+### 1. Competitive Benchmark 
+**Purpose**: Compares Minting performance against the Money gem
+- Object creation comparison
+- Arithmetic operation comparison
+- Memory usage comparison
+- High-volume transaction simulation
+- Precision accuracy comparison
+
+### 2. Core Operations Benchmark 
+**Purpose**: Measures basic operation performance and algorithms
 - Money creation with different data types
 - Arithmetic operations (+, -, *, /, abs)  
 - Comparison operations (==, <=>, >, hash)
 - Currency lookup and registration
+- Algorithms
+  - Split performance with different amounts and split sizes
+  - Allocation performance with various proportion patterns
+  - Precision edge cases with different currencies
+  - Remainder distribution scenarios
+  - Pathological edge cases
 
-**Key Metrics**: Operations per second for each operation type
+**Key Metrics**: 
+- Operations per second for each operation type
+- Performance vs. data size scaling
+- Accuracy of allocation results
+- Edge case handling performance
 
-### 2. Memory Benchmark (`memory_benchmark.rb`)
+### 3. Memory Benchmark 
 **Purpose**: Analyzes memory allocation and garbage collection
 - Object allocation patterns
 - Memory retention testing (leak detection)
@@ -44,33 +61,8 @@ BENCH=true rake bench:competitive
 - GC statistics (major/minor GC counts)
 - Memory stability over time
 
-### 3. Algorithm Benchmark (`algorithm_benchmark.rb`)
-**Purpose**: Tests allocation and splitting algorithm performance
-- Split performance with different amounts and split sizes
-- Allocation performance with various proportion patterns
-- Precision edge cases with different currencies
-- Remainder distribution scenarios
-- Pathological edge cases
 
-**Key Metrics**: 
-- Performance vs. data size scaling
-- Accuracy of allocation results
-- Edge case handling performance
-
-### 4. Competitive Benchmark (`competitive_benchmark.rb`)
-**Purpose**: Compares Minting performance against the Money gem
-- Object creation comparison
-- Arithmetic operation comparison
-- Memory usage comparison
-- High-volume transaction simulation
-- Precision accuracy comparison
-
-**Key Metrics**: 
-- Relative performance ratios
-- Memory allocation differences
-- Precision accuracy comparisons
-
-### 5. Regression Benchmark (`regression_benchmark.rb`)
+### 4. Regression Benchmark 
 **Purpose**: Detects performance regressions using Minitest::Benchmark
 - Ensures operations maintain expected Big-O complexity
 - Constant time operation verification
@@ -83,7 +75,6 @@ BENCH=true rake bench:competitive
 
 ## Environment Variables
 
-- `BENCH=true` - Required to run benchmark tests (they're skipped by default)
 - `RUBY_PROF=true` - Enable ruby-prof profiling (if available)
 
 ## Interpreting Results
@@ -141,14 +132,6 @@ Based on typical Ruby money library benchmarks:
 - **Allocation Algorithm**: Linear scaling O(n)  
 - **Remainder Distribution**: Accurate to currency subunit
 
-## Troubleshooting
-
-### Tests Skipping
-If benchmarks are being skipped, ensure `BENCH=true` is set:
-```bash
-BENCH=true ruby -Ilib:test test/performance/core_operations_benchmark.rb
-```
-
 ### Ruby Version Compatibility  
 Performance characteristics may vary between Ruby versions. Current testing focuses on Ruby 3.2+.
 
@@ -177,7 +160,6 @@ Performance characteristics may vary between Ruby versions. Current testing focu
 When adding new performance tests:
 
 1. **Use Descriptive Names**: Test method names should be clear
-2. **Skip by Default**: Use `skip unless ENV['BENCH']`
 3. **Include Setup**: Prepare test data in setup methods
 4. **Test Edge Cases**: Include boundary conditions
 5. **Document Expected Results**: Add comments for expected performance characteristics
