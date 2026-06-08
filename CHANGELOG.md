@@ -2,6 +2,21 @@
 
 ## [Unreleased]
 
+
+## [v1.6.1](https://github.com/gferraz/minting/releases/tag/v1.6.1) (2026-06-08)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.6.0...v1.6.1)
+
+### Improvements
+
+- Benchmark files better organized
+
+### Fixes
+
+- Load error when initialize the gem. Fixed require in 'minting.rb'
+- Fix benchmark scripts
+- Fix exception name
+
 ## [v1.6.0](https://github.com/gferraz/minting/releases/tag/v1.6.0) (2026-06-08)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.5.1...v1.6.0)
