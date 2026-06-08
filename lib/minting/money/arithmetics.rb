@@ -53,9 +53,7 @@ module Mint
     # Unary negation operator. Returns a new {Money} instance with the inverted sign.
     #
     # @return [Money] negated Money instance
-    def -@
-      mint(-amount)
-    end
+    def -@ = mint(-amount)
 
     # Performs multiplication of the monetary value by a standard scalar Numeric.
     #
