@@ -3,7 +3,7 @@
 # Mint currency registration and factory (public API)
 module Mint
   # Unknown currency excpetion
-  class UnknownCurreny < StandardError
+  class UnknownCurrency < StandardError
   end
 
   # Creates a new {Money} instance with the given amount and currency code.
