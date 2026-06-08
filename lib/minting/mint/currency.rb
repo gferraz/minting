@@ -15,17 +15,18 @@ module Mint
   # @attr_reader fractional_multiplier [Integer] 10^subunit, used for fractional conversions
   # @attr_reader minimum_amount [Rational] Smallest representable amount (1/fractional_multiplier)
   Currency = Data.define(:code, :subunit, :symbol, :priority, :country, :name,
-                         :fractional_multiplier, :minimum_amount) do
+                         :fractional_multiplier) do
     def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil)
       subunit = subunit.to_i
       priority = priority.to_i
       fractional_multiplier = 10**subunit
-      minimum_amount = Rational(1, fractional_multiplier)
       super(code:, subunit:, symbol:, priority:, country:, name:,
-            fractional_multiplier:, minimum_amount:)
+            fractional_multiplier:)
     end
 
     def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
+
+    def minimum_amount = Rational(1, fractional_multiplier)
 
     # Normalizes numeric amounts for this currency
     # 1. Converts to Rational
