@@ -44,9 +44,16 @@ module Mint
       new(amount, checked_currency)
     end
 
-    # Returns a new Money object with the specified amount, or self if unchanged
-    # @param new_amount [Numeric] The new amount
-    # @return [Money] A new Money object or self
+    # Returns a new Money object with the specified amount, or self if unchanged.
+    # This is the primary method for creating a modified copy of a Money instance
+    # while preserving immutability.
+    #
+    # @param new_amount [Numeric] The new monetary amount
+    # @return [Money] A new Money object with the new amount, or self if the amount is unchanged
+    # @example
+    #   price = Mint.money(10.00, 'USD')
+    #   price.mint(15.00)  #=> [USD 15.00]
+    #   price.mint(10.00)  #=> [USD 10.00] (returns self)
     def mint(new_amount)
       new_amount = currency.normalize_amount(new_amount)
       new_amount == amount ? self : Money.new(new_amount, currency)

@@ -4,9 +4,13 @@ module Mint
   # Implements the standard Ruby coercion protocol.
   class Money
     # Allows {Money} to interact seamlessly as the right-hand operand in Numeric arithmetic.
+    # This enables expressions like `5 + money` where `5` is a Numeric and `money` is a Money object.
     #
     # @param other [Numeric] the left-hand operand to coerce
     # @return [Array(CoercedNumber, Money)] coerced operand array
+    # @example
+    #   price = Mint.money(10, 'USD')
+    #   5 + price  #=> [USD 15.00] (via coercion)
     def coerce(other)
       [CoercedNumber.new(other), self]
     end

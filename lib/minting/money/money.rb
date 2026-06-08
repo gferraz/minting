@@ -11,9 +11,19 @@ module Mint
 
     # Returns the ISO 3-letter currency code string.
     #
-    # @return [String] the ISO currency code
+    # @return [String] the ISO currency code (e.g., "USD", "EUR", "BRL")
+    # @example
+    #   Mint.money(100, 'USD').currency_code  #=> "USD"
     def currency_code = currency.code
 
+    # Returns the monetary amount expressed in the currency's smallest unit (fractional units).
+    # For example, cents for USD (subunit 2), yen for JPY (subunit 0), fils for IQD (subunit 3).
+    #
+    # @return [Integer] the amount in fractional units
+    # @example
+    #   Mint.money(1234.56, 'USD').fractional  #=> 123456
+    #   Mint.money(1000, 'JPY').fractional     #=> 1000
+    #   Mint.money(123.456, 'IQD').fractional  #=> 123456
     def fractional = (amount * currency.fractional_multiplier).to_i
 
     # Generates a stable hash key for Money instances.

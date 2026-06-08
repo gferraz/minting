@@ -9,6 +9,8 @@ module Mint
     # Converts the monetary amount to a BigDecimal object.
     #
     # @return [BigDecimal] the decimal representation of the money amount
+    # @example
+    #   Mint.money(9.99, 'USD').to_d  #=> 0.999e1
     def to_d = amount.to_d 0
 
     # Converts the monetary amount to a standard float.
@@ -31,8 +33,17 @@ module Mint
     # Truncates and converts the monetary amount to an Integer.
     #
     # @return [Integer] the integer representation of the money amount
+    # @example
+    #   Mint.money(9.99, 'USD').to_i  #=> 9
+    #   Mint.money(-9.99, 'USD').to_i #=> -9
     def to_i = amount.to_i
 
+    # Returns a Hash representation of the money instance.
+    #
+    # @return [Hash] hash with :currency (String) and :amount (String) keys
+    # @example
+    #   Mint.money(134120, 'BRL').to_hash
+    #   #=> { currency: "BRL", amount: "134120.00" }
     def to_hash
       { currency: currency_code, amount: Kernel.format("%0.#{currency.subunit}f", amount) }
     end
