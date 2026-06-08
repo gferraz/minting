@@ -14,38 +14,34 @@ end
 
 Rake::TestTask.new('bench:all') do |t|
   t.libs = %w[lib test]
-  t.pattern = 'test/performance/**/*_benchmark.rb'
+ # t.pattern = 'test/performance/**/*_benchmark.rb'
 end
 
 Rake::TestTask.new('bench:competitive') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/competitive/*_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
+  #t.ruby_opts << '-r test_helper.rb'
 end
 
 Rake::TestTask.new('bench:core') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/core/parse_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
 end
 
 
 Rake::TestTask.new('bench:memory') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/memory/*_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
 end
 
 Rake::TestTask.new('bench:regression') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/regression/*_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
 end
 
 Rake::TestTask.new('bench:competitive') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/competitive_performance_benchmark.rb'
-  t.ruby_opts << '-r test_helper.rb'
 end
 
 RuboCop::RakeTask.new(:cop)
