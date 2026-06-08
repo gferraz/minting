@@ -25,8 +25,6 @@ module Mint
   end
 
   refine String do
-    def to_money(currency)
-      Mint.money(to_r, currency)
-    end
+    def to_money(currency) = Mint.money(to_r, currency)
   end
 end

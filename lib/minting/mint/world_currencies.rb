@@ -5,7 +5,7 @@ module Mint
 
   # Loads ISO world currencies from YAML file into the registry.
   #
-  # @return [Hash] all currencies hash
+  # @return [Hash{String => Currency}] ISO-4217 world currencies mapped by code
   # @api private
   def world_currencies
     @world_currencies ||= begin

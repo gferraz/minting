@@ -5,7 +5,7 @@ module Mint
   class Money
     # Creates a new Money immutable object with the specified amount and currency
     # @param amount [Numeric] The monetary amount
-    # @param currency [Currency] The currency object
+    # @param currency [Currency, String] The currency code or currency object
     # @raise [ArgumentError] If amount is not numeric or currency is invalid
     def self.create(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)

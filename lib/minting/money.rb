@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'minting/money/parse'
 require 'minting/money/allocation'
 require 'minting/money/arithmetics'
 require 'minting/money/coercion'

@@ -2,6 +2,8 @@
 
 require 'minting/mint/currency'
 require 'minting/mint/currency_store'
+require 'minting/mint/mint'
+require 'minting/mint/parser'
 require 'minting/mint/registry'
 require 'minting/mint/refinements'
 require 'minting/mint/world_currencies'

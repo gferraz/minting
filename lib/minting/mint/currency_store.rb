@@ -4,14 +4,16 @@ require 'yaml'
 
 # Mint currency store (internal)
 module Mint
-  # Internal currency storage and loading.
+  # Internal currency registry
   # Manages the registry cache and currency symbol lookups.
-  module CurrencyStore
+  module Registry
+    module_function
+
     # Returns the hash of all registered currencies.
     #
     # @return [Hash{String => Currency}] registered currencies mapped by code
     # @api private
-    def self.currencies
+    def currencies
       @currencies ||= Mint.world_currencies.dup
     end
 
@@ -19,7 +21,7 @@ module Mint
     #
     # @return [Array<Array<String, Currency>>] sorted symbol-to-currency mappings
     # @api private
-    def self.currency_symbols
+    def currency_symbols
       @currency_symbols ||= begin
         currencies.values
                   .reject { |currency| currency.symbol.empty? }
@@ -32,7 +34,7 @@ module Mint
     # Called when currencies are registered.
     #
     # @api private
-    def self.invalidate_symbols_cache
+    def invalidate_symbols_cache
       @currency_symbols = nil
     end
   end
