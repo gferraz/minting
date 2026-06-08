@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Mint Money parsing
 module Mint
   extend self
 

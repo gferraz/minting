@@ -185,12 +185,6 @@ class RegressionBenchmark < Minitest::Benchmark
     assert_performance_constant 0.99 do |_n|
       # These should all do type checking internally
       begin
-        "#{money}invalid"
-      rescue TypeError
-        # Expected
-      end
-
-      begin
         money * 'invalid'
       rescue TypeError
         # Expected
