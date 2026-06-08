@@ -15,7 +15,7 @@ module Mint
     raise ArgumentError, 'Currency code must be String' unless code.is_a? String
     unless code.match?(/^[A-Z_]+$/)
       raise ArgumentError,
-            "Currency code must only letters or '_' ('USD',, 'MY_COIN')"
+            "Currency code must have only letters or '_' ('USD',, 'MY_COIN')"
     end
 
     currencies = Registry.currencies

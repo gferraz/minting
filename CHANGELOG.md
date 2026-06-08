@@ -4,8 +4,13 @@
 
 ### Breaking Changes
 
-- Mint::Money.parse is now Mint.parse
+- `Mint::Money.parse` is now Mint.parse
+- `register_currency` new behaviour
+  - No more `register_currency!` variant
+
+### Inmprovements
 - ISO 4217 currencies can be accessed by calling Mint.world_currencies
+
 
 ## [v1.5.1](https://github.com/gferraz/minting/releases/tag/v1.5.1) (2026-06-05)
 

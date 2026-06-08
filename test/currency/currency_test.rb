@@ -9,10 +9,14 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_currency_construction
-    assert Mint::Currency.new(code: 'SGDA', subunit: 2, symbol: '^'), Mint.register_currency(code: 'SGDA', subunit: 2, symbol: '^')
+    sgda = Mint::Currency.new(code: 'SGDA', subunit: 2, symbol: '^')
+
+    assert_equal sgda, Mint.register_currency(code: 'SGDA', subunit: 2, symbol: '^')
+
     assert_raises IndexError, 'Currency: USD already exists' do
       Mint.register_currency(code: 'USD', subunit: 2, symbol: '$')
     end
+
     assert_raises ArgumentError, 'Currency code must be String or Symbol' do
       Mint.register_currency(code: 'USD4', subunit: 2, symbol: '$')
     end
