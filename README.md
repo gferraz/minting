@@ -148,7 +148,7 @@ price.clamp(min_price, 100) #=> [USD 75.00]
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero `Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`. Non-zero amounts must match currency and value.
 
-**Custom currencies** — `Mint.register_currency` returns the existing entry if the code is already registered; use `register_currency!` to detect duplicates.
+**Custom currencies** — `Mint.register_currency`, Only registered currency codes and symbolos are recoginized by the parser.
 
 **Built-in currencies** — ISO-style codes ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
 
