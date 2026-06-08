@@ -188,10 +188,10 @@ gem install minting
 ## Parsing strings
 
 ```ruby
-Mint::Money.parse('$19.99')           #=> [USD 19.99]
-Mint::Money.parse('19,99 €')          #=> [EUR 19.99]
-Mint::Money.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
-Mint::Money.parse('USD 1,234.56')     #=> [USD 1234.56]
+Mint.parse('$19.99')           #=> [USD 19.99]
+Mint.parse('19,99 €')          #=> [EUR 19.99]
+Mint.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
+Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
 ```
 
 - Pass a currency code when the string has no symbol or code. 

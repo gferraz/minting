@@ -208,7 +208,7 @@ property test:
 
 ```ruby
 m = Mint.money(9.99, 'USD')
-assert_equal m, Mint::Money.parse(m.inspect.delete_prefix('[').delete_suffix(']'))
+assert_equal m, Mint.parse(m.inspect.delete_prefix('[').delete_suffix(']'))
 ```
 
 Make it a one-liner or a property-based test with 10–20 random
