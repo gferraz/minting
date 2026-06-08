@@ -2,14 +2,20 @@
 
 ## [Unreleased]
 
+## [v1.6.0](https://github.com/gferraz/minting/releases/tag/v1.6.0) (2026-06-08)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.5.1...v1.6.0)
+
 ### Breaking Changes
 
 - `Mint::Money.parse` is now Mint.parse
-- `register_currency` new behaviour
-  - No more `register_currency!` variant
+- - No more `register_currency!` variant to register currency
 
 ### Inmprovements
 - ISO 4217 currencies can be accessed by calling Mint.world_currencies
+
+### Fixes
+- `Mint.parse` should consider the underline ('_') characteralid for currency code.
 
 
 ## [v1.5.1](https://github.com/gferraz/minting/releases/tag/v1.5.1) (2026-06-05)

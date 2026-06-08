@@ -3,5 +3,5 @@
 # Root namespace for the Minting library.
 module Minting
   # Current version of the Minting gem.
-  VERSION = '1.5.1'
+  VERSION = '1.6.0'
 end
