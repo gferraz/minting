@@ -64,7 +64,7 @@ module Mint
     when nil then return nil
     when String
       # Prefer an explicit ISO 4217 code (e.g. "USD 1,234.56") over symbol matching.
-      currency = Mint.currency(input[/\b([A-Z]+)\b/, 1])
+      currency = Mint.currency(input[/\b([A-Z_]+)\b/, 1])
       return currency if currency
 
       # Fall back to registered symbols, longest first (HK$ before $).
