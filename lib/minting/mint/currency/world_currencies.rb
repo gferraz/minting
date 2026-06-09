@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
+# Mint list of world currencies
 module Mint
-  module_function
-
   # Loads ISO world currencies from YAML file into the registry.
   #
   # @return [Hash{String => Currency}] ISO-4217 world currencies mapped by code
   # @api private
-  def world_currencies
+  def self.world_currencies
     @world_currencies ||= begin
       path = File.join(File.expand_path('../../data', __dir__), 'world-currencies.yaml')
 

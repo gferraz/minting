@@ -27,9 +27,14 @@ class MintingTest < Minitest::Test
 
     assert_equal '$9.99',  price.to_s
     assert_equal '9',      price.to_s(format: '%<amount>d')
+    assert_equal '$ 9', price.to_s(format: '%<symbol>s%<amount> d')
+    assert_equal '$-9.99',  (-price).to_s(format: '%<symbol>s%<amount> f')
+    assert_equal '$ 9.99',  price.to_s(format: '%<symbol>s%<amount> f')
     assert_equal '$9.99',  price.to_s(format: '%<symbol>s%<amount>f')
     assert_equal '$+9.99', price.to_s(format: '%<symbol>s%<amount>+f')
-    assert_equal '-9.99',  (-price).to_s(format: '%<amount>f')
+    assert_equal ' 9.99',  price.to_s(format: '%<amount> f')
+    assert_equal '-9.99',  (-price).to_s(format: '%<amount> f')
+    assert_equal '-9.99 USD', (-price).to_s(format: '%<amount> f %<currency>s')
 
     # Format with padding
     price_in_euros = Mint.money(12.34, 'EUR')

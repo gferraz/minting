@@ -91,9 +91,9 @@ module Mint
       end
       format ||= '%<symbol>s%<amount>f'
 
-      # Automatically adjust decimal places based on currency subunit
-      adjusted_format = format.gsub(/%<amount>(\+?\d*)f/,
-                                    "%<amount>\\1.#{currency.subunit}f")
+      # Automatically adjust decimal places based on currency subunit if missing
+      adjusted_format = format
+                        .gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
 
       Kernel.format(adjusted_format,
                     amount: value,

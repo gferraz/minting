@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v1.6.1](https://github.com/gferraz/minting/releases/tag/v1.6.2) (2026-06-09)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.6.1...v1.6.2)
+
+### Improvements
+
+- Complement World currencies database with all ISO codes
+- Fix an problem with special format option (eg: `1.23.dollars.to_s(format: "<amount> f")`)
 
 ## [v1.6.1](https://github.com/gferraz/minting/releases/tag/v1.6.1) (2026-06-08)
 
