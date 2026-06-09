@@ -133,6 +133,12 @@
   symbol: د.إ
   name: United Arab Emirates Dirham
   priority: 600
+- code: YER
+  country: YEM
+  subunit: 2
+  symbol: "﷼"
+  name: Yemeni Rial
+  priority: 114
 - code: IDR
   country: IDN
   subunit: 2
@@ -151,6 +157,12 @@
   symbol: "₦"
   name: Nigerian Naira
   priority: 111
+- code: SOS
+  country: SOM
+  subunit: 2
+  symbol: Sh
+  name: Somali Shilling
+  priority: 110
 - code: BDT
   country: BGD
   subunit: 2
@@ -169,12 +181,24 @@
   symbol: "₽"
   name: Russian Ruble
   priority: 107
+- code: SYP
+  country: SYR
+  subunit: 2
+  symbol: "£"
+  name: Syrian Pound
+  priority: 106
 - code: ETB
   country: ETH
   subunit: 2
   symbol: Br
   name: Ethiopian Birr
   priority: 105
+- code: ZWL
+  country: ZWE
+  subunit: 2
+  symbol: Z$
+  name: Zimbabwean Dollar
+  priority: 104
 - code: PHP
   country: PHL
   subunit: 2
@@ -211,6 +235,12 @@
   symbol: "฿"
   name: Thai Baht
   priority: 98
+- code: TMT
+  country: TKM
+  subunit: 2
+  symbol: m
+  name: Turkmenistani Manat
+  priority: 97
 - code: TZS
   country: TZA
   subunit: 2
@@ -223,6 +253,12 @@
   symbol: FCFA
   name: Central African CFA franc
   priority: 95
+- code: DJF
+  country: DJI
+  subunit: 0
+  symbol: Fdj
+  name: Djiboutian Franc
+  priority: 94
 - code: KES
   country: KEN
   subunit: 2
@@ -241,6 +277,12 @@
   symbol: "$"
   name: Colombian Peso
   priority: 91
+- code: ERN
+  country: ERI
+  subunit: 2
+  symbol: Nfk
+  name: Eritrean Nakfa
+  priority: 90
 - code: UGX
   country: UGA
   subunit: 0
@@ -271,6 +313,12 @@
   symbol: "؋"
   name: Afghan Afghani
   priority: 85
+- code: LBP
+  country: LBN
+  subunit: 2
+  symbol: "£"
+  name: Lebanese Pound
+  priority: 84
 - code: MAD
   country: MAR
   subunit: 2
@@ -283,6 +331,12 @@
   symbol: zł
   name: Polish Zloty
   priority: 82
+- code: SVC
+  country: SLV
+  subunit: 2
+  symbol: "$"
+  name: El Salvadoran Colón
+  priority: 81
 - code: UAH
   country: UKR
   subunit: 2
@@ -337,6 +391,12 @@
   symbol: Bs.
   name: Venezuelan Bolívar
   priority: 72
+- code: SSP
+  country: SSD
+  subunit: 2
+  symbol: "£"
+  name: South Sudanese Pound
+  priority: 71
 - code: TWD
   country: TWN
   subunit: 2
@@ -445,6 +505,18 @@
   symbol: د.ا
   name: Jordanian Dinar
   priority: 53
+- code: ALL
+  country: ALB
+  subunit: 2
+  symbol: L
+  name: Albanian Lek
+  priority: 52
+- code: MKD
+  country: MKD
+  subunit: 2
+  symbol: ден
+  name: North Macedonian Denar
+  priority: 51
 - code: AZN
   country: AZE
   subunit: 2
@@ -481,6 +553,18 @@
   symbol: Br
   name: Belarusian Ruble
   priority: 45
+- code: BAM
+  country: BIH
+  subunit: 2
+  symbol: KM
+  name: Bosnia and Herzegovina Convertible Mark
+  priority: 44
+- code: MOP
+  country: MAC
+  subunit: 2
+  symbol: P
+  name: Macanese Pataca
+  priority: 43
 - code: LAK
   country: LAO
   subunit: 2
@@ -493,6 +577,12 @@
   symbol: лв
   name: Kyrgyzstani Som
   priority: 41
+- code: MVR
+  country: MDV
+  subunit: 2
+  symbol: Rf
+  name: Maldivian Rufiyaa
+  priority: 40
 - code: LYD
   country: LBY
   subunit: 3
@@ -523,6 +613,30 @@
   symbol: лв
   name: Bulgarian Lev
   priority: 36
+- code: GNF
+  country: GIN
+  subunit: 0
+  symbol: Fr
+  name: Guinean Franc
+  priority: 35
+- code: GMD
+  country: GMB
+  subunit: 2
+  symbol: D
+  name: Gambian Dalasi
+  priority: 34
+- code: SLL
+  country: SLE
+  subunit: 2
+  symbol: Le
+  name: Sierra Leonean Leone
+  priority: 33
+- code: STN
+  country: STP
+  subunit: 2
+  symbol: Db
+  name: São Tomé and Príncipe Dobra
+  priority: 31
 - code: CRC
   country: CRI
   subunit: 2
@@ -534,6 +648,12 @@
   subunit: 3
   symbol: د.ك
   name: Kuwaiti Dinar
+  priority: 30
+- code: BTN
+  country: BTN
+  subunit: 2
+  symbol: Nu.
+  name: Bhutanese Ngultrum
   priority: 30
 - code: OMR
   country: OMN
@@ -553,6 +673,12 @@
   symbol: kn
   name: Croatian Kuna
   priority: 27
+- code: KMF
+  country: COM
+  subunit: 0
+  symbol: CF
+  name: Comorian Franc
+  priority: 26
 - code: GEL
   country: GEO
   subunit: 2
@@ -565,6 +691,12 @@
   symbol: "$U"
   name: Uruguayan Peso
   priority: 25
+- code: SCR
+  country: SYC
+  subunit: 2
+  symbol: "₨"
+  name: Seychellois Rupee
+  priority: 24
 - code: AMD
   country: ARM
   subunit: 2
@@ -583,6 +715,12 @@
   symbol: "﷼"
   name: Qatari Riyal
   priority: 22
+- code: MUR
+  country: MUS
+  subunit: 2
+  symbol: "₨"
+  name: Mauritian Rupee
+  priority: 22
 - code: BWP
   country: BWA
   subunit: 2
@@ -595,24 +733,48 @@
   symbol: L
   name: Moldovan Leu
   priority: 20
+- code: ANG
+  country: null
+  subunit: 2
+  symbol: ƒ
+  name: Netherlands Antillean Guilder
+  priority: 19
 - code: NAD
   country: NAM
   subunit: 2
   symbol: N$
   name: Namibian Dollar
   priority: 19
+- code: CVE
+  country: CPV
+  subunit: 2
+  symbol: $
+  name: Cape Verdean Escudo
+  priority: 18
 - code: LSL
   country: LSO
   subunit: 2
   symbol: L
   name: Lesotho Loti
   priority: 18
+- code: GIP
+  country: GIB
+  subunit: 2
+  symbol: £
+  name: Gibraltar Pound
+  priority: 17
 - code: BHD
   country: BHR
   subunit: 3
   symbol: ".د.ب"
   name: Bahraini Dinar
   priority: 17
+- code: FKP
+  country: FLK
+  subunit: 2
+  symbol: £
+  name: Falkland Islands Pound
+  priority: 16
 - code: TTD
   country: TTO
   subunit: 2
@@ -710,7 +872,7 @@
   name: Tongan Paʻanga
   priority: 1
 - code: XXX
-  country:
+  country: null
   subunit: 0
   symbol: ¤
   name: No Currency
