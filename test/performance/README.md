@@ -5,20 +5,11 @@ This directory contains comprehensive performance benchmarks for the Minting gem
 ## Quick Start
 
 ```bash
-# Run competitive tests 
-rake bench:competitive
-
-# Run all performance tests  
-rake bench:performance
-
-
-
-# Run regression tests (Minitest::Benchmark)
-rake bench:regression
-
-# Run competitive analysis against Money gem
-ake bench:competitive
-```
+rake bench:all            # Run tests for bench:all
+rake bench:competitive    # Run tests for bench:competitive
+rake bench:core           # Run tests for bench:core
+rake bench:memory         # Run tests for bench:memory
+rake bench:regression     # Run tests for bench:regression
 
 ## Benchhmark Categories
 
@@ -105,7 +96,7 @@ Allocated objects:
 
 ### Comparative Results  
 ```
-Comparison:
+Comparison Example:
       Mint addition:  1.234M i/s
      Money addition:  0.987M i/s - 1.25x slower
 ```
@@ -113,8 +104,6 @@ Comparison:
 - Higher multiplier means the baseline (first entry) is faster
 
 ## Performance Targets
-
-Based on typical Ruby money library benchmarks:
 
 ### Core Operations
 - **Object Creation**: > 500K ops/sec
@@ -131,36 +120,3 @@ Based on typical Ruby money library benchmarks:
 - **Split Algorithm**: Linear scaling O(n)
 - **Allocation Algorithm**: Linear scaling O(n)  
 - **Remainder Distribution**: Accurate to currency subunit
-
-### Ruby Version Compatibility  
-Performance characteristics may vary between Ruby versions. Current testing focuses on Ruby 3.2+.
-
-## Best Practices
-
-### Running Benchmarks
-1. **Consistent Environment**: Run on same machine/Ruby version
-2. **Minimal Background Load**: Close other applications  
-3. **Multiple Runs**: Results can vary, run several times
-4. **Baseline Comparison**: Always compare against previous versions
-
-### Interpreting Results
-1. **Focus on Relative Performance**: Absolute numbers depend on hardware
-2. **Look for Trends**: Performance degradation over time
-3. **Memory vs Speed Tradeoffs**: Sometimes slower is more memory efficient
-4. **Real-World Relevance**: Benchmark scenarios should match actual usage
-
-### Performance Regression Detection
-1. **Automate Regression Tests**: Run `rake bench:regression` in CI
-2. **Set Performance Budgets**: Define acceptable performance thresholds
-3. **Monitor Memory Usage**: Watch for memory leaks in long-running tests
-4. **Profile Before Optimizing**: Use ruby-prof to identify bottlenecks
-
-## Contributing Performance Tests
-
-When adding new performance tests:
-
-1. **Use Descriptive Names**: Test method names should be clear
-3. **Include Setup**: Prepare test data in setup methods
-4. **Test Edge Cases**: Include boundary conditions
-5. **Document Expected Results**: Add comments for expected performance characteristics
-6. **Consider Memory Impact**: Test both speed and memory usage
