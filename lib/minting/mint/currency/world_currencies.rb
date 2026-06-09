@@ -9,7 +9,7 @@ module Mint
   # @api private
   def world_currencies
     @world_currencies ||= begin
-      path = File.join(File.expand_path('../data', __dir__), 'currencies.yaml')
+      path = File.join(File.expand_path('../../data', __dir__), 'world-currencies.yaml')
 
       YAML.load_file(path).to_h { |entry| [entry['code'], Currency.new(**entry.transform_keys(&:to_sym))] }
     end.freeze

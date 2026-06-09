@@ -6,8 +6,8 @@ require 'yaml'
 module Mint
   # Internal currency registry
   # Manages the registry cache and currency symbol lookups.
-  module Registry
-    module_function
+  module CurrencyRegistry
+    extend self
 
     # Returns the hash of all registered currencies.
     #
@@ -29,6 +29,32 @@ module Mint
                   .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
       end.freeze
     end
+
+    # Registers a new currency, raising a KeyError if already registered.
+    #
+    # @param code [String] the unique currency code
+    # @param subunit [Integer] the decimal subunit precision, defaults to 0
+    # @param symbol [String] the display symbol
+    # @param priority [Integer] parser precedence priority
+    # @return [Currency] the newly registered Currency instance
+    # @raise [ArgumentError] if the code contains invalid characters
+    # @raise [KeyError] if the currency code is already registered
+    def register(code:, subunit: 0, symbol: '', priority: 0)
+      raise ArgumentError, 'Currency code must be String' unless code.is_a? String
+      unless code.match?(/^[A-Z_]+$/)
+        raise ArgumentError,
+              "Currency code must have only letters or '_' ('USD',, 'MY_COIN')"
+      end
+
+      currencies = CurrencyRegistry.currencies
+      raise KeyError, "Currency: #{code} already registered" if currencies[code]
+
+      currency = currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
+      invalidate_symbols_cache
+      currency
+    end
+
+    private
 
     # Clears and refreshes the currency symbol cache.
     # Called when currencies are registered.

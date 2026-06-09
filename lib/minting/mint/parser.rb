@@ -69,7 +69,7 @@ module Mint
       return currency if currency
 
       # Fall back to registered symbols, longest first (HK$ before $).
-      Mint.currency_symbols.each do |symbol, currency|
+      CurrencyRegistry.currency_symbols.each do |symbol, currency|
         return currency if input.include?(symbol)
       end
     end
