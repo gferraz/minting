@@ -2,7 +2,7 @@
 
 ## [Unreleased]
 
-## [v1.6.1](https://github.com/gferraz/minting/releases/tag/v1.6.2) (2026-06-09)
+## [v1.6.2](https://github.com/gferraz/minting/releases/tag/v1.6.2) (2026-06-09)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.6.1...v1.6.2)
 
