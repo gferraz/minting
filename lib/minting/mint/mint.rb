@@ -23,8 +23,21 @@ module Mint
     case currency
     when nil      then nil
     when Currency then currency
-    when String   then Registry.currencies[currency]
+    when String   then CurrencyRegistry.currencies[currency]
     else raise ArgumentError, "currency must be [Currency] ot [String] (#{currency})"
     end
+  end
+
+  # Registers a new currency, raising a KeyError if already registered.
+  #
+  # @param code [String] the unique currency code
+  # @param subunit [Integer] the decimal subunit precision, defaults to 0
+  # @param symbol [String] the display symbol
+  # @param priority [Integer] parser precedence priority
+  # @return [Currency] the newly registered Currency instance
+  # @raise [ArgumentError] if the code contains invalid characters
+  # @raise [KeyError] if the currency code is already registered
+  def self.register_currency(code:, subunit: 0, symbol: '', priority: 0)
+    CurrencyRegistry.register(code:, subunit:, symbol:, priority:)
   end
 end
