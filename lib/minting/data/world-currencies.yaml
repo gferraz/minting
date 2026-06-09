@@ -877,3 +877,118 @@
   symbol: ¤
   name: No Currency
   priority: 0
+- code: AWG
+  country: ABW
+  subunit: 2
+  symbol: ƒ
+  name: Aruban Florin
+  priority: 0
+- code: BMD
+  country: BMU
+  subunit: 2
+  symbol: "$"
+  name: Bermudian Dollar
+  priority: 0
+- code: CDF
+  country: COD
+  subunit: 2
+  symbol: Fr
+  name: Congolese Franc
+  priority: 0
+- code: CUP
+  country: CUB
+  subunit: 2
+  symbol: "$"
+  name: Cuban Peso
+  priority: 0
+- code: FOK
+  country: FRO
+  subunit: 2
+  symbol: kr
+  name: Faroese Króna
+  priority: 0
+- code: GGP
+  country: GGY
+  subunit: 2
+  symbol: £
+  name: Guernsey Pound
+  priority: 0
+- code: IMP
+  country: IMN
+  subunit: 2
+  symbol: £
+  name: Manx Pound
+  priority: 0
+- code: JEP
+  country: JEY
+  subunit: 2
+  symbol: £
+  name: Jersey Pound
+  priority: 0
+- code: KID
+  country: KIR
+  subunit: 2
+  symbol: "$"
+  name: Kiribati Dollar
+  priority: 0
+- code: KYD
+  country: CYM
+  subunit: 2
+  symbol: "$"
+  name: Cayman Islands Dollar
+  priority: 0
+- code: LRD
+  country: LBR
+  subunit: 2
+  symbol: "$"
+  name: Liberian Dollar
+  priority: 0
+- code: MGA
+  country: MDG
+  subunit: 2
+  symbol: Ar
+  name: Malagasy Ariary
+  priority: 0
+- code: MNT
+  country: MNG
+  subunit: 2
+  symbol: "₮"
+  name: Mongolian Tögrög
+  priority: 0
+- code: MRU
+  country: MRT
+  subunit: 2
+  symbol: UM
+  name: Mauritanian Ouguiya
+  priority: 0
+- code: SDG
+  country: SDN
+  subunit: 2
+  symbol: "£"
+  name: Sudanese Pound
+  priority: 0
+- code: SHP
+  country: SHN
+  subunit: 2
+  symbol: "£"
+  name: Saint Helena Pound
+  priority: 0
+- code: SLE
+  country: SLE
+  subunit: 2
+  symbol: Le
+  name: Sierra Leonean Leone (re-denominated)
+  priority: 0
+- code: TVD
+  country: TUV
+  subunit: 2
+  symbol: "$"
+  name: Tuvaluan Dollar
+  priority: 0
+- code: XDR
+  country: null
+  subunit: 0
+  symbol: SDR
+  name: Special Drawing Rights
+  priority: 0
+
