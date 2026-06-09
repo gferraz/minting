@@ -8,7 +8,7 @@ Fast, precise, and developer-friendly money handling for Ruby.
 
 **Tired of floating-point errors in financial calculations?** Minting uses Rational numbers for perfect precision.
 
-**Need performance?** Minting is 2× faster than alternatives for high-volume operations (often 10×+ for formatting). See the [Performance](#performance) section for full benchmarks.
+**Need performance?** Minting is 2× faster than alternatives for high-volume operations (often 10×+ for formatting). See the [Performance](https://github.com/gferraz/minting/blob/master/test/performance/README.md) section for full benchmarks.
 
 **Want a clean API?** Minting provides an intuitive interface with helpful error messages.
 
