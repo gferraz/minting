@@ -1,6 +1,7 @@
 require 'bundler/gem_tasks'
-require 'rubocop/rake_task'
 require 'rake/testtask'
+require 'rubocop/rake_task'
+require 'rubycritic/rake_task'
 require 'yard'
 
 CLOBBER.include %w[doc/css doc/js doc/Mint doc/*.html tmp .yardoc]
@@ -38,6 +39,10 @@ Rake::TestTask.new('bench:competitive') do |t|
 end
 
 RuboCop::RakeTask.new(:cop)
+
+RubyCritic::RakeTask.new do |task|
+  task.name = 'critic'
+end
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
