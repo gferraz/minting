@@ -1,0 +1,16 @@
+mode_ci:
+  enabled: false # default is false
+  branch: "master" # default is main
+# branch: "master" # default is main
+path: "tmp/rubycritic" # Set path where report will be saved (tmp/rubycritic by default)
+coverage_path: "tmp/simplecov" # Set path where SimpleCov coverage will be saved (./coverage by default)
+threshold_score: 10 # default is 0
+deduplicate_symlinks: false # default is false
+suppress_ratings: false # default is false
+no_browser: false # default is false
+formats: # Available values are: html, json, console, lint. Default value is html.
+  - console
+  - html
+minimum_score: 70 # default is 0
+paths: # Files to analyse. Churn calculation is scoped to these files when using Git SCM.
+  - "lib" # Wildcard patterns are supported (excludes tmp directories automatically) ex: lib/**

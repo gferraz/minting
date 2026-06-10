@@ -19,6 +19,7 @@ group :development do
   gem 'rubocop-performance', require: false
   gem 'rubocop-rake', require: false
   gem 'rubocop-thread_safety', require: false
+  gem 'rubycritic'
   gem 'ruby-prof'
   gem 'simplecov'
   gem 'yard'
