@@ -49,7 +49,7 @@ end
 
 YARD::Rake::YardocTask.new do |t|
   t.files   = ['lib/**/*.rb']
-  t.options = ['-o doc/api'] # Place the documentos in doc/api
+  #t.options = ['-o doc'] # Place the documentos in doc/api
   t.stats_options = ['--list-undoc']
 end
 
