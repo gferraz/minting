@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Development and Documentation
+- Add rubycritic and bundle-audit
+- Add Rdoc link in README
+
 ## [v1.6.3](https://github.com/gferraz/minting/releases/tag/v1.6.3) (2026-06-10)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.6.2...v1.6.3)
