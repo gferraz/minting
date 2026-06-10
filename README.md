@@ -185,6 +185,49 @@ Option 3: Install it yourself with:
 gem install minting
 ```
 
+## Configuration
+
+### Optional top‑level `Money` and `Currency`
+
+By default, Minting keeps everything namespaced under `Mint`:
+
+```ruby
+price    = Mint::Money.create(10, "USD")
+currency = Mint::Currency.new(code: "USD", symbol: "$", subunit: 2, priority: 0)
+```
+
+To avoid polluting the global namespace (and to coexist nicely with other gems), **Minting dont automatically defines `Money` or `Currency` at the top level automatically**.
+
+If you prefer the shorter `Money` / `Currency` constants in your application code, you can opt in explicitly.
+
+There are two ways to enable shorter constants:
+
+1. Require dsl in your app
+
+```ruby
+require "minting"
+require "minting/dsl"  # opt‑in top‑level Money / Currency
+```
+
+2. Call a configuration method
+
+```ruby
+Minting.use_top_level_constants!
+```
+
+After this, you can use:
+
+```ruby
+price = Money.create(10, "USD")     # equivalent to Mint::Money.create
+tax   = Money.money(2.50, "USD")   # via Mint.money, still available
+cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
+```
+
+#### When to use this
+
+- **Good fit:** application code, especially in Rails apps, where `Money` reads nicely in models and views.
+- **Not recommended:** reusable gems/libraries. In that case, stick to the namespaced API (`Mint::Money`, `Mint::Currency`) to avoid conflicts with other libraries.
+
 ## Parsing strings
 
 ```ruby
