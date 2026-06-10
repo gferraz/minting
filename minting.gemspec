@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'minting/version'
@@ -20,6 +22,7 @@ Gem::Specification.new do |s|
   s.metadata = {
     'bug_tracker_uri' => "#{s.homepage}/issues",
     'changelog_uri' => "#{s.homepage}/blob/master/CHANGELOG.md",
+    'documentation_uri' => 'https://www.rubydoc.info/gems/minting',
     'homepage_uri' => s.homepage,
     'source_code_uri' => s.homepage,
     'allowed_push_host' => 'https://rubygems.org',
