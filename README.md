@@ -16,6 +16,11 @@ Fast, precise, and developer-friendly money handling for Ruby.
 
 **Rails**? Use the [minting-rails](https://github.com/gferraz/minting-rails) companion gem
 
+## Resources
+
+- [API Documentation](https://www.rubydoc.info/gems/minting/frames)
+- [Git Repository](https://github.com/gferraz/minting)
+
 ## Quick start
 
 ```ruby
