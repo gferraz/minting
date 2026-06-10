@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v1.6.3](https://github.com/gferraz/minting/releases/tag/v1.6.3) (2026-06-10)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.6.2...v1.6.3)
+
+### Improvements
+
+- Optional top‑level access to `Money` and `Currency`
+
 ## [v1.6.2](https://github.com/gferraz/minting/releases/tag/v1.6.2) (2026-06-09)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.6.1...v1.6.2)
