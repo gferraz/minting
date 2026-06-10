@@ -8,6 +8,7 @@ group :development do
   gem 'benchmark-ips'
   gem 'bigdecimal'
   gem 'bundler'
+  gem 'bundle-audit'
   gem 'irb'
   gem 'minitest'
   gem 'money'

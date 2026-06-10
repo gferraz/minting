@@ -1,3 +1,4 @@
+require 'bundler/audit/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 require 'rubocop/rake_task'
@@ -37,6 +38,8 @@ Rake::TestTask.new('bench:competitive') do |t|
   t.libs = %w[lib test]
   t.pattern = 'test/performance/competitive/**/*_benchmark.rb'
 end
+
+Bundler::Audit::Task.new
 
 RuboCop::RakeTask.new(:cop)
 
