@@ -250,9 +250,9 @@ Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
 
 ## Roadmap
 
-- Improve formatting features
+- Add support to configure thousand and decimal separators in parse (evaluating)
 - Localization (I18n-aware formatting)
-- Basic exchange-rate conversions
+- Basic exchange-rate conversions - infrastructure only, not integrations yet
 
 ## Contributing
 
