@@ -8,6 +8,8 @@
 - 100% test coverage
 - 93/100 ruby critic score on lib/**
 - RDoc now available online
+- Add Github CI workflow
+- Drop support to ruby 3.2
 
 ## [v1.6.3](https://github.com/gferraz/minting/releases/tag/v1.6.3) (2026-06-10)
 
