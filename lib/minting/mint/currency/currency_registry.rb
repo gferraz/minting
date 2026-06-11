@@ -24,7 +24,7 @@ module Mint
     def currency_symbols
       @currency_symbols ||= begin
         currencies.values
-                  .reject { |currency| currency.symbol.empty? }
+                  .reject { it.symbol.empty? }
                   .map { |currency| [currency.symbol, currency] }
                   .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
       end.freeze
