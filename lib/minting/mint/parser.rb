@@ -62,7 +62,6 @@ module Mint
 
   def parse_currency(input)
     case input
-    when nil then return nil
     when String
       # Prefer an explicit ISO 4217 code (e.g. "USD 1,234.56") over symbol matching.
       currency = Mint.currency(input[/\b([A-Z_]+)\b/, 1])

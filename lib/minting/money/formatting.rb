@@ -45,10 +45,10 @@ module Mint
     #
     def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
       case format
-      when {}, '', nil then raise ArgumentError, 'format must not be empty or null'
-      when Hash        then validate_format_hash!(format)
+      when {}, '' then raise ArgumentError, 'format must not be empty'
+      when Hash   then validate_format_hash!(format)
       when String # noop
-      else raise ArgumentError, 'Invalid format'
+      else        raise ArgumentError, 'Invalid format. Only String or Hash are accepted'
       end
 
       formatted = format_amount(format)

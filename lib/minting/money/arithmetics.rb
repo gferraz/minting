@@ -31,10 +31,10 @@ module Mint
     # @raise [TypeError] if addition involves a different currency or incompatible types
     def +(addend)
       case addend
-      when 0     then return self
-      when Money then return mint(amount + addend.amount) if same_currency?(addend)
+      in 0 then self
+      in Money if same_currency?(addend) then mint(amount + addend.amount)
+      else raise TypeError, "#{addend} can't be added to #{self}"
       end
-      raise TypeError, "#{addend} can't be added to #{self}"
     end
 
     # Performs subtraction with another {Money} instance or standard zero Numeric.
@@ -61,9 +61,9 @@ module Mint
     # @return [Money] the multiplied Money instance
     # @raise [TypeError] if multiplier is not Numeric or is a Money object
     def *(multiplicand)
-      return mint(amount * multiplicand) if multiplicand.is_a?(Numeric)
+      raise TypeError, "#{self} can't be multiplied by #{multiplicand}" unless multiplicand.is_a?(Numeric)
 
-      raise TypeError, "#{self} can't be multiplied by #{multiplicand}"
+      mint(amount * multiplicand)
     end
 
     # Performs division of the monetary value by a scalar Numeric or identical currency {Money}.

@@ -278,6 +278,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_format_rejects_invalid_hash_format
+    assert_raises(ArgumentError) { usd_9_99.to_s(format: 34) }
     assert_raises(ArgumentError) { usd_9_99.to_s(format: {}) }
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { foo: 'bar' }) }
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' }) }

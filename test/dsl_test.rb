@@ -32,6 +32,16 @@ class DslTest < Minitest::Test
     assert_equal :existing_currency, Currency
   end
 
+  def test_does_not_override_already_defined_money
+    Object.const_set(:Money, Mint::Money)
+    Object.const_set(:Currency, Mint::Currency)
+
+    assert_output("", /already defined/) { Mint.use_top_level_constants! }
+
+    assert_equal Mint::Money, Money
+    assert_equal Mint::Currency, Currency
+  end
+
   private
 
   def remove_const(name)
