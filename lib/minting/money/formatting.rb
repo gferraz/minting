@@ -46,8 +46,8 @@ module Mint
     def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
       case format
       when {}, '' then raise ArgumentError, 'format must not be empty'
-      when Hash   then validate_format_hash!(format)
-      when String # noop
+      when Hash   then validate_format_hash(format)
+      when String then format = { positive: format }
       else        raise ArgumentError, 'Invalid format. Only String or Hash are accepted'
       end
 
@@ -61,41 +61,37 @@ module Mint
         formatted.gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]{1}|$))/, "\\1#{thousand}")
       end
 
-      formatted = formatted.rjust(width) if width
-      formatted
+      width ? formatted.rjust(width) : formatted
     end
 
     private
 
-    def validate_format_hash!(format)
+    def select_format(format)
+      negative_format = format[:negative]
+      zero_format = format[:zero]
+
+      if amount.negative? && negative_format
+        [negative_format, -amount]
+      elsif amount.zero? && zero_format
+        [zero_format,     amount]
+      else
+        [format[:positive], amount]
+      end
+    end
+
+    def validate_format_hash(format)
       unknown = format.keys - %i[positive negative zero]
 
       raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
     end
 
     def format_amount(format)
-      format = { positive: format } if format.is_a?(String)
-      positive_format = format[:positive]
-      negative_format = format[:negative]
-      zero_format = format[:zero]
-
-      if amount.negative? && negative_format
-        format = negative_format
-        value = -amount
-      elsif amount.zero? && zero_format
-        format = zero_format
-        value = amount
-      else
-        format = positive_format
-        value = amount
-      end
+      format, value = select_format(format)
       format ||= '%<symbol>s%<amount>f'
-
       # Automatically adjust decimal places based on currency subunit if missing
-      adjusted_format = format
-                        .gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+      format = format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
 
-      Kernel.format(adjusted_format,
+      Kernel.format(format,
                     amount: value,
                     currency: currency_code,
                     symbol: currency.symbol)

@@ -21,10 +21,10 @@ module Mint
   # @return [Currency, nil] the registered Currency instance or nil if not found
   def self.currency(currency)
     case currency
-    when nil      then nil
+    when NilClass then nil
     when Currency then currency
     when String   then CurrencyRegistry.currencies[currency]
-    else raise ArgumentError, "currency must be [Currency] ot [String] (#{currency})"
+    else          raise ArgumentError, "currency must be [Currency] ot [String] (#{currency})"
     end
   end
 
