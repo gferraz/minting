@@ -41,7 +41,9 @@ end
 
 Bundler::Audit::Task.new
 
-RuboCop::RakeTask.new(:cop)
+RuboCop::RakeTask.new(:cop) do |task|
+  task.patterns = ['lib']
+end
 
 RubyCritic::RakeTask.new do |task|
   task.name = 'critic'
