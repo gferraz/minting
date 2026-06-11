@@ -5,6 +5,9 @@
 ### Development and Documentation
 - Add rubycritic and bundle-audit
 - Add Rdoc link in README and gemspec
+- 100% test coverage
+- 93/100 ruby critic score on lib/**
+- RDoc now available online
 
 ## [v1.6.3](https://github.com/gferraz/minting/releases/tag/v1.6.3) (2026-06-10)
 
