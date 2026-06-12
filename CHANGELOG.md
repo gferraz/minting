@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+## [v1.7.0](https://github.com/gferraz/minting/releases/tag/v1.7.0) (2026-06-12)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.6.2...v1.7.0)
+
+### Fixes
+- Make all tests pass in ruby 3 and 4 (required Range#step patch for ruby 3.3)
+- Reorganized DSL (refinements, monkey patches, etc)
+
 ### Development and Documentation
 - Add rubycritic and bundle-audit
 - Add Rdoc link in README and gemspec
