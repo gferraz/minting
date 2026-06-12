@@ -34,5 +34,63 @@ class MintTest < Minitest::Test
   def test_money_range_step
     assert_equal [1.dollar, 2.dollars, 3.dollars],
                  ((1.dollar)..(3.dollars)).step(1.dollar).to_a
+
+    assert_equal [1.dollar, 2.dollars],
+                 ((1.dollar)...(3.dollars)).step(1.dollar).to_a
+
+    assert_equal [1.dollar, 3.dollars, 5.dollars],
+                 ((1.dollar)..(6.dollars)).step(2.dollars).to_a
+
+    assert_equal [],
+                 ((1.dollar)..(6.dollars)).step(-2.dollars).to_a
+
+    assert_equal [10.dollars, 8.dollars, 6.dollars],
+                 ((10.dollars)..(6.dollars)).step(-2.dollars).to_a
+
+    assert_equal [10.dollars, 8.dollars],
+                 ((10.dollars)...(6.dollars)).step(-2.dollars).to_a
+
+    assert_equal [10.dollars],
+                 ((10.dollars)..(6.dollars)).step(-6.dollars).to_a
+
+    assert_equal [1, 3, 5], (1..6).step(2).to_a
+
+    assert_raises(TypeError) { (1..6).step(2.dollars).to_a }
+  end
+
+  def test_money_range_step_edge_cases
+    # Beginless range — should raise TypeError, matching core Ruby
+    assert_raises(TypeError) { (..(6.dollars)).step(1.dollar).to_a }
+
+    # Endless range with block — verify it actually iterates correctly
+    # (use first(n) via break, since .to_a would hang)
+    enum = ((1.dollar)..).step(1.dollar)
+
+    assert_equal [1.dollar, 2.dollars, 3.dollars], enum.first(3)
+
+    # Single-element range (begin == end, inclusive)
+    assert_equal [1.dollar], ((1.dollar)..(1.dollar)).step(1.dollar).to_a
+
+    # Single-element range, exclusive — empty
+    assert_equal [], ((1.dollar)...(1.dollar)).step(1.dollar).to_a
+
+    # Step size of zero raises
+    assert_raises(ArgumentError) { ((1.dollar)..(3.dollars)).step(0.dollars).to_a }
+
+    # Step larger than range span (positive direction)
+    assert_equal [1.dollar], ((1.dollar)..(3.dollars)).step(10.dollars).to_a
+
+    # Block form returns self and yields correctly
+    result = []
+    range = ((1.dollar)..(3.dollars))
+    returned = range.step(1.dollar) { |v| result << v }
+
+    assert_equal [1.dollar, 2.dollars, 3.dollars], result
+    assert_same range, returned
+
+    # Enumerator form without block
+    assert_kind_of Enumerator, ((1.dollar)..(3.dollars)).step(1.dollar)
+
+    assert_raises(TypeError) { ((1.dollar)..(3.dollars)).step(1.euro).to_a }
   end
 end

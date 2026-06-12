@@ -36,7 +36,7 @@ class DslTest < Minitest::Test
     Object.const_set(:Money, Mint::Money)
     Object.const_set(:Currency, Mint::Currency)
 
-    assert_output("", /already defined/) { Mint.use_top_level_constants! }
+    assert_output('', /already defined/) { Mint.use_top_level_constants! }
 
     assert_equal Mint::Money, Money
     assert_equal Mint::Currency, Currency
