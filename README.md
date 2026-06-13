@@ -3,23 +3,10 @@
 Fast, precise, and developer-friendly money handling for Ruby.
 
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
-
-## Why Minting?
-
-**Tired of floating-point errors in financial calculations?** Minting uses Rational numbers for perfect precision.
-
-**Need performance?** Minting is 2× faster than alternatives for high-volume operations (often 10×+ for formatting). See the [Performance](https://github.com/gferraz/minting/blob/master/test/performance/README.md) section for full benchmarks.
-
-**Want a clean API?** Minting provides an intuitive interface with helpful error messages.
-
-**Looking for a proven alternative?** Check out the established [Money gem](https://github.com/RubyMoney/money) with thousands of stars on GitHub.
-
-**Rails**? Use the [minting-rails](https://github.com/gferraz/minting-rails) companion gem
-
-## Resources
-
-- [API Documentation](https://www.rubydoc.info/gems/minting/frames)
-- [Git Repository](https://github.com/gferraz/minting)
+[![CI](https://github.com/gferraz/minting/actions/workflows/ci.yml/badge.svg)](https://github.com/gferraz/minting/actions/workflows/ci.yml)
+[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gferraz/minting)
+[![RubyCritic](https://img.shields.io/badge/RubyCritic-93/100-brightgreen)](https://github.com/gferraz/minting)
+[![Documentation](https://img.shields.io/badge/docs-rubydoc.info-blue)](https://www.rubydoc.info/gems/minting/frames)
 
 ## Quick start
 
@@ -34,16 +21,44 @@ total.to_s                             #=> "$21.59"
 total.currency_code                    #=> "USD"
 ```
 
-## Features
+## Why Minting?
 
-- Arithmetic: `+ - * /`, unary minus, `abs`
-- Comparisons: `==`, `<=>`, `zero?`, `nonzero?`, `positive?`, `negative?`
-- Formatting: `to_s` with custom formats, thousand delimiters and decimal separators
-- Serialization: `to_json`, `to_i`, `to_f`, `to_r`, `to_d`
-- Allocation utilities: `split(quantity)`, `allocate([ratios])`, 
-- Utilities: `clamp(min, max)`
-- Numeric Refinements for ergonomics: `10.dollars`, `3.euros`, `4.to_money('USD')`
-- Currency registry with 117+ currencies and custom registration
+|                    | Minting                                   |
+|--------------------|-------------------------------------------|
+| **Precision**      | Rational-based, zero floating-point error |
+| **Performance**    | **2× faster** (10×+ formatting)           |
+| **Ruby support**   | 3.3+ (including Ruby 4.0)                 |
+| **Rails**          | Dedicated companion gem                   |
+| **Code quality**   | 100% coverage, 93/100 RubyCritic          |
+
+### 🎯 Exact precision
+Amounts are stored as `Rational` and rounded to the currency subunit. No floating-point surprises, ever.
+
+### ⚡ Blazing performance
+Minting is **2× faster** than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/README.md).
+
+### 🧼 Clean, modern API
+Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
+
+### 🚆 Rails-ready
+Use with the [minting-rails](https://github.com/gferraz/minting-rails) companion gem for drop-in ActiveRecord type casting, validators, and form helpers.
+
+### 🏆 Quality you can trust
+- **100% test coverage** — every line exercised
+- **93/100 RubyCritic score** — clean, maintainable code
+- **CI-tested on Ruby 3.3 and 4.0**
+
+## Installation
+
+```shell
+bundle add minting
+```
+
+Or add to your Gemfile:
+
+```ruby
+gem 'minting'
+```
 
 ## Usage
 
@@ -66,16 +81,15 @@ ten == Mint.money(10, 'EUR')     #=> false
 ten > Mint.money(9.99, 'USD')    #=> true
 
 # Zero equality semantics
-# Any zero amount is treated as equal, regardless of currency 
-Mint.money(0, 'USD') == Mint.money(0, 'EUR')  #=> true
+# Any zero amount is treated as equal, regardless of currency
+Mint.money(0, 'USD') == Mint.money(0, 'EUR')   #=> true
 Mint.money(0, 'USD') == 0                      #=> true
 Mint.money(0, 'USD') == 0.0                    #=> true
-Mint.money(0, 'USD') == 0r                     #=> true
 
 # Non-zero numerics are not equal to Money objects
 Mint.money(10, 'USD') == 10                    #=> false
 
-# Format (uses Kernel.format internally)
+# Format (uses Kernel.format syntax)
 price = Mint.money(9.99, 'USD')
 
 price.to_s                                  #=> "$9.99",
@@ -141,98 +155,6 @@ price.clamp(min_price, 100) #=> [USD 75.00]
 
 ```
 
-## API notes
-
-**Module names** — Require the `minting` gem; the public API lives under `Mint`.
-
-**Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
-
-**Refinements** — `10.dollars` and similar helpers require `using Mint` in the current scope (see Usage above).
-
-**Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
-
-**Zero equality** — Any zero amount is considered equal across currencies and to numeric zero `Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`. Non-zero amounts must match currency and value.
-
-**Custom currencies** — `Mint.register_currency`, Only registered currency codes and symbolos are recoginized by the parser.
-
-**Built-in currencies** — ISO-style codes ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
-
-## Installation
-
-Option 1: Via bundler command
-
-```shell
-bundle add minting
-bundle install
-```
-
-Option 2: add the line below to your application's Gemfile:
-
-```ruby
-gem 'minting'
-```
-
-or, if you want latest development version from Github
-
-```ruby
-gem 'minting', git: 'https://github.com/gferraz/minting.git'
-```
-
-and execute:
-
-```shell
-bundle install
-```
-
-Option 3: Install it yourself with:
-
-```shell
-gem install minting
-```
-
-## Configuration
-
-### Optional top‑level `Money` and `Currency`
-
-By default, Minting keeps everything namespaced under `Mint`:
-
-```ruby
-price    = Mint::Money.create(10, "USD")
-currency = Mint::Currency.new(code: "USD", symbol: "$", subunit: 2, priority: 0)
-```
-
-To avoid polluting the global namespace (and to coexist nicely with other gems), **Minting dont automatically defines `Money` or `Currency` at the top level automatically**.
-
-If you prefer the shorter `Money` / `Currency` constants in your application code, you can opt in explicitly.
-
-There are two ways to enable shorter constants:
-
-1. Require dsl in your app
-
-```ruby
-require "minting"
-require "minting/dsl"  # opt‑in top‑level Money / Currency
-```
-
-2. Call a configuration method
-
-```ruby
-Minting.use_top_level_constants!
-```
-
-After this, you can use:
-
-```ruby
-price = Money.create(10, "USD")     # equivalent to Mint::Money.create
-tax   = Money.money(2.50, "USD")   # via Mint.money, still available
-cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
-```
-
-#### When to use this
-
-- **Good fit:** application code, especially in Rails apps, where `Money` reads nicely in models and views.
-- **Not recommended:** reusable gems/libraries. In that case, stick to the namespaced API (`Mint::Money`, `Mint::Currency`) to avoid conflicts with other libraries.
-
 ## Parsing strings
 
 ```ruby
@@ -242,27 +164,58 @@ Mint.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
 Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
 ```
 
-- Pass a currency code when the string has no symbol or code. 
-- 1,234 means 1.234, not 1234, because one comma is treated as decimal.
-- 1,234.00 is unambiguous thousands-plus-decimal.
-- accounting negatives like ($1.23) are unsupported.
-- ambiguous symbols like $ resolve by priority, currently USD.
+Notes:
+- Pass a currency code when the string has no symbol or code.
+- `1,234` means 1.234, not 1234 — one comma is treated as decimal separator.
+- `1,234.00` is unambiguous (thousands + decimal).
+- Accounting negatives like `($1.23)` are unsupported for now.
+- Ambiguous symbols like `$` resolve by currency priority (currently USD).
+
+## API notes
+
+**Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
+
+**Refinements** — `10.dollars` and similar helpers require `using Mint` in the current scope (see Usage above).
+
+**Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
+
+**Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
+
+**Registered currencies** — `Mint.register_currency`. Only registered currency codes and symbols are recognized by the parser.
+
+**Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
+
+## Optional top-level `Money` and `Currency`
+
+By default, Minting keeps everything namespaced under `Mint` to coexist nicely with other gems. If you prefer shorter constants, opt in:
+
+```ruby
+require "minting"
+require "minting/dsl"  # opt‑in top‑level Money / Currency
+```
+
+Or at runtime:
+
+```ruby
+Minting.use_top_level_constants!
+```
+
+After opting in:
+
+```ruby
+price = Money.create(10, "USD")     # equivalent to Mint::Money.create
+tax   = Money.money(2.50, "USD")
+cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
+```
+
+**Good fit:** Application code, especially Rails apps.
+**Not recommended:** Reusable gems/libraries — stick to `Mint::Money` to avoid conflicts.
 
 ## Roadmap
 
-- Add support to configure thousand and decimal separators in parse (evaluating)
+- Configurable thousand/decimal separators in parse
 - Localization (I18n-aware formatting)
-- Basic exchange-rate conversions - infrastructure only, not integrations yet
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at <https://github.com/gferraz/minting>.
-
-1. Fork and create a feature branch
-2. Run the test suite: `rake`
-3. Run performance suites as needed: `rake bench:performance`
-4. Open a PR with a clear description and benchmarks if relevant
-
+- Exchange-rate conversion infrastructure
 
 ## License
 
