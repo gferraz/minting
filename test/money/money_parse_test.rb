@@ -50,6 +50,11 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_separator_variants
+    assert_equal Mint.money(1.20, 'USD'), Mint.parse('1,2', 'USD')
+    assert_equal Mint.money(1.23, 'USD'), Mint.parse('1,23', 'USD')
+    assert_equal Mint.money(1234, 'USD'), Mint.parse('1,234', 'USD')
+    assert_equal Mint.money(1.23, 'USD'), Mint.parse('1,2345', 'USD')
+
     assert_equal Mint.money(1234.56, 'USD'), Mint.parse('1,234.56', 'USD')
     assert_equal Mint.money(1234.56, 'USD'), Mint.parse('1.234,56', 'USD')
     assert_equal Mint.money(1_234_567, 'USD'), Mint.parse('1.234.567', 'USD')

@@ -166,7 +166,7 @@ Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
 
 Notes:
 - Pass a currency code when the string has no symbol or code.
-- `1,234` means 1.234, not 1234 — one comma is treated as decimal separator.
+- `1,234` means 1234, not 1.234 and `1,23` means 1.23, not 123
 - `1,234.00` is unambiguous (thousands + decimal).
 - Accounting negatives like `($1.23)` are unsupported for now.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
