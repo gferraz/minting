@@ -5,7 +5,7 @@ Fast, precise, and developer-friendly money handling for Ruby.
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 [![CI](https://github.com/gferraz/minting/actions/workflows/ci.yml/badge.svg)](https://github.com/gferraz/minting/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gferraz/minting)
-[![RubyCritic](https://img.shields.io/badge/RubyCritic-93/100-brightgreen)](https://github.com/gferraz/minting)
+[![RubyCritic](https://img.shields.io/badge/RubyCritic-94gem /100-brightgreen)](https://github.com/gferraz/minting)
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-blue)](https://www.rubydoc.info/gems/minting/frames)
 
 ## Quick start

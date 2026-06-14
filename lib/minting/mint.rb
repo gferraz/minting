@@ -3,11 +3,15 @@
 require 'minting/currency/currency'
 require 'minting/currency/currency_registry'
 require 'minting/currency/world_currencies'
+
+require 'minting/mint/dsl/numeric'
 require 'minting/mint/dsl/range'
-require 'minting/mint/dsl/refinements'
+require 'minting/mint/dsl/string'
 require 'minting/mint/dsl/top_level'
+
 require 'minting/mint/mint'
 require 'minting/mint/parser'
+
 require 'minting/money/allocation'
 require 'minting/money/arithmetics/methods'
 require 'minting/money/arithmetics/operators'

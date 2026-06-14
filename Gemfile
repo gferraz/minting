@@ -22,6 +22,7 @@ group :development do
   gem 'rubocop-thread_safety', require: false
   gem 'rubycritic'
   gem 'ruby-prof'
+  gem 'solargraph'
   gem 'simplecov'
   gem 'yard'
 end

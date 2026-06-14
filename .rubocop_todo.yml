@@ -9,7 +9,7 @@
 # Offense count: 1
 Lint/ItWithoutArgumentsInBlock:
   Exclude:
-    - 'lib/minting/mint/currency/currency_registry.rb'
+    - "lib/minting/mint/currency/currency_registry.rb"
 
 # Offense count: 1
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
@@ -20,8 +20,3 @@ Metrics/AbcSize:
 # Configuration parameters: CountKeywordArgs, MaxOptionalParameters.
 Metrics/ParameterLists:
   Max: 6
-
-# Offense count: 1
-ThreadSafety/ClassInstanceVariable:
-  Exclude:
-    - 'lib/minting/mint/currency/world_currencies.rb'

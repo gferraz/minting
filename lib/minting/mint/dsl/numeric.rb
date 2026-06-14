@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Mint refinements
+# Mint Numeric refinements
 module Mint
   refine Numeric do
     def reais = Mint.money(self, 'BRL')
@@ -14,9 +14,5 @@ module Mint
     alias_method :dollar, :dollars
     alias_method :euro, :euros
     alias_method :mint, :to_money
-  end
-
-  refine String do
-    def to_money(currency) = Mint.money(to_r, currency)
   end
 end
