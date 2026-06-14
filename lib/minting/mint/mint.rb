@@ -24,7 +24,7 @@ module Mint
     when NilClass then nil
     when Currency then currency
     when String   then CurrencyRegistry.currencies[currency]
-    else          raise ArgumentError, "currency must be [Currency] ot [String] (#{currency})"
+    else          raise ArgumentError, "currency must be [Currency], [String] or nil (#{currency})"
     end
   end
 
