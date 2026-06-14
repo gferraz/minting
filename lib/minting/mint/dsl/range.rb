@@ -9,7 +9,6 @@ module Mint
     # iteration (+ / <=>) for non-numeric steps natively, so this patch is
     # only needed on older Rubies.
     module RangeStepPatch
-
       # Iterates over the range using a Money step value.
       # Overrides Range#step to handle Mint::Money step sizes on Ruby < 4.0.
       #
