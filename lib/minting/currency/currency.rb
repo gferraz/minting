@@ -16,6 +16,13 @@ module Mint
   # @attr_reader minimum_amount [Rational] Smallest representable amount (1/fractional_multiplier)
   Currency = Data.define(:code, :subunit, :symbol, :priority, :country, :name,
                          :fractional_multiplier) do
+
+   # @param code [String] ISO 4217 currency code
+    # @param symbol [String] Display symbol
+    # @param subunit [Integer] Number of decimal places (default 0)
+    # @param priority [Integer] Parser precedence for symbol detection (default 0)
+    # @param country [String, nil] Associated country code (default nil)
+    # @param name [String, nil] Currency name (default nil)
     def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil)
       subunit = subunit.to_i
       priority = priority.to_i
@@ -24,8 +31,10 @@ module Mint
             fractional_multiplier:)
     end
 
+    # @return [String] debug representation
     def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
 
+    # @return [Rational] smallest representable amount (1/fractional_multiplier)
     def minimum_amount = Rational(1, fractional_multiplier)
 
     # Normalizes numeric amounts for this currency

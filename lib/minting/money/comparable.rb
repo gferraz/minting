@@ -14,6 +14,10 @@ module Mint
       end
     end
 
+    # Strict equality — both amount and currency must match exactly.
+    # Unlike ==, does not treat zero as equivalent across currencies.
+    #
+    # @return [Boolean]
     def eql?(other)
       other.is_a?(Mint::Money) &&
         amount == other.amount &&
@@ -37,8 +41,10 @@ module Mint
       end
     end
 
+    # @return [self, nil] self if amount is non-zero, nil otherwise
     def nonzero? = amount.nonzero?
 
+    # @return [Boolean] true if amount is zero
     def zero? = amount.zero?
   end
 end

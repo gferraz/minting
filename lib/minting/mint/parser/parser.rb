@@ -42,6 +42,10 @@ module Mint
     Rational(numeric)
   end
 
+  # Extracts currency from a string by matching ISO code or symbol.
+  #
+  # @param input [String] string potentially containing currency indicators
+  # @return [Currency, nil] registered currency or nil
   def parse_currency(input)
     case input
     when String

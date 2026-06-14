@@ -9,6 +9,12 @@ module Mint
     # iteration (+ / <=>) for non-numeric steps natively, so this patch is
     # only needed on older Rubies.
     module RangeStepPatch
+
+      # Iterates over the range using a Money step value.
+      # Overrides Range#step to handle Mint::Money step sizes on Ruby < 4.0.
+      #
+      # @param step_size [Mint::Money, nil] step amount
+      # @return [self, Enumerator] self if block given, Enumerator otherwise
       def step(step_size = nil, &block)
         return super unless step_size.is_a?(Mint::Money)
 
@@ -25,10 +31,12 @@ module Mint
 
       private
 
+      # Dispatches to the appropriate iteration strategy based on range bounds.
       def each_money_step(step, &)
         self.end ? bounded_step(step, &) : unbounded_step(step, &)
       end
 
+      # Iterates an open-ended range (no upper bound) with a Money step.
       def unbounded_step(step)
         current = self.begin
         loop do
@@ -37,6 +45,7 @@ module Mint
         end
       end
 
+      # Iterates a bounded range with a Money step, respecting direction and exclude_end?.
       def bounded_step(step)
         current = self.begin
         last    = self.end

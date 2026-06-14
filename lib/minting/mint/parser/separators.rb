@@ -6,6 +6,10 @@ module Mint
 
   private
 
+  # Classifies the separator pattern in a numeric string.
+  #
+  # @param numeric [String] numeric characters including commas and periods
+  # @return [Symbol] one of :decimal_period, :decimal_comma, :thousands_only, :mixed, :ambiguous
   def classify_separators(numeric)
     case [numeric.count(','), numeric.count('.')]
     in [0, 0] | [0, 1]          then :decimal_period # e.g. "1500" or "34.21".

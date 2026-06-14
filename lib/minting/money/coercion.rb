@@ -56,6 +56,7 @@ module Mint
 
       private
 
+      # Raises a TypeError with a descriptive message for unsupported coercions.
       def raise_coercion_error(operation, operand)
         raise TypeError, "#{@value} #{operation} #{operand} : incompatible operands"
       end
