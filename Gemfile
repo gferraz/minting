@@ -7,8 +7,8 @@ group :development do
   gem 'benchmark'
   gem 'benchmark-ips'
   gem 'bigdecimal'
-  gem 'bundler'
   gem 'bundle-audit'
+  gem 'bundler'
   gem 'irb'
   gem 'minitest'
   gem 'money'
@@ -22,7 +22,7 @@ group :development do
   gem 'rubocop-thread_safety', require: false
   gem 'rubycritic'
   gem 'ruby-prof'
-  gem 'solargraph'
   gem 'simplecov'
+  gem 'solargraph'
   gem 'yard'
 end
