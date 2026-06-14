@@ -213,7 +213,6 @@ cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 
 ## Roadmap
 
-- Configurable thousand/decimal separators in parse
 - Localization (I18n-aware formatting)
 - Exchange-rate conversion infrastructure
 
