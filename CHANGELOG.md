@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Code and Documentation
+- Update README
+- Reorganize code files
+
 ## [v1.7.0](https://github.com/gferraz/minting/releases/tag/v1.7.0) (2026-06-12)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.6.2...v1.7.0)
