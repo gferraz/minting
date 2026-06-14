@@ -10,7 +10,8 @@ require 'minting/mint/dsl/string'
 require 'minting/mint/dsl/top_level'
 
 require 'minting/mint/mint'
-require 'minting/mint/parser'
+require 'minting/mint/parser/parser'
+require 'minting/mint/parser/separators'
 
 require 'minting/money/allocation/allocation'
 require 'minting/money/allocation/split'
