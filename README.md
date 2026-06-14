@@ -170,6 +170,7 @@ Notes:
 - `1,234.00` is unambiguous (thousands + decimal).
 - Accounting negatives like `($1.23)` are unsupported for now.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
+- The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Mint.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
 
 ## API notes
 

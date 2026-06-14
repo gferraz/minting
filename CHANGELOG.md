@@ -2,7 +2,11 @@
 
 ## [Unreleased]
 
+### Fixes
+- Parser now scans all uppercase words for registered currency codes instead of taking the first match. Fixes `Mint.parse("MAX 10.00 USD")` edge case where spurious non-currency words preceded the real code.
+
 ### Code and Documentation
+- Add ROADMAP.md with prioritized gap list
 - Update README
 - Reorganize code files
 

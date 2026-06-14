@@ -60,6 +60,12 @@ class MoneyParseTest < Minitest::Test
     assert_equal Mint.money(1_234_567, 'USD'), Mint.parse('1.234.567', 'USD')
   end
 
+  def test_parse_with_code_among_spurious_uppercase_words
+    assert_equal Mint.money(10.00, 'USD'), Mint.parse('MAX 10.00 USD')
+    assert_equal Mint.money(10.00, 'XXX'), Mint.parse('AVG MIN MAX 10.00 XXX')
+    assert_equal Mint.money(10.00, 'EUR'), Mint.parse('10.00 EUR MAX')
+  end
+
   def test_parse_errors
     assert_raises(ArgumentError) { Mint.parse('') }
     assert_raises(ArgumentError) { Mint.parse(" \n\t ") }

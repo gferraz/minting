@@ -44,20 +44,22 @@ module Mint
 
   # Extracts currency from a string by matching ISO code or symbol.
   #
+  # Scans all uppercase words and returns the first registered code, falling
+  # back to symbol matching. This correctly handles inputs like
+  # "MAX 10.00 USD" where the first uppercase word isn't a currency code.
+  #
   # @param input [String] string potentially containing currency indicators
   # @return [Currency, nil] registered currency or nil
   def parse_currency(input)
-    case input
-    when String
-      # Prefer an explicit ISO 4217 code (e.g. "USD 1,234.56") over symbol matching.
-      currency = Mint.currency(input[/\b([A-Z_]+)\b/, 1])
+    input.scan(/\b([A-Z_]+)\b/) do |(code)|
+      currency = Mint.currency(code)
       return currency if currency
-
-      # Fall back to registered symbols, longest first (HK$ before $).
-      CurrencyRegistry.currency_symbols.each do |symbol, currency|
-        return currency if input.include?(symbol)
-      end
     end
+
+    CurrencyRegistry.currency_symbols.each do |symbol, currency|
+      return currency if input.include?(symbol)
+    end
+
     raise ArgumentError, 'Currency could not be detected'
   end
 end

@@ -15,7 +15,7 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 
 | Item | Description | Status |
 |------|-------------|--------|
-| **P0-1** | Fix parse currency detection — scan for *registered* currency codes instead of grabbing the first 3-letter uppercase word (`"MAX 10.00 USD"` currently fails) | | 
+| **P0-1** | Fix parse currency detection — scan for *registered* currency codes instead of grabbing the first 3-letter uppercase word (`"MAX 10.00 USD"` currently fails) | Done |
 | **P0-2** | Add Hash-format `to_s` test coverage — currently 0 tests for `{positive:, negative:, zero:}` | |
 | **P0-3** | Add `==` and `<=>` to `CoercedNumber` — only `+`, `-`, `*`, `/` are defined; `==` falls through to `Comparable` with a poor error | |
 | **P0-4** | Add CI gate on benchmark regression — fail CI if core ops regress >20% vs stored baseline | |
