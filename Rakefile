@@ -39,6 +39,19 @@ Rake::TestTask.new('bench:competitive') do |t|
   t.pattern = 'test/performance/competitive/**/*_benchmark.rb'
 end
 
+BASELINE_FILE = 'test/performance/check/results/baseline.json'
+
+desc 'Run core benchmarks and update the baseline'
+task 'bench:baseline' do
+  sh "ruby test/performance/check/runner.rb #{BASELINE_FILE}"
+  puts 'Baseline updated.'
+end
+
+desc 'Run core benchmarks and check for regressions against the baseline'
+task 'bench:check' do
+  ruby 'bin/bench_check'
+end
+
 Bundler::Audit::Task.new
 
 RuboCop::RakeTask.new(:cop) do |task|

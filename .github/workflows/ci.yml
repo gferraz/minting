@@ -25,4 +25,5 @@ jobs:
 
       - run: bundle exec rake cop
       - run: bundle exec rake test
+      - run: bundle exec rake bench:check
       - run: bundle exec rake bundle:audit
