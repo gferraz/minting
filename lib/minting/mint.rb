@@ -1,27 +1,15 @@
 # frozen_string_literal: true
 
-require 'minting/currency/currency'
+require_relative 'currency/currency'
 
-require 'minting/mint/dsl/numeric'
-require 'minting/mint/dsl/range'
-require 'minting/mint/dsl/string'
-require 'minting/mint/dsl/top_level'
+require_relative 'mint/dsl/numeric'
+require_relative 'mint/dsl/range'
+require_relative 'mint/dsl/string'
+require_relative 'mint/dsl/top_level'
 
-require 'minting/mint/mint'
-require 'minting/mint/parser/parser'
-require 'minting/mint/parser/separators'
+require_relative 'mint/mint'
+require_relative 'mint/parser/parser'
+require_relative 'mint/parser/separators'
+require_relative 'mint/registry/registry'
 
-require 'minting/money/allocation/allocation'
-require 'minting/money/allocation/split'
-require 'minting/money/arithmetics/methods'
-require 'minting/money/arithmetics/operators'
-require 'minting/money/clamp'
-require 'minting/money/coercion'
-require 'minting/money/comparable'
-require 'minting/money/constructors'
-require 'minting/money/conversion'
-require 'minting/money/format/formatting'
-require 'minting/money/format/to_s'
-require 'minting/money/money'
-
-require 'minting/mint/registry/registry'
+require_relative 'money/money'

@@ -1,5 +1,17 @@
 # frozen_string_literal: true
 
+require_relative 'allocation/allocation'
+require_relative 'allocation/split'
+require_relative 'arithmetics/methods'
+require_relative 'arithmetics/operators'
+require_relative 'clamp'
+require_relative 'coercion'
+require_relative 'comparable'
+require_relative 'constructors'
+require_relative 'conversion'
+require_relative 'format/formatting'
+require_relative 'format/to_s'
+
 module Mint
   # Money constructors
   class Money
