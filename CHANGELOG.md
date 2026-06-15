@@ -2,9 +2,16 @@
 
 ## [Unreleased]
 
+### Fixes
+- Parser now detects accounting-format parentheses `(USD 19.99)` and negates the parsed amount.
+
 ### Code and Documentation
 - Add benchmark regression gate (`rake bench:check`) — CI fails if core ops regress >20% vs stored baseline
 - Add `test/performance/check/runner.rb` and initial `test/performance/check/results/baseline.json` for 10 core operations (creation, arithmetic, comparison, formatting, parsing, split, allocate)
+- Add `inspect` round-trip property test — `Mint.parse(m.inspect)` round-trips for 8 amounts × 8 currencies
+- Move benchmark runner to `test/performance/check/`, baseline scoped by `RUBY_PLATFORM`
+- Mark all internal methods `@private` in YARD (CoercedNumber, format helpers, parser internals, allocation helpers, clamp helpers) — 100% documented, clean public API output
+- Add `Mint.zero(currency)` returning a frozen zero-Money — `Mint.zero('USD')`
 
 ## [v1.7.1](https://github.com/gferraz/minting/releases/tag/v1.7.1) (2026-06-14)
 
