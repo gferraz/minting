@@ -5,6 +5,22 @@ module Mint
   class Money
     private
 
+    # Resolves format/decimal/thousand from locale_backend when not explicitly given.
+    # @private
+    def resolve_locale_for(format, decimal, thousand)
+      locale = locale_backend
+      [format || locale[:format] || '%<symbol>s%<amount>f',
+       decimal || locale[:decimal] || '.',
+       thousand || locale[:thousand] || ',']
+    end
+
+    def locale_backend
+      bk = Mint.locale_backend
+      return {} unless bk.respond_to?(:call)
+
+      bk.call
+    end
+
     # Selects the appropriate format template and value based on the amount's sign.
     # @private
     def select_format(format)

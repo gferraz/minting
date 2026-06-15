@@ -5,7 +5,7 @@ module Mint
   class Money
     # Formats money as a string with customizable format, thousand delimiter, and decimal
     #
-    # @param format [String, Hash] Either a Format string with placeholders
+    # @param format [String, Hash, nil] Either a Format string with placeholders
     #   (%<symbol>s, %<amount>f, %<currency>s), or a Hash with per-sign keys
     #   (:positive, :negative, :zero) each holding a format string. A Hash
     #   is convenient for sign-aware formats such as accounting parentheses:
@@ -15,8 +15,12 @@ module Mint
     #   Missing keys fall back to the module default, so a Hash with only
     #   :negative will still format positives sensibly. The valid keys are
     #   :positive, :negative, :zero; anything else raises ArgumentError.
-    # @param thousand [String, false] Thousands delimiter (e.g., ',' for 1,000)
-    # @param decimal [String] Decimal separator (e.g., '.' or ',')
+    #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise
+    #   +"%<symbol>s%<amount>f"+.
+    # @param thousand [String, false, nil] Thousands delimiter (e.g., ',' for 1,000).
+    #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise +","+.
+    # @param decimal [String, nil] Decimal separator (e.g., '.' or ',').
+    #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise +"."+.
     # @return [String] Formatted money string
     #
     # @raise [ArgumentError] if +format+ is not a String or Hash, the Hash
@@ -43,7 +47,12 @@ module Mint
     #   money.to_s(format: '%<amount>10.2f')                #=> "   1234.56"
     #   money.to_s(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
     #
-    def to_s(format: '%<symbol>s%<amount>f', decimal: '.', thousand: ',', width: nil)
+    # @example Locale-aware formatting (with Mint.locale_backend set)
+    #   money.to_s  # decimal and thousand come from locale_backend
+    #
+    def to_s(format: nil, decimal: nil, thousand: nil, width: nil)
+      format, decimal, thousand = resolve_locale_for(format, decimal, thousand)
+
       case format
       when {}, '' then raise ArgumentError, 'format must not be empty'
       when Hash   then validate_format_hash(format)

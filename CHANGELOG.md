@@ -19,6 +19,11 @@
 ### Code quality
 - RuboCop clean across entire project (0 offenses) — adjusted `Metrics/AbcSize`, `Metrics/ParameterLists` limits, `# :nodoc:` on reopened `module Mint`, and excluded test‑specific cops (Minitest/MultipleAssertions, ThreadSafety/NewThread, metrics)
 
+### I18n
+- `Mint.locale_backend` — class‑level accessor that accepts a callable returning locale‑aware formatting defaults (`decimal`, `thousand`, `format`)
+- `Money#to_s` consults `Mint.locale_backend` when `format:`, `decimal:`, or `thousand:` are not explicitly provided
+- Enables `minting-rails` (or any caller) to wire in I18n‑driven formatting without the core gem depending on `i18n`
+
 ### Tests
 - Add concurrent‑access tests: `Mint.zero` singleton identity across threads, concurrent `register`, concurrent reads during registration
 - Add `Registry.currencies` frozen assertion

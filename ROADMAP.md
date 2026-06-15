@@ -55,8 +55,8 @@ The Money gem has a full pluggable bank system. Minting has nothing — not plan
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | Missing | High |
-| I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | Missing | High |
+| Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable returning `{ decimal:, thousand:, format: }` | High |
+| I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `minting-rails` | High |
 | Disambiguated symbols | `format(disambiguate: true)` → `"US$"` vs `"C$"` | Manual only | Medium |
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | Missing | Low |
 
@@ -157,8 +157,8 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `add_rate` / `get_rate` | ✅ | ❌ | Low |
 | | Rate import/export (json/yaml) | ✅ | ❌ | Low |
 | | ECB / OpenExchangeRates stores | ✅ (extracted) | ❌ | Low |
-| **I18n** | Locale backend | ✅ | ❌ | **High** |
-| | I18n integration | ✅ `locale_backend = :i18n` | ❌ | **High** |
+| **I18n** | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | **High** |
+| | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `minting-rails` | **High** |
 | | Per-locale formatting rules | ✅ | ❌ | **High** |
 | **Rounding** | Rounding modes | ✅ | ❌ Ruby default | Medium |
 | | Infinite precision | ✅ | ❌ | Low |
@@ -190,5 +190,5 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 ## Suggested next steps
 
-1. **P2-C** I18n formatting — already advertised in README roadmap
+1. **minting-rails** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
 2. **P1-5** Resolve remaining RuboCop offenses
