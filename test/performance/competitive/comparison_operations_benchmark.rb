@@ -49,7 +49,6 @@ class CompetitiveComparisonBenchmark < Minitest::Test
       Benchmark.ips do |x|
         x.report('Mint <=>') { @mint_a <=> @mint_c }
         x.report('Money <=>') { @money_a <=> @money_c }
-        x.report('Mint <=> other currency') { @mint_a <=> @mint_d }
         x.report('Money <=>') { @money_a <=> @money_c }
         x.compare!
       end

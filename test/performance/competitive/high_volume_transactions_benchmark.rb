@@ -2,6 +2,8 @@
 
 require_relative '../benchmark_helper'
 
+using Mint
+
 class CompetitiveHighVolumeBenchmark < Minitest::Test
   include BenchmarkHelper
 

@@ -15,7 +15,7 @@ class CompetitiveAllocationBenchmark < Minitest::Test
     @patterns = [
       [1, 2, 3],
       [0.25, 1.25, 2.25, 3.25],
-      (1..10).to_a
+      (1..60).to_a
     ]
   end
 
