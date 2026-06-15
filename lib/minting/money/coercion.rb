@@ -22,48 +22,39 @@ module Mint
       # @private
       def initialize(value) = @value = value
 
+      # @private
       # Adds a CoercedNumber to a Money object.
       # Only zero is a valid additive identity (returns the Money unchanged).
-      #
-      # @param other [Money] the right-hand operand
-      # @return [Money] the unmodified Money when self is zero
-      # @raise [TypeError] if self is non-zero
       def +(other)
         raise_coercion_error(:+, other) unless @value.zero?
 
         other
       end
 
+      # @private
       # Subtracts a Money object from a CoercedNumber.
       # Only zero is valid (returns the negated Money).
-      #
-      # @param other [Money] the right-hand operand
-      # @return [Money] the negated Money when self is zero
-      # @raise [TypeError] if self is non-zero
       def -(other)
         raise_coercion_error(:-, other) unless @value.zero?
 
         -other
       end
 
+      # @private
       # Multiplies a Money object by the wrapped numeric value.
       # This is the standard coercion path for `Numeric * Money`.
-      #
-      # @param other [Money] the right-hand operand
-      # @return [Money] the scaled Money object
       def *(other)
         other.mint(@value * other.amount)
       end
 
+      # @private
       # Divides a CoercedNumber by a Money object.
       # Not a meaningful operation (what currency is the result?).
-      #
-      # @param other [Money] the right-hand operand
-      # @raise [TypeError] always
       def /(other)
         raise_coercion_error(:/, other)
       end
 
+      # @private
       # Only zero is dimensionless and comparable to Money.
       # e.g. 0 < price is meaningful; 0.5 < price is not (what currency is 0.5?).
       def <=>(other)

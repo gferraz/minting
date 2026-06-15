@@ -13,9 +13,9 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 
 ## P0 — Quick wins
 
-| Item | Description | Status |
-|------|-------------|--------|
-| **P0-4** | Add CI gate on benchmark regression — fail CI if core ops regress >20% vs stored baseline | Done |
+| Item      | Description | Status |
+|-----------|-------------|--------|
+| **P0-1**  |             |        |
 
 ## P1 — Core hardening
 
@@ -23,11 +23,7 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 |------|-------------|--------|
 | **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load (Puma/Sidekiq). Options: `Mutex`, eager-load in Railtie, `Concurrent::Map` | |
 | **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | |
-
 | **P1-4** | Resolve remaining 3 RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | |
-
-| **P1-6** | Mark internal classes `@private` in YARD — `CoercedNumber`, `format_amount` clutter public API stats | |
-
 ## P2 — Feature parity with the Money gem
 
 ### P2-A Arithmetic & numeric operations

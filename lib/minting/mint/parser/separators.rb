@@ -7,9 +7,7 @@ module Mint
   private
 
   # Classifies the separator pattern in a numeric string.
-  #
-  # @param numeric [String] numeric characters including commas and periods
-  # @return [Symbol] one of :decimal_period, :decimal_comma, :thousands_only, :mixed, :ambiguous
+  # @private
   def classify_separators(numeric)
     case [numeric.count('.'), numeric.count(',')]
     in [0, 1] if numeric[-4] == ',' then :thousands_comma  # Comma is a thousand separator
@@ -22,6 +20,7 @@ module Mint
   end
 
   # Converts locale-specific decimal/thousand separators into a plain decimal string.
+  # @private
   def normalize_separators(numeric)
     case classify_separators(numeric)
     when :decimal_period   then numeric # Nothing to normalize (e.g. "1500" or "34.21").

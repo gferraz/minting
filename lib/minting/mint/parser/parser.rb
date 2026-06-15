@@ -35,6 +35,7 @@ module Mint
   private
 
   # Extracts a numeric value from input that should only contain an amount.
+  # @private
   def parse_amount(input)
     # Remove any charater that is not a digit, comma or period
     numeric = input.scan(/[\d.,-]/).join
@@ -47,9 +48,7 @@ module Mint
   # Scans all uppercase words and returns the first registered code, falling
   # back to symbol matching. This correctly handles inputs like
   # "MAX 10.00 USD" where the first uppercase word isn't a currency code.
-  #
-  # @param input [String] string potentially containing currency indicators
-  # @return [Currency, nil] registered currency or nil
+  # @private
   def parse_currency(input)
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
       currency = Mint.currency(code)

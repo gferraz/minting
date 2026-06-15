@@ -27,6 +27,7 @@ module Mint
     # Distributes any leftover amount across the allocation slots by adjusting
     # individual amounts by the currency's minimum unit, and converting to Money.
     # Caution: amounts array is mutated by this method
+    # @private
     def allocate_left_over(amounts:, left_over:)
       if left_over.nonzero?
         minimum = currency.minimum_amount

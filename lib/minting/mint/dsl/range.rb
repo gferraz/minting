@@ -31,11 +31,13 @@ module Mint
       private
 
       # Dispatches to the appropriate iteration strategy based on range bounds.
+      # @private
       def each_money_step(step, &)
         self.end ? bounded_step(step, &) : unbounded_step(step, &)
       end
 
       # Iterates an open-ended range (no upper bound) with a Money step.
+      # @private
       def unbounded_step(step)
         current = self.begin
         loop do
@@ -45,6 +47,7 @@ module Mint
       end
 
       # Iterates a bounded range with a Money step, respecting direction and exclude_end?.
+      # @private
       def bounded_step(step)
         current = self.begin
         last    = self.end

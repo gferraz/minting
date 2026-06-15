@@ -53,9 +53,7 @@ module Mint
     private
 
     # Converts a clamp boundary to a numeric amount.
-    #
-    # @param boundary [Numeric, Mint::Money, nil]
-    # @return [Numeric, nil]
+    # @private
     def normalize_boundary(boundary)
       case boundary
       in NilClass | Numeric                then boundary

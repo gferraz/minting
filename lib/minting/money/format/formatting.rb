@@ -6,9 +6,7 @@ module Mint
     private
 
     # Selects the appropriate format template and value based on the amount's sign.
-    #
-    # @param format [Hash] format hash with :positive, :negative, :zero keys
-    # @return [Array(Symbol, Rational)] format template and amount to format
+    # @private
     def select_format(format)
       negative_format = format[:negative]
       zero_format = format[:zero]
@@ -23,9 +21,7 @@ module Mint
     end
 
     # Validates that format hash contains only known keys.
-    #
-    # @param format [Hash] format hash to validate
-    # @raise [ArgumentError] if unknown keys are present
+    # @private
     def validate_format_hash(format)
       unknown = format.keys - %i[positive negative zero]
 
@@ -33,9 +29,7 @@ module Mint
     end
 
     # Applies a format template to produce a formatted string representation.
-    #
-    # @param format [Hash] format configuration
-    # @return [String] formatted amount
+    # @private
     def format_amount(format)
       format, value = select_format(format)
       format ||= '%<symbol>s%<amount>f'
