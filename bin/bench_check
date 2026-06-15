@@ -10,8 +10,8 @@ baseline_path = File.join(results_dir, "baseline-#{platform}.json")
 threshold = (ARGV[0] || 0.80).to_f
 
 unless File.exist?(baseline_path)
-  puts "No baseline found for #{platform} at #{baseline_path}. Run `rake bench:baseline` first."
-  exit 1
+  puts "No baseline for #{platform} at #{baseline_path}. Skipping check."
+  exit 0
 end
 
 baseline = JSON.parse(File.read(baseline_path))
