@@ -53,14 +53,10 @@ module Mint
   # @private
   def parse_currency(input)
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
-      currency = Mint.currency_for(code)
+      currency = Mint.currency_for_code(code)
       return currency if currency
     end
 
-    Registry.currency_symbols.each do |symbol, currency|
-      return currency if input.include?(symbol)
-    end
-
-    raise ArgumentError, 'Currency could not be detected'
+    Registry.detect_currency(input) or raise ArgumentError, 'Currency could not be detected'
   end
 end

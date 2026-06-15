@@ -89,7 +89,7 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| ISO numeric code | `currency.iso_numeric` (e.g. `"840"`) | Missing | Medium |
+| ISO numeric code | `currency.iso_numeric` (e.g. `"840"`) | Missing | Low |
 | Disambiguate symbol | `currency.disambiguate_symbol` (e.g. `"US$"`) | Missing | Medium |
 | HTML entity | `currency.html_entity` (e.g. `"&#36;"`) | Missing | Low |
 | `symbol_first` | `currency.symbol_first?` | Minting hard-codes symbol-first | Low |

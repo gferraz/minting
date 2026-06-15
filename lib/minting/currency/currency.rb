@@ -42,7 +42,6 @@ module Mint
     def normalize_amount(amount) = amount.to_r.round(subunit)
   end
 
-
   # Resolves an object into a {Currency}, returning +nil+ when it can't.
   #
   # Accepts +nil+, +String+, {Currency}, or {Money}.
@@ -57,7 +56,7 @@ module Mint
     when NilClass then nil
     when Currency then object
     when Money    then object.currency
-    when String   then Mint.currency_for object
+    when String   then Mint.currency_for_code object
     else          raise ArgumentError, "currency must be [Currency], [Money], [String] or nil (#{object})"
     end
   end

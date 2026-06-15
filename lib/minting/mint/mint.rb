@@ -35,8 +35,16 @@ module Mint
   #
   # @param code [String] the currency code
   # @return [Currency, nil] the registered Currency, or +nil+ if not found
-  def self.currency_for(code)
+  def self.currency_for_code(code)
     Registry.currencies[code]
+  end
+
+  # Looks up a currency by its display symbol.
+  #
+  # @param symbol [String] the display symbol (e.g. "$", "R$")
+  # @return [Currency, nil] the highest-priority currency for the symbol
+  def self.currency_for_symbol(symbol)
+    Registry.currency_for_symbol(symbol)
   end
 
   # Returns a zero {Money} in the given currency, useful as a default value

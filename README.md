@@ -172,6 +172,22 @@ Notes:
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
 - The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Mint.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
 
+## Currency lookup
+
+```ruby
+# By ISO code (direct hash lookup, string only)
+Mint.currency_for_code('USD')        #=> #<Currency code="USD" ...>
+
+# By display symbol (highest-priority currency for ambiguous symbols)
+Mint.currency_for_symbol('$')        #=> #<Currency code="USD" ...>
+Mint.currency_for_symbol('R$')       #=> #<Currency code="BRL" ...>
+Mint.currency_for_symbol('€')        #=> #<Currency code="EUR" ...>
+
+# Generic resolver (accepts String, Currency, Money, or nil)
+Mint.currency('USD')                 #=> #<Currency code="USD" ...>
+Mint.currency(nil)                   #=> nil
+```
+
 ## API notes
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
@@ -182,7 +198,9 @@ Notes:
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
 
-**Registered currencies** — `Mint.register_currency`. Only registered currency codes and symbols are recognized by the parser.
+**Zero helper** — `Mint.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
+
+**Registered currencies** — `Mint.register_currency(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
 
