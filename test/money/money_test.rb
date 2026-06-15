@@ -30,7 +30,7 @@ class MoneyTest < Minitest::Test
 
   def test_inspect_round_trip
     amounts = [0, 1, 10.34, 99.99, 100, 1_234_567.89, -5, -0.50]
-    codes   = Mint::CurrencyRegistry.currencies.keys.sample(8)
+    codes   = Mint::Registry.currencies.keys.sample(8)
 
     amounts.product(codes).each do |amount, code|
       original = Mint.money(amount, code)

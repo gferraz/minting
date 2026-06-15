@@ -14,6 +14,8 @@ module Mint
   # @raise [ArgumentError] if the currency code is not registered
   def self.money(amount, currency_code) = Money.create(amount, currency_code)
 
+  def self.world_currencies = Registry.world_currencies
+
   # Finds a registered currency by its code, symbol,
   # or retrieves it directly if already a Currency object.
   #
@@ -23,7 +25,7 @@ module Mint
     case currency
     when NilClass then nil
     when Currency then currency
-    when String   then CurrencyRegistry.currencies[currency]
+    when String   then Registry.currencies[currency]
     else          raise ArgumentError, "currency must be [Currency], [String] or nil (#{currency})"
     end
   end
@@ -34,18 +36,11 @@ module Mint
   # @param currency [String, Currency] a currency code or object
   # @return [Money] a frozen zero-Money
   # @raise [ArgumentError] if the currency is not registered
-  ZERO_MUTEX = Monitor.new
-
-  private_constant :ZERO_MUTEX
-
   def self.zero(currency)
     checked = Mint.currency(currency)
     raise ArgumentError, "Invalid Currency: [#{currency}]" unless checked
 
-    ZERO_MUTEX.synchronize do
-      @zeros ||= {}
-      @zeros[checked] ||= Money.send(:new, 0, checked)
-    end
+    Registry.zero_for(checked)
   end
 
   # Registers a new currency, raising a KeyError if already registered.
@@ -58,6 +53,6 @@ module Mint
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
   def self.register_currency(code:, subunit: 0, symbol: '', priority: 0)
-    CurrencyRegistry.register(code:, subunit:, symbol:, priority:)
+    Registry.register(code:, subunit:, symbol:, priority:)
   end
 end

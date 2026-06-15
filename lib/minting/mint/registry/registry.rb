@@ -2,23 +2,34 @@
 
 require 'yaml'
 
-# Mint currency store (internal)
+# Mint registry: manages all cached state
 module Mint
-  # Internal currency registry
-  # Manages the registry cache and currency symbol lookups.
-  module CurrencyRegistry
+  # Internal registry for currencies, symbols, and zero-money cache.
+  # All mutable shared state lives here.
+  module Registry
     extend self
 
     MUTEX = Monitor.new
 
     private_constant :MUTEX
 
-    # Returns the frozen hash of all registered currencies.
+    # Loads ISO world currencies from YAML file.
+    #
+    # @return [Hash{String => Currency}] ISO-4217 world currencies mapped by code
+    # @api private
+    def world_currencies
+      @world_currencies ||= begin
+        path = File.join(File.expand_path('../../data', __dir__), 'world-currencies.yaml')
+        YAML.load_file(path).to_h { |entry| [entry['code'], Currency.new(**entry.transform_keys(&:to_sym))] }
+      end.freeze
+    end
+
+    # Returns the frozen hash of all registered currencies (world + custom).
     #
     # @return [Hash{String => Currency}] registered currencies mapped by code
     # @api private
     def currencies
-      @currencies || MUTEX.synchronize { @currencies = Mint.world_currencies.dup.freeze }
+      @currencies || MUTEX.synchronize { @currencies = world_currencies.dup.freeze }
     end
 
     # Registered symbols sorted for detection: longest match wins, then parser priority.
@@ -59,6 +70,18 @@ module Mint
         @currencies = @currencies.merge(code => currency).freeze
         @currency_symbols = nil
         currency
+      end
+    end
+
+    # Returns the cached zero-Money for a currency, creating it if needed.
+    #
+    # @param currency [Currency] the currency object
+    # @return [Money] a frozen zero-Money
+    # @api private
+    def zero_for(currency)
+      MUTEX.synchronize do
+        @zeros ||= {}
+        @zeros[currency] ||= Mint::Money.send(:new, 0, currency)
       end
     end
   end

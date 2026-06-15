@@ -57,7 +57,7 @@ module Mint
       return currency if currency
     end
 
-    CurrencyRegistry.currency_symbols.each do |symbol, currency|
+    Registry.currency_symbols.each do |symbol, currency|
       return currency if input.include?(symbol)
     end
 

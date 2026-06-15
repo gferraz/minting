@@ -47,7 +47,7 @@ class MintTest < Minitest::Test
   end
 
   def test_currencies_frozen
-    assert_predicate Mint::CurrencyRegistry.currencies, :frozen?
+    assert_predicate Mint::Registry.currencies, :frozen?
   end
 
   def test_concurrent_zero_returns_same_object
@@ -98,7 +98,7 @@ class MintTest < Minitest::Test
     reader = Thread.new do
       100.times do
         Mint.currency('USD')
-        Mint::CurrencyRegistry.currencies.values
+        Mint::Registry.currencies.values
       end
     end
 
