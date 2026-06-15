@@ -13,17 +13,18 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 
 ## P0 — Quick wins
 
-| Item      | Description | Status |
-|-----------|-------------|--------|
-| **P0-1**  |             |        |
+| Item | Description | Status |
+|------|-------------|--------|
 
 ## P1 — Core hardening
 
 | Item | Description | Status |
 |------|-------------|--------|
-| **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load (Puma/Sidekiq). Options: `Mutex`, eager-load in Railtie, `Concurrent::Map` | |
-| **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | |
-| **P1-4** | Resolve remaining 3 RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | |
+| **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load (Puma/Sidekiq). Options: `Mutex`, eager-load in Railtie, `Concurrent::Map` | ✅ |
+| **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | ✅ |
+| **P1-3** | Symbol-based currency lookup — `Mint.currency_for_symbol(symbol)` | ✅ |
+| **P1-4** | String detection helper — `Registry.detect_currency(input)`, used by parser for symbol scan | ✅ |
+| **P1-5** | Resolve remaining RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | |
 ## P2 — Feature parity with the Money gem
 
 ### P2-A Arithmetic & numeric operations
@@ -31,7 +32,7 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
 | `divmod` / `div` / `modulo` / `remainder` | `money.divmod(other)`, `money % other`, `money.remainder(other)` | Missing | High |
-| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | `Mint.zero('USD')` returns frozen zero-Money | Low |
+| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | **✅** `Mint.zero('USD')` returns frozen zero-Money, thread-safe singleton | Done |
 | Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | `10.dollars` via refinements only | Low |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | Raises `TypeError` on mismatch | Medium |
 
@@ -162,7 +163,9 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | **Rounding** | Rounding modes | ✅ | ❌ always subunit | Medium |
 | | Infinite precision | ✅ | ❌ | Low |
 | | Cash rounding | ✅ | ❌ | Low |
-| **Currency** | ISO numeric code | ✅ | ❌ | Medium |
+| **Currency** | Lookup by ISO code | ✅ `.find` | **✅** `currency_for_code` `currencies` | — |
+| | Lookup by symbol | ❌ | **✅** `currency_for_symbol`, `detect_currency` | — |
+| | ISO numeric code | ✅ | ❌ | Medium |
 | | Disambiguate symbol | ✅ | ❌ | Medium |
 | | HTML entity | ✅ | ❌ | Low |
 | | Symbol first flag | ✅ | ❌ hard-coded | Low |
@@ -179,7 +182,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `'string'.to_money(code)` | ❌ | ✅ | — |
 | **Infrastructure** | 100% test coverage | ❌ | **✅** | — |
 | | Immutable value objects | ❌ | **✅ frozen** | — |
-| | Thread-safe registry | ✅ mutex | ❌ | **High** |
+| | Thread-safe registry | ✅ mutex | **✅ Monitor + copy‑on‑write** | Done |
 | | Range stepping | ❌ | **✅ `(1..10).step(1)`** | — |
 | | RuboCop clean | ❌ | 🔶 3 offenses | Medium |
 
@@ -189,5 +192,4 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 1. **P2-A** `divmod` / `div` / `modulo` / `remainder` — highest priority arithmetic gap
 2. **P2-C** I18n formatting — already advertised in README roadmap
-3. **P1-1 + P1-2** Thread safety and immutability — production readiness
-4. **P1-4** Resolve remaining RuboCop offenses
+3. **P1-5** Resolve remaining RuboCop offenses

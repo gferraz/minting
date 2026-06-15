@@ -13,6 +13,7 @@
 - Fix `Mint.zero` bug — use resolved `Currency` object as cache key instead of raw string parameter
 - Restore missing YARD summary line on `Mint.register_currency`
 - `Mint.currency_for_symbol(symbol)` — new public method, looks up a registered currency by its display symbol (e.g. `"$"` → USD)
+- `Mint.currency_for_code(code)` — looks up a registered currency by its code
 - `Registry.detect_currency(input)` — internal helper that scans strings for registered symbols, used by the parser
 
 ### Tests
