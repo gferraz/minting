@@ -32,6 +32,20 @@ class MintTest < Minitest::Test
     assert_same Mint.zero('USD'), Mint.zero('USD')
   end
 
+  def test_zero_unknown_currency
+    assert_raises(ArgumentError) { Mint.zero('UNKNOWN') }
+    assert_raises(ArgumentError) { Mint.zero(nil) }
+  end
+
+  def test_mint_zero_returns_singleton
+    zero_from_create = Mint.money(0, 'USD')
+    zero_from_mint  = Mint.money(10, 'USD').mint(0)
+    zero_from_zero  = Mint.zero('USD')
+
+    assert_same zero_from_zero, zero_from_create
+    assert_same zero_from_zero, zero_from_mint
+  end
+
   def test_mint_refinements
     assert_equal 1.dollar, Mint.money(1, 'USD')
     assert_equal 1.euro, Mint.money(1, 'EUR')

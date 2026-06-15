@@ -38,11 +38,11 @@ module Mint
     checked = Mint.currency(currency)
     raise ArgumentError, "Invalid Currency: [#{currency}]" unless checked
 
-    @zeros ||= CurrencyRegistry.currencies.values.to_h { |currency| [currency, Mint::Money.send(:new, 0, currency)] }
-    @zeros[currency] ||= Money.send(:new, 0, currency)
-    @zeros[currency]
+    @zeros ||= {}
+    @zeros[checked] ||= Money.send(:new, 0, checked)
   end
 
+  # Registers a new currency, raising a KeyError if already registered.
   #
   # @param code [String] the unique currency code
   # @param subunit [Integer] the decimal subunit precision, defaults to 0
