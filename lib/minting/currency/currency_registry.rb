@@ -27,13 +27,12 @@ module Mint
     # @api private
     def currency_symbols
       @currency_symbols || MUTEX.synchronize do
-        @currency_symbols ||= begin
+        @currency_symbols =
           currencies.values
-                    .reject { |c| c.symbol.empty? }
+                    .reject { |currency| currency.symbol.empty? }
                     .map { |currency| [currency.symbol, currency] }
                     .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
                     .freeze
-        end
       end
     end
 
