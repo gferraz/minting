@@ -73,6 +73,9 @@ Performance/CollectionLiteralInLoop:
   Exclude:
     - "test/**/*"
 
+ThreadSafety/ClassInstanceVariable:
+  Enabled: false
+
 ThreadSafety/NewThread:
   Exclude:
     - "test/**/*"
