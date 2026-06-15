@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Code and Documentation
+- Add benchmark regression gate (`rake bench:check`) — CI fails if core ops regress >20% vs stored baseline
+- Add `test/performance/check/runner.rb` and initial `test/performance/check/results/baseline.json` for 10 core operations (creation, arithmetic, comparison, formatting, parsing, split, allocate)
+
+## [v1.7.1](https://github.com/gferraz/minting/releases/tag/v1.7.1) (2026-06-14)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.6.2...v1.7.1)
+
 ### Fixes
 - Parser now scans all uppercase words for registered currency codes instead of taking the first match. Fixes `Mint.parse("MAX 10.00 USD")` edge case where spurious non-currency words preceded the real code.
 
