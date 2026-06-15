@@ -12,7 +12,7 @@ class MoneyParseTest < Minitest::Test
 
   def test_parse_with_explicit_currency_object_or_symbol
     assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', Mint.currency('USD'))
+    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', Mint.currency_for('USD'))
   end
 
   def test_parse_trims_whitespace

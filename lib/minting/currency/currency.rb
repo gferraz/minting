@@ -41,4 +41,25 @@ module Mint
     # 2. Rounds to respect currency subunit
     def normalize_amount(amount) = amount.to_r.round(subunit)
   end
+
+
+  # Resolves the objetc int a currency
+  # @param currency [String, Currency, Money] the currency identifier or object
+  # @return [Currency, nil] the registered Currency instance or nil if not found
+  def Currency.resolve(object)
+    case object
+    when NilClass then nil
+    when Currency then object
+    when Money    then object.currency
+    when String   then Mint.currency_for object
+    else          raise ArgumentError, "currency must be [Currency], [Money], [String] or nil (#{object})"
+    end
+  end
+
+  # Resolves the objetc into a currency
+  # @param currency [String, Currency, Money] the currency identifier or object
+  # @raises [ArgumentError] If not able to resolve into a currency
+  def Currency.resolve!(object)
+    resolve(object) or raise ArgumentError, "Could not resolve (#{object}) into a currency"
+  end
 end

@@ -25,7 +25,7 @@ module Mint
     input = input.strip
     raise ArgumentError, 'input cannot be empty' if input.empty?
 
-    currency = Mint.currency(currency) || parse_currency(input)
+    currency = Currency.resolve(currency) || parse_currency(input)
     raise ArgumentError, "Currency [#{currency}] not registered" unless currency
 
     amount = currency.normalize_amount(parse_amount(input))
@@ -53,7 +53,7 @@ module Mint
   # @private
   def parse_currency(input)
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
-      currency = Mint.currency(code)
+      currency = Mint.currency_for(code)
       return currency if currency
     end
 

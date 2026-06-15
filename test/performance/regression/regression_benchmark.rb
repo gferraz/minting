@@ -66,9 +66,9 @@ class RegressionBenchmark < Minitest::Benchmark
     currencies = %w[USD EUR GBP JPY BRL CAD AUD CHF CNY SEK]
 
     assert_performance_constant 0.99 do |_n|
-      currency = currencies.sample
-      Mint.currency(currency)
-      Mint.money(100, currency)
+      code = currencies.sample
+      Mint.currency_for(code)
+      Mint.money(100, code)
     end
   end
 

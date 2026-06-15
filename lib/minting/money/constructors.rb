@@ -10,12 +10,10 @@ module Mint
     def self.create(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
 
-      checked_currency = Mint.currency(currency)
-      raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
+      currency = Currency.resolve!(currency)
+      amount = currency.normalize_amount(amount)
 
-      amount = checked_currency.normalize_amount(amount)
-
-      amount.zero? ? Mint.zero(checked_currency) : new(amount, checked_currency)
+      amount.zero? ? Mint.zero(currency) : new(amount, currency)
     end
 
     # Builds a Money from a fractional (smallest-unit) Integer amount.
@@ -39,12 +37,9 @@ module Mint
     def self.from_fractional(fractional, currency)
       raise ArgumentError, 'fractional must be an Integer' unless fractional.is_a?(Integer)
 
-      checked_currency = Mint.currency(currency)
-      raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
-
-      amount = Rational(fractional, checked_currency.fractional_multiplier)
-
-      amount.zero? ? Mint.zero(checked_currency) : new(amount, checked_currency)
+      currency = Currency.resolve!(currency)
+      amount = Rational(fractional, currency.fractional_multiplier)
+      amount.zero? ? Mint.zero(currency) : new(amount, currency)
     end
 
     # Returns a new Money object with the specified amount, or self if unchanged.

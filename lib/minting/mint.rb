@@ -11,7 +11,6 @@ require 'minting/mint/mint'
 require 'minting/mint/parser/parser'
 require 'minting/mint/parser/separators'
 
-
 require 'minting/money/allocation/allocation'
 require 'minting/money/allocation/split'
 require 'minting/money/arithmetics/methods'

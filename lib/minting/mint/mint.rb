@@ -16,18 +16,20 @@ module Mint
 
   def self.world_currencies = Registry.world_currencies
 
-  # Finds a registered currency by its code, symbol,
-  # or retrieves it directly if already a Currency object.
+  # Gets a currency from an object
   #
   # @param currency [String, Currency] the currency identifier or object
   # @return [Currency, nil] the registered Currency instance or nil if not found
-  def self.currency(currency)
-    case currency
-    when NilClass then nil
-    when Currency then currency
-    when String   then Registry.currencies[currency]
-    else          raise ArgumentError, "currency must be [Currency], [String] or nil (#{currency})"
-    end
+  def self.currency(object)
+    Currency.resolve(object)
+  end
+
+  # finds a registered currency for the code
+  #
+  # @param code [String] the currency identifier or object
+  # @return [Currency, nil] the registered Currency instance or nil if not found
+  def self.currency_for(code)
+    Registry.currencies[code]
   end
 
   # Returns a zero {Money} in the given currency, useful as a default value
@@ -35,13 +37,8 @@ module Mint
   #
   # @param currency [String, Currency] a currency code or object
   # @return [Money] a frozen zero-Money
-  # @raise [ArgumentError] if the currency is not registered
-  def self.zero(currency)
-    checked = Mint.currency(currency)
-    raise ArgumentError, "Invalid Currency: [#{currency}]" unless checked
-
-    Registry.zero_for(checked)
-  end
+  # @raise [ArgumentError] if the currency can't be resolved
+  def self.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
 
   # Registers a new currency, raising a KeyError if already registered.
   #
