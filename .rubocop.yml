@@ -73,6 +73,9 @@ Performance/CollectionLiteralInLoop:
   Exclude:
     - "test/**/*"
 
+ThreadSafety/ClassAndModuleAttributes:
+  Enabled: false
+
 ThreadSafety/ClassInstanceVariable:
   Enabled: false
 
