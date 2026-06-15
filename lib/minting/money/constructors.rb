@@ -13,7 +13,9 @@ module Mint
       checked_currency = Mint.currency(currency)
       raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
 
-      new(checked_currency.normalize_amount(amount), checked_currency)
+      amount = checked_currency.normalize_amount(amount)
+
+      amount.zero? ? Mint.zero(checked_currency) : new(amount, checked_currency)
     end
 
     # Builds a Money from a fractional (smallest-unit) Integer amount.
@@ -41,7 +43,8 @@ module Mint
       raise ArgumentError, "Currency not found (#{currency})" unless checked_currency
 
       amount = Rational(fractional, checked_currency.fractional_multiplier)
-      new(amount, checked_currency)
+
+      amount.zero? ? Mint.zero(checked_currency) : new(amount, checked_currency)
     end
 
     # Returns a new Money object with the specified amount, or self if unchanged.
@@ -56,7 +59,14 @@ module Mint
     #   price.mint(10.00)  #=> [USD 10.00] (returns self)
     def mint(new_amount)
       new_amount = currency.normalize_amount(new_amount)
-      new_amount == amount ? self : Money.new(new_amount, currency)
+
+      if new_amount == amount
+        self
+      elsif new_amount.zero?
+        Mint.zero(currency)
+      else
+        Money.new(new_amount, currency)
+      end
     end
 
     private

@@ -31,7 +31,7 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
 | `divmod` / `div` / `modulo` / `remainder` | `money.divmod(other)`, `money % other`, `money.remainder(other)` | Missing | High |
-| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | `Mint.money(0, "USD")` works but named constructor is cleaner | Low |
+| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | `Mint.zero('USD')` returns frozen zero-Money | Low |
 | Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | `10.dollars` via refinements only | Low |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | Raises `TypeError` on mismatch | Medium |
 
@@ -149,7 +149,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `drop_trailing_zeros` | ✅ | ❌ | Medium |
 | **Parsing** | `parse(string)` | ✅ (via monetize gem) | ✅ `Mint.parse` | — |
 | | Ambiguous separator handling | ✅ | ✅ | — |
-| | Accounting negative parsing | ✅ | ❌ documented | Medium |
+| | Accounting negative parsing | ✅ | ✅ | Medium |
 | **Exchange** | Bank interface | ✅ <br>`Money::Bank::Base` | ❌ | **High** |
 | | In-memory rate store | ✅ | ❌ | **High** |
 | | `exchange_to(currency)` | ✅ | ❌ | **High** |

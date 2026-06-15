@@ -28,7 +28,21 @@ module Mint
     end
   end
 
-  # Registers a new currency, raising a KeyError if already registered.
+  # Returns a zero {Money} in the given currency, useful as a default value
+  # for discounts, totals, or placeholders.
+  #
+  # @param currency [String, Currency] a currency code or object
+  # @return [Money] a frozen zero-Money
+  # @raise [ArgumentError] if the currency is not registered
+  def self.zero(currency)
+    checked = Mint.currency(currency)
+    raise ArgumentError, "Invalid Currency: [#{currency}]" unless checked
+
+    @zeros ||= CurrencyRegistry.currencies.values.to_h { |currency| [currency, Mint::Money.send(:new, 0, currency)] }
+    @zeros[currency] ||= Money.send(:new, 0, currency)
+    @zeros[currency]
+  end
+
   #
   # @param code [String] the unique currency code
   # @param subunit [Integer] the decimal subunit precision, defaults to 0
