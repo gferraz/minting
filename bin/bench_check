@@ -4,18 +4,20 @@
 require 'json'
 require 'tempfile'
 
-baseline_path = ARGV[0] || 'test/performance/check/results/baseline.json'
-threshold = (ARGV[1] || 0.80).to_f
+platform = RUBY_PLATFORM
+results_dir = File.expand_path('../test/performance/check/results', __dir__)
+baseline_path = File.join(results_dir, "baseline-#{platform}.json")
+threshold = (ARGV[0] || 0.80).to_f
 
 unless File.exist?(baseline_path)
-  puts "No baseline found at #{baseline_path}. Run `rake bench:baseline` first."
+  puts "No baseline found for #{platform} at #{baseline_path}. Run `rake bench:baseline` first."
   exit 1
 end
 
 baseline = JSON.parse(File.read(baseline_path))
 current_json = Tempfile.new(%w[bench_current .json])
 
-unless system("ruby test/performance/check/runner.rb #{current_json.path}")
+unless system("bundle exec ruby test/performance/check/runner.rb #{current_json.path}")
   puts 'Benchmark runner failed.'
   exit 1
 end
