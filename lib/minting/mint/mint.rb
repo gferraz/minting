@@ -14,20 +14,27 @@ module Mint
   # @raise [ArgumentError] if the currency code is not registered
   def self.money(amount, currency_code) = Money.create(amount, currency_code)
 
+  # @return [Hash{String => Currency}] the frozen world-currencies hash
+  # @api private
   def self.world_currencies = Registry.world_currencies
 
-  # Gets a currency from an object
+  # Resolves an object into a {Currency}, delegating to {Currency.resolve}.
   #
-  # @param currency [String, Currency] the currency identifier or object
-  # @return [Currency, nil] the registered Currency instance or nil if not found
+  # Accepts +nil+, +String+, {Currency}, or {Money}. Returns +nil+ when
+  # the input is +nil+ or the code is not registered.
+  #
+  # @param object [String, Currency, Money, nil] a currency identifier
+  # @return [Currency, nil]
   def self.currency(object)
     Currency.resolve(object)
   end
 
-  # finds a registered currency for the code
+  # Looks up a registered currency by its alpha code.
   #
-  # @param code [String] the currency identifier or object
-  # @return [Currency, nil] the registered Currency instance or nil if not found
+  # Unlike {.currency}, this performs a direct hash lookup and only accepts strings.
+  #
+  # @param code [String] the currency code
+  # @return [Currency, nil] the registered Currency, or +nil+ if not found
   def self.currency_for(code)
     Registry.currencies[code]
   end

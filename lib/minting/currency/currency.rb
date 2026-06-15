@@ -43,9 +43,15 @@ module Mint
   end
 
 
-  # Resolves the objetc int a currency
-  # @param currency [String, Currency, Money] the currency identifier or object
-  # @return [Currency, nil] the registered Currency instance or nil if not found
+  # Resolves an object into a {Currency}, returning +nil+ when it can't.
+  #
+  # Accepts +nil+, +String+, {Currency}, or {Money}.
+  # Passing a {Money} extracts its currency
+  #
+  # @param object [String, Currency, Money, nil] a currency code, object, or +nil+
+  # @return [Currency, nil] the resolved Currency, or +nil+ if +object+ is +nil+
+  #   or the code is not registered
+  # @raise [ArgumentError] if +object+ is an unsupported type (e.g. +Integer+)
   def Currency.resolve(object)
     case object
     when NilClass then nil
@@ -56,9 +62,13 @@ module Mint
     end
   end
 
-  # Resolves the objetc into a currency
-  # @param currency [String, Currency, Money] the currency identifier or object
-  # @raises [ArgumentError] If not able to resolve into a currency
+  # Resolves an object into a {Currency}, raising on failure.
+  #
+  # Like {.resolve} but raises when the result would be +nil+.
+  #
+  # @param object [String, Currency, Money, nil] a currency code, object, or +nil+
+  # @return [Currency] the resolved Currency
+  # @raise [ArgumentError] if +object+ cannot be resolved into a registered currency
   def Currency.resolve!(object)
     resolve(object) or raise ArgumentError, "Could not resolve (#{object}) into a currency"
   end
