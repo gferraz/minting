@@ -28,6 +28,19 @@ class MoneyTest < Minitest::Test
     assert_equal '[USD 10.34]', Mint.money(10.34, 'USD').inspect
   end
 
+  def test_inspect_round_trip
+    amounts = [0, 1, 10.34, 99.99, 100, 1_234_567.89, -5, -0.50]
+    codes   = Mint::CurrencyRegistry.currencies.keys.sample(8)
+
+    amounts.product(codes).each do |amount, code|
+      original = Mint.money(amount, code)
+      parsed   = Mint.parse(original.inspect)
+
+      assert_equal original, parsed,
+                   "inspect round-trip failed: #{original.inspect} -> #{parsed.inspect}"
+    end
+  end
+
   def test_same_currency
     assert 10.34.mint('USD').same_currency?(Mint.money(100, 'USD'))
     refute 10.34.mint('USD').same_currency?(Mint.money(10.34, 'BRL'))
