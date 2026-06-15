@@ -9,12 +9,16 @@ module Mint
   module CurrencyRegistry
     extend self
 
-    # Returns the hash of all registered currencies.
+    MUTEX = Monitor.new
+
+    private_constant :MUTEX
+
+    # Returns the frozen hash of all registered currencies.
     #
     # @return [Hash{String => Currency}] registered currencies mapped by code
     # @api private
     def currencies
-      @currencies ||= Mint.world_currencies.dup
+      @currencies || MUTEX.synchronize { @currencies = Mint.world_currencies.dup.freeze }
     end
 
     # Registered symbols sorted for detection: longest match wins, then parser priority.
@@ -22,12 +26,15 @@ module Mint
     # @return [Array<Array<String, Currency>>] sorted symbol-to-currency mappings
     # @api private
     def currency_symbols
-      @currency_symbols ||= begin
-        currencies.values
-                  .reject { |c| c.symbol.empty? }
-                  .map { |currency| [currency.symbol, currency] }
-                  .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
-      end.freeze
+      @currency_symbols || MUTEX.synchronize do
+        @currency_symbols ||= begin
+          currencies.values
+                    .reject { |c| c.symbol.empty? }
+                    .map { |currency| [currency.symbol, currency] }
+                    .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
+                    .freeze
+        end
+      end
     end
 
     # Registers a new currency, raising a KeyError if already registered.
@@ -46,22 +53,14 @@ module Mint
               "Currency code must have only letters or '_' ('USD',, 'MY_COIN')"
       end
 
-      currencies = CurrencyRegistry.currencies
-      raise KeyError, "Currency: #{code} already registered" if currencies[code]
+      MUTEX.synchronize do
+        raise KeyError, "Currency: #{code} already registered" if currencies[code]
 
-      currency = currencies[code] = Currency.new(code:, subunit:, symbol:, priority:)
-      invalidate_symbols_cache
-      currency
-    end
-
-    private
-
-    # Clears and refreshes the currency symbol cache.
-    # Called when currencies are registered.
-    #
-    # @api private
-    def invalidate_symbols_cache
-      @currency_symbols = nil
+        currency = Currency.new(code:, subunit:, symbol:, priority:)
+        @currencies = @currencies.merge(code => currency).freeze
+        @currency_symbols = nil
+        currency
+      end
     end
   end
 end

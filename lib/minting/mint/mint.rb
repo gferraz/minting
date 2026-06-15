@@ -34,12 +34,18 @@ module Mint
   # @param currency [String, Currency] a currency code or object
   # @return [Money] a frozen zero-Money
   # @raise [ArgumentError] if the currency is not registered
+  ZERO_MUTEX = Monitor.new
+
+  private_constant :ZERO_MUTEX
+
   def self.zero(currency)
     checked = Mint.currency(currency)
     raise ArgumentError, "Invalid Currency: [#{currency}]" unless checked
 
-    @zeros ||= {}
-    @zeros[checked] ||= Money.send(:new, 0, checked)
+    ZERO_MUTEX.synchronize do
+      @zeros ||= {}
+      @zeros[checked] ||= Money.send(:new, 0, checked)
+    end
   end
 
   # Registers a new currency, raising a KeyError if already registered.

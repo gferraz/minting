@@ -37,17 +37,17 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 
 ### P2-B Exchange rates & bank infrastructure
 
-The Money gem has a full pluggable bank system. Minting has nothing — this is the biggest gap.
+The Money gem has a full pluggable bank system. Minting has nothing — not planned in the near term.
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Bank interface | `Money::Bank::Base` with `#exchange(money, currency)` | Missing | High |
-| In-memory rate store | `Money::RatesStore::Memory` (thread-safe) | Missing | High |
-| Global bank config | `Money.default_bank = bank` | Missing | High |
-| Convert currency | `money.exchange_to("EUR")` | Missing | High |
-| Register rates | `Money.add_rate("USD", "CAD", 1.25)` | Missing | High |
-| Rate import/export | `bank.export_rates(:json)`, `bank.import_rates(:yaml, ...)` | Missing | Medium |
-| Thread-local bank override | `Money.with_bank(bank) { }` | Missing | Medium |
+| Bank interface | `Money::Bank::Base` with `#exchange(money, currency)` | Missing | Low |
+| In-memory rate store | `Money::RatesStore::Memory` (thread-safe) | Missing | Low |
+| Global bank config | `Money.default_bank = bank` | Missing | Low |
+| Convert currency | `money.exchange_to("EUR")` | Missing | Low |
+| Register rates | `Money.add_rate("USD", "CAD", 1.25)` | Missing | Low |
+| Rate import/export | `bank.export_rates(:json)`, `bank.import_rates(:yaml, ...)` | Missing | Low |
+| Thread-local bank override | `Money.with_bank(bank) { }` | Missing | Low |
 | ECB / OpenExchangeRates stores | `Money::Bank::ECB` (extracted to separate gems) | Missing (future) | Low |
 
 ### P2-C Locale / I18n formatting
@@ -150,11 +150,11 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | **Parsing** | `parse(string)` | ✅ (via monetize gem) | ✅ `Mint.parse` | — |
 | | Ambiguous separator handling | ✅ | ✅ | — |
 | | Accounting negative parsing | ✅ | ✅ | Medium |
-| **Exchange** | Bank interface | ✅ <br>`Money::Bank::Base` | ❌ | **High** |
-| | In-memory rate store | ✅ | ❌ | **High** |
-| | `exchange_to(currency)` | ✅ | ❌ | **High** |
-| | `add_rate` / `get_rate` | ✅ | ❌ | **High** |
-| | Rate import/export (json/yaml) | ✅ | ❌ | Medium |
+| **Exchange** | Bank interface | ✅ <br>`Money::Bank::Base` | ❌ | Low |
+| | In-memory rate store | ✅ | ❌ | Low |
+| | `exchange_to(currency)` | ✅ | ❌ | Low |
+| | `add_rate` / `get_rate` | ✅ | ❌ | Low |
+| | Rate import/export (json/yaml) | ✅ | ❌ | Low |
 | | ECB / OpenExchangeRates stores | ✅ (extracted) | ❌ | Low |
 | **I18n** | Locale backend | ✅ | ❌ | **High** |
 | | I18n integration | ✅ `locale_backend = :i18n` | ❌ | **High** |
@@ -187,7 +187,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 ## Suggested next steps
 
-1. **P0-1** Fix parse currency detection — small change, big correctness win
-2. **P2-B** Start the bank/exchange infrastructure — the single biggest gap to the Money gem
-3. **P2-C** I18n formatting — already advertised in README roadmap
-4. **P1-1 + P1-2** Thread safety and immutability — production readiness
+1. **P2-A** `divmod` / `div` / `modulo` / `remainder` — highest priority arithmetic gap
+2. **P2-C** I18n formatting — already advertised in README roadmap
+3. **P1-1 + P1-2** Thread safety and immutability — production readiness
+4. **P1-4** Resolve remaining RuboCop offenses

@@ -46,6 +46,72 @@ class MintTest < Minitest::Test
     assert_same zero_from_zero, zero_from_mint
   end
 
+  def test_currencies_frozen
+    assert_predicate Mint::CurrencyRegistry.currencies, :frozen?
+  end
+
+  def test_concurrent_zero_returns_same_object
+    threads = Array.new(10) { Thread.new { Mint.zero('USD') } }
+    results = threads.map(&:value)
+
+    assert(results.all? { |z| z.equal?(results.first) })
+  end
+
+  def test_concurrent_zero_different_currencies
+    codes = %w[USD BRL JPY PEN EUR]
+    threads = codes.cycle.first(20).map { |code| Thread.new { Mint.zero(code) } }
+    results = threads.map(&:value)
+
+    codes.each do |code|
+      group = results.select { |m| m.currency.code == code }
+
+      assert group.all? { |m| m.equal?(group.first) },
+             "All #{code} zeros should be the same object"
+    end
+  end
+
+  def test_concurrent_register
+    codes = %w[AAA BBB CCC DDD]
+    threads = codes.map { |code| Thread.new { Mint.register_currency(code:) } }
+    results = threads.map(&:value)
+
+    results.each { |currency| assert_kind_of Mint::Currency, currency }
+    codes.each { |code| refute_nil Mint.currency(code) }
+  end
+
+  def test_concurrent_register_raises_on_duplicate
+    Mint.register_currency(code: 'ZZZ_')
+
+    threads = Array.new(5) do
+      Thread.new do
+        Mint.register_currency(code: 'ZZZ_')
+      rescue StandardError
+        nil
+      end
+    end
+    results = threads.map(&:value)
+
+    assert_empty results.compact
+  end
+
+  def test_concurrent_reads_during_registration
+    reader = Thread.new do
+      100.times do
+        Mint.currency('USD')
+        Mint::CurrencyRegistry.currencies.values
+      end
+    end
+
+    writer = Thread.new do
+      Mint.register_currency(code: 'EEE')
+    end
+
+    reader.join
+    writer.join
+
+    assert Mint.currency('EEE')
+  end
+
   def test_mint_refinements
     assert_equal 1.dollar, Mint.money(1, 'USD')
     assert_equal 1.euro, Mint.money(1, 'EUR')

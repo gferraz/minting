@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Improvements
+- Thread‑safe `CurrencyRegistry` — `Monitor`‑guarded lazy init + copy‑on‑write for `register`, eliminates TOCTOU race on duplicate‑currency check
+- Thread‑safe `Mint.zero` — `Monitor`‑guarded `@zeros` cache, guarantees `assert_same` contract under concurrent access
+- `CurrencyRegistry.currencies` now returns a frozen hash — prevents accidental mutation by callers
+- Fix `Mint.zero` bug — use resolved `Currency` object as cache key instead of raw string parameter
+- Restore missing YARD summary line on `Mint.register_currency`
+
+### Tests
+- Add concurrent‑access tests: `Mint.zero` singleton identity across threads, concurrent `register`, concurrent reads during registration
+- Add `CurrencyRegistry.currencies` frozen assertion
+
 ## [v1.7.2](https://github.com/gferraz/minting/releases/tag/v1.7.2) (2026-06-15)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.7.1...v1.7.2)
