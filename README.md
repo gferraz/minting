@@ -183,9 +183,6 @@ Mint.currency_for_symbol('$')        #=> #<Currency code="USD" ...>
 Mint.currency_for_symbol('R$')       #=> #<Currency code="BRL" ...>
 Mint.currency_for_symbol('€')        #=> #<Currency code="EUR" ...>
 
-# Generic resolver (accepts String, Currency, Money, or nil)
-Mint.currency('USD')                 #=> #<Currency code="USD" ...>
-Mint.currency(nil)                   #=> nil
 ```
 
 ## API notes

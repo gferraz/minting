@@ -18,17 +18,6 @@ module Mint
   # @api private
   def self.world_currencies = Registry.world_currencies
 
-  # Resolves an object into a {Currency}, delegating to {Currency.resolve}.
-  #
-  # Accepts +nil+, +String+, {Currency}, or {Money}. Returns +nil+ when
-  # the input is +nil+ or the code is not registered.
-  #
-  # @param object [String, Currency, Money, nil] a currency identifier
-  # @return [Currency, nil]
-  def self.currency(object)
-    Currency.resolve(object)
-  end
-
   # Looks up a registered currency by its alpha code.
   #
   # Unlike {.currency}, this performs a direct hash lookup and only accepts strings.

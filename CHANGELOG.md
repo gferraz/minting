@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Breaking
+- `Mint.currencies` deprecated
+
 ### Improvements
 - Consolidate cached state into `Mint::Registry` — replaces `CurrencyRegistry` and `Mint.world_currencies` with a single module
 - Thread‑safe `Registry` — `Monitor`‑guarded lazy init + copy‑on‑write for `register`, eliminates TOCTOU race on duplicate‑currency check
