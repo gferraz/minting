@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [v1.7.3](https://github.com/gferraz/minting/releases/tag/v1.7.3) (2026-06-15)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.7.2...v1.7.3)
+
 ### Breaking
 - `Mint.currencies` deprecated
 
