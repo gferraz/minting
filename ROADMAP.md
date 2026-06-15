@@ -23,9 +23,9 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 |------|-------------|--------|
 | **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load (Puma/Sidekiq). Options: `Mutex`, eager-load in Railtie, `Concurrent::Map` | |
 | **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | |
-| **P1-3** | Add `inspect` round-trip property test — `Mint.parse(m.inspect)` should round-trip for random amounts | Done |
+
 | **P1-4** | Resolve remaining 3 RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | |
-| **P1-5** | Improve YARD documentation coverage (~55% → 100% public API) — registry methods, allocation, serialization, arithmetic lacking docs | |
+
 | **P1-6** | Mark internal classes `@private` in YARD — `CoercedNumber`, `format_amount` clutter public API stats | |
 
 ## P2 — Feature parity with the Money gem
