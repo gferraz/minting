@@ -7,7 +7,7 @@ class MintingTest < Minitest::Test
     refute_nil ::Minting::VERSION
   end
 
-  def test_readme_usage # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Minitest/MultipleAssertions
+  def test_readme_usage
     ten_dollars = Mint.money(10, 'USD')
 
     assert_equal 10, ten_dollars.to_i

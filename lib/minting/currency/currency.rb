@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# :nodoc:
 module Mint
   # Represents a specific currency unit, identified by ISO 4217 alphabetic code.
   # Currency objects are immutable and define the properties of a monetary unit

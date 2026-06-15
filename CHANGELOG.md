@@ -16,6 +16,9 @@
 - `Mint.currency_for_code(code)` — looks up a registered currency by its code
 - `Registry.detect_currency(input)` — internal helper that scans strings for registered symbols, used by the parser
 
+### Code quality
+- RuboCop clean across entire project (0 offenses) — adjusted `Metrics/AbcSize`, `Metrics/ParameterLists` limits, `# :nodoc:` on reopened `module Mint`, and excluded test‑specific cops (Minitest/MultipleAssertions, ThreadSafety/NewThread, metrics)
+
 ### Tests
 - Add concurrent‑access tests: `Mint.zero` singleton identity across threads, concurrent `register`, concurrent reads during registration
 - Add `Registry.currencies` frozen assertion

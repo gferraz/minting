@@ -129,12 +129,12 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | Floating-point safety | BigDecimal | **Rational (no FP at all)** ✅ | — |
 | **Creation** | `Money.new(amount, currency)` | ✅ | ✅ `Mint.money(amt, code)` | — |
 | | `from_fractional` / `from_cents` | ✅ `Money.from_cents` | ✅ `Money.from_fractional` | — |
-| | `Money.empty(currency)` | ✅ | ❌ | Low |
-| | Named constructors (`us_dollar`, etc.) | ✅ | 🔶 via refinements | Low |
+| | `Money.empty(currency)` | ✅ | Mint.zero(currency) | ✅  |
+| | Named constructors (`us_dollar`, etc.) | ✅ |  ✅  | - |
 | | `fractional` / `cents` | ✅ | ✅ `fractional` | — |
 | **Arithmetic** | `+`, `-`, `*`, `/`, `**` | ✅ | ✅ | — |
 | | `-@` (negation), `abs` | ✅ | ✅ | — |
-| | `divmod`, `modulo`, `remainder`, `div` | ✅ | ❌ | High |
+| | `divmod`, `modulo`, `remainder`, `div` | ✅ | ❌ | Low |
 | | Cross-currency arithmetic | 🔶 auto-converts | ❌ raises TypeError | Medium |
 | **Comparison** | `<=>`, `==`, `eql?`, `hash` | ✅ | ✅ | — |
 | | Zero-equality across currencies | ✅ `Money.new(0, "USD") == 0` | **✅ + eql-shielded** | — |
@@ -160,13 +160,13 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | **I18n** | Locale backend | ✅ | ❌ | **High** |
 | | I18n integration | ✅ `locale_backend = :i18n` | ❌ | **High** |
 | | Per-locale formatting rules | ✅ | ❌ | **High** |
-| **Rounding** | Rounding modes | ✅ | ❌ always subunit | Medium |
+| **Rounding** | Rounding modes | ✅ | ❌ Ruby default | Medium |
 | | Infinite precision | ✅ | ❌ | Low |
 | | Cash rounding | ✅ | ❌ | Low |
 | **Currency** | Lookup by ISO code | ✅ `.find` | **✅** `currency_for_code` `currencies` | — |
 | | Lookup by symbol | ❌ | **✅** `currency_for_symbol`, `detect_currency` | — |
-| | ISO numeric code | ✅ | ❌ | Medium |
-| | Disambiguate symbol | ✅ | ❌ | Medium |
+| | ISO numeric code | ✅ | ❌ | Low |
+| | Disambiguate symbol | ✅ | ❌ | Low |
 | | HTML entity | ✅ | ❌ | Low |
 | | Symbol first flag | ✅ | ❌ hard-coded | Low |
 | | Smallest denomination | ✅ | ❌ | Low |
@@ -190,6 +190,5 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 ## Suggested next steps
 
-1. **P2-A** `divmod` / `div` / `modulo` / `remainder` — highest priority arithmetic gap
-2. **P2-C** I18n formatting — already advertised in README roadmap
-3. **P1-5** Resolve remaining RuboCop offenses
+1. **P2-C** I18n formatting — already advertised in README roadmap
+2. **P1-5** Resolve remaining RuboCop offenses

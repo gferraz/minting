@@ -1,4 +1,4 @@
-inherit_from: .rubocop_todo.yml
+# inherit_from: .rubocop_todo.yml
 
 plugins:
   - rubocop-minitest
@@ -20,14 +20,59 @@ AllCops:
 Layout/LineLength:
   Max: 120
 
+Metrics/AbcSize:
+  Max: 18
+  Exclude:
+    - "test/**/*"
+
 Metrics/CyclomaticComplexity:
   Max: 9
+  Exclude:
+    - "test/**/*"
 
 Metrics/MethodLength:
   Max: 30
+  Exclude:
+    - "test/**/*"
+
+Metrics/ParameterLists:
+  Max: 6
 
 Naming/BinaryOperatorParameterName:
   Enabled: false
 
 Style/NumericPredicate:
   Enabled: false
+
+# --- Test-specific overrides ---
+
+Minitest/MultipleAssertions:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/ClassLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/ModuleLength:
+  Exclude:
+    - "test/**/*"
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "test/**/*"
+
+Naming/VariableNumber:
+  Exclude:
+    - "test/**/*"
+
+Performance/CollectionLiteralInLoop:
+  Exclude:
+    - "test/**/*"
+
+ThreadSafety/NewThread:
+  Exclude:
+    - "test/**/*"
