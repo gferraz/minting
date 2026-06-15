@@ -1,0 +1,50 @@
+{
+  "metadata": {
+    "gem_version": "1.7.1",
+    "generated_at": "2026-06-15T00:25:37Z",
+    "ruby_version": "4.0.5",
+    "ruby_platform": "arm64-darwin23"
+  },
+  "results": {
+    "creation": {
+      "ips": 1417471,
+      "elapsed": 0.3527
+    },
+    "addition": {
+      "ips": 1262502,
+      "elapsed": 0.7921
+    },
+    "subtraction": {
+      "ips": 1368524,
+      "elapsed": 0.7307
+    },
+    "multiplication": {
+      "ips": 2241208,
+      "elapsed": 0.2231
+    },
+    "division": {
+      "ips": 2158746,
+      "elapsed": 0.2316
+    },
+    "comparison": {
+      "ips": 3190027,
+      "elapsed": 0.3135
+    },
+    "formatting": {
+      "ips": 250748,
+      "elapsed": 1.994
+    },
+    "parsing": {
+      "ips": 113351,
+      "elapsed": 0.8822
+    },
+    "split": {
+      "ips": 662484,
+      "elapsed": 0.3019
+    },
+    "allocate": {
+      "ips": 446381,
+      "elapsed": 0.448
+    }
+  }
+}
