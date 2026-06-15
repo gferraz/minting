@@ -37,10 +37,12 @@ module Mint
   # Extracts a numeric value from input that should only contain an amount.
   # @private
   def parse_amount(input)
+    accounting_negative = input.start_with?('(') && input.end_with?(')')
+
     # Remove any charater that is not a digit, comma or period
     numeric = input.scan(/[\d.,-]/).join
-    numeric = normalize_separators(numeric)
-    Rational(numeric)
+    amount = Rational(normalize_separators(numeric))
+    accounting_negative ? -amount : amount
   end
 
   # Extracts currency from a string by matching ISO code or symbol.

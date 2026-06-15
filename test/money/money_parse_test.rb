@@ -34,6 +34,22 @@ class MoneyParseTest < Minitest::Test
     assert_equal Mint.money(-1.25, 'USD'), Mint.parse('-USD 1.25')
   end
 
+  def test_parse_accounting_negative
+    assert_equal Mint.money(-19.99, 'USD'), Mint.parse('($19.99)')
+    assert_equal Mint.money(-10.00, 'USD'), Mint.parse('(USD 10.00)')
+    assert_equal Mint.money(-12.34, 'EUR'), Mint.parse('(12,34 €)')
+    assert_equal Mint.money(-5.00, 'USD'),  Mint.parse('(5.00)', 'USD')
+  end
+
+  def test_parse_accounting_negative_with_spaces
+    assert_equal Mint.money(-19.99, 'USD'), Mint.parse('( $19.99 )')
+    assert_equal Mint.money(-10.00, 'USD'), Mint.parse('( USD 10.00 )')
+  end
+
+  def test_parse_accounting_negative_zero
+    assert_equal Mint.money(0, 'USD'), Mint.parse('($0.00)')
+  end
+
   def test_parse_symbol_registered_after_symbol_index_is_cached
     Mint.parse('$1')
     currency = Mint.register_currency(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
