@@ -18,6 +18,20 @@ class MintTest < Minitest::Test
     assert_equal Mint.currency('SGX'), sgx
   end
 
+  def test_zero
+    assert_equal Mint.money(0, 'USD'), Mint.zero('USD')
+    assert_equal Mint.money(0, 'BRL'), Mint.zero('BRL')
+    assert_equal Mint.money(0, 'JPY'), Mint.zero('JPY')
+  end
+
+  def test_zero_with_currency_object
+    assert_equal Mint.money(0, 'USD'), Mint.zero(Mint.currency('USD'))
+  end
+
+  def test_zero_returns_same_object
+    assert_same Mint.zero('USD'), Mint.zero('USD')
+  end
+
   def test_mint_refinements
     assert_equal 1.dollar, Mint.money(1, 'USD')
     assert_equal 1.euro, Mint.money(1, 'EUR')
