@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'json'
+require 'tempfile'
+
+baseline_path = ARGV[0] || 'test/performance/check/results/baseline.json'
+threshold = (ARGV[1] || 0.80).to_f
+
+unless File.exist?(baseline_path)
+  puts "No baseline found at #{baseline_path}. Run `rake bench:baseline` first."
+  exit 1
+end
+
+baseline = JSON.parse(File.read(baseline_path))
+current_json = Tempfile.new(%w[bench_current .json])
+
+unless system("ruby test/performance/check/runner.rb #{current_json.path}")
+  puts 'Benchmark runner failed.'
+  exit 1
+end
+
+current = JSON.parse(File.read(current_json.path))
+
+failures = []
+baseline['results'].each do |key, b|
+  c = current.dig('results', key)
+  next unless c
+
+  ratio = c['ips'].to_f / b['ips']
+  if ratio < threshold
+    failures << format('%<key>-15s baseline: %<b>10d ips  current: %<c>10d ips  ratio: %<ratio>5.1f%%',
+                       key:, b: b['ips'], c: c['ips'], ratio: ratio * 100)
+  end
+end
+
+puts "\n--- Benchmark Regression Check ---"
+if failures.empty?
+  puts 'All benchmarks within 20% of baseline.'
+else
+  puts 'Regressions detected:'
+  failures.each { |f| puts "  FAIL  #{f}" }
+  exit 1
+end
