@@ -176,12 +176,12 @@ Notes:
 
 ```ruby
 # By ISO code (direct hash lookup, string only)
-Mint.currency_for_code('USD')        #=> #<Currency code="USD" ...>
+Mint::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
 
 # By display symbol (highest-priority currency for ambiguous symbols)
-Mint.currency_for_symbol('$')        #=> #<Currency code="USD" ...>
-Mint.currency_for_symbol('R$')       #=> #<Currency code="BRL" ...>
-Mint.currency_for_symbol('€')        #=> #<Currency code="EUR" ...>
+Mint::Currency.for_symbol('$')        #=> #<Currency code="USD" ...>
+Mint::Currency.for_symbol('R$')       #=> #<Currency code="BRL" ...>
+Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 
 ```
 

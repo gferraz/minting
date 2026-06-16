@@ -72,4 +72,8 @@ module Mint
   def Currency.resolve!(object)
     resolve(object) or raise ArgumentError, "Could not resolve (#{object}) into a currency"
   end
+
+  def Currency.for_code(code) = Mint.currency_for_code(code)
+  def Currency.for_symbol(symbol) = Mint.currency_for_symbol(symbol)
+
 end
