@@ -83,12 +83,26 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_errors
-    assert_raises(ArgumentError) { Mint.parse('') }
-    assert_raises(ArgumentError) { Mint.parse(" \n\t ") }
-    assert_raises(ArgumentError) { Mint.parse('12,344,123.12.123', 'USD') }
-    assert_raises(ArgumentError) { Mint.parse(19.99, 'USD') }
-    assert_raises(ArgumentError) { Mint.parse('19.99') }
-    assert_raises(ArgumentError) { Mint.parse('abc', 'USD') }
-    assert_raises(ArgumentError) { Mint.parse('10', 'ZZZ') }
+    assert_raises(ArgumentError) { Mint.parse!('') }
+    assert_raises(ArgumentError) { Mint.parse!(" \n\t ") }
+    assert_raises(ArgumentError) { Mint.parse!('12,344,123.12.123', 'USD') }
+    assert_raises(ArgumentError) { Mint.parse!(19.99, 'USD') }
+    assert_raises(ArgumentError) { Mint.parse!('19.99') }
+    assert_raises(ArgumentError) { Mint.parse!('abc', 'USD') }
+    assert_raises(ArgumentError) { Mint.parse!('10', 'ZZZ') }
+  end
+
+  def test_parse_returns_nil_on_failure
+    assert_nil Mint.parse('')
+    assert_nil Mint.parse(" \n\t ")
+    assert_nil Mint.parse('12,344,123.12.123', 'USD')
+    assert_nil Mint.parse(19.99, 'USD')
+    assert_nil Mint.parse('19.99')
+    assert_nil Mint.parse('abc', 'USD')
+    assert_nil Mint.parse('10', 'ZZZ')
+  end
+
+  def test_parse_returns_money_on_success
+    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
   end
 end

@@ -2,15 +2,16 @@
 
 ## [Unreleased]
 
+### Breaking
+- Money.create is now deprecated and issue an warning. Use Money.from(amount, currency)
+- `Mint.parse` now returns `nil` on failure instead of raising. Use `Mint.parse!` for the raising variant.
+
 ### Improvements
 - `Mint::Money.zero(currency)` — class method delegating to `Mint.zero`
 - `Money#mint` is deprecated and renamed to `Money#change` — clearer name for changing a Money's amount while preserving its currency
 
 ### Tests
 - Add `Mint::Money.zero(currency)` delegation tests
-
-### Breaking
-- Money.create is now deprecated and issue an warning. Use Money.from(amount, currency)
 
 ## [v1.7.3](https://github.com/gferraz/minting/releases/tag/v1.7.3) (2026-06-15)
 
