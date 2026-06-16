@@ -15,7 +15,7 @@ class MintTest < Minitest::Test
   def test_register
     sgx = Mint.register_currency(code: 'SGX', subunit: 2, symbol: '^')
 
-    assert_equal Mint.currency_for_code('SGX'), sgx
+    assert_equal Mint::Currency.for_code('SGX'), sgx
   end
 
   def test_zero
@@ -25,7 +25,7 @@ class MintTest < Minitest::Test
   end
 
   def test_zero_with_currency_object
-    assert_equal Mint.money(0, 'USD'), Mint.zero(Mint.currency_for_code('USD'))
+    assert_equal Mint.money(0, 'USD'), Mint.zero(Mint::Currency.for_code('USD'))
   end
 
   def test_zero_returns_same_object
@@ -76,7 +76,7 @@ class MintTest < Minitest::Test
     results = threads.map(&:value)
 
     results.each { |currency| assert_kind_of Mint::Currency, currency }
-    codes.each { |code| refute_nil Mint.currency_for_code(code) }
+    codes.each { |code| refute_nil Mint::Currency.for_code(code) }
   end
 
   def test_concurrent_register_raises_on_duplicate
@@ -97,7 +97,7 @@ class MintTest < Minitest::Test
   def test_concurrent_reads_during_registration
     reader = Thread.new do
       100.times do
-        Mint.currency_for_code('USD')
+        Mint::Currency.for_code('USD')
         Mint::Registry.currencies.values
       end
     end
@@ -109,7 +109,7 @@ class MintTest < Minitest::Test
     reader.join
     writer.join
 
-    assert Mint.currency_for_code('EEE')
+    assert Mint::Currency.for_code('EEE')
   end
 
   def test_mint_refinements

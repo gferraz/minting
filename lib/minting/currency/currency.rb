@@ -42,7 +42,7 @@ module Mint
     # 2. Rounds to respect currency subunit
     def normalize_amount(amount) = amount.to_r.round(subunit)
 
-    def zero = Mint.zero(self)
+    def zero = Currency.zero(self)
   end
 
   # Resolves an object into a {Currency}, returning +nil+ when it can't.
@@ -59,7 +59,7 @@ module Mint
     when NilClass then nil
     when Currency then object
     when Money    then object.currency
-    when String   then Mint.currency_for_code object
+    when String   then Currency.for_code object
     else          raise ArgumentError, "currency must be [Currency], [Money], [String] or nil (#{object})"
     end
   end
@@ -75,7 +75,28 @@ module Mint
     resolve(object) or raise ArgumentError, "Could not resolve (#{object}) into a currency"
   end
 
-  def Currency.for_code(code) = Mint.currency_for_code(code)
-  def Currency.for_symbol(symbol) = Mint.currency_for_symbol(symbol)
-  def Currency.register(code:, subunit: 0, symbol: '', priority: 0) = Registry.register(code:, subunit:, symbol:, priority:)
+  # Looks up a registered currency by its alpha code.
+  #
+  # @param code [String] the currency code
+  # @return [Currency, nil] the registered Currency, or +nil+ if not found
+  def Currency.for_code(code)
+    Registry.currencies[code]
+  end
+
+  # Looks up a currency by its display symbol.
+  #
+  # @param symbol [String] the display symbol (e.g. "$", "R$")
+  # @return [Currency, nil] the highest-priority currency for the symbol
+  def Currency.for_symbol(symbol)
+    Registry.currency_for_symbol(symbol)
+  end
+
+
+  # Returns a zero {Money} in the given currency, useful as a default value
+  # for discounts, totals, or placeholders.
+  #
+  # @param currency [String, Currency] a currency code or object
+  # @return [Money] a frozen zero-Money
+  # @raise [ArgumentError] if the currency can't be resolved
+  def Currency.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
 end

@@ -88,7 +88,7 @@ module Mint
     return currency if currency
 
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
-      currency = Mint.currency_for_code(code)
+      currency = Currency.for_code(code)
       return currency if currency
     end
 
