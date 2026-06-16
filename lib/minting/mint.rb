@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative 'mint/rounding'
 require_relative 'currency/currency'
 
 require_relative 'mint/dsl/numeric'

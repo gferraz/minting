@@ -17,7 +17,7 @@ module Mint
     def split(slices)
       raise ArgumentError, 'Slices quantity must be an poitive integer' unless slices.positive? && slices.integer?
 
-      fraction = (amount / slices).round(currency.subunit)
+      fraction = currency.normalize_amount(amount / slices)
       allocate_left_over(amounts: Array.new(slices, fraction),
                          left_over: amount - (fraction * slices))
     end

@@ -17,4 +17,16 @@ module Mint
   # @return [Hash{String => Currency}] the frozen world-currencies hash
   # @api private
   def self.world_currencies = Registry.world_currencies
+
+  # Executes a block with a specific rounding mode applied to all money
+  # construction, parsing, change, allocation, and split operations.
+  #
+  # Restores the previous mode (or default) when the block exits, even on
+  # exception.
+  #
+  # @param mode [Symbol] one of: +:half_up+, +:half_down+, +:floor+,
+  #   +:ceil+, +:truncate+, +:down+
+  # @yield block to execute with the rounding mode active
+  # @raise [ArgumentError] if +mode+ is not a recognised rounding mode
+  def self.with_rounding(mode, &) = Rounding.with_mode(mode, &)
 end

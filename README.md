@@ -189,6 +189,16 @@ Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
 
+**Rounding modes** — Wrap operations in `Mint.with_rounding(mode)` to change how amounts are rounded to the subunit:
+
+```ruby
+Mint.with_rounding(:half_down) { Mint.money(1.005, 'USD') }  #=> [USD 1.00]
+Mint.with_rounding(:ceil)      { Mint.money(1.001, 'USD') }  #=> [USD 1.01]
+Mint.with_rounding(:floor)     { Mint.parse('1.009', 'USD') } #=> [USD 1.00]
+```
+
+Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
+
 **Refinements** — `10.dollars` and similar helpers require `using Mint` in the current scope (see Usage above).
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.

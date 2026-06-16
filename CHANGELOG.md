@@ -12,6 +12,10 @@
 - `Mint.parse` now returns `nil` on failure instead of raising. Use `Mint.parse!` for the raising variant.
 
 ### Improvements
+- `Mint.with_rounding(mode)` — block-scoped rounding mode via `Thread.current`, restores on exit
+- `Currency#normalize_amount` delegates to `Mint::Rounding.apply` — single dispatch point for all rounding
+- `allocate` and `split` use `currency.normalize_amount` instead of direct `.round(subunit)` — automatically respect block-scoped mode
+- Modes: `:half_up`, `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down` — all `Rational`-native, no `BigDecimal` dependency
 - `Currency.zero(currency)` — class method on `Currency`, new home for zero-money access
 - `Currency.for_code(code)` — direct hash lookup by currency code
 - `Currency.for_symbol(symbol)` — exact symbol match via frozen hash
