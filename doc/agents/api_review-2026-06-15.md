@@ -142,8 +142,6 @@ This is odd: the param type is a `Currency` in the docs, but you call `other.cur
 
 ## 3. Parsing API
 
-`Mint.parse` is already strong. To beat competitors, lean into this.
-
 ### Suggestions
 
 1. **Return type & error modes**
@@ -152,17 +150,6 @@ This is odd: the param type is a `Currency` in the docs, but you call `other.cur
    - Add **two modes**:
      - `Mint.parse!(...)` – raises on failure.
      - `Mint.parse(...)` – returns `nil` on failure or perhaps `Result` object in future, but nil is sufficient initially.
-
-2. **Expose configuration hooks**
-
-   Even if not fully implemented yet, define the shape:
-
-   ```ruby
-   Mint.parser.default_currency = 'USD'
-   Mint.parser.symbol_priority = %w[USD CAD AUD]
-   ```
-
-   That gives you a path to match/beat `monetize` / `money` ecosystem flexibility.
 
 3. **Quality-of-life alias**
 
