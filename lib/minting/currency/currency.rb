@@ -41,6 +41,8 @@ module Mint
     # 1. Converts to Rational
     # 2. Rounds to respect currency subunit
     def normalize_amount(amount) = amount.to_r.round(subunit)
+
+    def zero = Mint.zero(self)
   end
 
   # Resolves an object into a {Currency}, returning +nil+ when it can't.
@@ -75,5 +77,5 @@ module Mint
 
   def Currency.for_code(code) = Mint.currency_for_code(code)
   def Currency.for_symbol(symbol) = Mint.currency_for_symbol(symbol)
-
+  def Currency.register(code:, subunit: 0, symbol: '', priority: 0) = Registry.register(code:, subunit:, symbol:, priority:)
 end
