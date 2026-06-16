@@ -13,7 +13,7 @@ class MintTest < Minitest::Test
   end
 
   def test_register
-    sgx = Mint.register_currency(code: 'SGX', subunit: 2, symbol: '^')
+    sgx = Mint::Currency.register(code: 'SGX', subunit: 2, symbol: '^')
 
     assert_equal Mint::Currency.for_code('SGX'), sgx
   end
@@ -72,7 +72,7 @@ class MintTest < Minitest::Test
 
   def test_concurrent_register
     codes = %w[AAA BBB CCC DDD]
-    threads = codes.map { |code| Thread.new { Mint.register_currency(code:) } }
+    threads = codes.map { |code| Thread.new { Mint::Currency.register(code:) } }
     results = threads.map(&:value)
 
     results.each { |currency| assert_kind_of Mint::Currency, currency }
@@ -80,11 +80,11 @@ class MintTest < Minitest::Test
   end
 
   def test_concurrent_register_raises_on_duplicate
-    Mint.register_currency(code: 'ZZZ_')
+    Mint::Currency.register(code: 'ZZZ_')
 
     threads = Array.new(5) do
       Thread.new do
-        Mint.register_currency(code: 'ZZZ_')
+        Mint::Currency.register(code: 'ZZZ_')
       rescue StandardError
         nil
       end
@@ -103,7 +103,7 @@ class MintTest < Minitest::Test
     end
 
     writer = Thread.new do
-      Mint.register_currency(code: 'EEE')
+      Mint::Currency.register(code: 'EEE')
     end
 
     reader.join

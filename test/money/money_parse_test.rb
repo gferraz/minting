@@ -52,7 +52,7 @@ class MoneyParseTest < Minitest::Test
 
   def test_parse_symbol_registered_after_symbol_index_is_cached
     Mint.parse('$1')
-    currency = Mint.register_currency(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
+    currency = Mint::Currency.register(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
 
     assert_equal currency, Mint.parse('T$1').currency
     assert_equal currency, Mint.parse('PT_ST 12.23').currency

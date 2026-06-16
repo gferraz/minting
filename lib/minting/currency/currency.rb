@@ -42,7 +42,7 @@ module Mint
     # 2. Rounds to respect currency subunit
     def normalize_amount(amount) = amount.to_r.round(subunit)
 
-    def zero = Currency.zero(self)
+    def zero = Registry.zero_for(self)
   end
 
   # Registers a new currency, raising a KeyError if already registered.
@@ -54,7 +54,7 @@ module Mint
   # @return [Currency] the newly registered Currency instance
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
-  def Currency.register_currency(code:, subunit: 0, symbol: '', priority: 0)
+  def Currency.register(code:, subunit: 0, symbol: '', priority: 0)
     Registry.register(code:, subunit:, symbol:, priority:)
   end
 

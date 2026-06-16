@@ -9,6 +9,8 @@ module Mint
     # @return [Money] a frozen zero-Money
     # @api private
     def self.zero_for(currency)
+      raise ArgumentError, "Expect a Currency param. (#{currency})" unless currency.is_a?(Currency)
+
       MUTEX.synchronize do
         @zeros ||= {}
         @zeros[currency] ||= Mint::Money.send(:new, 0, currency)
