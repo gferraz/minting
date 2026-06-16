@@ -6,7 +6,7 @@ module Mint
     # Returns the absolute value of the monetary amount as a new {Money} instance.
     #
     # @return [Money] the absolute value
-    def abs = mint(amount.abs)
+    def abs = change(amount.abs)
 
     # Returns true if the monetary amount is less than zero.
     #
@@ -22,6 +22,6 @@ module Mint
     # Enables standard ranges and stepping (e.g. `1.dollar..10.dollars`).
     #
     # @return [Money] successor Money instance
-    def succ = mint(amount + currency.minimum_amount)
+    def succ = change(amount + currency.minimum_amount)
   end
 end

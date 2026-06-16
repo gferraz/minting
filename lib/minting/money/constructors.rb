@@ -64,9 +64,9 @@ module Mint
     # @return [Money] A new Money object with the new amount, or self if the amount is unchanged
     # @example
     #   price = Mint.money(10.00, 'USD')
-    #   price.mint(15.00)  #=> [USD 15.00]
-    #   price.mint(10.00)  #=> [USD 10.00] (returns self)
-    def mint(new_amount)
+    #   price.change(15.00)  #=> [USD 15.00]
+    #   price.change(10.00)  #=> [USD 10.00] (returns self)
+    def change(new_amount)
       new_amount = currency.normalize_amount(new_amount)
 
       if new_amount == amount
@@ -76,6 +76,11 @@ module Mint
       else
         Money.new(new_amount, currency)
       end
+    end
+
+    def mint(new_amount)
+      warn 'Money#mint is now deprecated and will be removed in v2'
+      change(new_amount)
     end
 
     private

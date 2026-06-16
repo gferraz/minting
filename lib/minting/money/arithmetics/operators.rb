@@ -11,7 +11,7 @@ module Mint
     def +(addend)
       case addend
       in 0 then self
-      in Money if same_currency?(addend) then mint(amount + addend.amount)
+      in Money if same_currency?(addend) then change(amount + addend.amount)
       else raise TypeError, "#{addend} can't be added to #{self}"
       end
     end
@@ -24,7 +24,7 @@ module Mint
     def -(subtrahend)
       case subtrahend
       when 0     then return self
-      when Money then return mint(amount - subtrahend.amount) if same_currency?(subtrahend)
+      when Money then return change(amount - subtrahend.amount) if same_currency?(subtrahend)
       end
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
@@ -32,7 +32,7 @@ module Mint
     # Unary negation operator. Returns a new {Money} instance with the inverted sign.
     #
     # @return [Money] negated Money instance
-    def -@ = mint(-amount)
+    def -@ = change(-amount)
 
     # Performs multiplication of the monetary value by a standard scalar Numeric.
     #
@@ -42,7 +42,7 @@ module Mint
     def *(multiplicand)
       raise TypeError, "#{self} can't be multiplied by #{multiplicand}" unless multiplicand.is_a?(Numeric)
 
-      mint(amount * multiplicand)
+      change(amount * multiplicand)
     end
 
     # Performs division of the monetary value by a scalar Numeric or identical currency {Money}.
@@ -53,7 +53,7 @@ module Mint
     # @raise [ZeroDivisionError] if division by zero is attempted
     def /(divisor)
       case divisor
-      when Numeric then return mint(amount / divisor)
+      when Numeric then return change(amount / divisor)
       when Money   then return amount / divisor.amount if same_currency? divisor
       end
       raise TypeError, "#{self} can't be divided by #{divisor}"
@@ -65,7 +65,7 @@ module Mint
     # @return [Money] reult of amount ** exponent
     # @raise [TypeError] if exponent is not Numeric
     def **(exponent)
-      return mint(amount**exponent) if exponent.is_a?(Numeric)
+      return change(amount**exponent) if exponent.is_a?(Numeric)
 
       raise TypeError, "#{self} can't be powered by #{exponent}"
     end

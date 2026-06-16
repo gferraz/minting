@@ -47,7 +47,7 @@ module Mint
       else
         min = min_or_range
       end
-      mint(amount.clamp(normalize_boundary(min), normalize_boundary(max)))
+      change(amount.clamp(normalize_boundary(min), normalize_boundary(max)))
     end
 
     private

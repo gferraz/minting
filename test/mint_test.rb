@@ -8,8 +8,8 @@ class MintTest < Minitest::Test
 
     assert_equal Mint.money(10.01, 'PEN'), Mint.money(10.01, 'PEN')
 
-    assert_equal ten_reais, ten_reais.mint(10)
-    assert_equal ten_reais, ten_reais.mint(9.999)
+    assert_equal ten_reais, ten_reais.change(10)
+    assert_equal ten_reais, ten_reais.change(9.999)
   end
 
   def test_register
@@ -39,7 +39,7 @@ class MintTest < Minitest::Test
 
   def test_mint_zero_returns_singleton
     zero_from_create = Mint.money(0, 'USD')
-    zero_from_mint  = Mint.money(10, 'USD').mint(0)
+    zero_from_mint  = Mint.money(10, 'USD').change(0)
     zero_from_zero  = Mint.zero('USD')
 
     assert_same zero_from_zero, zero_from_create

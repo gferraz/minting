@@ -4,6 +4,7 @@
 
 ### Improvements
 - `Mint::Money.zero(currency)` — class method delegating to `Mint.zero`
+- `Money#mint` is deprecated and renamed to `Money#change` — clearer name for changing a Money's amount while preserving its currency
 
 ### Tests
 - Add `Mint::Money.zero(currency)` delegation tests
