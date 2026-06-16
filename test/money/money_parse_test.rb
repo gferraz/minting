@@ -4,10 +4,10 @@ using Mint
 
 class MoneyParseTest < Minitest::Test
   def test_parse_with_explicit_currency
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
-    assert_equal Mint.money(1234.56, 'EUR'), Mint.parse('1.234,56', 'EUR')
-    assert_equal Mint.money(-1010.5, 'BRL'), Mint.parse('-1.010,50', 'BRL')
-    assert_equal Mint.money(-1_123_010.5, 'BRL'), Mint.parse('-1,123,010.50', 'BRL')
+    assert_equal Mint.money(19.99, 'USD'), Mint::Money.parse('19.99', 'USD')
+    assert_equal Mint.money(1234.56, 'EUR'), Mint::Money.parse('1.234,56', 'EUR')
+    assert_equal Mint.money(-1010.5, 'BRL'), Mint::Money.parse('-1.010,50', 'BRL')
+    assert_equal Mint.money(-1_123_010.5, 'BRL'), Mint::Money.parse('-1,123,010.50', 'BRL')
   end
 
   def test_parse_with_explicit_currency_object_or_symbol
@@ -83,10 +83,10 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_errors
-    assert_raises(ArgumentError) { Mint.parse!('') }
-    assert_raises(ArgumentError) { Mint.parse!(" \n\t ") }
-    assert_raises(ArgumentError) { Mint.parse!('12,344,123.12.123', 'USD') }
-    assert_raises(ArgumentError) { Mint.parse!(19.99, 'USD') }
+    assert_raises(ArgumentError) { Mint::Money.parse!('') }
+    assert_raises(ArgumentError) { Mint::Money.parse!(" \n\t ") }
+    assert_raises(ArgumentError) { Mint::Money.parse!('12,344,123.12.123', 'USD') }
+    assert_raises(ArgumentError) { Mint::Money.parse!(19.99, 'USD') }
     assert_raises(ArgumentError) { Mint.parse!('19.99') }
     assert_raises(ArgumentError) { Mint.parse!('abc', 'USD') }
     assert_raises(ArgumentError) { Mint.parse!('10', 'ZZZ') }

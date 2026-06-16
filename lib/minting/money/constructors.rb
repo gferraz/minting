@@ -16,6 +16,35 @@ module Mint
       amount.zero? ? Mint.zero(currency) : new(amount, currency)
     end
 
+    # Parses a human-readable money string into a {Money} object.
+    #
+    # Returns +nil+ when the input is invalid or currency cannot be determined.
+    #
+    # @param input [String] Amount input, optionally including a currency symbol or code
+    # @param currency [String, Symbol, Currency, nil] ISO code when not present in +input+
+    # @return [Money, nil]
+    #
+    # @example With explicit currency
+    #   Money.parse('19.99', 'USD')    #=> [USD 19.99]
+    #   Money.parse('garbage', 'USD')  #=> nil
+    #
+    # @example With symbol or code in the string
+    #   Money.parse('$19.99')            #=> [USD 19.99]
+    #   Money.parse('USD 1,234.56')    #=> [USD 1234.56]
+    def self.parse(input, currency = nil) = Mint.parse(input, currency)
+
+    # Like {.parse} but raises on failure.
+    #
+    # @param input [String] Amount input, optionally including a currency symbol or code
+    # @param currency [String, Symbol, Currency, nil] ISO code when not present in +input+
+    # @return [Money]
+    # @raise [ArgumentError] when +input+ is invalid or currency cannot be determined
+    #
+    # @example
+    #   Money.parse!('19.99', 'USD')    #=> [USD 19.99]
+    #   Money.parse!('garbage', 'USD')  #=> ArgumentError
+    def self.parse!(input, currency = nil) = Mint.parse!(input, currency)
+
     # Returns a frozen zero Money in the given currency.
     #
     # @param currency [String, Currency] a currency code or object

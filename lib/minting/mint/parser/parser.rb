@@ -13,12 +13,12 @@ module Mint
   # @return [Money, nil]
   #
   # @example With explicit currency
-  #   Money.parse('19.99', 'USD')    #=> [USD 19.99]
-  #   Money.parse('garbage', 'USD')  #=> nil
+  #   Mint.parse('19.99', 'USD')    #=> [USD 19.99]
+  #   Mint.parse('garbage', 'USD')  #=> nil
   #
   # @example With symbol or code in the string
-  #   Money.parse('$19.99')            #=> [USD 19.99]
-  #   Money.parse('USD 1,234.56')    #=> [USD 1234.56]
+  #   Mint.parse('$19.99')            #=> [USD 19.99]
+  #   Mint.parse('USD 1,234.56')    #=> [USD 1234.56]
   def parse(input, currency = nil)
     return nil unless input.is_a?(String)
 
@@ -43,8 +43,8 @@ module Mint
   # @raise [ArgumentError] when +input+ is invalid or currency cannot be determined
   #
   # @example
-  #   Money.parse!('19.99', 'USD')    #=> [USD 19.99]
-  #   Money.parse!('garbage', 'USD')  #=> ArgumentError
+  #   Mint.parse!('19.99', 'USD')    #=> [USD 19.99]
+  #   Mint.parse!('garbage', 'USD')  #=> ArgumentError
   def parse!(input, currency = nil)
     raise ArgumentError, 'input must be a String' unless input.is_a?(String)
 
