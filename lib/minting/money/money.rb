@@ -49,11 +49,5 @@ module Mint
     def inspect
       Kernel.format "[#{currency_code} %0.#{currency.subunit}f]", amount
     end
-
-    # Helper method to verify if another object has the identical currency.
-    #
-    # @param other [Currency] the target currency to compare
-    # @return [Boolean] true if currencies match, false otherwise
-    def same_currency?(other) = other.currency == currency
   end
 end

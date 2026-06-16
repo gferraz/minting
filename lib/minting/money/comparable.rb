@@ -44,6 +44,12 @@ module Mint
     # @return [self, nil] self if amount is non-zero, nil otherwise
     def nonzero? = amount.nonzero?
 
+    # Helper method to verify if another Money has the identical currency.
+    #
+    # @param other [Money] the target currency to compare
+    # @return [Boolean] true if currencies match, false otherwise
+    def same_currency?(other) = other.currency == currency
+
     # @return [Boolean] true if amount is zero
     def zero? = amount.zero?
   end
