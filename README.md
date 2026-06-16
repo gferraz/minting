@@ -216,12 +216,19 @@ Or at runtime:
 Minting.use_top_level_constants!
 ```
 
+For Rails applications, you can enable the top-level constants in an initializer:
+
+```ruby
+# config/initializers/minting.rb
+require "minting/dsl"
+```
+
 After opting in:
 
 ```ruby
-price = Mint.money(10, "USD") # equivalent to Mint::Money.from
-tax   = Mint::Money.money(2.50, "USD")
-cur   = Mint::Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
+price = Money.from(10, "USD")                   # equivalent to Mint::Money.from
+tax   = Money.from(2.50, "USD")
+cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 ```
 
 **Good fit:** Application code, especially Rails apps.
