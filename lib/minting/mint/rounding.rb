@@ -12,19 +12,19 @@ module Mint
       down: ->(amount, ndigits) { amount.truncate(ndigits) }
     }.freeze
 
-    module_function
-
-    def current_mode
+    # @api private
+    def self.current_mode
       Thread.current[:minting_rounding_mode] || :half_up
     end
 
-    def apply(amount, ndigits)
+    # @api private
+    def self.apply(amount, ndigits)
       MODES.fetch(current_mode).call(amount.to_r, ndigits)
     end
 
-    def with_mode(mode)
-      mode = mode.to_sym
-      raise ArgumentError, "unknown rounding mode: #{mode}" unless MODES.key?(mode)
+    # @api private
+    def self.with_mode(mode)
+      raise ArgumentError, "Unknown rounding mode: #{mode}" unless MODES.key?(mode)
 
       prev = Thread.current[:minting_rounding_mode]
       Thread.current[:minting_rounding_mode] = mode
