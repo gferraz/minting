@@ -64,11 +64,11 @@ class CoreOperationsBenchmark < Minitest::Test
   def test_currency_operations_performance
     with_bench('Currency Operations Performance') do
       Benchmark.ips do |x|
-        x.report('currency lookup (string)') { Mint.currency_for_code('USD') }
-        x.report('currency lookup (symbol)') { Mint.currency_for_symbol('R$') }
+        x.report('currency lookup (string)') { Currency.for_code('USD') }
+        x.report('currency lookup (symbol)') { Currency.for_symbol('R$') }
         x.report('money with currency lookup') { Mint.money(100, 'USD') }
         x.report('currency registration') do
-          Mint.register_currency(code: 'TEST', subunit: 2, symbol: 'T')
+          Currency.register(code: 'TEST', subunit: 2, symbol: 'T')
         end
         x.compare!
       end

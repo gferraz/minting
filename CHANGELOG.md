@@ -3,12 +3,32 @@
 ## [Unreleased]
 
 ### Breaking
-- Money.create is now deprecated and issue an warning. Use Money.from(amount, currency)
+- `Mint.zero` removed — use `Currency.zero(currency)` instead
+- `Mint.currency_for_code` removed — use `Currency.for_code(code)` instead
+- `Mint.currency_for_symbol` removed — use `Currency.for_symbol(symbol)` instead
+- `Mint.register_currency` removed — use `Currency.register(code:, subunit:, symbol:, priority:)` instead
+- `normalize_separators` renamed to `parse_separators` — returns `nil` for invalid input instead of raising
+- `parse_currency` signature changed to `(input, currency = nil)` — returns `nil` when currency cannot be determined
 - `Mint.parse` now returns `nil` on failure instead of raising. Use `Mint.parse!` for the raising variant.
 
 ### Improvements
-- `Mint::Money.zero(currency)` — class method delegating to `Mint.zero`
-- `Money#mint` is deprecated and renamed to `Money#change` — clearer name for changing a Money's amount while preserving its currency
+- `Currency.zero(currency)` — class method on `Currency`, new home for zero-money access
+- `Currency.for_code(code)` — direct hash lookup by currency code
+- `Currency.for_symbol(symbol)` — exact symbol match via frozen hash
+- `Currency.register(code:, subunit:, symbol:, priority:)` — idempotent registration on the `Currency` class
+- `Currency#zero` — instance shortcut to `Registry.zero_for(self)`, used internally by `Money.from`, `Money.from_fractional`, and `Money#change`
+- `Money.zero(currency)` — class method delegating to `Currency.zero`
+- `Money#change` — renamed from `Money#mint` for clarity; `Money#mint` retained with deprecation warning
+- `Mint.parse!` — raising variant of `Mint.parse`
+- `Money.parse` / `Money.parse!` — thin wrappers on `Mint.parse` / `Mint.parse!`
+- `Mint.locale_backend` extracted to `lib/minting/mint/locale_backend.rb`
+- `parse_separators` returns `nil` for invalid patterns instead of raising — consistent nil-propagating pattern with `Mint.parse`
+
+### Code quality
+- ROADMAP reorganized — completed items moved below pending, P2-A lowered to Low, P1-5 marked done, suggested next steps updated
+- Benchmark files updated to use new `Currency.*` API
+- README.md updated for renamed methods (`Currency.register`, `Currency.zero`)
+- `.github/copilot-instructions.md` updated for `Currency.register`
 
 ### Tests
 - Add `Mint::Money.zero(currency)` delegation tests

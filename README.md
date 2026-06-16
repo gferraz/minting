@@ -195,9 +195,9 @@ Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
 
-**Zero helper** — `Mint.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
+**Zero helper** — `Currency.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
 
-**Registered currencies** — `Mint.register_currency(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser.
+**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
 
