@@ -24,17 +24,17 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | ✅ |
 | **P1-3** | Symbol-based currency lookup — `Mint.currency_for_symbol(symbol)` | ✅ |
 | **P1-4** | String detection helper — `Registry.detect_currency(input)`, used by parser for symbol scan | ✅ |
-| **P1-5** | Resolve remaining RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | |
+| **P1-5** | Resolve remaining RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | ✅ |
 ## P2 — Feature parity with the Money gem
 
 ### P2-A Arithmetic & numeric operations
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| `divmod` / `div` / `modulo` / `remainder` | `money.divmod(other)`, `money % other`, `money.remainder(other)` | Missing | High |
-| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | **✅** `Mint.zero('USD')` returns frozen zero-Money, thread-safe singleton | Done |
-| Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | `10.dollars` via refinements only | Low |
+| `divmod` / `div` / `modulo` / `remainder` | `money.divmod(other)`, `money % other`, `money.remainder(other)` | Missing | Low |
+| Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | ✅ `10.dollars` via refinements only | Done |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | Raises `TypeError` on mismatch | Medium |
+| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | ✅ `Mint.zero('USD')` returns frozen zero-Money, thread-safe singleton | Done |
 
 ### P2-B Exchange rates & bank infrastructure
 
@@ -55,10 +55,10 @@ The Money gem has a full pluggable bank system. Minting has nothing — not plan
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable returning `{ decimal:, thousand:, format: }` | High |
 | I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `minting-rails` | High |
 | Disambiguated symbols | `format(disambiguate: true)` → `"US$"` vs `"C$"` | Manual only | Medium |
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | Missing | Low |
+| Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable returning `{ decimal:, thousand:, format: }` | High |
 
 ### P2-D Advanced formatting
 
@@ -132,22 +132,22 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `Money.empty(currency)` | ✅ | Mint.zero(currency) | ✅  |
 | | Named constructors (`us_dollar`, etc.) | ✅ |  ✅  | - |
 | | `fractional` / `cents` | ✅ | ✅ `fractional` | — |
-| **Arithmetic** | `+`, `-`, `*`, `/`, `**` | ✅ | ✅ | — |
-| | `-@` (negation), `abs` | ✅ | ✅ | — |
-| | `divmod`, `modulo`, `remainder`, `div` | ✅ | ❌ | Low |
+| **Arithmetic** | `divmod`, `modulo`, `remainder`, `div` | ✅ | ❌ | Low |
 | | Cross-currency arithmetic | 🔶 auto-converts | ❌ raises TypeError | Medium |
+| | `+`, `-`, `*`, `/`, `**` | ✅ | ✅ | — |
+| | `-@` (negation), `abs` | ✅ | ✅ | — |
 | **Comparison** | `<=>`, `==`, `eql?`, `hash` | ✅ | ✅ | — |
 | | Zero-equality across currencies | ✅ `Money.new(0, "USD") == 0` | **✅ + eql-shielded** | — |
 | | `clamp` | ❌ | ✅ | — |
-| **Formatting** | `to_s` | ✅ | ✅ | — |
-| | `Kernel.format`-style templates | ❌ `%u`/`%n` | **✅ `%<symbol>s%<amount>f`** | — |
-| | Sign-aware hash format | ❌ | **✅ `{positive:,negative:,zero:}`** | — |
-| | `no_cents`, `no_cents_if_whole` | ✅ | ❌ | Medium |
+| **Formatting** | `no_cents`, `no_cents_if_whole` | ✅ | ❌ | Medium |
 | | `symbol: true/false` | ✅ | 🔶 manual | Medium |
 | | `disambiguate` | ✅ | ❌ | Medium |
 | | `html_wrap` | ✅ | 🔶 different `to_html` | Low |
 | | `south_asian_number_formatting` | ✅ | ❌ | Low |
 | | `drop_trailing_zeros` | ✅ | ❌ | Medium |
+| | `to_s` | ✅ | ✅ | — |
+| | `Kernel.format`-style templates | ❌ `%u`/`%n` | **✅ `%<symbol>s%<amount>f`** | — |
+| | Sign-aware hash format | ❌ | **✅ `{positive:,negative:,zero:}`** | — |
 | **Parsing** | `parse(string)` | ✅ (via monetize gem) | ✅ `Mint.parse` | — |
 | | Ambiguous separator handling | ✅ | ✅ | — |
 | | Accounting negative parsing | ✅ | ✅ | Medium |
@@ -157,38 +157,37 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `add_rate` / `get_rate` | ✅ | ❌ | Low |
 | | Rate import/export (json/yaml) | ✅ | ❌ | Low |
 | | ECB / OpenExchangeRates stores | ✅ (extracted) | ❌ | Low |
-| **I18n** | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | **High** |
-| | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `minting-rails` | **High** |
+| **I18n** | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `minting-rails` | **High** |
 | | Per-locale formatting rules | ✅ | ❌ | **High** |
+| | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | **High** |
 | **Rounding** | Rounding modes | ✅ | ❌ Ruby default | Medium |
 | | Infinite precision | ✅ | ❌ | Low |
 | | Cash rounding | ✅ | ❌ | Low |
-| **Currency** | Lookup by ISO code | ✅ `.find` | **✅** `currency_for_code` `currencies` | — |
-| | Lookup by symbol | ❌ | **✅** `currency_for_symbol`, `detect_currency` | — |
-| | ISO numeric code | ✅ | ❌ | Low |
+| **Currency** | ISO numeric code | ✅ | ❌ | Low |
 | | Disambiguate symbol | ✅ | ❌ | Low |
 | | HTML entity | ✅ | ❌ | Low |
 | | Symbol first flag | ✅ | ❌ hard-coded | Low |
 | | Smallest denomination | ✅ | ❌ | Low |
 | | Unregister / reset | ✅ | ❌ | Low |
 | | Inherit from currency | ✅ | ❌ | Low |
-| **Serialization** | `to_json` | ✅ | ✅ | — |
+| | Lookup by ISO code | ✅ `.find` | **✅** `currency_for_code` `currencies` | — |
+| | Lookup by symbol | ❌ | **✅** `currency_for_symbol`, `detect_currency` | — |
+| **Serialization** | `to_money(currency)` | ✅ | ❌ | Low |
+| | `with_currency(code)` | ✅ | ❌ | Low |
+| | `to_json` | ✅ | ✅ | — |
 | | `to_hash` | ✅ | ✅ | — |
 | | `to_html` | ✅ | ✅ | — |
-| | `to_money(currency)` | ✅ | ❌ | Low |
-| | `with_currency(code)` | ✅ | ❌ | Low |
 | **Refinements** | `10.dollars` | ❌ | ✅ | — |
 | | `10.reais` | ❌ | ✅ | — |
 | | `'string'.to_money(code)` | ❌ | ✅ | — |
-| **Infrastructure** | 100% test coverage | ❌ | **✅** | — |
+| **Infrastructure** | RuboCop clean | ❌ | 🔶 3 offenses | Medium |
+| | 100% test coverage | ❌ | **✅** | — |
 | | Immutable value objects | ❌ | **✅ frozen** | — |
 | | Thread-safe registry | ✅ mutex | **✅ Monitor + copy‑on‑write** | Done |
 | | Range stepping | ❌ | **✅ `(1..10).step(1)`** | — |
-| | RuboCop clean | ❌ | 🔶 3 offenses | Medium |
 
 ---
 
 ## Suggested next steps
 
 1. **minting-rails** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
-2. **P1-5** Resolve remaining RuboCop offenses
