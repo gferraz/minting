@@ -12,7 +12,7 @@ module Mint
   # @param currency_code [Currency, String] Currency code
   # @return [Money] the instantiated Money object
   # @raise [ArgumentError] if the currency code is not registered
-  def self.money(amount, currency_code) = Money.create(amount, currency_code)
+  def self.money(amount, currency_code) = Money.from(amount, currency_code)
 
   # @return [Hash{String => Currency}] the frozen world-currencies hash
   # @api private

@@ -7,13 +7,20 @@ module Mint
     # @param amount [Numeric] The monetary amount
     # @param currency [Currency, String] The currency code or currency object
     # @raise [ArgumentError] If amount is not numeric or currency is invalid
-    def self.create(amount, currency)
+    def self.from(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
 
       currency = Currency.resolve!(currency)
       amount = currency.normalize_amount(amount)
 
       amount.zero? ? Mint.zero(currency) : new(amount, currency)
+    end
+
+    # Backwards-compatible alias for previous API
+    # TODO: deprecate in a future major release
+    def self.create(amount, currency)
+      warn 'Money.create is now deprecated. Use Money.from'
+      from(amount, currency)
     end
 
     # Builds a Money from a fractional (smallest-unit) Integer amount.

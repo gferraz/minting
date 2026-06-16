@@ -219,9 +219,9 @@ Minting.use_top_level_constants!
 After opting in:
 
 ```ruby
-price = Money.create(10, "USD")     # equivalent to Mint::Money.create
-tax   = Money.money(2.50, "USD")
-cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
+price = Mint.money(10, "USD") # equivalent to Mint::Money.from
+tax   = Mint::Money.money(2.50, "USD")
+cur   = Mint::Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 ```
 
 **Good fit:** Application code, especially Rails apps.
