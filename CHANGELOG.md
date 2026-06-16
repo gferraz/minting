@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Improvements
+- `Mint::Money.zero(currency)` — class method delegating to `Mint.zero`
+
+### Tests
+- Add `Mint::Money.zero(currency)` delegation tests
+
 ### Breaking
 - Money.create is now deprecated and issue an warning. Use Money.from(amount, currency)
 
@@ -34,6 +40,7 @@
 ### Tests
 - Add concurrent‑access tests: `Mint.zero` singleton identity across threads, concurrent `register`, concurrent reads during registration
 - Add `Registry.currencies` frozen assertion
+- Add `Mint::Money.zero(currency)` delegation tests
 
 ## [v1.7.2](https://github.com/gferraz/minting/releases/tag/v1.7.2) (2026-06-15)
 

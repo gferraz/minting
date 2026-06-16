@@ -16,6 +16,13 @@ module Mint
       amount.zero? ? Mint.zero(currency) : new(amount, currency)
     end
 
+    # Returns a frozen zero Money in the given currency.
+    #
+    # @param currency [String, Currency] a currency code or object
+    # @return [Money] a frozen zero-Money
+    # @raise [ArgumentError] if the currency can't be resolved
+    def self.zero(currency) = Mint.zero(currency)
+
     # Backwards-compatible alias for previous API
     # TODO: deprecate in a future major release
     def self.create(amount, currency)

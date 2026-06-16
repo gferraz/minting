@@ -112,6 +112,15 @@ class MoneyTest < Minitest::Test
     end
   end
 
+  def test_money_zero
+    assert_same Mint::Money.zero('USD'), Mint::Money.zero('USD')
+    assert_equal Mint.money(0, 'USD'), Mint::Money.zero('USD')
+  end
+
+  def test_money_zero_raises_on_unknown_currency
+    assert_raises(ArgumentError) { Mint::Money.zero('UNKNOWN') }
+  end
+
   def test_from_fractional_rejects_non_integer
     assert_raises(ArgumentError) { Mint::Money.from_fractional(1.5, 'USD') }
     assert_raises(ArgumentError) { Mint::Money.from_fractional('100', 'USD') }
