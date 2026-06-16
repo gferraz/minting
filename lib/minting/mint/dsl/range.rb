@@ -62,6 +62,7 @@ module Mint
         end
       end
     end
+
     Range.prepend(Mint::RangeStepPatch)
   end
 end
