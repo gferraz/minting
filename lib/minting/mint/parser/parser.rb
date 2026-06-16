@@ -20,9 +20,19 @@ module Mint
   #   Money.parse('$19.99')            #=> [USD 19.99]
   #   Money.parse('USD 1,234.56')    #=> [USD 1234.56]
   def parse(input, currency = nil)
-    parse!(input, currency)
-  rescue ArgumentError
-    nil
+    return nil unless input.is_a?(String)
+
+    input = input.strip
+    return nil if input.empty?
+
+    currency = parse_currency(input, currency)
+    return nil unless currency
+
+    amount = parse_amount(input)
+    return nil unless amount
+
+    amount = currency.normalize_amount(amount)
+    Mint::Money.new(amount, currency)
   end
 
   # Like {.parse} but raises on failure.
@@ -41,10 +51,13 @@ module Mint
     input = input.strip
     raise ArgumentError, 'input cannot be empty' if input.empty?
 
-    currency = Currency.resolve(currency) || parse_currency(input)
-    raise ArgumentError, "Currency [#{currency}] not registered" unless currency
+    currency = parse_currency(input, currency)
+    raise ArgumentError, "Currency [#{currency}] not found" unless currency
 
-    amount = currency.normalize_amount(parse_amount(input))
+    amount = parse_amount(input)
+    raise ArgumentError, "Could not parse [#{input}]" unless amount
+
+    amount = currency.normalize_amount(amount)
     Mint::Money.new(amount, currency)
   end
 
@@ -56,8 +69,11 @@ module Mint
     accounting_negative = input.start_with?('(') && input.end_with?(')')
 
     # Remove any charater that is not a digit, comma or period
-    numeric = input.scan(/[\d.,-]/).join
-    amount = Rational(normalize_separators(numeric))
+    numeric_input = input.scan(/[\d.,-]/).join
+    numeric = parse_separators(numeric_input)
+    return nil unless numeric
+
+    amount = Rational(numeric)
     accounting_negative ? -amount : amount
   end
 
@@ -67,12 +83,15 @@ module Mint
   # back to symbol matching. This correctly handles inputs like
   # "MAX 10.00 USD" where the first uppercase word isn't a currency code.
   # @private
-  def parse_currency(input)
+  def parse_currency(input, currency = nil)
+    currency = Currency.resolve(currency)
+    return currency if currency
+
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
       currency = Mint.currency_for_code(code)
       return currency if currency
     end
 
-    Registry.detect_currency(input) or raise ArgumentError, 'Currency could not be detected'
+    Registry.detect_currency(input)
   end
 end
