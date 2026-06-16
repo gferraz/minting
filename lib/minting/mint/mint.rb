@@ -18,14 +18,6 @@ module Mint
   # @api private
   def self.world_currencies = Registry.world_currencies
 
-  # Returns a zero {Money} in the given currency, useful as a default value
-  # for discounts, totals, or placeholders.
-  #
-  # @param currency [String, Currency] a currency code or object
-  # @return [Money] a frozen zero-Money
-  # @raise [ArgumentError] if the currency can't be resolved
-  def self.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
-
   # Registers a new currency, raising a KeyError if already registered.
   #
   # @param code [String] the unique currency code

@@ -19,28 +19,28 @@ class MintTest < Minitest::Test
   end
 
   def test_zero
-    assert_equal Mint.money(0, 'USD'), Mint.zero('USD')
-    assert_equal Mint.money(0, 'BRL'), Mint.zero('BRL')
-    assert_equal Mint.money(0, 'JPY'), Mint.zero('JPY')
+    assert_equal Mint.money(0, 'USD'), Mint::Currency.zero('USD')
+    assert_equal Mint.money(0, 'BRL'), Mint::Currency.zero('BRL')
+    assert_equal Mint.money(0, 'JPY'), Mint::Currency.zero('JPY')
   end
 
   def test_zero_with_currency_object
-    assert_equal Mint.money(0, 'USD'), Mint.zero(Mint::Currency.for_code('USD'))
+    assert_equal Mint.money(0, 'USD'), Mint::Currency.zero(Mint::Currency.for_code('USD'))
   end
 
   def test_zero_returns_same_object
-    assert_same Mint.zero('USD'), Mint.zero('USD')
+    assert_same Mint::Currency.zero('USD'), Mint::Currency.zero('USD')
   end
 
   def test_zero_unknown_currency
-    assert_raises(ArgumentError) { Mint.zero('UNKNOWN') }
-    assert_raises(ArgumentError) { Mint.zero(nil) }
+    assert_raises(ArgumentError) { Mint::Currency.zero('UNKNOWN') }
+    assert_raises(ArgumentError) { Mint::Currency.zero(nil) }
   end
 
   def test_mint_zero_returns_singleton
     zero_from_create = Mint.money(0, 'USD')
     zero_from_mint  = Mint.money(10, 'USD').change(0)
-    zero_from_zero  = Mint.zero('USD')
+    zero_from_zero  = Mint::Currency.zero('USD')
 
     assert_same zero_from_zero, zero_from_create
     assert_same zero_from_zero, zero_from_mint
@@ -51,7 +51,7 @@ class MintTest < Minitest::Test
   end
 
   def test_concurrent_zero_returns_same_object
-    threads = Array.new(10) { Thread.new { Mint.zero('USD') } }
+    threads = Array.new(10) { Thread.new { Mint::Currency.zero('USD') } }
     results = threads.map(&:value)
 
     assert(results.all? { |z| z.equal?(results.first) })
@@ -59,7 +59,7 @@ class MintTest < Minitest::Test
 
   def test_concurrent_zero_different_currencies
     codes = %w[USD BRL JPY PEN EUR]
-    threads = codes.cycle.first(20).map { |code| Thread.new { Mint.zero(code) } }
+    threads = codes.cycle.first(20).map { |code| Thread.new { Mint::Currency.zero(code) } }
     results = threads.map(&:value)
 
     codes.each do |code|

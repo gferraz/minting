@@ -13,7 +13,7 @@ module Mint
       currency = Currency.resolve!(currency)
       amount = currency.normalize_amount(amount)
 
-      amount.zero? ? Mint.zero(currency) : new(amount, currency)
+      amount.zero? ? currency.zero : new(amount, currency)
     end
 
     # Parses a human-readable money string into a {Money} object.
@@ -50,7 +50,7 @@ module Mint
     # @param currency [String, Currency] a currency code or object
     # @return [Money] a frozen zero-Money
     # @raise [ArgumentError] if the currency can't be resolved
-    def self.zero(currency) = Mint.zero(currency)
+    def self.zero(currency) = Currency.resolve!(currency).zero
 
     # Backwards-compatible alias for previous API
     # TODO: deprecate in a future major release
@@ -82,7 +82,7 @@ module Mint
 
       currency = Currency.resolve!(currency)
       amount = Rational(fractional, currency.fractional_multiplier)
-      amount.zero? ? Mint.zero(currency) : new(amount, currency)
+      amount.zero? ? currency.zero : new(amount, currency)
     end
 
     # Returns a new Money object with the specified amount, or self if unchanged.
@@ -101,7 +101,7 @@ module Mint
       if new_amount == amount
         self
       elsif new_amount.zero?
-        Mint.zero(currency)
+        currency.zero
       else
         Money.new(new_amount, currency)
       end

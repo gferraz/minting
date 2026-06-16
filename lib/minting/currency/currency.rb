@@ -45,6 +45,19 @@ module Mint
     def zero = Currency.zero(self)
   end
 
+  # Registers a new currency, raising a KeyError if already registered.
+  #
+  # @param code [String] the unique currency code
+  # @param subunit [Integer] the decimal subunit precision, defaults to 0
+  # @param symbol [String] the display symbol
+  # @param priority [Integer] parser precedence priority
+  # @return [Currency] the newly registered Currency instance
+  # @raise [ArgumentError] if the code contains invalid characters
+  # @raise [KeyError] if the currency code is already registered
+  def Currency.register_currency(code:, subunit: 0, symbol: '', priority: 0)
+    Registry.register(code:, subunit:, symbol:, priority:)
+  end
+
   # Resolves an object into a {Currency}, returning +nil+ when it can't.
   #
   # Accepts +nil+, +String+, {Currency}, or {Money}.
@@ -90,7 +103,6 @@ module Mint
   def Currency.for_symbol(symbol)
     Registry.currency_for_symbol(symbol)
   end
-
 
   # Returns a zero {Money} in the given currency, useful as a default value
   # for discounts, totals, or placeholders.
