@@ -2,6 +2,15 @@
 
 ## [Unreleased]
 
+## [v1.8.1](https://github.com/gferraz/minting/releases/tag/v1.8.1) (2026-06-17)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.8.0...v1.8.1)
+
+### Bug fixes
+- Fixed `Money#to_d` crash on zero-money when calling `Integer#to_d` with a precision
+  argument (incompatible with bigdecimal 4.1.2). Zero-money cache now stores a `Rational`
+  instead of an `Integer`.
+
 ## [v1.8.0](https://github.com/gferraz/minting/releases/tag/v1.8.0) (2026-06-16)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.7.3...v1.8.0)
