@@ -13,7 +13,7 @@ module Mint
 
       MUTEX.synchronize do
         @zeros ||= {}
-        @zeros[currency] ||= Mint::Money.send(:new, 0, currency)
+        @zeros[currency] ||= Mint::Money.send(:new, 0r, currency)
       end
     end
   end
