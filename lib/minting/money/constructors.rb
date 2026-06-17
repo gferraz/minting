@@ -89,28 +89,30 @@ module Mint
     # This is the primary method for creating a modified copy of a Money instance
     # while preserving immutability.
     #
-    # @param new_amount [Numeric] The new monetary amount
+    # @param amount [Numeric] The new monetary amount
     # @return [Money] A new Money object with the new amount, or self if the amount is unchanged
     # @example
     #   price = Mint.money(10.00, 'USD')
-    #   price.change(15.00)  #=> [USD 15.00]
-    #   price.change(10.00)  #=> [USD 10.00] (returns self)
-    def change(new_amount)
-      new_amount = currency.normalize_amount(new_amount)
+    #   price.copy_with(amount: 15.00)  #=> [USD 15.00]
+    #   price.copy_with(amount: 10.00)  #=> [USD 10.00] (returns self)
+    def copy_with(amount:)
+      amount = currency.normalize_amount(amount)
 
-      if new_amount == amount
+      if amount == self.amount
         self
-      elsif new_amount.zero?
+      elsif amount.zero?
         currency.zero
       else
-        Money.new(new_amount, currency)
+        Money.new(amount, currency)
       end
     end
 
     def mint(new_amount)
       warn 'Money#mint is now deprecated and will be removed in v2'
-      change(new_amount)
+      copy_with(amount: new_amount)
     end
+
+
 
     private
 

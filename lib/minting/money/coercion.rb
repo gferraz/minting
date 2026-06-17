@@ -44,7 +44,7 @@ module Mint
       # Multiplies a Money object by the wrapped numeric value.
       # This is the standard coercion path for `Numeric * Money`.
       def *(other)
-        other.change(@value * other.amount)
+        other.copy_with(amount: @value * other.amount)
       end
 
       # @private

@@ -47,7 +47,7 @@ module Mint
       else
         min = min_or_range
       end
-      change(amount.clamp(normalize_boundary(min), normalize_boundary(max)))
+      copy_with(amount: amount.clamp(normalize_boundary(min), normalize_boundary(max)))
     end
 
     private

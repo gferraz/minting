@@ -88,14 +88,14 @@ class RoundingTest < Minitest::Test
     end
   end
 
-  def test_change_respects_mode
+  def test_copy_with_respects_mode
     money = parse('1.00')
 
     Mint.with_rounding(:half_down) do
-      assert_equal parse('1.00'), money.change(1.005r)
+      assert_equal parse('1.00'), money.copy_with(amount: 1.005r)
     end
     Mint.with_rounding(:ceil) do
-      assert_equal parse('1.01'), money.change(1.001r)
+      assert_equal parse('1.01'), money.copy_with(amount: 1.001r)
     end
   end
 
