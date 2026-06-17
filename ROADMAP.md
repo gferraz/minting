@@ -32,9 +32,13 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
 | `divmod` / `div` / `modulo` / `remainder` | `money.divmod(other)`, `money % other`, `money.remainder(other)` | Missing | Low |
+| `allocate_max_amounts(amounts)` | `money.allocate_max_amounts([500, 300, 200])` — allocate up to per-part caps, rounds residual | Missing | Medium |
+| `calculate_splits(n)` | `money.calculate_splits(3)` → `{ Money => count }` hash | Missing | Medium |
+| Configurable leftover distribution | `allocate(ratios, :roundrobin)` / `:roundrobin_reverse` / `:nearest` — selectable rounding strategy during division | Missing | Medium |
 | Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | ✅ `10.dollars` via refinements only | Done |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | Raises `TypeError` on mismatch | Medium |
 | `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | ✅ `Mint.zero('USD')` returns frozen zero-Money, thread-safe singleton | Done |
+| `convert_currency(rate, target)` | `money.convert_currency(exchange_rate, "JPY")` — simple rate-based conversion without bank | Missing | Low |
 
 ### P2-B Exchange rates & bank infrastructure
 
@@ -72,7 +76,7 @@ Minting's `Kernel.format`-based system is more expressive for templates, but lac
 | HTML-wrapped parts | `format(html_wrap: true)` → `<span class="money-...">` | Minting has `to_html` (different approach) | Low |
 | Sign before symbol | `format(sign_before_symbol: true)` → `"-£1.00"` | Missing | Low |
 | Drop trailing zeros | `format(drop_trailing_zeros: true)` → `"$1.1"` | Missing | Medium |
-| Default formatting rules | `Money.default_formatting_rules = { ... }` | Missing | Medium |
+| Default formatting rules | `Money.default_formatting_rules = { ... }` | Missing | Low |
 | I18n symbol translation | `format(translate: true)` | Missing | Medium |
 
 ### P2-E Rounding & precision strategies
@@ -95,9 +99,12 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 | HTML entity | `currency.html_entity` (e.g. `"&#36;"`) | Missing | Low |
 | `symbol_first` | `currency.symbol_first?` | Minting hard-codes symbol-first | Low |
 | Smallest denomination | `currency.smallest_denomination` | Missing | Low |
+| `minor_units` / exponent | `currency.minor_units` → `2` | Missing | Low |
 | `Currency.all` sorted list | `Money::Currency.all` | `Mint.currencies.values` | Low |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | Missing | Low |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | Missing | Low |
+| Crypto currencies | `Money.configure { crypto_currencies: true }` — YAML-backed crypto currency support | Missing | Low |
+| Custom currencies from YAML | `experimental_custom_currency_path` — load custom currencies from a YAML file | Missing | Low |
 
 ### P2-G Serialization & conversion
 
@@ -105,6 +112,16 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 |---------|-----------|---------|----------|
 | `to_money(currency)` | Convert self to Money, optionally exchanging | Missing | Low |
 | `with_currency("EUR")` | Swap currency without converting | Missing | Low |
+| Subunit converters | `.subunits(format: :stripe)` / `from_subunits(100, 'ISK', format: :stripe)` — pluggable subunit formats for payment provider interop | Missing | Low |
+| Custom converters | Subclass `Money::Converters::Converter` to define custom subunit logic | Missing | Low |
+
+### P2-H Infrastructure
+
+| Feature | shopify-money | Minting | Priority |
+|---------|-------------|---------|----------|
+| RuboCop cops | `Money/MissingCurrency`, `Money/ZeroMoney` — static analysis to enforce currency presence | Missing | Medium |
+| RBS type signatures | Full `sig/` directory for type checking | Missing | Low |
+| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro for decimal columns | 🔶 Planned in `minting-rails` | Medium |
 
 ## P3 — Polish & community
 
@@ -191,3 +208,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 ## Suggested next steps
 
 1. **minting-rails** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
+2. **Configurable allocation** — `allocate_max_amounts`, `calculate_splits`, and leftover distribution strategies
+3. **Formatting convenience flags** — `no_cents`, `no_cents_if_whole`, `drop_trailing_zeros`, `symbol:` override
+4. **RuboCop cops** — `Money/MissingCurrency` and `Money/ZeroMoney` for static analysis
+5. **Disambiguated symbols** — `currency.disambiguate_symbol` for `"US$"` vs `"C$"`
