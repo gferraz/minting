@@ -21,29 +21,19 @@ total.to_s                             #=> "$21.59"
 total.currency_code                    #=> "USD"
 ```
 
-## Why Minting?
-
-|                    | Minting                                   |
-|--------------------|-------------------------------------------|
-| **Precision**      | Rational-based, zero floating-point error |
-| **Performance**    | **2× faster** (10×+ formatting)           |
-| **Ruby support**   | 3.3+ (including Ruby 4.0)                 |
-| **Rails**          | Dedicated companion gem                   |
-| **Code quality**   | 100% coverage, 93/100 RubyCritic          |
-
-### 🎯 Exact precision
+### Exact precision
 Amounts are stored as `Rational` and rounded to the currency subunit. No floating-point surprises, ever.
 
-### ⚡ Blazing performance
-Minting is **2× faster** than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/README.md).
+### Blazing performance
+Minting is faster than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/README.md).
 
-### 🧼 Clean, modern API
+### Clean, modern API
 Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
 
-### 🚆 Rails-ready
+### Rails-ready
 Use with the [minting-rails](https://github.com/gferraz/minting-rails) companion gem for drop-in ActiveRecord type casting, validators, and form helpers.
 
-### 🏆 Quality you can trust
+### Quality code
 - **100% test coverage** — every line exercised
 - **93/100 RubyCritic score** — clean, maintainable code
 - **CI-tested on Ruby 3.3 and 4.0**
