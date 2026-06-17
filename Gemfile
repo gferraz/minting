@@ -11,7 +11,6 @@ group :development do
   gem 'bundler'
   gem 'irb'
   gem 'minitest'
-  gem 'money'
   gem 'rake'
   gem 'reek'
   gem 'rubocop', require: false
@@ -25,4 +24,12 @@ group :development do
   gem 'simplecov'
   gem 'solargraph'
   gem 'yard'
+end
+
+group :money_bench do
+  gem 'money'
+end
+
+group :shopify_bench do
+  gem 'shopify-money'
 end

@@ -16,7 +16,7 @@ end
 
 Rake::TestTask.new('bench:all') do |t|
   t.libs = %w[lib test]
-  t.pattern = 'test/performance/**/*_benchmark.rb'
+  t.pattern = 'test/performance/{core,memory,regression,competitive/money}/*_benchmark.rb'
 end
 
 Rake::TestTask.new('bench:core') do |t|
@@ -34,9 +34,20 @@ Rake::TestTask.new('bench:regression') do |t|
   t.pattern = 'test/performance/regression/*_benchmark.rb'
 end
 
-Rake::TestTask.new('bench:competitive') do |t|
-  t.libs = %w[lib test]
-  t.pattern = 'test/performance/competitive/**/*_benchmark.rb'
+desc 'Run competitive benchmarks (Money gem)'
+task 'bench:competitive' do
+  sh 'bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/money/**/*_benchmark.rb\")].each { |f| require f }"'
+end
+
+desc 'Run competitive benchmarks (Shopify Money)'
+task 'bench:competitive:shopify' do
+  sh 'BUNDLE_WITHOUT=money_bench bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/shopify/**/*_benchmark.rb\")].each { |f| require f }"'
+end
+
+desc 'Run all competitive benchmarks (both Money and Shopify)'
+task 'bench:competitive:all' do
+  sh 'bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/money/**/*_benchmark.rb\")].each { |f| require f }"'
+  sh 'BUNDLE_WITHOUT=money_bench bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/shopify/**/*_benchmark.rb\")].each { |f| require f }"'
 end
 
 desc 'Run core benchmarks and update the baseline'

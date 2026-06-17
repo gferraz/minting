@@ -4,16 +4,10 @@ require_relative '../test_helper'
 require 'benchmark'
 require 'benchmark/ips'
 require 'bigdecimal'
-require 'money'
 
 using Mint
 
 module BenchmarkHelper
-  def configure_money_gem(rounding: BigDecimal::ROUND_HALF_UP, currency: 'USD')
-    Money.rounding_mode = rounding
-    Money.default_currency = Money::Currency.new(currency)
-  end
-
   def test_amounts
     @test_amounts ||= [1.00, 10.50, 123.45, 999.99, 1234.56]
   end
@@ -128,7 +122,7 @@ module BenchmarkHelper
     end
   end
 
-  module_function :configure_money_gem, :test_amounts, :random_amounts, :random_amount, :diff,
+  module_function :test_amounts, :random_amounts, :random_amount, :diff,
                   :run_object_space_profile, :run_gc_stat, :with_bench, :measure_object_space,
                   :measure_memory_usage, :measure_allocations, :measure_gc_stats
 end
