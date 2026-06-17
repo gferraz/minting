@@ -112,8 +112,6 @@ module Mint
       copy_with(amount: new_amount)
     end
 
-
-
     private
 
     # Initializes a new Money object with the given amount and currency.
