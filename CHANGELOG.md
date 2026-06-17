@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [v1.8.0](https://github.com/gferraz/minting/releases/tag/v1.8.0) (2026-06-16)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.7.3...v1.8.0)
+
 ### Breaking
 - `Mint.zero` removed — use `Currency.zero(currency)` instead
 - `Mint.currency_for_code` removed — use `Currency.for_code(code)` instead
@@ -20,9 +24,9 @@
 - `Currency.for_code(code)` — direct hash lookup by currency code
 - `Currency.for_symbol(symbol)` — exact symbol match via frozen hash
 - `Currency.register(code:, subunit:, symbol:, priority:)` — idempotent registration on the `Currency` class
-- `Currency#zero` — instance shortcut to `Registry.zero_for(self)`, used internally by `Money.from`, `Money.from_fractional`, and `Money#change`
+- `Currency#zero` — instance shortcut to `Registry.zero_for(self)`, used internally by `Money.from`, `Money.from_fractional`, and `Money#copy_with`
 - `Money.zero(currency)` — class method delegating to `Currency.zero`
-- `Money#change` — renamed from `Money#mint` for clarity; `Money#mint` retained with deprecation warning
+- `Money#copy_with(amount:)` — renamed from `Money#change` for immutability semantics; `Money#change` and `Money#mint` retained with deprecation warning
 - `Mint.parse!` — raising variant of `Mint.parse`
 - `Money.parse` / `Money.parse!` — thin wrappers on `Mint.parse` / `Mint.parse!`
 - `Mint.locale_backend` extracted to `lib/minting/mint/locale_backend.rb`
@@ -30,12 +34,16 @@
 
 ### Code quality
 - ROADMAP reorganized — completed items moved below pending, P2-A lowered to Low, P1-5 marked done, suggested next steps updated
-- Benchmark files updated to use new `Currency.*` API
+- Methods reorganized — arithmetic, constructors, and coercion moved to dedicated modules for clarity
+- Benchmark files updated to use new `Currency.*` and `copy_with` API
 - README.md updated for renamed methods (`Currency.register`, `Currency.zero`)
 - `.github/copilot-instructions.md` updated for `Currency.register`
+- RDoc and inline documentation updated across the codebase
+- Copilot instructions moved to `doc/agents/`
 
 ### Tests
 - Add `Mint::Money.zero(currency)` delegation tests
+- Test names and calls updated for `Money#copy_with`
 
 ## [v1.7.3](https://github.com/gferraz/minting/releases/tag/v1.7.3) (2026-06-15)
 
