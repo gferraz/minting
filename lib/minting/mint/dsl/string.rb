@@ -7,6 +7,6 @@ module Mint
     #
     # @param currency [String, Symbol, Currency] target currency
     # @return [Money]
-    def to_money(currency) = Mint.money(to_r, currency)
+    def to_money(currency) = Mint::Money.from(to_r, currency)
   end
 end
