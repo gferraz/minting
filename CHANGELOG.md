@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### New methods
+- `Mint::Money.no_currency(amount)` — creates a Money instance in the ISO 4217 XXX
+  ("No Currency") currency. Useful for abstract monetary values, or
+  placeholders where no real currency applies.
+
 ## [v1.8.1](https://github.com/gferraz/minting/releases/tag/v1.8.1) (2026-06-17)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.8.0...v1.8.1)

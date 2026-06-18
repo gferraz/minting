@@ -121,6 +121,12 @@ Mint::Money.from_fractional(999, 'USD') #=> [USD 9.99]
 Mint::Money.from_fractional(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
 
 
+# No currency (ISO 4217 XXX)
+
+Mint::Money.no_currency(100) #=> [XXX 100]
+Mint::Money.no_currency(0)   #=> [XXX 0]
+
+
 # Proportional allocation and split
 
 ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]

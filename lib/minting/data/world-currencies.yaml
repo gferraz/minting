@@ -873,7 +873,7 @@
   priority: 1
 - code: XXX
   country: null
-  subunit: 0
+  subunit: 4
   symbol: ¤
   name: No Currency
   priority: 0
@@ -991,4 +991,3 @@
   symbol: SDR
   name: Special Drawing Rights
   priority: 0
-

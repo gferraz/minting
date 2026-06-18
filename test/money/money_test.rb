@@ -18,6 +18,24 @@ class MoneyTest < Minitest::Test
     assert_equal 14,  Mint.money(14, Mint::Currency.for_code('PEN')).amount
   end
 
+  def test_no_currency
+    m = Mint::Money.no_currency(100)
+
+    assert_instance_of Mint::Money, m
+    assert_equal 'XXX', m.currency_code
+    assert_equal 100, m.amount
+    assert_predicate m, :frozen?
+
+    assert_raises(ArgumentError) { Mint::Money.no_currency('bad') }
+  end
+
+  def test_no_currency_zero_returns_singleton
+    zero = Mint::Money.no_currency(0)
+
+    assert_same zero, Mint::Money.no_currency(0)
+    assert_equal zero, Mint::Money.no_currency(0)
+  end
+
   def test_hash
     assert_equal Mint.money(2, 'USD').hash, Mint.money(2, 'USD').hash
     refute_equal Mint.money(2, 'USD').hash, Mint.money(0, 'USD').hash

@@ -16,6 +16,15 @@ module Mint
       amount.zero? ? currency.zero : new(amount, currency)
     end
 
+    # Creates a new Money without a currency (ISO 4217 XXX — "No Currency").
+    #
+    # @param amount [Numeric] The monetary amount
+    # @return [Money] a Money instance with the XXX currency
+    # @raise [ArgumentError] If amount is not numeric
+    # @example
+    #   Money.no_currency(100)  #=> [XXX 100]
+    def self.no_currency(amount) = from(amount, 'XXX')
+
     # Parses a human-readable money string into a {Money} object.
     #
     # Returns +nil+ when the input is invalid or currency cannot be determined.
