@@ -62,13 +62,18 @@ module Mint
 
       formatted = format_amount(format)
 
-      formatted.tr!('.', decimal) if decimal != '.'
+      # Split into integer and decimal parts using the dot surrounded by digits.
+      # This ensures we don't apply the thousands separator to the decimal part,
+      # and we don't mistake dots in currency symbols (e.g. ".د.ب") for the decimal separator.
+      parts = formatted.split(/(?<=\d)\.(?=\d)/, 2)
 
       unless thousand.empty?
         # Regular expression courtesy of Money gem
         # Matches digits followed by groups of 3 digits until non-digit or end
-        formatted.gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]{1}|$))/, "\\1#{thousand}")
+        parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]{1}|$))/, "\\1#{thousand}")
       end
+
+      formatted = parts.join(decimal)
 
       width ? formatted.rjust(width) : formatted
     end

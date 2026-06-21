@@ -32,6 +32,8 @@ class MoneyFormatTest < Minitest::Test
     money = Mint.money(123_456_789.01, 'USD')
 
     assert_equal '123-456-789|01', money.to_s(format: '%<amount>f', thousand: '-', decimal: '|')
+    assert_equal '123.456.789|01', money.to_s(format: '%<amount>f', thousand: '.', decimal: '|')
+
     assert_equal '-123456789.01', (-money).to_s(format: '%<amount>f', thousand: '')
   end
 
