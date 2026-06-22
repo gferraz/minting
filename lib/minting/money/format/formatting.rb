@@ -43,13 +43,11 @@ module Mint
       # strip %<fractional>d specifiers entirely since there's no valid integer for "nothing"
       resolved_format.gsub!(/%<fractional>[^%]*?d/, '') if currency.subunit.zero?
 
-      integral = adjusted_amount.to_i
-
       result = Kernel.format(resolved_format, {
                                amount: adjusted_amount,
                                currency: currency_code,
                                symbol: currency.symbol,
-                               integral: integral,
+                               integral: adjusted_amount.to_i,
                                fractional: fractional
                              })
 
