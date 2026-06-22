@@ -68,41 +68,6 @@ rake bench:regression     # Run tests for bench:regression
 
 - `RUBY_PROF=true` - Enable ruby-prof profiling (if available)
 
-## Interpreting Results
-
-### Benchmark IPS Results
-```
-Calculating -------------------------------------
-        operation_name     123.456k i/100ms
--------------------------------------------------
-        operation_name       1.234M (± 2.3%) i/s -      6.789M
-```
-- **i/100ms**: Iterations per 100 milliseconds (warmup measurement)
-- **i/s**: Final iterations per second
-- **(± X%)**: Standard deviation percentage
-- Higher numbers are better
-
-### Memory Analysis Results
-```
---- Object Creation ---
-Allocated objects:
-  T_OBJECT: 1000
-  T_IMEMO: 50
-  T_STRING: 25
-```
-- Shows objects allocated by type
-- Lower allocation numbers are generally better
-- Watch for unexpected allocations
-
-### Comparative Results  
-```
-Comparison Example:
-      Mint addition:  1.234M i/s
-     Money addition:  0.987M i/s - 1.25x slower
-```
-- Shows relative performance between libraries
-- Higher multiplier means the baseline (first entry) is faster
-
 ## Performance Targets
 
 ### Core Operations
