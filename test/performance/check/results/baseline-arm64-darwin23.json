@@ -1,50 +1,50 @@
 {
   "metadata": {
-    "gem_version": "1.8.2",
-    "generated_at": "2026-06-22T02:23:10Z",
+    "gem_version": "1.7.1",
+    "generated_at": "2026-06-15T00:25:37Z",
     "ruby_version": "4.0.5",
     "ruby_platform": "arm64-darwin23"
   },
   "results": {
     "creation": {
-      "ips": 1356974,
-      "elapsed": 0.3685
+      "ips": 1417471,
+      "elapsed": 0.3527
     },
     "addition": {
-      "ips": 1235529,
-      "elapsed": 0.8094
+      "ips": 1262502,
+      "elapsed": 0.7921
     },
     "subtraction": {
-      "ips": 1328655,
-      "elapsed": 0.7526
+      "ips": 1368524,
+      "elapsed": 0.7307
     },
     "multiplication": {
-      "ips": 2162480,
-      "elapsed": 0.2312
+      "ips": 2241208,
+      "elapsed": 0.2231
     },
     "division": {
-      "ips": 2051063,
-      "elapsed": 0.2438
+      "ips": 2158746,
+      "elapsed": 0.2316
     },
     "comparison": {
-      "ips": 3341319,
-      "elapsed": 0.2993
+      "ips": 3190027,
+      "elapsed": 0.3135
     },
     "formatting": {
-      "ips": 404990,
-      "elapsed": 1.2346
+      "ips": 250748,
+      "elapsed": 1.994
     },
     "parsing": {
-      "ips": 152409,
-      "elapsed": 0.6561
+      "ips": 113351,
+      "elapsed": 0.8822
     },
     "split": {
-      "ips": 723440,
-      "elapsed": 0.2765
+      "ips": 662484,
+      "elapsed": 0.3019
     },
     "allocate": {
-      "ips": 498516,
-      "elapsed": 0.4012
+      "ips": 446381,
+      "elapsed": 0.448
     }
   }
 }
