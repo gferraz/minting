@@ -5,25 +5,10 @@ module Mint
   class Money
     private
 
-    # Resolves format/decimal/thousand from locale_backend when not explicitly given.
+    # Resolves the format template and amount based on the amount's sign
+    # (negative_format/zero_format may override both the template and negate the value)
     # @private
-    def resolve_locale_for(format, decimal, thousand)
-      locale = locale_backend
-      [format || locale[:format] || '%<symbol>s%<amount>f',
-       decimal || locale[:decimal] || '.',
-       thousand || locale[:thousand] || ',']
-    end
-
-    def locale_backend
-      bk = Mint.locale_backend
-      return {} unless bk.respond_to?(:call)
-
-      bk.call
-    end
-
-    # Selects the appropriate format template and value based on the amount's sign.
-    # @private
-    def select_format(format)
+    def resolve_format(format)
       negative_format = format[:negative]
       zero_format = format[:zero]
 
@@ -32,7 +17,7 @@ module Mint
       elsif amount.zero? && zero_format
         [zero_format,     amount]
       else
-        [format[:positive], amount]
+        [format[:positive] || '%<symbol>s%<amount>f', amount]
       end
     end
 
@@ -46,15 +31,39 @@ module Mint
 
     # Applies a format template to produce a formatted string representation.
     # @private
-    def format_amount(format)
-      format, value = select_format(format)
-      format ||= '%<symbol>s%<amount>f'
-      # Automatically adjust decimal places based on currency subunit if missing
-      format = format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+    #
+    def format_amount(format, decimal:, thousand:)
+      resolved_format, adjusted_amount = resolve_format(format)
 
-      refs = format.scan(/%<(\w+)>/).flatten.map(&:to_sym)
-      all_args = { amount: value, currency: currency_code, symbol: currency.symbol }
-      Kernel.format(format, **all_args.slice(*refs))
+      # Inject the currency's subunit precision into %<amount>f specifiers
+      # e.g. '%<amount>f' becomes '%<amount>.2f' for USD
+      resolved_format = resolved_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+
+      # Zero-subunit currencies (e.g. JPY) have no fractional part —
+      # strip %<fractional>d specifiers entirely since there's no valid integer for "nothing"
+      resolved_format.gsub!(/%<fractional>[^%]*?d/, '') if currency.subunit.zero?
+
+      integral = adjusted_amount.to_i
+
+      result = Kernel.format(resolved_format, {
+                               amount: adjusted_amount,
+                               currency: currency_code,
+                               symbol: currency.symbol,
+                               integral: integral,
+                               fractional: fraction
+                             })
+
+      # Substitute decimal first, while the dot is still unambiguous
+      result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if decimal != '.'
+
+      # Apply thousands only to the integral portion, using the decimal as boundary
+      if thousand && !thousand.empty? && adjusted_amount.abs >= 1000
+        parts = result.split(/(?<=\d)#{Regexp.escape(decimal)}(?=\d)/, 2)
+        parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, "\\1#{thousand}")
+        result = parts.join(decimal)
+      end
+
+      result
     end
   end
 end

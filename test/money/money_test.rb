@@ -90,9 +90,9 @@ class MoneyTest < Minitest::Test
   end
 
   def test_fractional
-    assert_equal 123_456, Mint.money(1234.56, 'USD').fractional
-    assert_equal 123_00, Mint.money(123, 'USD').fractional
-    assert_equal 123_99, Mint.money(123.9912, 'USD').fractional
+    assert_equal 123_456, Mint.money(1234.56, 'USD').subunits
+    assert_equal 123_00, Mint.money(123, 'USD').subunits
+    assert_equal 123_99, Mint.money(123.9912, 'USD').subunits
   end
 
   def test_from_fractional
@@ -125,7 +125,7 @@ class MoneyTest < Minitest::Test
     [9.99, 100, 0, 0.01, 1_234_567.89].each do |amount|
       m = Mint.money(amount, 'USD')
 
-      assert_equal m, Mint::Money.from_subunits(m.fractional, 'USD'),
+      assert_equal m, Mint::Money.from_subunits(m.subunits, 'USD'),
                    "round trip failed for #{amount}"
     end
   end

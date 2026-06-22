@@ -73,9 +73,10 @@ class LocaleBackendTest < Minitest::Test
 
   def test_non_callable_backend_is_ignored
     Mint.locale_backend = :i18n
-    money = Mint.money(1234.56, 'USD')
 
-    assert_equal '$1,234.56', money.to_s
+    _, err = capture_io { Mint.money(1234.56, 'USD').to_s }
+
+    assert_match(/invalid locale/, err)
   end
 
   def test_backend_without_respond_to_call_is_ignored
