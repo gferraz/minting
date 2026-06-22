@@ -18,7 +18,7 @@ class CompetitiveObjectCreationBenchmark < Minitest::Test
       Benchmark.ips do |x|
         x.report('Mint.money') { Mint.money(@amount, 'USD') }
         x.report('Mint some.dollars') { @amount.dollars }
-        x.report('Mint.from_fractional') { Mint.money((@amount * 100).to_i, 'USD') }
+        x.report('Mint.from_subunits') { Mint.money((@amount * 100).to_i, 'USD') }
         x.report('Shopify Money.new') { Money.from_amount(@amount, 'USD') }
         x.compare!
       end

@@ -145,7 +145,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | **Storage** | Internal representation | Integer / BigDecimal | **Rational** ✅ | — |
 | | Floating-point safety | BigDecimal | **Rational (no FP at all)** ✅ | — |
 | **Creation** | `Money.new(amount, currency)` | ✅ | ✅ `Mint.money(amt, code)` | — |
-| | `from_fractional` / `from_cents` | ✅ `Money.from_cents` | ✅ `Money.from_fractional` | — |
+| | `from_fractional` / `from_cents` | ✅ `Money.from_cents` | ✅ `Money.from_subunits` | — |
 | | `Money.empty(currency)` | ✅ | Mint.zero(currency) | ✅  |
 | | Named constructors (`us_dollar`, etc.) | ✅ |  ✅  | - |
 | | `fractional` / `cents` | ✅ | ✅ `fractional` | — |

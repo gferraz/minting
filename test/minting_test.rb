@@ -73,9 +73,9 @@ class MintingTest < Minitest::Test
     # Fractional units (inverse of #fractional)
     assert_equal 999, price.fractional
     assert_equal Mint.money(9.99, 'USD'),
-                 Mint::Money.from_fractional(999, 'USD')
+                 Mint::Money.from_subunits(999, 'USD')
     assert_equal Mint.money(1234, 'JPY'),
-                 Mint::Money.from_fractional(1234, 'JPY')
+                 Mint::Money.from_subunits(1234, 'JPY')
 
     # Allocation and split
 

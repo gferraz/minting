@@ -117,12 +117,11 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_middle_eastern_currency_formats
-    aed = Mint.money(1234.56, 'AED')
     sar = Mint.money(987.65, 'SAR')
     ils = Mint.money(456.78, 'ILS')
 
     # Middle Eastern currencies - often RTL but displayed LTR in code
-    assert_equal 'د.إ1,234.56', aed.to_s
+    assert_equal 'د.إ1,234.56', Mint.money(1234.56, 'AED').to_s
     assert_equal '﷼987.65', sar.to_s
     assert_equal '₪456.78', ils.to_s
   end
@@ -285,5 +284,31 @@ class MoneyFormatTest < Minitest::Test
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { foo: 'bar' }) }
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { positive: '%<amount>f', bananas: '%<amount>d' }) }
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { 'negative' => 'x' }) }
+  end
+
+  def test_format_with_integral_and_fractional_parts
+    m = Mint.money(1234.56, 'USD')
+
+    assert_equal '1234', m.to_s(format: '%<integral>d', thousand: '')
+    assert_equal '1,234 + 56/100', m.to_s(format: '%<integral>d + %<fractional>d/100')
+    assert_equal ' 1,234_56', m.to_s(format: '%<integral> d_%<fractional>d')
+    assert_equal '-1,234_56', (-m).to_s(format: '%<integral>d_%<fractional>d')
+    assert_equal '+1,234_56', m.to_s(format: '%<integral>+d_%<fractional>d')
+    assert_equal '$1,234/56', m.to_s(format: '%<symbol>s%<integral>d/%<fractional>d')
+    assert_equal '1,234', m.to_s(format: '%<integral>d')
+    assert_equal '56 cents', m.to_s(format: '%<fractional>d cents')
+
+    # Composes with hash format too
+    loss = Mint.money(-1234.56, 'USD')
+
+    assert_equal '($1,234/56)', loss.to_s(format: { negative: '(%<symbol>s%<integral>d/%<fractional>d)' })
+
+    # Negative without a custom negative hash template
+    assert_equal '-1,234_56', loss.to_s(format: '%<integral>d_%<fractional>d')
+
+    # Currency with subunit of 0
+    jpy = Mint.money(1234, 'JPY')
+
+    assert_equal '1,234_', jpy.to_s(format: '%<integral>d_%<fractional>d')
   end
 end

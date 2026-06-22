@@ -117,8 +117,8 @@ price.to_hash #=> {currency: "USD", amount: "9.99"}
 # Fractional units (inverse of #fractional) - exact integer arithmetic
 
 price.fractional                        #=> 999
-Mint::Money.from_fractional(999, 'USD') #=> [USD 9.99]
-Mint::Money.from_fractional(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
+Mint::Money.from_subunits(999, 'USD') #=> [USD 9.99]
+Mint::Money.from_subunits(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
 
 
 # No currency (ISO 4217 XXX)

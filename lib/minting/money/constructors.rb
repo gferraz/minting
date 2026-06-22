@@ -80,13 +80,13 @@ module Mint
     #   is not registered
     #
     # @example USD cents
-    #   Money.from_fractional(123_456, 'USD') #=> [USD 1234.56]
+    #   Money.from_subunits(123_456, 'USD') #=> [USD 1234.56]
     # @example JPY (subunit 0)
-    #   Money.from_fractional(1234, 'JPY')    #=> [JPY 1234]
+    #   Money.from_subunits(1234, 'JPY')    #=> [JPY 1234]
     # @example Round trip
     #   m = Mint.money(9.99, 'USD')
-    #   Money.from_fractional(m.fractional, 'USD') == m #=> true
-    def self.from_fractional(fractional, currency)
+    #   Money.from_subunits(m.fractional, 'USD') == m #=> true
+    def self.from_subunits(fractional, currency)
       raise ArgumentError, 'fractional must be an Integer' unless fractional.is_a?(Integer)
 
       currency = Currency.resolve!(currency)
