@@ -97,6 +97,11 @@ price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
 
 price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
+# Integral & fractional parts
+price.to_s(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
+Mint.money(0.99, 'USD').to_s(format: '%<integral>d dollars and %<fractional>02d cents')
+#=> "0 dollars and 99 cents"
+
 # Per-sign Hash format (e.g. accounting parentheses for losses)
 loss = Mint.money(-1234.56, 'USD')
 loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"

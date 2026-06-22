@@ -6,9 +6,10 @@ module Mint
     # Formats money as a string with customizable format, thousand delimiter, and decimal
     #
     # @param format [String, Hash, nil] Either a Format string with placeholders
-    #   (%<symbol>s, %<amount>f, %<currency>s), or a Hash with per-sign keys
-    #   (:positive, :negative, :zero) each holding a format string. A Hash
-    #   is convenient for sign-aware formats such as accounting parentheses:
+    #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d),
+    #   or a Hash with per-sign keys (:positive, :negative, :zero) each
+    #   holding a format string. A Hash is convenient for sign-aware formats
+    #   such as accounting parentheses:
     #
     #     money.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
     #
@@ -37,6 +38,12 @@ module Mint
     #   money.to_s(format: '%<currency>s %<amount>f')       #=> "USD 1234.56"
     #   money.to_s(format: '%<amount>f %<symbol>s')         #=> "1234.56 $"
     #   money.to_s(format: '%<symbol>s%<amount>+f')         #=> "$+1234.56"
+    #
+    # @example Integral & fractional parts
+    #   money.to_s(format: '%<integral>d.%<fractional>02d')  #=> "1234.56"
+    #   price = Mint.money(0.99, 'USD')
+    #   price.to_s(format: '%<integral>d dollars and %<fractional>02d cents')
+    #   #=> "0 dollars and 99 cents"
     #
     # @example Per-sign Hash format (accounting parentheses)
     #   loss = Mint.money(-1234.56, 'USD')
