@@ -50,7 +50,7 @@ module Mint
                                currency: currency_code,
                                symbol: currency.symbol,
                                integral: integral,
-                               fractional: fraction
+                               fractional: fractional
                              })
 
       # Substitute decimal first, while the dot is still unambiguous

@@ -38,7 +38,7 @@ module Mint
     #   Mint.money(123.456, 'IQD').subunits  #=> 123456
     def subunits = (amount * currency.fractional_multiplier).to_i
 
-    def fraction = ((amount.abs % 1) * currency.fractional_multiplier).to_i
+    def fractional = ((amount.abs % 1) * currency.fractional_multiplier).to_i
 
     # Generates a stable hash key for Money instances.
     #
