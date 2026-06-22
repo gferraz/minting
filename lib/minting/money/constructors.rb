@@ -68,15 +68,15 @@ module Mint
       from(amount, currency)
     end
 
-    # Builds a Money from a fractional (smallest-unit) Integer amount.
-    # This is the inverse of {#fractional}: for USD, the fractional unit is
+    # Builds a Money from a subunit (smallest-unit) Integer amount.
+    # This is the inverse of {#subunits}: for USD, the subunit is
     # 1 cent; for JPY it is 1 yen; for IQD it is 1 dinar (subunit 3).
     #
-    # @param fractional [Integer] the amount expressed in the currency's
+    # @param amount [Integer] the amount expressed in the currency's
     #   smallest unit (e.g. cents). Must be an Integer to preserve exactness.
     # @param currency [String, Symbol, Currency] the currency identifier
     # @return [Money] the resulting Money instance
-    # @raise [ArgumentError] if +fractional+ is not an Integer or +currency+
+    # @raise [ArgumentError] if +subunits+ is not an Integer or +currency+
     #   is not registered
     #
     # @example USD cents
@@ -85,12 +85,12 @@ module Mint
     #   Money.from_subunits(1234, 'JPY')    #=> [JPY 1234]
     # @example Round trip
     #   m = Mint.money(9.99, 'USD')
-    #   Money.from_subunits(m.fractional, 'USD') == m #=> true
-    def self.from_subunits(fractional, currency)
-      raise ArgumentError, 'fractional must be an Integer' unless fractional.is_a?(Integer)
+    #   Money.from_subunits(m.subunits, 'USD') == m #=> true
+    def self.from_subunits(subunits, currency)
+      raise ArgumentError, 'subunits must be an Integer' unless subunits.is_a?(Integer)
 
       currency = Currency.resolve!(currency)
-      amount = Rational(fractional, currency.fractional_multiplier)
+      amount = Rational(subunits, currency.fractional_multiplier)
       amount.zero? ? currency.zero : new(amount, currency)
     end
 

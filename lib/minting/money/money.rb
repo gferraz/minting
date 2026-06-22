@@ -33,10 +33,12 @@ module Mint
     #
     # @return [Integer] the amount in fractional units
     # @example
-    #   Mint.money(1234.56, 'USD').fractional  #=> 123456
-    #   Mint.money(1000, 'JPY').fractional     #=> 1000
-    #   Mint.money(123.456, 'IQD').fractional  #=> 123456
-    def fractional = (amount * currency.fractional_multiplier).to_i
+    #   Mint.money(1234.56, 'USD').subunits  #=> 123456
+    #   Mint.money(1000, 'JPY').subunits     #=> 1000
+    #   Mint.money(123.456, 'IQD').subunits  #=> 123456
+    def subunits = (amount * currency.fractional_multiplier).to_i
+
+    def fraction = ((amount.abs % 1) * currency.fractional_multiplier).to_i
 
     # Generates a stable hash key for Money instances.
     #
