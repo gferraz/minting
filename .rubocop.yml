@@ -1,5 +1,3 @@
-# inherit_from: .rubocop_todo.yml
-
 plugins:
   - rubocop-minitest
   - rubocop-packaging
@@ -21,7 +19,7 @@ Layout/LineLength:
   Max: 120
 
 Metrics/AbcSize:
-  Max: 18
+  Max: 20
   Exclude:
     - "test/**/*"
 

@@ -27,6 +27,7 @@ module Mint
     attr_accessor :locale_backend
   end
 
+  # @api private
   class Money
     private
 

@@ -29,6 +29,15 @@ module Mint
       raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
     end
 
+    def apply_thousand_separator(string, decimal:, thousand:)
+      return string if !thousand || thousand.empty?
+
+      # Apply thousands only to the integral portion, using the decimal as boundary
+      parts = string.split(/(?<=\d)#{Regexp.escape(decimal)}(?=\d)/, 2)
+      parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, "\\1#{thousand}")
+      parts.join(decimal)
+    end
+
     # Applies a format template to produce a formatted string representation.
     # @private
     #
@@ -54,14 +63,10 @@ module Mint
       # Substitute decimal first, while the dot is still unambiguous
       result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if decimal != '.'
 
-      # Apply thousands only to the integral portion, using the decimal as boundary
-      if thousand && !thousand.empty? && adjusted_amount.abs >= 1000
-        parts = result.split(/(?<=\d)#{Regexp.escape(decimal)}(?=\d)/, 2)
-        parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, "\\1#{thousand}")
-        result = parts.join(decimal)
-      end
+      return result if adjusted_amount.abs < 1000
 
-      result
+      # Apply thousands only to the integral portion, using the decimal as boundary
+      apply_thousand_separator(result, decimal:, thousand:)
     end
   end
 end
