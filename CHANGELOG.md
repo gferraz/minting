@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Improvements
+- `Mint.with_rounding(mode)` now loads the rounding module lazily on first call — apps that never use custom rounding modes incur zero overhead.
+- `Money#subunits` — renamed from `#fractional` for clarity. `Money.from_subunits` replaces `Money.from_fraction`. **Breaking**
+
+### Documentation
+- Complete RDoc across the codebase — Money, Currency, allocation, arithmetics, clamp, coercion, conversion, and formatting modules.
+
+### Fixes
+- Fix `to_d` crash for symbols containing a '.' character.
+- Fix test assertion for 0 XXX amount format.
+
+### Performance
+- `rake bench:check` now also runs benchmarks under `Mint.with_rounding(:half_down)`, storing/checking baselines for both the fast path and rounding mode in a single combined JSON file.
+- `rake bench:baseline` generates baselines for both modes at once.
+- `bin/bench_check` prints the best and worst ratio vs baseline per mode at the end.
+
 ## [v1.8.2](https://github.com/gferraz/minting/releases/tag/v1.8.2) (2026-06-18)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.8.1...v1.8.2)
