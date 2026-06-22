@@ -24,15 +24,26 @@ end
 
 current = JSON.parse(File.read(current_json.path))
 
-failures = []
-baseline['results'].each do |key, b|
-  c = current.dig('results', key)
-  next unless c
+MODES = %w[no_rounding half_down].freeze
 
-  ratio = c['ips'].to_f / b['ips']
-  if ratio < threshold
-    failures << format('%<key>-15s baseline: %<b>10d ips  current: %<c>10d ips  ratio: %<ratio>5.1f%%',
-                       key:, b: b['ips'], c: c['ips'], ratio: ratio * 100)
+all_ratios = []
+failures = []
+MODES.each do |mode|
+  b_mode = baseline.dig('results', mode)
+  c_mode = current.dig('results', mode)
+  next unless b_mode && c_mode
+
+  b_mode.each do |key, b|
+    c = c_mode[key]
+    next unless c
+
+    ratio = c['ips'].to_f / b['ips']
+    all_ratios << { mode:, key:, ratio:, b: b['ips'], c: c['ips'] }
+
+    if ratio < threshold
+      failures << format('%<mode>s %<key>-15s baseline: %<b>10d ips  current: %<c>10d ips  ratio: %<ratio>5.1f%%',
+                         mode:, key:, b: b['ips'], c: c['ips'], ratio: ratio * 100)
+    end
   end
 end
 
@@ -42,5 +53,19 @@ if failures.empty?
 else
   puts 'Regressions detected:'
   failures.each { |f| puts "  FAIL  #{f}" }
-  exit 1
 end
+
+puts "\n--- Best vs Worst vs Baseline ---"
+MODES.each do |mode|
+  entries = all_ratios.select { |r| r[:mode] == mode }
+  next if entries.empty?
+
+  best = entries.max_by { |r| r[:ratio] }
+  worst = entries.min_by { |r| r[:ratio] }
+
+  puts "#{mode}:"
+  puts "  Best:        #{format('%<key>-15s ratio: %<ratio>5.1f%%  baseline: %<b>10d ips  current: %<c>10d ips', key: best[:key], ratio: best[:ratio] * 100, b: best[:b], c: best[:c])}"
+  puts "  Worst:       #{format('%<key>-15s ratio: %<ratio>5.1f%%  baseline: %<b>10d ips  current: %<c>10d ips', key: worst[:key], ratio: worst[:ratio] * 100, b: worst[:b], c: worst[:c])}"
+end
+
+exit 1 unless failures.empty?

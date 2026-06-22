@@ -9,7 +9,7 @@ unless RUBY_VERSION.start_with?('4.')
 
   output = {
     metadata: { ruby_version: RUBY_VERSION, ruby_platform: RUBY_PLATFORM },
-    results: {}
+    results: { no_rounding: {}, half_down: {} }
   }
   json = JSON.pretty_generate(output)
   puts json
@@ -32,32 +32,30 @@ ITERS = {
   allocate: 200_000
 }.freeze
 
+MODES = {
+  no_rounding: nil,
+  half_down: :half_down
+}.freeze
+
 m1 = 123.45.dollars
 m2 = 67.89.dollars
 split_money = 100.dollars
 parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500']
 parse_count = parse_inputs.size
 
-results = {}
-
-ITERS.each do |name, n|
-  GC.start
-  real = Benchmark.measure do
-    case name
-    when :creation       then n.times { Mint.money(123.45, 'USD') }
-    when :addition       then n.times { m1 + m2 }
-    when :subtraction    then n.times { m1 - m2 }
-    when :multiplication then n.times { m1 * 2 }
-    when :division       then n.times { m1 / 2 }
-    when :comparison     then n.times { m1 == m2 }
-    when :formatting     then n.times { m1.to_s }
-    when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
-    when :split          then n.times { split_money.split(3) }
-    when :allocate       then n.times { split_money.allocate([1, 2, 3]) }
-    end
-  end.real
-
-  results[name.to_s] = { ips: (n / real).round, elapsed: real.round(4) }
+bench_block = lambda do |name, n|
+  case name
+  when :creation       then n.times { Mint.money(123.45, 'USD') }
+  when :addition       then n.times { m1 + m2 }
+  when :subtraction    then n.times { m1 - m2 }
+  when :multiplication then n.times { m1 * 2 }
+  when :division       then n.times { m1 / 2 }
+  when :comparison     then n.times { m1 == m2 }
+  when :formatting     then n.times { m1.to_s }
+  when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
+  when :split          then n.times { split_money.split(3) }
+  when :allocate       then n.times { split_money.allocate([1, 2, 3]) }
+  end
 end
 
 output = {
@@ -67,8 +65,26 @@ output = {
     ruby_version: RUBY_VERSION,
     ruby_platform: RUBY_PLATFORM
   },
-  results: results
+  results: {}
 }
+
+MODES.each do |mode_name, rounding_mode|
+  GC.start
+  results = {}
+
+  ITERS.each do |name, n|
+    GC.start
+    real = if rounding_mode
+             Benchmark.measure { Mint.with_rounding(rounding_mode) { bench_block.call(name, n) } }.real
+           else
+             Benchmark.measure { bench_block.call(name, n) }.real
+           end
+
+    results[name.to_s] = { ips: (n / real).round, elapsed: real.round(4) }
+  end
+
+  output[:results][mode_name.to_s] = results
+end
 
 json = JSON.pretty_generate(output)
 puts json
