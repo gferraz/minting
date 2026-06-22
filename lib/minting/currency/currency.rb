@@ -42,6 +42,11 @@ module Mint
     # 2. Rounds to respect currency subunit
     def normalize_amount(amount) = Mint::Rounding.apply(amount, subunit)
 
+    # Returns the cached frozen zero-Money for this currency.
+    #
+    # @return [Money] a frozen zero-Money instance
+    # @example
+    #   Mint::Currency.for_code('USD').zero  #=> [USD 0.00]
     def zero = Registry.zero_for(self)
   end
 

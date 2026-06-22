@@ -119,6 +119,13 @@ module Mint
       end
     end
 
+    # Returns a new Money with the given amount in the same currency.
+    #
+    # @deprecated Use {#copy_with} instead. Will be removed in v2.
+    # @param new_amount [Numeric] the new monetary amount
+    # @return [Money] a new Money instance, or self if unchanged
+    # @example
+    #   Mint.money(10, 'USD').mint(15)  #=> [USD 15.00]
     def mint(new_amount)
       warn 'Money#mint is now deprecated and will be removed in v2'
       copy_with(amount: new_amount)
