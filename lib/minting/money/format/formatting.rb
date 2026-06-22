@@ -42,15 +42,16 @@ module Mint
     # @private
     #
     def format_amount(format, decimal:, thousand:)
+      subunit = currency.subunit
       resolved_format, adjusted_amount = resolve_format(format)
 
       # Inject the currency's subunit precision into %<amount>f specifiers
       # e.g. '%<amount>f' becomes '%<amount>.2f' for USD
-      resolved_format = resolved_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{currency.subunit}f")
+      resolved_format = resolved_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
 
       # Zero-subunit currencies (e.g. JPY) have no fractional part —
       # strip %<fractional>d specifiers entirely since there's no valid integer for "nothing"
-      resolved_format.gsub!(/%<fractional>[^%]*?d/, '') if currency.subunit.zero?
+      resolved_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
 
       result = Kernel.format(resolved_format, {
                                amount: adjusted_amount,
