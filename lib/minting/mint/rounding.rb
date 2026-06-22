@@ -24,12 +24,18 @@ module Mint
     end
 
     # Rounds +amount+ to +ndigits+ using the currently scoped rounding mode.
+    # Uses the fast path (+to_r.round+) when no custom mode is active.
     # @api private
     # @param amount [Numeric]
     # @param ndigits [Integer]
     # @return [Rational]
     def self.apply(amount, ndigits)
-      MODES.fetch(current_mode).call(amount.to_r, ndigits)
+      mode = Thread.current[:minting_rounding_mode]
+      if mode
+        MODES.fetch(mode).call(amount.to_r, ndigits)
+      else
+        amount.to_r.round(ndigits)
+      end
     end
 
     # Sets a rounding mode for the duration of a block, restoring the
@@ -48,4 +54,11 @@ module Mint
       Thread.current[:minting_rounding_mode] = prev
     end
   end
+end
+
+# When loaded, patch Currency to delegate rounding through this module.
+# Remove the default fast-path method first to avoid redefinition warnings.
+Mint::Currency.remove_method(:normalize_amount)
+Mint::Currency.define_method(:normalize_amount) do |amount|
+  Mint::Rounding.apply(amount, subunit)
 end

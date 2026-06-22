@@ -11,6 +11,8 @@ module Mint
     def self.zero_for(currency)
       raise ArgumentError, "Expect a Currency param. (#{currency})" unless currency.is_a?(Currency)
 
+      return @zeros[currency] if @zeros&.key?(currency)
+
       MUTEX.synchronize do
         @zeros ||= {}
         @zeros[currency] ||= Mint::Money.send(:new, 0r, currency)

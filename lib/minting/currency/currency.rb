@@ -40,7 +40,7 @@ module Mint
     # Normalizes numeric amounts for this currency
     # 1. Converts to Rational
     # 2. Rounds to respect currency subunit
-    def normalize_amount(amount) = Mint::Rounding.apply(amount, subunit)
+    def normalize_amount(amount) = amount.to_r.round(subunit)
 
     # Returns the cached frozen zero-Money for this currency.
     #

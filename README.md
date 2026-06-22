@@ -195,6 +195,8 @@ Mint.with_rounding(:floor)     { Mint.parse('1.009', 'USD') } #=> [USD 1.00]
 
 Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
 
+> **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Mint.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes (the common case), there is **no performance cost**.
+
 **Refinements** — `10.dollars` and similar helpers require `using Mint` in the current scope (see Usage above).
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
