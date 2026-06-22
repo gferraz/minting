@@ -36,7 +36,7 @@ module Mint
       locale = locale_backend
       [format || locale[:format] || '%<symbol>s%<amount>f',
        decimal || locale[:decimal] || '.',
-       thousand || locale[:thousand] || ',']
+       thousand.nil? ? (locale[:thousand] || ',') : thousand]
     end
 
     def locale_backend
