@@ -34,6 +34,7 @@ module Mint
     # @private
     def resolve_locale_for(format, decimal, thousand)
       locale = locale_backend
+
       [format || locale[:format] || '%<symbol>s%<amount>f',
        decimal || locale[:decimal] || '.',
        thousand.nil? ? (locale[:thousand] || ',') : thousand]
