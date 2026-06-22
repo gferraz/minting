@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
-  # Formatting functionality for Money objects
+  # :nodoc:
   class Money
     private
 

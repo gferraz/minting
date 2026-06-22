@@ -35,7 +35,7 @@ Use with the [minting-rails](https://github.com/gferraz/minting-rails) companion
 
 ### Quality code
 - **100% test coverage** — every line exercised
-- **93/100 RubyCritic score** — clean, maintainable code
+- **94/100 RubyCritic score** — clean, maintainable code
 - **CI-tested on Ruby 3.3 and 4.0**
 
 ## Installation
@@ -164,7 +164,7 @@ Notes:
 - Pass a currency code when the string has no symbol or code.
 - `1,234` means 1234, not 1.234 and `1,23` means 1.23, not 123
 - `1,234.00` is unambiguous (thousands + decimal).
-- Accounting negatives like `($1.23)` are unsupported for now.
+- Accounting negatives like `($1.23)` or `(USD 10.00)` are supported — the parser detects parentheses and negates the amount.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
 - The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Mint.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
 
@@ -242,7 +242,6 @@ cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 
 ## Roadmap
 
-- Localization (I18n-aware formatting)
 - Exchange-rate conversion infrastructure
 
 ## License

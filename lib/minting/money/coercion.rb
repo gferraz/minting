@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
-  # Implements the standard Ruby coercion protocol.
+  # :nodoc:
   class Money
     # Allows {Money} to interact seamlessly as the right-hand operand in Numeric arithmetic.
     # This enables expressions like `5 * money` where `5` is a Numeric and `money` is a Money object.

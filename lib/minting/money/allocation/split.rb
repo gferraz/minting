@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
-  # Allocation and splitting
+  # :nodoc:
   class Money
     # Splits the monetary amount into a given quantity of equal parts.
     # Disperses any fractional subunit rounding differences across the initial slots

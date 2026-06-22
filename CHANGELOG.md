@@ -44,7 +44,7 @@
 - `Currency.register(code:, subunit:, symbol:, priority:)` — idempotent registration on the `Currency` class
 - `Currency#zero` — instance shortcut to `Registry.zero_for(self)`, used internally by `Money.from`, `Money.from_fractional`, and `Money#copy_with`
 - `Money.zero(currency)` — class method delegating to `Currency.zero`
-- `Money#copy_with(amount:)` — renamed from `Money#change` for immutability semantics; `Money#change` and `Money#mint` retained with deprecation warning
+- `Money#copy_with(amount:)` — renamed from `Money#change` for immutability semantics; `Money#mint` retained with deprecation warning
 - `Mint.parse!` — raising variant of `Mint.parse`
 - `Money.parse` / `Money.parse!` — thin wrappers on `Mint.parse` / `Mint.parse!`
 - `Mint.locale_backend` extracted to `lib/minting/mint/locale_backend.rb`

@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
 module Mint
-  # Money constructors
+  # :nodoc:
   class Money
     # Creates a new Money immutable object with the specified amount and currency
     # @param amount [Numeric] The monetary amount
     # @param currency [Currency, String] The currency code or currency object
+    # @return [Money] the new Money instance
     # @raise [ArgumentError] If amount is not numeric or currency is invalid
+    # @example
+    #   Money.from(10, 'USD')  #=> [USD 10.00]
     def self.from(amount, currency)
       raise ArgumentError, 'amount must be Numeric' unless amount.is_a?(Numeric)
 
@@ -72,7 +75,7 @@ module Mint
     # This is the inverse of {#subunits}: for USD, the subunit is
     # 1 cent; for JPY it is 1 yen; for IQD it is 1 dinar (subunit 3).
     #
-    # @param amount [Integer] the amount expressed in the currency's
+    # @param subunits [Integer] the amount expressed in the currency's
     #   smallest unit (e.g. cents). Must be an Integer to preserve exactness.
     # @param currency [String, Symbol, Currency] the currency identifier
     # @return [Money] the resulting Money instance

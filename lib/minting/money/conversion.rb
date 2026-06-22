@@ -4,7 +4,7 @@ require 'bigdecimal'
 require 'erb'
 
 module Mint
-  # Conversion and serialization logic for {Money} instances.
+  # :nodoc:
   class Money
     # Converts the monetary amount to a BigDecimal object.
     #

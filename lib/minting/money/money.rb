@@ -13,7 +13,9 @@ require_relative 'format/formatting'
 require_relative 'format/to_s'
 
 module Mint
-  # Money constructors
+  # Represents a monetary value paired with a currency.
+  # Money objects are immutable and support arithmetic, comparison,
+  # formatting, allocation, and parsing operations.
   class Money
     # The default display format pattern for formatting monetary values.
     # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.

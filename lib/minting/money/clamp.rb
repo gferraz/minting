@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
-  # Money clamp
+  # :nodoc:
   class Money
     # Constrains +self+ to the inclusive range [+min+, +max+].
     #
@@ -58,7 +58,7 @@ module Mint
       case boundary
       in NilClass | Numeric                then boundary
       in Money if same_currency?(boundary) then boundary.amount
-      in Money                             then raise ArgumentError, "oundary currency must be: #{currency_code}"
+      in Money                             then raise ArgumentError, "Boundary currency must be: #{currency_code}"
       else                                 raise ArgumentError, "Boundary must be Numeric or Money #{boundary}"
       end
     end

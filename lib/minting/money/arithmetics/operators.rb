@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
-  # Money Arithmetics
+  # :nodoc:
   class Money
     # Performs addition with another {Money} instance or standard zero Numeric.
     #
