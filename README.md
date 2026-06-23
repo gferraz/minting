@@ -24,7 +24,7 @@ total.currency_code                    #=> "USD"
 Amounts are stored as `Rational` and rounded to the currency subunit. No floating-point surprises, ever.
 
 ### Blazing performance
-Minting is faster than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/README.md).
+Minting is faster than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/BENCHMARKS.md).
 
 ### Clean, modern API
 Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
@@ -209,7 +209,7 @@ Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:dow
 
 **Zero helper** — `Currency.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
 
-**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser.
+**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. Nonetheless, you don't need to register a currency to use it with most of the features.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
 
