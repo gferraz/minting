@@ -22,73 +22,73 @@ Benchmarks run on Ruby 4.0.5 (arm64-darwin23). All figures in **operations/secon
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| `Money.new` / `Mint.money` | 1,307,000 | — | — | — | — |
-| `from_amount` / `Mint.money` | 1,307,000 | 580,000 | 605,000 | **2.3x** | **2.2x** |
-| `from_subunits` / `Money.new(cents)` | 1,307,000 | 580,000 | 605,000 | **2.3x** | **2.2x** |
-| `.dollars` syntax | 1,307,000 | — | — | — | — |
+| `Mint.money` / `Money.new(cents)` | 870,000 | 636,000 | — | **1.4x** | — |
+| `Mint.money` / `Money.from_amount` | 870,000 | 379,000 | 376,000 | **2.3x** | **2.3x** |
+| `Mint.from_subunits` / `Money.new(cents)` | 1,000,000 | 636,000 | 376,000 | **1.6x** | **2.7x** |
+| `some.dollars` syntax | 781,000 | — | — | — | — |
 
 ### Arithmetic Operations
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| Addition | 1,188,000 | — | — | — | — |
-| Subtraction | 879,000 | 329,000 | — | **2.7x** | — |
-| Multiplication (scalar) | 1,160,000 | 475,000 | — | **2.4x** | — |
-| Division (scalar) | 1,043,000 | 335,000 | — | **3.1x** | — |
-| Division (ratio) | 4,009,000 | 357,000 | — | **11.2x** | — |
-| Negation | 1,423,000 | 544,000 | — | **2.6x** | — |
+| Addition | 822,000 | 312,000 | — | **2.6x** | — |
+| Subtraction | 850,000 | 309,000 | 323,000 | **2.8x** | **2.6x** |
+| Multiplication (scalar) | 1,119,000 | 458,000 | 444,000 | **2.4x** | **2.5x** |
+| Division (scalar) | 988,000 | 319,000 | — | **3.1x** | — |
+| Division (ratio) | 3,674,000 | 334,000 | — | **11.0x** | — |
+| Negation | 1,316,000 | 521,000 | — | **2.5x** | — |
 
 ### Comparison Operations
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| `==` (same value) | 2,032,000 | — | 307,000 | — | **6.6x** |
-| `==` (different value) | 2,219,000 | — | 316,000 | — | **7.0x** |
-| `==` (different currency) | 1,780,000 | — | 179,000 | — | **9.9x** |
-| `>` | 1,557,000 | — | 333,000 | — | **4.7x** |
-| `<=>` | 1,909,000 | — | 345,000 | — | **5.5x** |
-| `.hash` | 4,282,000 | — | 1,320,000 | — | **3.2x** |
+| `==` (same value) | 1,841,000 | 264,000 | 305,000 | **7.0x** | **6.0x** |
+| `==` (different value) | 1,817,000 | 274,000 | 300,000 | **6.6x** | **6.1x** |
+| `==` (different currency) | 1,530,000 | 158,000 | 181,000 | **9.7x** | **8.5x** |
+| `>` | 1,830,000 | 326,000 | 327,000 | **5.6x** | **5.6x** |
+| `<=>` | 1,897,000 | 324,000 | 329,000 | **5.9x** | **5.8x** |
+| `.hash` | 4,041,000 | 1,225,000 | 1,253,000 | **3.3x** | **3.2x** |
 
 ### Formatting / String Operations
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| `to_s` | 297,000 | — | 114,000 | — | **2.6x** |
-| `inspect` | 2,505,000 | — | 1,042,000 | — | **2.4x** |
-| `to_json` | 2,163,000 | — | 113,000 | — | **19.1x** |
+| `to_s` (amount 123.45) | 243,000 | 115,000 | 115,000 | **2.1x** | **2.1x** |
+| `inspect` (amount 123.45) | 2,358,000 | 964,000 | 911,000 | **2.4x** | **2.6x** |
+| `to_json` (amount 123.45) | 2,022,000 | — | 106,000 | — | **19.0x** |
 
 ### Numeric Conversion
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| `to_i` | 11,656,000 | 580,000 | 605,000 | **20.1x** | **19.3x** |
-| `to_f` | 7,491,000 | 562,000 | 595,000 | **13.3x** | **12.6x** |
-| `to_d` | 2,325,000 | 626,000 | 651,000 | **3.7x** | **3.6x** |
-| `to_r` | 13,599,000 | N/A | N/A | — | — |
+| `to_i` | 11,680,000 | 559,000 | 531,000 | **20.9x** | **22.0x** |
+| `to_f` | 7,420,000 | 400,000 | 518,000 | **18.6x** | **14.3x** |
+| `to_d` | 2,126,000 | 559,000 | 577,000 | **3.8x** | **3.7x** |
+| `to_r` | 12,237,000 | N/A | N/A | — | — |
 
 ### Currency Lookup
 
 | Operation | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| `for_code` / `find` | 4,657,000 | — | 1,510,000 | — | **3.1x** |
+| `for_code` / `find` | 5,320,000 | 1,260,000 | 1,371,000 | **4.2x** | **3.9x** |
 
 ### Split & Allocation
 
-| Scenario | Minting | Money gem | Minting vs Money |
-|---|---|---|---|
-| Split 6 ways (small) | 352,000 | 78,000 | **4.5x** |
-| Split 1830 ways (small) | 2,200 | 304 | **7.2x** |
-| Split 6 ways (large) | 314,000 | 79,000 | **4.0x** |
-| Split 1830 ways (large) | 1,900 | 308 | **6.2x** |
-| Allocate [1,2,3] (small) | 353,000 | 134,000 | **2.6x** |
-| Allocate [1..60] (small) | 21,000 | 9,200 | **2.3x** |
+| Scenario | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
+|---|---|---|---|---|---|
+| Split 6 ways (small) | 339,000 | 71,000 | 77,000 | **4.8x** | **4.4x** |
+| Split 1830 ways (small) | 2,064 | 227 | 308 | **9.1x** | **6.7x** |
+| Split 6 ways (large) | 295,000 | 75,000 | 76,000 | **3.9x** | **3.9x** |
+| Split 1830 ways (large) | 1,598 | 270 | 239 | **5.9x** | **6.7x** |
+| Allocate [1,2,3] (small) | 356,000 | 109,000 | 124,000 | **3.3x** | **2.9x** |
+| Allocate [1..60] (small) | 15,232 | 7,126 | 8,863 | **2.1x** | **1.7x** |
 
 ### High-Volume Transaction Simulation
 
 | Metric | Minting | Money gem | Shopify Money | Minting vs Money | Minting vs Shopify |
 |---|---|---|---|---|---|
-| Time (50k transactions) | 282ms | 681ms | 646ms | **2.4x faster** | **2.3x faster** |
-| Throughput | 177,000/s | 73,000/s | 77,000/s | **2.4x** | **2.3x** |
+| Time (50k transactions) | 568ms | 1,589ms | 646ms | **2.8x faster** | **2.3x faster** |
+| Throughput | 88,000/s | 31,000/s | 77,000/s | **2.8x** | **2.3x** |
 
 ## Benchhmark Categories
 
