@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### New features
+- `Money::PRESETS` — frozen hash of named format presets (`:accounting`, `:european`, `:amount`, `:currency`). Pass as the first argument to `to_s` for quick access: `money.to_s(:accounting)`.
+- `Money#to_s` now accepts an optional positional `preset` parameter — expands the preset and merges with any explicit kwargs.
+
 ### Improvements
 - `Mint.with_rounding(mode)` now loads the rounding module lazily on first call — apps that never use custom rounding modes incur zero overhead.
 - `Money#subunits` — renamed from `#fractional` for clarity. `Money.from_subunits` replaces `Money.from_fraction`. **Breaking**

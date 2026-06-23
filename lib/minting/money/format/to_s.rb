@@ -4,7 +4,6 @@ module Mint
   # :nodoc:
   class Money
     PRESETS = {
-      default: {},
       amount: { format: '%<amount>f' },
       accounting: { format: { negative: '(%<symbol>s%<amount>f)' } },
       european: { format: '%<amount>f %<symbol>s', decimal: ',', thousand: '.' },
@@ -14,7 +13,7 @@ module Mint
     # Formats money as a string with customizable format, thousand delimiter, and decimal
     #
     # @param preset [Symbol, nil] Named format preset, one of:
-    #   +:default+, +:accounting+, +:european+, +:amount+, +:currency+.
+    #   +:accounting+, +:european+, +:amount+, +:currency+.
     #   When provided, expands to the preset's format options and merges
     #   with any explicit keyword arguments (kwargs override the preset).
     # @param format [String, Hash, nil] Either a Format string with placeholders
@@ -47,11 +46,10 @@ module Mint
     #   money.to_s(decimal: ',', thousand: '')   #=> "$1234,56"
     #
     # @example Preset formats
-    #   money.to_s(:accounting)                  #=> "$1,234.56"
-    #   money.to_s(:amount)                      #=> "1234.56"
     #   loss = Mint.money(-1234.56, 'USD')
     #   loss.to_s(:accounting)                   #=> "($1,234.56)"
     #   money.to_s(:european)                    #=> "1.234,56 €"
+    #   money.to_s(:amount)                      #=> "1234.56"
     #   money.to_s(:currency)                    #=> "USD 1234.56"
     #
     # @example Custom formats
@@ -80,12 +78,14 @@ module Mint
     #
     def to_s(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil)
       if preset
-        config = PRESETS.fetch(preset.to_sym) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
+        config = PRESETS.fetch(preset) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
         format ||= config[:format]
         decimal ||= config[:decimal]
         thousand ||= config[:thousand]
         width ||= config[:width]
       end
+
+      validate_separators!(decimal:, thousand:)
 
       format, decimal, thousand = resolve_locale_for(format, decimal, thousand)
 

@@ -29,6 +29,23 @@ module Mint
       raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
     end
 
+    # Validates +decimal+ and +thousand+ separator arguments.
+    # @private
+    def validate_separators!(decimal:, thousand:)
+      case decimal
+      when '' then raise ArgumentError, 'decimal must be a non-empty'
+      when nil # :noop
+      when String
+        raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}" if decimal == thousand
+      else raise ArgumentError, "decimal must be a String, false, or nil, got #{decimal.inspect}"
+      end
+
+      case thousand
+      when false, nil, String # :noop
+      else raise ArgumentError, "thousand must be a String, false, or nil, got #{thousand.inspect}"
+      end
+    end
+
     def apply_thousand_separator(string, decimal:, thousand:)
       return string if !thousand || thousand.empty?
 

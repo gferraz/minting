@@ -4,6 +4,7 @@ class MoneyFormatTest < Minitest::Test
   FUEL = Mint::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
   def usd_9_99 = Mint.money(9.99, 'USD')
+  def usd_123_456_789_01 = Mint.money(123_456_789.01, 'USD')
 
   def test_numeric_simple_format
     assert_equal '$9.99',    usd_9_99.to_s
@@ -286,11 +287,6 @@ class MoneyFormatTest < Minitest::Test
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { 'negative' => 'x' }) }
   end
 
-  def test_preset_default
-    assert_equal '$9.99', usd_9_99.to_s(:default)
-    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').to_s(:default)
-  end
-
   def test_preset_accounting
     profit = Mint.money(1234.56, 'USD')
     loss = Mint.money(-1234.56, 'USD')
@@ -353,5 +349,44 @@ class MoneyFormatTest < Minitest::Test
     jpy = Mint.money(1234, 'JPY')
 
     assert_equal '1,234_', jpy.to_s(format: '%<integral>d_%<fractional>d')
+  end
+
+  def test_validate_decimal_invalid_type
+    assert_raises(ArgumentError) { usd_9_99.to_s(decimal: 123) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(decimal: true) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(decimal: '') }
+  end
+
+  def test_validate_decimal_nil_is_valid
+    assert_equal '$9.99', usd_9_99.to_s(decimal: nil)
+  end
+
+  def test_validate_thousand_invalid_type
+    assert_raises(ArgumentError) { usd_9_99.to_s(thousand: 123) }
+    assert_raises(ArgumentError) { usd_9_99.to_s(thousand: true) }
+  end
+
+  def test_validate_thousand_nil_and_false_are_valid
+    assert_equal '$123,456,789.01', usd_123_456_789_01.to_s(thousand: nil)
+    assert_equal '$123456789.01', usd_123_456_789_01.to_s(thousand: false)
+  end
+
+  def test_validate_thousand_empty_string_is_valid
+    assert_equal '$9.99', usd_9_99.to_s(thousand: '')
+  end
+
+  def test_validate_decimal_and_thousand_identical
+    assert_raises(ArgumentError) { usd_9_99.to_s(decimal: ',', thousand: ',') }
+  end
+
+  def test_validate_decimal_and_thousand_identical_allows_if_one_empty
+    assert_equal '9,99', usd_9_99.to_s(decimal: ',', thousand: '', format: '%<amount>f')
+  end
+
+  def test_validate_decimal_and_thousand_different_ok
+    assert_equal '$9.99', usd_9_99.to_s(decimal: '.', thousand: ',')
+    money = Mint.money(1234.56, 'USD')
+
+    assert_equal '1,234.56', money.to_s(decimal: '.', thousand: ',', format: '%<amount>f')
   end
 end
