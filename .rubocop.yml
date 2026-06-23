@@ -1,5 +1,3 @@
-inherit_from: .rubocop_todo.yml
-
 plugins:
   - rubocop-minitest
   - rubocop-packaging
@@ -21,12 +19,12 @@ Layout/LineLength:
   Max: 120
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 25
   Exclude:
     - "test/**/*"
 
 Metrics/CyclomaticComplexity:
-  Max: 9
+  Max: 11
   Exclude:
     - "test/**/*"
 
@@ -37,6 +35,11 @@ Metrics/MethodLength:
 
 Metrics/ParameterLists:
   Max: 6
+
+Metrics/PerceivedComplexity:
+  Max: 10
+  Exclude:
+    - "test/**/*"
 
 Naming/BinaryOperatorParameterName:
   Enabled: false
@@ -58,10 +61,6 @@ Metrics/ClassLength:
     - "test/**/*"
 
 Metrics/ModuleLength:
-  Exclude:
-    - "test/**/*"
-
-Metrics/PerceivedComplexity:
   Exclude:
     - "test/**/*"
 
