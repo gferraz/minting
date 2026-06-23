@@ -84,12 +84,13 @@ loss  = Mint.money(-1234.56, 'USD')
 
 # Built-in named presets
 loss.to_s(:accounting)                      #=> "($1,234.56)"
-price.to_s(:european)                       #=> "1.234,56 €"
-price.to_s(:amount)                         #=> "1234.56"
-price.to_s(:currency)                       #=> "USD 1234.56"
+Mint.money(1234.56, 'EUR').to_s(:european)  #=> "1.234,56 €"
+price.to_s(:amount)                         #=> "9.99"
+price.to_s(:currency)                       #=> "USD 9.99"
 
 # Presets can be overridden with explicit kwargs
-price.to_s(:european, decimal: '.')          #=> "1,234.56 €"
+Mint.money(1234.56, 'EUR').to_s(:european, format: '%<amount>f %<currency>s')
+#=> "1.234,56 EUR"
 
 # Or use direct format strings
 price.to_s                                  #=> "$9.99",

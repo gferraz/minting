@@ -3,8 +3,16 @@
 ## [Unreleased]
 
 ### New features
+-
+
+## [v1.9.0](https://github.com/gferraz/minting/releases/tag/v1.9.0) (2026-06-23)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.8.2...v1.9.0)
+
+### New features
 - `Money::PRESETS` — frozen hash of named format presets (`:accounting`, `:european`, `:amount`, `:currency`). Pass as the first argument to `to_s` for quick access: `money.to_s(:accounting)`.
 - `Money#to_s` now accepts an optional positional `preset` parameter — expands the preset and merges with any explicit kwargs.
+- Validates `decimal` and `thousand` separators — rejects invalid types and identical non-empty values.
 
 ### Improvements
 - `Mint.with_rounding(mode)` now loads the rounding module lazily on first call — apps that never use custom rounding modes incur zero overhead.
