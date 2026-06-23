@@ -286,6 +286,49 @@ class MoneyFormatTest < Minitest::Test
     assert_raises(ArgumentError) { usd_9_99.to_s(format: { 'negative' => 'x' }) }
   end
 
+  def test_preset_default
+    assert_equal '$9.99', usd_9_99.to_s(:default)
+    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').to_s(:default)
+  end
+
+  def test_preset_accounting
+    profit = Mint.money(1234.56, 'USD')
+    loss = Mint.money(-1234.56, 'USD')
+
+    assert_equal '$1,234.56', profit.to_s(:accounting)
+    assert_equal '($1,234.56)', loss.to_s(:accounting)
+    assert_equal '$0.00', Mint.money(0, 'USD').to_s(:accounting)
+  end
+
+  def test_preset_european
+    eur = Mint.money(1234.56, 'EUR')
+
+    assert_equal '1.234,56 €', eur.to_s(:european)
+    assert_equal '-1.234,56 €', (-eur).to_s(:european)
+  end
+
+  def test_preset_amount
+    assert_equal '9.99', usd_9_99.to_s(:amount)
+    assert_equal '-9.99', (-usd_9_99).to_s(:amount)
+  end
+
+  def test_preset_currency
+    assert_equal 'USD 9.99', usd_9_99.to_s(:currency)
+    assert_equal 'EUR -1,234.56', Mint.money(-1234.56, 'EUR').to_s(:currency)
+  end
+
+  def test_preset_unknown
+    assert_raises(ArgumentError) { usd_9_99.to_s(:bogus) }
+    assert_raises(ArgumentError) { usd_9_99.to_s('stringy') }
+  end
+
+  def test_preset_with_override
+    eur = Mint.money(1234.56, 'EUR')
+
+    assert_equal '1.234|56 €', eur.to_s(:european, decimal: '|')
+    assert_equal '1.234,56 EUR', eur.to_s(:european, format: '%<amount>f %<currency>s')
+  end
+
   def test_format_with_integral_and_fractional_parts
     m = Mint.money(1234.56, 'USD')
 

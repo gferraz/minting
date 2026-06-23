@@ -3,8 +3,20 @@
 module Mint
   # :nodoc:
   class Money
+    PRESETS = {
+      default: {},
+      amount: { format: '%<amount>f' },
+      accounting: { format: { negative: '(%<symbol>s%<amount>f)' } },
+      european: { format: '%<amount>f %<symbol>s', decimal: ',', thousand: '.' },
+      currency: { format: '%<currency>s %<amount>f' }
+    }.freeze
+
     # Formats money as a string with customizable format, thousand delimiter, and decimal
     #
+    # @param preset [Symbol, nil] Named format preset, one of:
+    #   +:default+, +:accounting+, +:european+, +:amount+, +:currency+.
+    #   When provided, expands to the preset's format options and merges
+    #   with any explicit keyword arguments (kwargs override the preset).
     # @param format [String, Hash, nil] Either a Format string with placeholders
     #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d),
     #   or a Hash with per-sign keys (:positive, :negative, :zero) each
@@ -24,14 +36,23 @@ module Mint
     #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise +"."+.
     # @return [String] Formatted money string
     #
-    # @raise [ArgumentError] if +format+ is not a String or Hash, the Hash
-    #   is empty, or the Hash contains an unrecognised key.
+    # @raise [ArgumentError] if +preset+ is not a recognised name, or if
+    #   +format+ is not a String or Hash, the Hash is empty, or the Hash
+    #   contains an unrecognised key.
     #
     # @example Basic formatting
     #   money = Mint.money(1234.56, 'USD')
     #   money.to_s                               #=> "$1,234.56"
     #   money.to_s(thousand: '.', decimal: ',')  #=> "$1.234,56"
     #   money.to_s(decimal: ',', thousand: '')   #=> "$1234,56"
+    #
+    # @example Preset formats
+    #   money.to_s(:accounting)                  #=> "$1,234.56"
+    #   money.to_s(:amount)                      #=> "1234.56"
+    #   loss = Mint.money(-1234.56, 'USD')
+    #   loss.to_s(:accounting)                   #=> "($1,234.56)"
+    #   money.to_s(:european)                    #=> "1.234,56 €"
+    #   money.to_s(:currency)                    #=> "USD 1234.56"
     #
     # @example Custom formats
     #   money.to_s(format: '%<amount>f')                    #=> "1234.56"
@@ -57,7 +78,15 @@ module Mint
     # @example Locale-aware formatting (with Mint.locale_backend set)
     #   money.to_s  # decimal and thousand come from locale_backend
     #
-    def to_s(format: nil, decimal: nil, thousand: nil, width: nil)
+    def to_s(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil)
+      if preset
+        config = PRESETS.fetch(preset.to_sym) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
+        format ||= config[:format]
+        decimal ||= config[:decimal]
+        thousand ||= config[:thousand]
+        width ||= config[:width]
+      end
+
       format, decimal, thousand = resolve_locale_for(format, decimal, thousand)
 
       case format
