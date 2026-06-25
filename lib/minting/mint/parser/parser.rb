@@ -84,14 +84,14 @@ module Mint
   # "MAX 10.00 USD" where the first uppercase word isn't a currency code.
   # @private
   def parse_currency(input, currency = nil)
-    currency = Currency.resolve(currency)
-    return currency if currency
-
     input.scan(/\b([A-Z_]+)\b/) do |(code)|
-      currency = Currency.for_code(code)
-      return currency if currency
+      found = Currency.for_code(code)
+      return found if found
     end
 
-    Registry.detect_currency(input)
+    found = Registry.detect_currency(input)
+    return found if found
+
+    Currency.resolve(currency)
   end
 end

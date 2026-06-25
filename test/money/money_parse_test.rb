@@ -8,6 +8,8 @@ class MoneyParseTest < Minitest::Test
     assert_equal Mint.money(1234.56, 'EUR'), Mint::Money.parse('1.234,56', 'EUR')
     assert_equal Mint.money(-1010.5, 'BRL'), Mint::Money.parse('-1.010,50', 'BRL')
     assert_equal Mint.money(-1_123_010.5, 'BRL'), Mint::Money.parse('-1,123,010.50', 'BRL')
+    assert_equal Mint.money(19.99, 'BRL'), Mint::Money.parse('19.99 BRL', 'USD')
+    assert_equal Mint.money(19.99, 'EUR'), Mint::Money.parse('19.99 EUR', 'USD')
   end
 
   def test_parse_with_explicit_currency_object_or_symbol
