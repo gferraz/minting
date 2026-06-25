@@ -5,6 +5,13 @@
 ### New features
 -
 
+## [v1.9.1](https://github.com/gferraz/minting/releases/tag/v1.9.1) (2026-06-24)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.0...v1.9.1)
+
+### Fixes
+- `Mint.parse` / `Mint::Money.parse` with an explicit `currency` parameter: the parser now scans the string for a currency code or symbol first, only falling back to the explicit parameter when none is found. Previously the explicit currency was returned immediately, ignoring any code embedded in the string.
+
 ## [v1.9.0](https://github.com/gferraz/minting/releases/tag/v1.9.0) (2026-06-23)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.8.2...v1.9.0)
