@@ -5,14 +5,14 @@
 ### New features
 
 
-## [v1.9.2](https://github.com/gferraz/minting/releases/tag/v1.9.2) (2026-06-24)
+## [v1.9.3](https://github.com/gferraz/minting/releases/tag/v1.9.3) (2026-06-26)
 
-[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.1...v1.9.2)
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.1...v1.9.3)
 
 ### Breaking Changes
-- `to_s` now works without any paramter. to use format parametere, call `to_formatted_s`
+- `to_s` now works only with no paramters. to use format arguments, call `to_formatted_s` or `to_fs` 
 
-## [v1.9.1](https://github.com/gferraz/minting/releases/tag/v1.9.1) (2026-06-24)
+## [v1.9.1](https://github.com/gferraz/minting/releases/tag/v1.9.1) (2026-06-26)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.0...v1.9.1)
 
