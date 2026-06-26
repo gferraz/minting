@@ -102,5 +102,7 @@ module Mint
     end
 
     def to_s = to_formatted_s
+
+    alias to_fs to_formatted_s
   end
 end

@@ -8,10 +8,10 @@ class MoneyFormatTest < Minitest::Test
 
   def test_numeric_simple_format
     assert_equal '$9.99',    usd_9_99.to_s
-    assert_equal '9',        usd_9_99.to_formatted_s(format: '%<amount>d')
-    assert_equal '$9.99',    usd_9_99.to_formatted_s(format: '%<symbol>s%<amount>f')
-    assert_equal '$+9.99',   usd_9_99.to_formatted_s(format: '%<symbol>s%<amount>+f')
-    assert_equal '-9.99',    (-usd_9_99).to_formatted_s(format: '%<amount>f')
+    assert_equal '9',        usd_9_99.to_fs(format: '%<amount>d')
+    assert_equal '$9.99',    usd_9_99.to_fs(format: '%<symbol>s%<amount>f')
+    assert_equal '$+9.99',   usd_9_99.to_fs(format: '%<symbol>s%<amount>+f')
+    assert_equal '-9.99',    (-usd_9_99).to_fs(format: '%<amount>f')
   end
 
   def test_more_numeric_simple_format
