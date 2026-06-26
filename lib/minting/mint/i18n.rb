@@ -10,7 +10,7 @@ module Mint
     #   [+:thousand+]  Thousands delimiter (e.g. +"."+)
     #   [+:format+]    Format template string (e.g. +"%<amount>f %<symbol>s"+)
     #
-    # When set, +#to_s+ and +#format+ use these values as fallbacks when the
+    # When set, +#to_formatted_s+ and +#format+ use these values as fallbacks when the
     # corresponding parameter is not explicitly provided.
     #
     # @example Rails I18n integration (in minting-rails railtie)

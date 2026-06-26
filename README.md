@@ -83,43 +83,43 @@ price = Mint.money(9.99, 'USD')
 loss  = Mint.money(-1234.56, 'USD')
 
 # Built-in named presets
-loss.to_s(:accounting)                      #=> "($1,234.56)"
-Mint.money(1234.56, 'EUR').to_s(:european)  #=> "1.234,56 €"
-price.to_s(:amount)                         #=> "9.99"
-price.to_s(:currency)                       #=> "USD 9.99"
+loss.to_formatted_s(:accounting)                      #=> "($1,234.56)"
+Mint.money(1234.56, 'EUR').to_formatted_s(:european)  #=> "1.234,56 €"
+price.to_formatted_s(:amount)                         #=> "9.99"
+price.to_formatted_s(:currency)                       #=> "USD 9.99"
 
 # Presets can be overridden with explicit kwargs
-Mint.money(1234.56, 'EUR').to_s(:european, format: '%<amount>f %<currency>s')
+Mint.money(1234.56, 'EUR').to_formatted_s(:european, format: '%<amount>f %<currency>s')
 #=> "1.234,56 EUR"
 
 # Or use direct format strings
-price.to_s                                  #=> "$9.99",
-price.to_s(format: '%<amount>d')            #=> "9",
-price.to_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",
-price.to_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
-(-price).to_s(format: '%<amount>f')         #=> "-9.99",
+price.to_formatted_s                                  #=> "$9.99",
+price.to_formatted_s(format: '%<amount>d')            #=> "9",
+price.to_formatted_s(format: '%<symbol>s%<amount>f')  #=> "$9.99",
+price.to_formatted_s(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
+(-price).to_formatted_s(format: '%<amount>f')         #=> "-9.99",
 
 # Format with padding
 price_in_euros = Mint.money(12.34, 'EUR')
 
-price.to_s(format: '--%<amount>7d')               #=> "--      9"
-price.to_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
-(-price).to_s(format: '  %<amount>10f')           #=> "       -9.99"
+price.to_formatted_s(format: '--%<amount>7d')               #=> "--      9"
+price.to_formatted_s(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
+(-price).to_formatted_s(format: '  %<amount>10f')           #=> "       -9.99"
 
-price_in_euros.to_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
+price_in_euros.to_formatted_s(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 # Integral & fractional parts
-price.to_s(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
+price.to_formatted_s(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
 Mint.money(0.99, 'USD').to_s(format: '%<integral>d dollars and %<fractional>02d cents')
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
 loss = Mint.money(-1234.56, 'USD')
-loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
-Mint.money(0, 'BRL').to_s(format: { zero: '--' })          #=> "--"
+loss.to_formatted_s(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
+Mint.money(0, 'BRL').to_formatted_s(format: { zero: '--' })          #=> "--"
 # All three keys at once:
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
-Mint.money(1234.56, 'USD').to_s(format: fmt)               #=> "$1,234.56"
+Mint.money(1234.56, 'USD').to_formatted_s(format: fmt)               #=> "$1,234.56"
 
 # Json serialization
 

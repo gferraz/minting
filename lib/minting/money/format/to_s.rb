@@ -22,7 +22,7 @@ module Mint
     #   holding a format string. A Hash is convenient for sign-aware formats
     #   such as accounting parentheses:
     #
-    #     money.to_s(format: { negative: '(%<symbol>s%<amount>f)' })
+    #     money.to_formatted_s(format: { negative: '(%<symbol>s%<amount>f)' })
     #
     #   Missing keys fall back to the module default, so a Hash with only
     #   :negative will still format positives sensibly. The valid keys are
@@ -41,42 +41,42 @@ module Mint
     #
     # @example Basic formatting
     #   money = Mint.money(1234.56, 'USD')
-    #   money.to_s                               #=> "$1,234.56"
-    #   money.to_s(thousand: '.', decimal: ',')  #=> "$1.234,56"
-    #   money.to_s(decimal: ',', thousand: '')   #=> "$1234,56"
+    #   money.to_formatted_s                               #=> "$1,234.56"
+    #   money.to_formatted_s(thousand: '.', decimal: ',')  #=> "$1.234,56"
+    #   money.to_formatted_s(decimal: ',', thousand: '')   #=> "$1234,56"
     #
     # @example Preset formats
     #   loss = Mint.money(-1234.56, 'USD')
-    #   loss.to_s(:accounting)                   #=> "($1,234.56)"
-    #   money.to_s(:european)                    #=> "1.234,56 €"
-    #   money.to_s(:amount)                      #=> "1234.56"
-    #   money.to_s(:currency)                    #=> "USD 1234.56"
+    #   loss.to_formatted_s(:accounting)                   #=> "($1,234.56)"
+    #   money.to_formatted_s(:european)                    #=> "1.234,56 €"
+    #   money.to_formatted_s(:amount)                      #=> "1234.56"
+    #   money.to_formatted_s(:currency)                    #=> "USD 1234.56"
     #
     # @example Custom formats
-    #   money.to_s(format: '%<amount>f')                    #=> "1234.56"
-    #   money.to_s(format: '%<currency>s %<amount>f')       #=> "USD 1234.56"
-    #   money.to_s(format: '%<amount>f %<symbol>s')         #=> "1234.56 $"
-    #   money.to_s(format: '%<symbol>s%<amount>+f')         #=> "$+1234.56"
+    #   money.to_formatted_s(format: '%<amount>f')                    #=> "1234.56"
+    #   money.to_formatted_s(format: '%<currency>s %<amount>f')       #=> "USD 1234.56"
+    #   money.to_formatted_s(format: '%<amount>f %<symbol>s')         #=> "1234.56 $"
+    #   money.to_formatted_s(format: '%<symbol>s%<amount>+f')         #=> "$+1234.56"
     #
     # @example Integral & fractional parts
-    #   money.to_s(format: '%<integral>d.%<fractional>02d')  #=> "1234.56"
+    #   money.to_formatted_s(format: '%<integral>d.%<fractional>02d')  #=> "1234.56"
     #   price = Mint.money(0.99, 'USD')
-    #   price.to_s(format: '%<integral>d dollars and %<fractional>02d cents')
+    #   price.to_formatted_s(format: '%<integral>d dollars and %<fractional>02d cents')
     #   #=> "0 dollars and 99 cents"
     #
     # @example Per-sign Hash format (accounting parentheses)
     #   loss = Mint.money(-1234.56, 'USD')
-    #   loss.to_s(format: { negative: '(%<symbol>s%<amount>f)' }) #=> "($1,234.56)"
-    #   Mint.money(0, 'BRL').to_s(format: { zero: '--' })        #=> "--"
+    #   loss.to_formatted_s(format: { negative: '(%<symbol>s%<amount>f)' }) #=> "($1,234.56)"
+    #   Mint.money(0, 'BRL').to_formatted_s(format: { zero: '--' })        #=> "--"
     #
     # @example Padding and alignment
-    #   money.to_s(format: '%<amount>10.2f')                #=> "   1234.56"
-    #   money.to_s(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
+    #   money.to_formatted_s(format: '%<amount>10.2f')                #=> "   1234.56"
+    #   money.to_formatted_s(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
     #
     # @example Locale-aware formatting (with Mint.locale_backend set)
-    #   money.to_s  # decimal and thousand come from locale_backend
+    #   money.to_formatted_s  # decimal and thousand come from locale_backend
     #
-    def to_s(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil)
+    def to_formatted_s(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil)
       if preset
         config = PRESETS.fetch(preset) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
         format ||= config[:format]
@@ -100,5 +100,7 @@ module Mint
 
       width ? formatted.rjust(width) : formatted
     end
+
+    def to_s = to_formatted_s
   end
 end
