@@ -110,7 +110,7 @@ price_in_euros.to_formatted_s(format: '%<symbol>2s%<amount>+10f')    #=> " €  
 
 # Integral & fractional parts
 price.to_formatted_s(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
-Mint.money(0.99, 'USD').to_s(format: '%<integral>d dollars and %<fractional>02d cents')
+Mint.money(0.99, 'USD').to_fs(format: '%<integral>d dollars and %<fractional>02d cents')
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
@@ -231,20 +231,20 @@ By default, Minting keeps everything namespaced under `Mint` to coexist nicely w
 
 ```ruby
 require "minting"
-require "minting/dsl"  # opt‑in top‑level Money / Currency
+require "minting/mint/aliases"  # opt‑in top‑level Money / Currency
 ```
 
 Or at runtime:
 
 ```ruby
-Minting.use_top_level_constants!
+Mint.use_top_level_constants!
 ```
 
 For Rails applications, you can enable the top-level constants in an initializer:
 
 ```ruby
 # config/initializers/minting.rb
-require "minting/dsl"
+require "minting/mint/aliases"
 ```
 
 After opting in:
