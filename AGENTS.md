@@ -181,7 +181,7 @@ override the preset.
 
 `Mint.locale_backend=` (a callable or Hash returning
 `{ decimal:, thousand:, format: }`) supplies defaults when the corresponding
-kwarg is nil. This is how `minting-rails` wires I18n. See
+kwarg is nil. This is how `attribute-money` wires I18n. See
 `test/locale_backend_test.rb` — tests save/restore the backend in
 setup/teardown; do the same if you touch it.
 

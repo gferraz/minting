@@ -253,7 +253,7 @@ Multi-PR epic:
 1. `Mint::Bank` interface with `#exchange(money, target)`.
 2. `Mint::Bank::MemoryStore` (in-memory, good for tests).
 3. `Mint::Bank::ECB` or `Mint::Bank::OpenExchangeRates` (network).
-4. Update `minting-rails` to expose bank config in the Railtie.
+4. Update `attribute-money` to expose bank config in the Railtie.
 
 ### P2-3 Reek / RuboCop tightening
 

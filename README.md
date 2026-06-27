@@ -30,7 +30,7 @@ Minting is faster than the Money gem for everyday operations and **over 10× fas
 Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
 
 ### Rails-ready
-Use with the [minting-rails](https://github.com/gferraz/minting-rails) companion gem for drop-in ActiveRecord type casting, validators, and form helpers.
+Use with the [attribute-money](https://github.com/gferraz/attribute-money) companion gem for drop-in ActiveRecord type casting, validators, and form helpers.
 
 ### Quality code
 - **100% test coverage** — every line exercised

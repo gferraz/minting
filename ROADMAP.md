@@ -59,7 +59,7 @@ The Money gem has a full pluggable bank system. Minting has nothing — not plan
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `minting-rails` | High |
+| I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `attribute-money` | High |
 | Disambiguated symbols | `format(disambiguate: true)` → `"US$"` vs `"C$"` | Manual only | Medium |
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | Missing | Low |
 | Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable returning `{ decimal:, thousand:, format: }` | High |
@@ -121,7 +121,7 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 |---------|-------------|---------|----------|
 | RuboCop cops | `Money/MissingCurrency`, `Money/ZeroMoney` — static analysis to enforce currency presence | Missing | Medium |
 | RBS type signatures | Full `sig/` directory for type checking | Missing | Low |
-| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro for decimal columns | 🔶 Planned in `minting-rails` | Medium |
+| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro for decimal columns | 🔶 Planned in `attribute-money` | Medium |
 
 ## P3 — Polish & community
 
@@ -174,7 +174,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `add_rate` / `get_rate` | ✅ | ❌ | Low |
 | | Rate import/export (json/yaml) | ✅ | ❌ | Low |
 | | ECB / OpenExchangeRates stores | ✅ (extracted) | ❌ | Low |
-| **I18n** | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `minting-rails` | **High** |
+| **I18n** | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `attribute-money` | **High** |
 | | Per-locale formatting rules | ✅ | ❌ | **High** |
 | | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | **High** |
 | **Rounding** | Rounding modes | ✅ | ❌ Ruby default | Medium |
@@ -207,7 +207,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 ## Suggested next steps
 
-1. **minting-rails** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
+1. **attribute-money** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
 2. **Configurable allocation** — `allocate_max_amounts`, `calculate_splits`, and leftover distribution strategies
 3. **Formatting convenience flags** — `no_cents`, `no_cents_if_whole`, `drop_trailing_zeros`, `symbol:` override
 4. **RuboCop cops** — `Money/MissingCurrency` and `Money/ZeroMoney` for static analysis

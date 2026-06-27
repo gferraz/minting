@@ -294,7 +294,7 @@ Your README is already strong. To push it over the top vs. `money` gem and frien
      - Always-exact `Rational` amounts.
      - Currency-agnostic zero.
      - Faster formatting (link benchmarks).
-     - Separate `minting-rails` companion for clean Rails integration.
+     - Separate `attribute-money` companion for clean Rails integration.
 
 2. **Add “Common tasks” cheatsheet**
 
@@ -314,7 +314,7 @@ Your README is already strong. To push it over the top vs. `money` gem and frien
 
 3. **Prominent “Rails” heading**
 
-   Right now you just mention `minting-rails`. Make it a full section:
+   Right now you just mention `attribute-money`. Make it a full section:
 
    - How to add gem.
    - Example migration / attribute definition (even if in the other repo, mirror one snippet here).

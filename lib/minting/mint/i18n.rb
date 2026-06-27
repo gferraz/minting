@@ -13,7 +13,7 @@ module Mint
     # When set, +#to_formatted_s+ and +#format+ use these values as fallbacks when the
     # corresponding parameter is not explicitly provided.
     #
-    # @example Rails I18n integration (in minting-rails railtie)
+    # @example Rails I18n integration (in attribute-money railtie)
     #   Mint.locale_backend = -> {
     #     fmt = I18n.t('number.currency.format')
     #     {
