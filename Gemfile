@@ -6,7 +6,6 @@ gemspec
 group :development do
   gem 'benchmark'
   gem 'benchmark-ips'
-  gem 'bigdecimal'
   gem 'bundle-audit'
   gem 'bundler'
   gem 'irb'
@@ -22,7 +21,6 @@ group :development do
   gem 'rubycritic'
   gem 'ruby-prof'
   gem 'simplecov'
-  gem 'solargraph'
   gem 'yard'
 end
 
