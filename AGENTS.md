@@ -117,11 +117,14 @@ There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 ### Currency resolution
 
 `Currency.resolve(obj)` accepts `nil`, `Currency`, `Money`, or `String` and
-returns `nil` on miss; `Currency.resolve!(obj)` raises `ArgumentError`.
-`Mint.money` and `Money.from` always go through `resolve!`, so unknown codes
-raise rather than returning nil. `Money.from` also short-circuits zero amounts
-to the cached `currency.zero` singleton, so `Mint.money(0, 'USD')` is the
-same frozen object across calls — don't assume `Money.new` is the only path.
+returns `nil` on miss; `Currency.resolve!(obj)` raises `Mint::UnknownCurrency`.
+`Mint::UnknownCurrency < ArgumentError`, so existing `rescue ArgumentError`
+handlers still work — new code can `rescue Mint::UnknownCurrency` for the
+specific case. `Mint.money` and `Money.from` always go through `resolve!`, so
+unknown codes raise rather than returning nil. `Money.from` also short-circuits
+zero amounts to the cached `currency.zero` singleton, so
+`Mint.money(0, 'USD')` is the same frozen object across calls — don't assume
+`Money.new` is the only path.
 
 ### Amount normalization
 
@@ -318,7 +321,7 @@ handles non-numeric steps natively, so the patch is gated by
 |------|------|
 | `lib/minting.rb` | entry point (requires `mint/mint`, `version`) |
 | `lib/minting/mint.rb` | load graph for Mint, Currency, registry, parser, DSL |
-| `lib/minting/mint/mint.rb` | `Mint.money`, `Mint.with_rounding`, `Mint::UnknownCurrency` |
+| `lib/minting/mint/mint.rb` | `Mint.money`, `Mint.with_rounding`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
 | `lib/minting/mint/registry/` | `registry.rb`, `registration.rb`, `symbols.rb`, `zeros.rb` — all shared state + `MUTEX` |
 | `lib/minting/currency/currency.rb` | `Currency` (`Data.define`), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
 | `lib/minting/mint/parser/parser.rb`, `separators.rb` | `Mint.parse` / `Mint.parse!` |

@@ -7,7 +7,8 @@ module Mint
     # @param amount [Numeric] The monetary amount
     # @param currency [Currency, String] The currency code or currency object
     # @return [Money] the new Money instance
-    # @raise [ArgumentError] If amount is not numeric or currency is invalid
+    # @raise [ArgumentError] If amount is not numeric
+    # @raise [Mint::UnknownCurrency] If currency cannot be resolved
     # @example
     #   Money.from(10, 'USD')  #=> [USD 10.00]
     def self.from(amount, currency)
@@ -61,7 +62,7 @@ module Mint
     #
     # @param currency [String, Currency] a currency code or object
     # @return [Money] a frozen zero-Money
-    # @raise [ArgumentError] if the currency can't be resolved
+    # @raise [Mint::UnknownCurrency] if the currency can't be resolved
     def self.zero(currency) = Currency.resolve!(currency).zero
 
     # Builds a Money from a subunit (smallest-unit) Integer amount.
@@ -72,8 +73,8 @@ module Mint
     #   smallest unit (e.g. cents). Must be an Integer to preserve exactness.
     # @param currency [String, Symbol, Currency] the currency identifier
     # @return [Money] the resulting Money instance
-    # @raise [ArgumentError] if +subunits+ is not an Integer or +currency+
-    #   is not registered
+    # @raise [ArgumentError] if +subunits+ is not an Integer
+    # @raise [Mint::UnknownCurrency] if +currency+ is not registered
     #
     # @example USD cents
     #   Money.from_subunits(123_456, 'USD') #=> [USD 1234.56]

@@ -7,7 +7,7 @@ class MoneyTest < Minitest::Test
 
     assert_raises(ArgumentError) { Mint.money('b', 'USD') }
     assert_raises(ArgumentError) { Mint.money(10r, Object.new) }
-    assert_raises(ArgumentError) { Mint.money(1, 'NOT_A_CURRENCY') }
+    assert_raises(Mint::UnknownCurrency) { Mint.money(1, 'NOT_A_CURRENCY') }
   end
 
   def test_amount
@@ -134,7 +134,7 @@ class MoneyTest < Minitest::Test
   end
 
   def test_money_zero_raises_on_unknown_currency
-    assert_raises(ArgumentError) { Mint::Money.zero('UNKNOWN') }
+    assert_raises(Mint::UnknownCurrency) { Mint::Money.zero('UNKNOWN') }
   end
 
   def test_from_subunits_rejects_non_integer

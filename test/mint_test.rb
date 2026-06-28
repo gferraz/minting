@@ -31,8 +31,8 @@ class MintTest < Minitest::Test
   end
 
   def test_zero_unknown_currency
-    assert_raises(ArgumentError) { Mint::Currency.zero('UNKNOWN') }
-    assert_raises(ArgumentError) { Mint::Currency.zero(nil) }
+    assert_raises(Mint::UnknownCurrency) { Mint::Currency.zero('UNKNOWN') }
+    assert_raises(Mint::UnknownCurrency) { Mint::Currency.zero(nil) }
   end
 
   def test_mint_zero_returns_singleton

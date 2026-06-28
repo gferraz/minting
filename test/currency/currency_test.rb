@@ -48,4 +48,20 @@ class CurrencyTest < Minitest::Test
   def test_finder
     assert_equal 'BRL', Mint::Currency.for_code('BRL').code
   end
+
+  def test_resolve_bang_raises_unknown_currency_for_unregistered_code
+    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!('NOPE') }
+  end
+
+  def test_unknown_currency_inherits_from_argument_error
+    assert_operator Mint::UnknownCurrency, :<, ArgumentError
+  end
+
+  def test_resolve_bang_raises_unknown_currency_for_nil
+    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!(nil) }
+  end
+
+  def test_resolve_bang_resolves_valid_code
+    assert_equal @dollar, Mint::Currency.resolve!('USD')
+  end
 end

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Core extension: adds money-conversion helpers to Numeric.
 class Numeric
   # @return [Money] self interpreted as BRL
   def reais = Mint::Money.from(self, 'BRL')

@@ -2,12 +2,13 @@
 
 ## [Unreleased]
 
-## [v1.9.5](https://github.com/gferraz/minting/releases/tag/v1.9.5) (2026-06-27)
+## [v1.9.5](https://github.com/gferraz/minting/releases/tag/v1.9.5) (2026-06-28)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.4...v1.9.5)
 
 ### Improvements
 - New alias to money object `.to_formatted_s` method: `format`, or the already existing `to_fs`
+- `Currency.resolve!` now raises `Mint::UnknownCurrency` (previously `ArgumentError`) when a currency cannot be resolved. `Mint::UnknownCurrency` inherits from `ArgumentError`, so existing `rescue ArgumentError` handlers continue to work — use `rescue Mint::UnknownCurrency` for the specific case. Affects `Mint.money`, `Money.from`, `Money.zero`, `Money.from_subunits`, and `Currency.zero`.
  
 ### Breaking Changes
 - Now core extenssion methods, such as `"$23.34".to_money` don't require using Mint (refinements syntax) anymore.

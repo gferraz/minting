@@ -88,9 +88,11 @@ module Mint
   #
   # @param object [String, Currency, Money, nil] a currency code, object, or +nil+
   # @return [Currency] the resolved Currency
-  # @raise [ArgumentError] if +object+ cannot be resolved into a registered currency
+  # @raise [Mint::UnknownCurrency] if +object+ cannot be resolved into a
+  #   registered currency. +Mint::UnknownCurrency+ inherits from +ArgumentError+,
+  #   so existing +rescue ArgumentError+ handlers continue to work.
   def Currency.resolve!(object)
-    resolve(object) or raise ArgumentError, "Could not resolve (#{object}) into a currency"
+    resolve(object) or raise Mint::UnknownCurrency, "Could not resolve (#{object}) into a currency"
   end
 
   # Looks up a registered currency by its alpha code.
@@ -114,6 +116,6 @@ module Mint
   #
   # @param currency [String, Currency] a currency code or object
   # @return [Money] a frozen zero-Money
-  # @raise [ArgumentError] if the currency can't be resolved
+  # @raise [Mint::UnknownCurrency] if the currency can't be resolved
   def Currency.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
 end
