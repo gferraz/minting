@@ -4,15 +4,10 @@
 
 ## [v1.9.5](https://github.com/gferraz/minting/releases/tag/v1.9.5) (2026-06-27)
 
-[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.3...v1.9.5)
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.4...v1.9.5)
 
 ### Breaking Changes
 - Now core extenssion methods, such as `"$23.34".to_money` don't require using Mint (refinements syntax) anymore.
-
-### Fixes
-- README: `to_s(format: ...)` example replaced with `to_formatted_s(format: ...)`, or its alias `to_fs` (`to_s` takes no args since v1.9.3).
-- README: `require "minting/dsl"` replaced with `require "minting/mint/aliases"` (no `lib/minting/dsl.rb` existed).
-- README: `Minting.use_top_level_constants!` replaced with `Mint.use_top_level_constants!` (method was on `Mint`, not `Minting`).
 
 ## [v1.9.3](https://github.com/gferraz/minting/releases/tag/v1.9.3) (2026-06-26)
 
