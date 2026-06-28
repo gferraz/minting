@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyTest < Minitest::Test
   def test_its_contructors
     assert_instance_of Mint::Money, Mint.money(100, 'USD')

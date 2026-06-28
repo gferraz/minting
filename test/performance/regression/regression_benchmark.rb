@@ -3,7 +3,6 @@
 require_relative '../benchmark_helper'
 
 class RegressionBenchmark < Minitest::Benchmark
-  using Mint
   include BenchmarkHelper
 
   def setup

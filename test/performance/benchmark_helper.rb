@@ -5,8 +5,6 @@ require 'benchmark'
 require 'benchmark/ips'
 require 'bigdecimal'
 
-using Mint
-
 module BenchmarkHelper
   def test_amounts
     @test_amounts ||= [1.00, 10.50, 123.45, 999.99, 1234.56]

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyArithmeticsTest < Minitest::Test
   def test_addition
     assert_equal 10.dollars, 2.dollars + 2.dollars + 6.dollars

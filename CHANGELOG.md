@@ -2,13 +2,12 @@
 
 ## [Unreleased]
 
-## [v1.9.4](https://github.com/gferraz/minting/releases/tag/v1.9.4) (2026-06-26)
+## [v1.9.5](https://github.com/gferraz/minting/releases/tag/v1.9.5) (2026-06-27)
 
-[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.3...v1.9.4)
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.3...v1.9.5)
 
 ### Breaking Changes
-- `require 'minting'` now auto-binds the top-level `Money` constant to `Mint::Money`. If `Money` is already defined (e.g. by the `money` gem), minting warns and skips the auto-bind. 
-- `Currency` is no longer auto-bound alongside `Money`. To opt in to the top-level `Currency` constant, `require 'minting/mint/aliases'`. This avoids conflicts with application domain models named `Currency` (e.g. a Rails model).
+- Now core extenssion methods, such as `"$23.34".to_money` don't require using Mint (refinements syntax) anymore.
 
 ### Fixes
 - README: `to_s(format: ...)` example replaced with `to_formatted_s(format: ...)`, or its alias `to_fs` (`to_s` takes no args since v1.9.3).

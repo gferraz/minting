@@ -17,8 +17,6 @@ unless RUBY_VERSION.start_with?('4.')
   exit 0
 end
 
-using Mint
-
 ITERS = {
   creation: 500_000,
   addition: 1_000_000,

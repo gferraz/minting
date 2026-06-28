@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyParseTest < Minitest::Test
   def test_parse_with_explicit_currency
     assert_equal Mint.money(19.99, 'USD'), Mint::Money.parse('19.99', 'USD')

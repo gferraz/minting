@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyClampTest < Minitest::Test
   def test_clamp_in_range_returns_self
     money = 5.dollars

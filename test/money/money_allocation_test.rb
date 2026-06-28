@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyAllocationTest < Minitest::Test
   def test_money_allocate_errors
     price = 10.10.dollars

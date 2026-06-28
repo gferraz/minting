@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-using Mint
-
 class MoneyComparableTest < Minitest::Test
   def test_equality
     assert_equal 10.dollars, Mint.money(10r, 'USD')
