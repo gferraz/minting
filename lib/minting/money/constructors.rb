@@ -64,13 +64,6 @@ module Mint
     # @raise [ArgumentError] if the currency can't be resolved
     def self.zero(currency) = Currency.resolve!(currency).zero
 
-    # Backwards-compatible alias for previous API
-    # TODO: deprecate in a future major release
-    def self.create(amount, currency)
-      warn 'Money.create is now deprecated. Use Money.from'
-      from(amount, currency)
-    end
-
     # Builds a Money from a subunit (smallest-unit) Integer amount.
     # This is the inverse of {#subunits}: for USD, the subunit is
     # 1 cent; for JPY it is 1 yen; for IQD it is 1 dinar (subunit 3).

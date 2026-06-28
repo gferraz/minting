@@ -6,8 +6,15 @@
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.4...v1.9.5)
 
+### Improvements
+- New alias to money object `.to_formatted_s` method: `format`, or the already existing `to_fs`
+ 
 ### Breaking Changes
 - Now core extenssion methods, such as `"$23.34".to_money` don't require using Mint (refinements syntax) anymore.
+
+### Deprecations
+- Deprecated `Money.create` removed
+- Deprecated `Money.mint` removed
 
 ## [v1.9.3](https://github.com/gferraz/minting/releases/tag/v1.9.3) (2026-06-26)
 

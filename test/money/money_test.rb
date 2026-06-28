@@ -58,8 +58,8 @@ class MoneyTest < Minitest::Test
   end
 
   def test_same_currency
-    assert 10.34.mint('USD').same_currency?(Mint.money(100, 'USD'))
-    refute 10.34.mint('USD').same_currency?(Mint.money(10.34, 'BRL'))
+    assert 10.34.to_money('USD').same_currency?(Mint.money(100, 'USD'))
+    refute 10.34.to_money('USD').same_currency?(Mint.money(10.34, 'BRL'))
   end
 
   def test_zero
@@ -93,7 +93,7 @@ class MoneyTest < Minitest::Test
     assert_equal 123_99, Mint.money(123.9912, 'USD').subunits
   end
 
-  def test_from_fractional
+  def test_from_subunits
     # Subunit 2: USD cents
     assert_equal Mint.money(1234.56, 'USD'),
                  Mint::Money.from_subunits(123_456, 'USD')
@@ -119,7 +119,7 @@ class MoneyTest < Minitest::Test
                  Mint::Money.from_subunits(100, Mint::Currency.for_code('USD'))
   end
 
-  def test_from_fractional_round_trip
+  def test_from_subunits_round_trip
     [9.99, 100, 0, 0.01, 1_234_567.89].each do |amount|
       m = Mint.money(amount, 'USD')
 
@@ -137,13 +137,13 @@ class MoneyTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.zero('UNKNOWN') }
   end
 
-  def test_from_fractional_rejects_non_integer
+  def test_from_subunits_rejects_non_integer
     assert_raises(ArgumentError) { Mint::Money.from_subunits(1.5, 'USD') }
     assert_raises(ArgumentError) { Mint::Money.from_subunits('100', 'USD') }
     assert_raises(ArgumentError) { Mint::Money.from_subunits(100r, 'USD') }
   end
 
-  def test_from_fractional_rejects_unknown_currency
+  def test_from_subunits_rejects_unknown_currency
     assert_raises(ArgumentError) { Mint::Money.from_subunits(100, 'ZZZ') }
     assert_raises(ArgumentError) { Mint::Money.from_subunits(100, Object.new) }
   end
