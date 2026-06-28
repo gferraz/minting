@@ -2,8 +2,14 @@
 
 ## [Unreleased]
 
-### New features
+### Breaking Changes
+- `require 'minting'` now auto-binds the top-level `Money` constant to `Mint::Money`. If `Money` is already defined (e.g. by the `money` gem), minting warns and skips the auto-bind. `Mint.use_top_level_constants!` has been removed.
+- `Currency` is no longer auto-bound alongside `Money`. To opt in to the top-level `Currency` constant, `require 'minting/mint/aliases'`. This avoids conflicts with application domain models named `Currency` (e.g. a Rails model).
 
+### Fixes
+- README: `to_s(format: ...)` example replaced with `to_formatted_s(format: ...)` (`to_s` takes no args since v1.9.3).
+- README: `require "minting/dsl"` replaced with `require "minting/mint/aliases"` (no `lib/minting/dsl.rb` existed).
+- README: `Minting.use_top_level_constants!` replaced with `Mint.use_top_level_constants!` (method was on `Mint`, not `Minting`).
 
 ## [v1.9.3](https://github.com/gferraz/minting/releases/tag/v1.9.3) (2026-06-26)
 

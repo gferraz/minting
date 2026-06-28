@@ -73,20 +73,29 @@ Notes:
 
 ### Load graph
 
-`lib/minting.rb` only requires `minting/mint` and `minting/version`.
+`lib/minting.rb` requires `minting/mint` and `minting/version`, then auto-binds
+`::Money = Mint::Money` (warn-and-skip if already defined).
 `lib/minting/mint.rb` wires the rest: `Currency`, the DSL refinements
-(`mint/dsl/*`), `i18n`, `Mint` module, parser + separators, registry, and
-finally `money/money` (which itself requires all `money/*` mixins).
+(`mint/dsl/numeric`, `range`, `string`), `i18n`, `Mint` module, parser +
+separators, registry, and finally `money/money` (which itself requires all
+`money/*` mixins).
 
-There is **no `lib/minting/dsl.rb`**. The opt-in paths for top-level constants are:
-- `Mint.use_top_level_constants!` — defined in `mint/dsl/top_level.rb`, requires
-  `mint/aliases` which sets `Money = Mint::Money` and `Currency = Mint::Currency`.
-  Note the method is on `Mint`, not `Minting`.
-- Direct `require 'minting/mint/aliases'` if you want the constants without
-  the guard.
+### Top-level constants: `Money` auto-bound, `Currency` opt-in
 
-The README uses `require "minting/mint/aliases"` and `Mint.use_top_level_constants!`
-for these examples.
+`require 'minting'` auto-binds the top-level `Money` constant to `Mint::Money`
+for convenience. If `::Money` is already defined (e.g. the `money` gem loaded
+first), it warns and skips — use `Mint::Money` in that case. This is a
+**breaking change from < v2.0**, where both constants were opt-in via
+`Mint.use_top_level_constants!` (now removed).
+
+`Currency` is **not** auto-bound, because application domain models are
+commonly named `Currency` (e.g. a Rails model). Opt in via
+`require 'minting/mint/aliases'`, which binds `Currency = Mint::Currency`
+with the same warn-and-skip guard.
+
+There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
+(removed in v2.0). The only opt-in path for `Currency` is
+`require 'minting/mint/aliases'`.
 
 ### Two namespaces, one registry
 
@@ -269,9 +278,18 @@ handles non-numeric steps natively, so the patch is gated by
 - **`to_s` takes no args since v1.9.3.** Use `to_formatted_s` (or `to_fs`)
   for format/decimal/thousand/width. Calling `to_s(format: ...)` raises
   `ArgumentError: wrong number of arguments`.
-- **No `lib/minting/dsl.rb`.** Top-level constants are opt-in via
-  `Mint.use_top_level_constants!` (note: on `Mint`, not `Minting`) or
-  `require 'minting/mint/aliases'`.
+- **`Money` is auto-bound at require time.** `require 'minting'` sets
+  `::Money = Mint::Money`. If `::Money` is already defined (e.g. the `money`
+  gem loaded first), it warns and skips. `Currency` is **not** auto-bound —
+  use `require 'minting/mint/aliases'` to opt in. There is no
+  `Mint.use_top_level_constants!` (removed in v2.0) and no `lib/minting/dsl.rb`.
+- **Money-gem co-loading requires order.** If both minting and the `money`
+  gem are loaded in the same process (e.g. competitive benchmarks),
+  `require 'money'` must run **before** `require 'minting'` — otherwise the
+  money gem's `class Money` reopens and corrupts `Mint::Money`'s methods.
+  The competitive benchmark helpers (`competitive/money/benchmark_helper.rb`,
+  `competitive/shopify/benchmark_helper.rb`) require `money_setup`/
+  `shopify_setup` before `benchmark_helper` for this reason.
 - **Zero singleton.** `Mint.money(0, 'USD')` returns the cached frozen
   `currency.zero`, not a fresh object. `Money.from` and `Money.from_subunits`
   both do this. Equality and `assert_same` tests rely on it.
@@ -306,7 +324,8 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/mint/parser/parser.rb`, `separators.rb` | `Mint.parse` / `Mint.parse!` |
 | `lib/minting/mint/rounding.rb` | lazy rounding-mode module + global `normalize_amount` patch |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
-| `lib/minting/mint/dsl/` | `numeric`, `string`, `range`, `top_level` refinements/aliases |
+| `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
+| `lib/minting/mint/aliases.rb` | opt-in `Currency = Mint::Currency` (warn-and-skip if already defined) |
 | `lib/minting/money/money.rb` | `Money` core; requires all `money/*` mixins |
 | `lib/minting/money/constructors.rb` | `from`, `from_subunits`, `no_currency`, `parse`, `copy_with`, `zero`, deprecated `create`/`mint` |
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |

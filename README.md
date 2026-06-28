@@ -227,33 +227,32 @@ Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:dow
 
 ## Optional top-level `Money` and `Currency`
 
-By default, Minting keeps everything namespaced under `Mint` to coexist nicely with other gems. If you prefer shorter constants, opt in:
+By default, `require "minting"` exposes `Mint::Money` as the top-level `Money` constant, so you can write `Money.from(10, "USD")` directly:
 
 ```ruby
 require "minting"
-require "minting/mint/aliases"  # opt‑in top‑level Money / Currency
+
+price = Money.from(10, "USD")                   # equivalent to Mint::Money.from
+tax   = Money.from(2.50, "USD")
 ```
 
-Or at runtime:
+`Currency` is **not** auto-bound, because application domain models are commonly named `Currency` (e.g. a Rails model). To opt in to the top-level `Currency` constant:
 
 ```ruby
-Mint.use_top_level_constants!
+require "minting"
+require "minting/mint/aliases"  # opt-in top-level Currency
+
+cur = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 ```
 
-For Rails applications, you can enable the top-level constants in an initializer:
+For Rails applications, you can enable the top-level `Currency` constant in an initializer:
 
 ```ruby
 # config/initializers/minting.rb
 require "minting/mint/aliases"
 ```
 
-After opting in:
-
-```ruby
-price = Money.from(10, "USD")                   # equivalent to Mint::Money.from
-tax   = Money.from(2.50, "USD")
-cur   = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
-```
+If another `Money` is already defined when `require "minting"` runs (e.g. the `money` gem was loaded first), Minting warns and skips the auto-bind — use `Mint::Money` in that case. The same applies to `Currency` via `minting/mint/aliases`.
 
 **Good fit:** Application code, especially Rails apps.
 **Not recommended:** Reusable gems/libraries — stick to `Mint::Money` to avoid conflicts.
