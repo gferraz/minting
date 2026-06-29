@@ -3,27 +3,83 @@
 module Mint
   # :nodoc:
   class Money
-    def self.format_cache
-      @format_cache ||= {}
+    def self.compiled_formatters
+      @compiled_formatters ||= {}
+    end
+
+    # Build each sign template with subunit precision baked in, returning a
+    # frozen Hash of templates keyed by sign (:positive, :negative, :zero).
+    # Keeps %<symbol>s and %<currency>s as format args so width/padding specifiers work.
+    # @private
+    def self.compile_templates(format_hash, subunit)
+      templates = {}
+      positive_raw = format_hash[:positive] || '%<symbol>s%<amount>f'
+
+      %i[positive negative zero].each do |sign|
+        template = sign == :positive ? positive_raw : format_hash[sign]
+        next unless template
+
+        template = template.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+        template.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
+        templates[sign] = template.freeze
+      end
+
+      templates
+    end
+
+    # Builds and returns a lambda that formats amounts for a fixed
+    # [format_config, currency, decimal, thousand] combination.
+    # The lambda is cached by {.compiled_formatters}.
+    # @private
+    def self.compile_formatter(format_hash, currency, decimal, thousand) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      subunit = currency.subunit
+      has_decimal_substitution = decimal != '.'
+      escaped_decimal = Regexp.escape(decimal)
+      has_thousand_separator = thousand && !thousand.empty?
+
+      templates = compile_templates(format_hash, subunit)
+
+      positive_template = templates[:positive]
+      negative_template = templates[:negative]
+      zero_template = templates[:zero]
+
+      # Detect whether templates use %<fractional>, and whether thousand separator
+      # logic is needed (only when there is an amount or integral placeholder)
+      all_templates = templates.values.join
+      needs_fractional = all_templates.include?('%<fractional>')
+      needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
+
+      lambda do |amount, cur|
+        format_template, adjusted_amount =
+          if negative_template && amount.negative?
+            [negative_template, -amount]
+          elsif zero_template && amount.zero?
+            [zero_template, amount]
+          else
+            [positive_template, amount]
+          end
+
+        args = { amount: adjusted_amount,
+                 symbol: cur.symbol,
+                 currency: cur.code,
+                 integral: adjusted_amount.to_i }
+
+        args[:fractional] = ((amount.abs % 1) * cur.fractional_multiplier).to_i if needs_fractional
+
+        result = Kernel.format(format_template, **args)
+        result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
+
+        if needs_integral && has_thousand_separator && (adjusted_amount >= 1000 || adjusted_amount <= -1000)
+          parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
+          parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
+          result = parts.join(decimal)
+        end
+
+        result
+      end
     end
 
     private
-
-    # Resolves the format template and amount based on the amount's sign
-    # (negative_format/zero_format may override both the template and negate the value)
-    # @private
-    def resolve_format(format)
-      negative_format = format[:negative]
-      zero_format = format[:zero]
-
-      if amount.negative? && negative_format
-        [negative_format, -amount]
-      elsif amount.zero? && zero_format
-        [zero_format,     amount]
-      else
-        [format[:positive] || '%<symbol>s%<amount>f', amount]
-      end
-    end
 
     # Validates that format hash contains only known keys.
     # @private
@@ -50,51 +106,17 @@ module Mint
       end
     end
 
-    def apply_thousand_separator(string, decimal:, thousand:)
-      return string if !thousand || thousand.empty?
-
-      # Apply thousands only to the integral portion, using the decimal as boundary
-      parts = string.split(/(?<=\d)#{Regexp.escape(decimal)}(?=\d)/, 2)
-      parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, "\\1#{thousand}")
-      parts.join(decimal)
-    end
-
-    # Applies a format template to produce a formatted string representation.
+    # Applies a format template to the money amount, returning a formatted string.
+    # Uses a cached compiled formatter lambda that pre-resolves currency-specific
+    # values (symbol, code, subunit) so per-call work is reduced to
+    # Kernel.format + optional separator substitutions.
     # @private
-    #
     def format_amount(format, decimal:, thousand:)
-      subunit = currency.subunit
-      resolved_format, adjusted_amount = resolve_format(format)
+      key = format.hash ^ currency_code.hash ^ decimal.hash ^ thousand.hash
 
-      resolved_format = inject_subunit_precision(resolved_format, subunit)
+      formatter = Money.compiled_formatters[key] ||= Money.compile_formatter(format, currency, decimal, thousand)
 
-      result = Kernel.format(resolved_format, {
-                               amount: adjusted_amount,
-                               currency: currency_code,
-                               symbol: currency.symbol,
-                               integral: adjusted_amount.to_i,
-                               fractional: fractional
-                             })
-
-      # Substitute decimal first, while the dot is still unambiguous
-      result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if decimal != '.'
-
-      return result if adjusted_amount.abs < 1000
-
-      # Apply thousands only to the integral portion, using the decimal as boundary
-      apply_thousand_separator(result, decimal:, thousand:)
-    end
-
-    # Injects the currency's subunit precision into %<amount>f specifiers
-    # (e.g. '%<amount>f' → '%<amount>.2f' for USD). For zero-subunit
-    # currencies (e.g. JPY), strips %<fractional>d specifiers.
-    # @private
-    def inject_subunit_precision(template, subunit)
-      Money.format_cache[[template, subunit]] ||= begin
-        result = template.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
-        result.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
-        result.freeze
-      end
+      formatter.call(amount, currency)
     end
   end
 end
