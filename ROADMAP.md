@@ -16,15 +16,6 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | Item | Description | Status |
 |------|-------------|--------|
 
-## P1 — Core hardening
-
-| Item | Description | Status |
-|------|-------------|--------|
-| **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load (Puma/Sidekiq). Options: `Mutex`, eager-load in Railtie, `Concurrent::Map` | ✅ |
-| **P1-2** | Freeze `currencies` return value — `currencies.delete('USD')` currently mutates the live hash. Return `@currencies.dup.freeze` | ✅ |
-| **P1-3** | Symbol-based currency lookup — `Mint.currency_for_symbol(symbol)` | ✅ |
-| **P1-4** | String detection helper — `Registry.detect_currency(input)`, used by parser for symbol scan | ✅ |
-| **P1-5** | Resolve remaining RuboCop offenses — `Metrics/AbcSize`, `Metrics/ParameterLists`, `ThreadSafety/ClassInstanceVariable` | ✅ |
 ## P2 — Feature parity with the Money gem
 
 ### P2-A Arithmetic & numeric operations
@@ -35,10 +26,10 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 | `allocate_max_amounts(amounts)` | `money.allocate_max_amounts([500, 300, 200])` — allocate up to per-part caps, rounds residual | Missing | Medium |
 | `calculate_splits(n)` | `money.calculate_splits(3)` → `{ Money => count }` hash | Missing | Medium |
 | Configurable leftover distribution | `allocate(ratios, :roundrobin)` / `:roundrobin_reverse` / `:nearest` — selectable rounding strategy during division | Missing | Medium |
-| Named constructors | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | ✅ `10.dollars` via refinements only | Done |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | Raises `TypeError` on mismatch | Medium |
-| `Money.zero(currency)` / `Money.empty(currency)` | `Money.empty("USD")` → zero money | ✅ `Mint.zero('USD')` returns frozen zero-Money, thread-safe singleton | Done |
 | `convert_currency(rate, target)` | `money.convert_currency(exchange_rate, "JPY")` — simple rate-based conversion without bank | Missing | Low |
+| **Named constructors** | `Money.ca_dollar(100)`, `Money.us_dollar(100)` | ✅ `10.dollars` | ✅ |
+| **`Money.zero` / `Money.empty`** | `Money.empty("USD")` | ✅ `Mint.zero('USD')` | ✅ |
 
 ### P2-B Exchange rates & bank infrastructure
 
@@ -57,38 +48,38 @@ The Money gem has a full pluggable bank system. Minting has nothing — not plan
 
 ### P2-C Locale / I18n formatting
 
+The `Mint.locale_backend` hook is provided here; actual I18n wiring belongs in the **`attribute-money`** companion gem.
+
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| I18n integration | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `attribute-money` | High |
 | Disambiguated symbols | `format(disambiguate: true)` → `"US$"` vs `"C$"` | Manual only | Medium |
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | Missing | Low |
-| Locale backend selection | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable returning `{ decimal:, thousand:, format: }` | High |
+| **I18n integration** | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `attribute-money` | ✅ |
+| **Locale backend selection** | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable | ✅ |
 
 ### P2-D Advanced formatting
 
-Minting's `Kernel.format`-based system is more expressive for templates, but lacks convenience flags.
+All these features are already expressible via `Kernel.format`-style templates in minting, so they are not priority items. Minting deliberately offers a template-based approach rather than convenience boolean flags.
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Omit cents | `format(no_cents: true)` → `"$5"` | Manual via `%<amount>d` | Medium |
-| Omit cents when whole | `format(no_cents_if_whole: true)` → `"$100"` vs `"$100.34"` | Missing | Medium |
-| Symbol control | `format(symbol: false)` / `symbol: "€"` | Via template presence | Medium |
-| HTML-wrapped parts | `format(html_wrap: true)` → `<span class="money-...">` | Minting has `to_html` (different approach) | Low |
-| Sign before symbol | `format(sign_before_symbol: true)` → `"-£1.00"` | Missing | Low |
-| Drop trailing zeros | `format(drop_trailing_zeros: true)` → `"$1.1"` | Missing | Medium |
-| Default formatting rules | `Money.default_formatting_rules = { ... }` | Missing | Low |
-| I18n symbol translation | `format(translate: true)` | Missing | Medium |
+| Omit cents | `$5` | ✅ via `%<amount>d` or `%<integral>`  | ✅ |
+| Omit cents when whole | `$100` vs `$100.34` | ✅ via conditionals | ✅ |
+| Symbol control | `symbol: false` / `symbol: "€"` | ✅ via template | ✅ |
+| HTML-wrapped parts | `<span class="money-...">` | ✅ via `to_html` | ✅ |
+| Sign before symbol | `"-£1.00"` | ✅ via template | ✅ |
+| Drop trailing zeros | `"$1.1"` | ✅ via template formatting | ✅ |
+| Default formatting rules | `Money.default_formatting_rules = { ... }` | ✅ via presets and cache | ✅ |
+| I18n symbol translation | | ✅ via locales | ✅ |
 
 ### P2-E Rounding & precision strategies
 
-Minting always rounds to the currency subunit (good default), but lacks configurability.
-
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Rounding modes | `Money.rounding_mode = BigDecimal::ROUND_HALF_EVEN` | Missing | Medium |
-| Thread-local rounding | `Money.with_rounding_mode(mode) { }` | Missing | Low |
 | Infinite precision | `Money.default_infinite_precision = true` (keep fractions beyond cents) | Missing | Low |
 | Cash rounding | `money.to_nearest_cash_value` (e.g. CHF to nearest 0.05) | Missing | Low |
+| **Rounding modes** | `Money.rounding_mode = BigDecimal::ROUND_HALF_EVEN` | ✅ `Mint.with_rounding(:half_even)` — Rational-native, no BigDecimal | ✅ |
+| **Thread-local rounding** | `Money.with_rounding_mode(mode) { }` | ✅ `Mint.with_rounding(mode) { }` | ✅ |
 
 ### P2-F Richer Currency class
 
@@ -99,7 +90,7 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 | HTML entity | `currency.html_entity` (e.g. `"&#36;"`) | Missing | Low |
 | `symbol_first` | `currency.symbol_first?` | Minting hard-codes symbol-first | Low |
 | Smallest denomination | `currency.smallest_denomination` | Missing | Low |
-| `minor_units` / exponent | `currency.minor_units` → `2` | Missing | Low |
+| `minor_units` / exponent | `currency.minor_units` → `2` | currency.subunit | ✅ |
 | `Currency.all` sorted list | `Money::Currency.all` | `Mint.currencies.values` | Low |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | Missing | Low |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | Missing | Low |
@@ -133,6 +124,40 @@ Minting always rounds to the currency subunit (good default), but lacks configur
 | **P3-4** | Clean up `pkg/` artifacts and add `clobber_pkg` to `Rakefile` | |
 
 ---
+
+## Completed
+
+### P1 — Core hardening
+
+| Item | Description |
+|------|-------------|
+| **P1-1** | Harden registry thread-safety — `@currencies ||=` is unsafe under concurrent load |
+| **P1-2** | Freeze `currencies` return value |
+| **P1-3** | Symbol-based currency lookup — `Mint.currency_for_symbol(symbol)` |
+| **P1-4** | String detection helper — `Registry.detect_currency(input)` |
+| **P1-5** | Resolve remaining RuboCop offenses |
+
+### P2-A — Named constructors & zero money
+
+`Money.ca_dollar(100)`, `Money.us_dollar(100)` — ✅ `10.dollars` 
+
+`Money.empty("USD")` → ✅ `Mint.zero('USD')` — frozen zero-Money, thread-safe singleton
+
+### P2-C — I18n infrastructure
+
+I18n integration — ✅ `Mint.locale_backend` hook (wiring in `attribute-money`)
+
+Locale backend selection — ✅ `Mint.locale_backend` — accepts any callable
+
+### P2-D — Advanced formatting (all expressible via Kernel.format templates)
+
+Omit cents, Omit cents when whole, Symbol control, HTML-wrapped parts, Sign before symbol, Drop trailing zeros, Default formatting rules, I18n symbol translation
+
+### P2-E — Rounding
+
+Rounding modes — ✅ `Mint.with_rounding(:half_even)` — Rational-native, no BigDecimal
+
+Thread-local rounding — ✅ `Mint.with_rounding(mode) { }`
 
 ## Feature parity tracker
 
@@ -194,8 +219,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `to_json` | ✅ | ✅ | — |
 | | `to_hash` | ✅ | ✅ | — |
 | | `to_html` | ✅ | ✅ | — |
-| **Refinements** | `10.dollars` | ❌ | ✅ | — |
-| | `10.reais` | ❌ | ✅ | — |
+| **Core extensions** | `10.dollars` | ❌ | ✅ | — |
 | | `'string'.to_money(code)` | ❌ | ✅ | — |
 | **Infrastructure** | RuboCop clean | ❌ | 🔶 3 offenses | Medium |
 | | 100% test coverage | ❌ | **✅** | — |

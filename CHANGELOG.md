@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Performance
+- Formatting is now compiled into reusable lambdas at the class level — bakes subunit precision, resolves sign templates, and pre-detects placeholder usage (`%<amount>`, `%<integral>`, `%<fractional>`) once per unique format configuration, eliminating per-call gsub, method dispatch, and conditional computation. 1.4–2.2x formatting speedup depending on scenario.
+
 ## [v1.9.6](https://github.com/gferraz/minting/releases/tag/v1.9.6) (2026-06-29)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.4...v1.9.6)
