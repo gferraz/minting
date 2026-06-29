@@ -33,10 +33,10 @@ module Mint
     # @private
     def validate_separators!(decimal:, thousand:)
       case decimal
-      when '' then raise ArgumentError, 'decimal must be a non-empty'
-      when nil # :noop
-      when String
-        raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}" if decimal == thousand
+      when nil      # :noop
+      when ''       then raise ArgumentError, 'decimal must be a non-empty'
+      when thousand then raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}"
+      when String   # :noop
       else raise ArgumentError, "decimal must be a String, false, or nil, got #{decimal.inspect}"
       end
 
@@ -62,13 +62,7 @@ module Mint
       subunit = currency.subunit
       resolved_format, adjusted_amount = resolve_format(format)
 
-      # Inject the currency's subunit precision into %<amount>f specifiers
-      # e.g. '%<amount>f' becomes '%<amount>.2f' for USD
-      resolved_format = resolved_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
-
-      # Zero-subunit currencies (e.g. JPY) have no fractional part —
-      # strip %<fractional>d specifiers entirely since there's no valid integer for "nothing"
-      resolved_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
+      resolved_format = inject_subunit_precision(resolved_format, subunit)
 
       result = Kernel.format(resolved_format, {
                                amount: adjusted_amount,
@@ -85,6 +79,19 @@ module Mint
 
       # Apply thousands only to the integral portion, using the decimal as boundary
       apply_thousand_separator(result, decimal:, thousand:)
+    end
+
+    # Injects the currency's subunit precision into %<amount>f specifiers
+    # (e.g. '%<amount>f' → '%<amount>.2f' for USD). For zero-subunit
+    # currencies (e.g. JPY), strips %<fractional>d specifiers.
+    # @private
+    def inject_subunit_precision(template, subunit)
+      cache ||= {}
+      cache[[template, subunit]] ||= begin
+        result = template.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+        result.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
+        result.freeze
+      end
     end
   end
 end
