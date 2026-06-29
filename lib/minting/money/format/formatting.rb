@@ -53,9 +53,9 @@ module Mint
 
       lambda do |amount, cur|
         format_template, adjusted_amount =
-          if negative_template && amount.negative?
+          if negative_template && amount < 0
             [negative_template, -amount]
-          elsif zero_template && amount.zero?
+          elsif zero_template && amount == 0
             [zero_template, amount]
           else
             [positive_template, amount]
@@ -86,9 +86,9 @@ module Mint
     # Validates that format hash contains only known keys.
     # @private
     def validate_format_hash(format)
-      # unknown = format.keys - %i[positive negative zero]
+      unknown = format.keys - %i[positive negative zero]
 
-      # raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
+      raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
     end
 
     # Validates +decimal+ and +thousand+ separator arguments.
