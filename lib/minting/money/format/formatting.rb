@@ -3,6 +3,10 @@
 module Mint
   # :nodoc:
   class Money
+    def self.format_cache
+      @format_cache ||= {}
+    end
+
     private
 
     # Resolves the format template and amount based on the amount's sign
@@ -86,8 +90,7 @@ module Mint
     # currencies (e.g. JPY), strips %<fractional>d specifiers.
     # @private
     def inject_subunit_precision(template, subunit)
-      cache ||= {}
-      cache[[template, subunit]] ||= begin
+      Money.format_cache[[template, subunit]] ||= begin
         result = template.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
         result.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
         result.freeze
