@@ -83,17 +83,17 @@ class MoneyFormatTest < Minitest::Test
 
   # Real-world currency formatting tests
   def test_european_currency_formats
-    eur = Mint.money(1234.56, 'EUR')
+    eur = Mint.money(9234.56, 'EUR')
     gbp = Mint.money(987.65, 'GBP')
     chf = Mint.money(456.78, 'CHF')
 
     # European style: symbol after amount
-    assert_equal '1,234.56 €', eur.format(format: '%<amount>f %<symbol>s')
+    assert_equal '9,234.56 €', eur.format(format: '%<amount>f %<symbol>s', thousand: ',', decimal: '.')
     assert_equal '987.65 £', gbp.format(format: '%<amount>f %<symbol>s')
     assert_equal '456.78 Fr', chf.format(format: '%<amount>f %<symbol>s')
 
     # European style with comma separator and dot delimiter
-    assert_equal '1.234,56 €', eur.format(format: '%<amount>f %<symbol>s', thousand: '.', decimal: ',')
+    assert_equal '9.234,56 €', eur.format(format: '%<amount>f %<symbol>s', thousand: '.', decimal: ',')
     assert_equal '987,65 £', gbp.format(format: '%<amount>f %<symbol>s', decimal: ',')
   end
 

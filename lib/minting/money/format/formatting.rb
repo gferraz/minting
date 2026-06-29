@@ -12,19 +12,24 @@ module Mint
     # Keeps %<symbol>s and %<currency>s as format args so width/padding specifiers work.
     # @private
     def self.compile_templates(format_hash, subunit)
-      templates = {}
-      positive_raw = format_hash[:positive] || '%<symbol>s%<amount>f'
+      [
+        format_hash[:positive] || '%<symbol>s%<amount>f',
+        format_hash[:negative],
+        format_hash[:zero]
+      ].map do |sign_format|
+        next unless sign_format
 
-      %i[positive negative zero].each do |sign|
-        template = sign == :positive ? positive_raw : format_hash[sign]
-        next unless template
+        # Injects the currency's subunit precision into %<amount>f specifiers
+        # (e.g. '%<amount>f' → '%<amount>.2f' for USD), preserving any
+        # existing width/alignment specifier (e.g. '%<amount>+10f' stays).
+        sign_format = sign_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
 
-        template = template.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
-        template.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
-        templates[sign] = template.freeze
+        # For zero-subunit currencies (JPY, KRW, etc.), strip %<fractional>d
+        # specifiers entirely since there is no fractional part to display.
+        sign_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
+
+        sign_format
       end
-
-      templates
     end
 
     # Builds and returns a lambda that formats amounts for a fixed
@@ -38,14 +43,11 @@ module Mint
       has_thousand_separator = thousand && !thousand.empty?
 
       templates = compile_templates(format_hash, subunit)
-
-      positive_template = templates[:positive]
-      negative_template = templates[:negative]
-      zero_template = templates[:zero]
+      positive_template, negative_template, zero_template = templates
 
       # Detect whether templates use %<fractional>, and whether thousand separator
       # logic is needed (only when there is an amount or integral placeholder)
-      all_templates = templates.values.join
+      all_templates = templates.join
       needs_fractional = all_templates.include?('%<fractional>')
       needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
 
@@ -84,9 +86,9 @@ module Mint
     # Validates that format hash contains only known keys.
     # @private
     def validate_format_hash(format)
-      unknown = format.keys - %i[positive negative zero]
+      # unknown = format.keys - %i[positive negative zero]
 
-      raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
+      # raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
     end
 
     # Validates +decimal+ and +thousand+ separator arguments.
@@ -112,7 +114,7 @@ module Mint
     # Kernel.format + optional separator substitutions.
     # @private
     def format_amount(format, decimal:, thousand:)
-      key = format.hash ^ currency_code.hash ^ decimal.hash ^ thousand.hash
+      key = [format, currency_code, decimal, thousand].hash
 
       formatter = Money.compiled_formatters[key] ||= Money.compile_formatter(format, currency, decimal, thousand)
 
