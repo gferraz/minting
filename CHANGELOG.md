@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [v1.9.6](https://github.com/gferraz/minting/releases/tag/v1.9.6) (2026-06-29)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.4...v1.9.6)
+
 ### Performance
 - Format-template subunit injection extracted into `inject_subunit_precision` and memoized — avoids a regexp gsub per `format` call for repeated format+currency combinations (~24% formatting speedup).
 
