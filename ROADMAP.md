@@ -68,7 +68,7 @@ All these features are already expressible via `Kernel.format`-style templates i
 | Symbol control | `symbol: false` / `symbol: "€"` | ✅ via template | ✅ |
 | HTML-wrapped parts | `<span class="money-...">` | ✅ via `to_html` | ✅ |
 | Sign before symbol | `"-£1.00"` | ✅ via template | ✅ |
-| Drop trailing zeros | `"$1.1"` | ✅ via template formatting | ✅ |
+| Drop trailing zeros | `"$1.1"` | ❌ no dedicated boolean flag (achievable via template, but not a drop-in substitute) | — |
 | Default formatting rules | `Money.default_formatting_rules = { ... }` | ✅ via presets and cache | ✅ |
 | I18n symbol translation | | ✅ via locales | ✅ |
 
@@ -91,7 +91,7 @@ All these features are already expressible via `Kernel.format`-style templates i
 | `symbol_first` | `currency.symbol_first?` | Minting hard-codes symbol-first | Low |
 | Smallest denomination | `currency.smallest_denomination` | Missing | Low |
 | `minor_units` / exponent | `currency.minor_units` → `2` | currency.subunit | ✅ |
-| `Currency.all` sorted list | `Money::Currency.all` | `Mint.currencies.values` | Low |
+| `Currency.all` sorted list | `Money::Currency.all` | `Registry.currencies.values` (no public `.all` method) | Low |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | Missing | Low |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | Missing | Low |
 | Crypto currencies | `Money.configure { crypto_currencies: true }` — YAML-backed crypto currency support | Missing | Low |
@@ -186,7 +186,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `disambiguate` | ✅ | ❌ | Medium |
 | | `html_wrap` | ✅ | 🔶 different `to_html` | Low |
 | | `south_asian_number_formatting` | ✅ | ❌ | Low |
-| | `drop_trailing_zeros` | ✅ | ❌ | Medium |
+| | `drop_trailing_zeros` | ✅ | ❌ no dedicated boolean flag (achievable via template, not a drop-in) | — |
 | | `to_s` | ✅ | ✅ | — |
 | | `Kernel.format`-style templates | ❌ `%u`/`%n` | **✅ `%<symbol>s%<amount>f`** | — |
 | | Sign-aware hash format | ❌ | **✅ `{positive:,negative:,zero:}`** | — |
@@ -200,9 +200,9 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | Rate import/export (json/yaml) | ✅ | ❌ | Low |
 | | ECB / OpenExchangeRates stores | ✅ (extracted) | ❌ | Low |
 | **I18n** | I18n integration | ✅ `locale_backend = :i18n` | 🔶 Hook ready, wiring in `attribute-money` | **High** |
-| | Per-locale formatting rules | ✅ | ❌ | **High** |
-| | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | **High** |
-| **Rounding** | Rounding modes | ✅ | ❌ Ruby default | Medium |
+| | Per-locale formatting rules | ✅ | 🔶 `Mint.locale_backend` hook ready (wiring in `attribute-money`) | — |
+| | Locale backend | ✅ | **✅** `Mint.locale_backend` hook | — |
+| **Rounding** | Rounding modes | ✅ | **✅** `Mint.with_rounding(:half_even)` — Rational-native | — |
 | | Infinite precision | ✅ | ❌ | Low |
 | | Cash rounding | ✅ | ❌ | Low |
 | **Currency** | ISO numeric code | ✅ | ❌ | Low |
@@ -221,7 +221,7 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | `to_html` | ✅ | ✅ | — |
 | **Core extensions** | `10.dollars` | ❌ | ✅ | — |
 | | `'string'.to_money(code)` | ❌ | ✅ | — |
-| **Infrastructure** | RuboCop clean | ❌ | 🔶 3 offenses | Medium |
+| **Infrastructure** | RuboCop clean | ❌ | **✅** (0 offenses) | — |
 | | 100% test coverage | ❌ | **✅** | — |
 | | Immutable value objects | ❌ | **✅ frozen** | — |
 | | Thread-safe registry | ✅ mutex | **✅ Monitor + copy‑on‑write** | Done |
