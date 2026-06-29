@@ -26,7 +26,7 @@ module Mint
     # @return [String] HTML5 `<data>` representation
     def to_html(format = DEFAULT_FORMAT)
       title = Kernel.format("#{currency_code} %0.#{currency.subunit}f", amount)
-      body = to_formatted_s(format: format)
+      body = format(format: format)
       %(<data class='money' title='#{title}'>#{ERB::Util.html_escape(body)}</data>)
     end
 

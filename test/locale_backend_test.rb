@@ -50,19 +50,19 @@ class LocaleBackendTest < Minitest::Test
   def test_explicit_decimal_overrides_backend
     Mint.locale_backend = -> { { decimal: ',' } }
 
-    assert_equal '$99.99', Mint.money(99.99, 'USD').to_formatted_s(decimal: '.')
+    assert_equal '$99.99', Mint.money(99.99, 'USD').format(decimal: '.')
   end
 
   def test_explicit_thousand_overrides_backend
     Mint.locale_backend = -> { { thousand: '.' } }
 
-    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').to_formatted_s(thousand: ',')
+    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').format(thousand: ',')
   end
 
   def test_explicit_format_overrides_backend
     Mint.locale_backend = -> { { format: '%<symbol>s%<amount>f' } }
 
-    assert_equal '99.95', Mint.money(99.95, 'USD').to_formatted_s(format: '%<amount>f')
+    assert_equal '99.95', Mint.money(99.95, 'USD').format(format: '%<amount>f')
   end
 
   def test_partial_locale_falls_back_to_defaults
@@ -112,6 +112,6 @@ class LocaleBackendTest < Minitest::Test
   def test_explicit_format_overrides_locale_format_and_separator
     Mint.locale_backend = -> { { thousand: '-', decimal: ',' } }
 
-    assert_equal '$1-234.56', Mint.money(1234.56, 'USD').to_formatted_s(decimal: '.')
+    assert_equal '$1-234.56', Mint.money(1234.56, 'USD').format(decimal: '.')
   end
 end

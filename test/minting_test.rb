@@ -24,34 +24,34 @@ class MintingTest < Minitest::Test
     price = Mint.money(9.99, 'USD')
 
     assert_equal '$9.99',  price.to_s
-    assert_equal '9',      price.to_formatted_s(format: '%<amount>d')
-    assert_equal '$ 9', price.to_formatted_s(format: '%<symbol>s%<amount> d')
-    assert_equal '$-9.99',  (-price).to_formatted_s(format: '%<symbol>s%<amount> f')
-    assert_equal '$ 9.99',  price.to_formatted_s(format: '%<symbol>s%<amount> f')
-    assert_equal '$9.99',  price.to_formatted_s(format: '%<symbol>s%<amount>f')
-    assert_equal '$+9.99', price.to_formatted_s(format: '%<symbol>s%<amount>+f')
-    assert_equal ' 9.99',  price.to_formatted_s(format: '%<amount> f')
-    assert_equal '-9.99',  (-price).to_formatted_s(format: '%<amount> f')
-    assert_equal '-9.99 USD', (-price).to_formatted_s(format: '%<amount> f %<currency>s')
+    assert_equal '9',      price.format(format: '%<amount>d')
+    assert_equal '$ 9', price.format(format: '%<symbol>s%<amount> d')
+    assert_equal '$-9.99',  (-price).format(format: '%<symbol>s%<amount> f')
+    assert_equal '$ 9.99',  price.format(format: '%<symbol>s%<amount> f')
+    assert_equal '$9.99',  price.format(format: '%<symbol>s%<amount>f')
+    assert_equal '$+9.99', price.format(format: '%<symbol>s%<amount>+f')
+    assert_equal ' 9.99',  price.format(format: '%<amount> f')
+    assert_equal '-9.99',  (-price).format(format: '%<amount> f')
+    assert_equal '-9.99 USD', (-price).format(format: '%<amount> f %<currency>s')
 
     # Format with padding
     price_in_euros = Mint.money(12.34, 'EUR')
 
-    assert_equal '--      9',        price.to_formatted_s(format: '--%<amount>7d')
-    assert_equal '        9.99 USD', price.to_formatted_s(format: '  %<amount>10f %<currency>s')
-    assert_equal '       -9.99',     (-price).to_formatted_s(format: '  %<amount>10f')
+    assert_equal '--      9',        price.format(format: '--%<amount>7d')
+    assert_equal '        9.99 USD', price.format(format: '  %<amount>10f %<currency>s')
+    assert_equal '       -9.99',     (-price).format(format: '  %<amount>10f')
 
     assert_equal ' €    +12.34',
-                 price_in_euros.to_formatted_s(format: '%<symbol>2s%<amount>+10f')
+                 price_in_euros.format(format: '%<symbol>2s%<amount>+10f')
 
     # Per-sign Hash format (accounting parentheses, zero placeholder)
     loss = Mint.money(-1234.56, 'USD')
 
     assert_equal '($1,234.56)',
-                 loss.to_formatted_s(format: { negative: '(%<symbol>s%<amount>f)' })
+                 loss.format(format: { negative: '(%<symbol>s%<amount>f)' })
 
     assert_equal '--',
-                 Mint.money(0, 'BRL').to_formatted_s(format: { zero: '--' })
+                 Mint.money(0, 'BRL').format(format: { zero: '--' })
 
     fmt = {
       positive: '%<symbol>s%<amount>f',
@@ -59,7 +59,7 @@ class MintingTest < Minitest::Test
       zero: '--'
     }
 
-    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').to_formatted_s(format: fmt)
+    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').format(format: fmt)
 
     # Json serialization
 
