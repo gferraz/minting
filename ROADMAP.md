@@ -207,8 +207,5 @@ Comprehensive comparison between Money gem v6.x and Minting.
 
 ## Suggested next steps
 
-1. **attribute-money** — wire `Mint.locale_backend` to `I18n.t('number.currency.format')` in a Railtie
-2. **Configurable allocation** — `allocate_max_amounts`, `calculate_splits`, and leftover distribution strategies
-3. **Formatting convenience flags** — `no_cents`, `no_cents_if_whole`, `drop_trailing_zeros`, `symbol:` override
-4. **RuboCop cops** — `Money/MissingCurrency` and `Money/ZeroMoney` for static analysis
-5. **Disambiguated symbols** — `currency.disambiguate_symbol` for `"US$"` vs `"C$"`
+1. **RuboCop cops** — `Money/MissingCurrency` and `Money/ZeroMoney` for static analysis
+2. **Disambiguated symbols** — `currency.disambiguate_symbol` for `"US$"` vs `"C$"`
