@@ -52,7 +52,7 @@ The `Mint.locale_backend` hook is provided here; actual I18n wiring belongs in t
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Disambiguated symbols | `format(disambiguate: true)` → `"US$"` vs `"C$"` | Manual only | Medium |
+| Disambiguated symbols | :disambiguated option | ✅ `%<dsymbol>s` template placeholder | ✅ |
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | Missing | Low |
 | **I18n integration** | Reads `I18n.t('number.currency.format')` for separators/template | 🔶 Hook in core (`Mint.locale_backend`), wiring in `attribute-money` | ✅ |
 | **Locale backend selection** | `Money.locale_backend = :i18n` / `:currency` | **✅** `Mint.locale_backend` — accepts any callable | ✅ |
@@ -86,9 +86,9 @@ All these features are already expressible via `Kernel.format`-style templates i
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
 | ISO numeric code | `currency.iso_numeric` (e.g. `"840"`) | Missing | Low |
-| Disambiguate symbol | `currency.disambiguate_symbol` (e.g. `"US$"`) | Missing | Medium |
+| Disambiguate symbol | `currency.disambiguate_symbol` (e.g. `"US$"`) | `currency.disambiguate_symbol` | ✅ |
 | HTML entity | `currency.html_entity` (e.g. `"&#36;"`) | Missing | Low |
-| `symbol_first` | `currency.symbol_first?` | Minting hard-codes symbol-first | Low |
+| `symbol_first` | `currency.symbol_first?` | template placeholder | ✅ |
 | Smallest denomination | `currency.smallest_denomination` | Missing | Low |
 | `minor_units` / exponent | `currency.minor_units` → `2` | currency.subunit | ✅ |
 | `Currency.all` sorted list | `Money::Currency.all` | `Registry.currencies.values` (no public `.all` method) | Low |
@@ -159,6 +159,10 @@ Rounding modes — ✅ `Mint.with_rounding(:half_even)` — Rational-native, no 
 
 Thread-local rounding — ✅ `Mint.with_rounding(mode) { }`
 
+### P2-F — Disambiguated symbols
+
+`%<dsymbol>s` format placeholder — ✅ resolves to `currency.disambiguate_symbol` (e.g. `"US$"`, `"C$"`, `"A$"`), falls back to primary symbol when absent
+
 ## Feature parity tracker
 
 Comprehensive comparison between Money gem v6.x and Minting.
@@ -182,11 +186,11 @@ Comprehensive comparison between Money gem v6.x and Minting.
 | | Zero-equality across currencies | ✅ `Money.new(0, "USD") == 0` | **✅ + eql-shielded** | — |
 | | `clamp` | ❌ | ✅ | — |
 | **Formatting** | `no_cents`, `no_cents_if_whole` | ✅ | ❌ | Medium |
-| | `symbol: true/false` | ✅ | 🔶 manual | Medium |
-| | `disambiguate` | ✅ | ❌ | Medium |
-| | `html_wrap` | ✅ | 🔶 different `to_html` | Low |
+| | `symbol: true/false` | ✅ | `%<symbol>s` template| ✅ |
+| | `disambiguate` | ✅ | ✅ `%<dsymbol>s` template | ✅ |
+| | `html_wrap` | ✅ | different `to_html` | ✅ |
 | | `south_asian_number_formatting` | ✅ | ❌ | Low |
-| | `drop_trailing_zeros` | ✅ | ❌ no dedicated boolean flag (achievable via template, not a drop-in) | — |
+| | `drop_trailing_zeros` | ✅ |  via template) | - |
 | | `to_s` | ✅ | ✅ | — |
 | | `Kernel.format`-style templates | ❌ `%u`/`%n` | **✅ `%<symbol>s%<amount>f`** | — |
 | | Sign-aware hash format | ❌ | **✅ `{positive:,negative:,zero:}`** | — |
@@ -232,4 +236,3 @@ Comprehensive comparison between Money gem v6.x and Minting.
 ## Suggested next steps
 
 1. **RuboCop cops** — `Money/MissingCurrency` and `Money/ZeroMoney` for static analysis
-2. **Disambiguated symbols** — `currency.disambiguate_symbol` for `"US$"` vs `"C$"`

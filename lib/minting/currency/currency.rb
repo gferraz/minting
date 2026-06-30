@@ -15,20 +15,23 @@ module Mint
   # @attr_reader name [String, nil] Currency name
   # @attr_reader fractional_multiplier [Integer] 10^subunit, used for fractional conversions
   # @attr_reader minimum_amount [Rational] Smallest representable amount (1/fractional_multiplier)
+  # @attr_reader disambiguate_symbol [String, nil] A longer, code-prefixed variant to distinguish
+  #   currencies that share the same primary symbol (e.g. "US$" for USD, "C$" for CAD).
   Currency = Data.define(:code, :subunit, :symbol, :priority, :country, :name,
-                         :fractional_multiplier) do
+                         :fractional_multiplier, :disambiguate_symbol) do
     # @param code [String] ISO 4217 currency code
     # @param symbol [String] Display symbol
     # @param subunit [Integer] Number of decimal places (default 0)
     # @param priority [Integer] Parser precedence for symbol detection (default 0)
     # @param country [String, nil] Associated country code (default nil)
     # @param name [String, nil] Currency name (default nil)
-    def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil)
+    def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil,
+                   disambiguate_symbol: nil)
       subunit = subunit.to_i
       priority = priority.to_i
       fractional_multiplier = 10**subunit
       super(code:, subunit:, symbol:, priority:, country:, name:,
-            fractional_multiplier:)
+            fractional_multiplier:, disambiguate_symbol:)
     end
 
     # @return [String] debug representation

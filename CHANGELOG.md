@@ -2,8 +2,11 @@
 
 ## [Unreleased]
 
+### Features
+- `%<dsymbol>s` format placeholder — uses `currency.disambiguate_symbol` (e.g. `"US$"`, `"C$"`, `"A$"`) when available, falling back to the primary symbol. Allows per-template disambiguation: `money.format(format: '%<dsymbol>s%<amount>f')` → `"US$10.00"`.
+
 ### Performance
-- Formatting is now compiled into reusable lambdas at the class level — bakes subunit precision, resolves sign templates, and pre-detects placeholder usage (`%<amount>`, `%<integral>`, `%<fractional>`) once per unique format configuration, eliminating per-call gsub, method dispatch, and conditional computation. 1.4–2.2x formatting speedup depending on scenario.
+- Formatting is now compiled into reusable lambdas at the class level — bakes subunit precision, resolves sign templates, and pre-detects placeholder usage (`%<amount>`, `%<integral>`, `%<fractional>`, `%<dsymbol>`) once per unique format configuration, eliminating per-call gsub, method dispatch, and conditional computation. 1.4–2.2x formatting speedup depending on scenario.
 
 ## [v1.9.6](https://github.com/gferraz/minting/releases/tag/v1.9.6) (2026-06-29)
 

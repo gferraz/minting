@@ -17,7 +17,7 @@ module Mint
     #   When provided, expands to the preset's format options and merges
     #   with any explicit keyword arguments (kwargs override the preset).
     # @param format [String, Hash, nil] Either a Format string with placeholders
-    #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d),
+    #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d, %<dsymbol>s),
     #   or a Hash with per-sign keys (:positive, :negative, :zero) each
     #   holding a format string. A Hash is convenient for sign-aware formats
     #   such as accounting parentheses:

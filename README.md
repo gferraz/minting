@@ -118,6 +118,11 @@ Mint.money(0, 'BRL').format(format: { zero: '--' })          #=> "--"
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
 Mint.money(1234.56, 'USD').format(format: fmt)               #=> "$1,234.56"
 
+# Disambiguated symbol (e.g. "US$" vs "C$" vs "A$")
+Mint.money(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
+Mint.money(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
+Mint.money(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00"  (no dsymbol, falls back to symbol)
+
 # Json serialization
 
 price.to_json # => "{\"currency\": \"USD\", \"amount\": \"9.99\"}"

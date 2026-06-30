@@ -45,11 +45,12 @@ module Mint
       templates = compile_templates(format_hash, subunit)
       positive_template, negative_template, zero_template = templates
 
-      # Detect whether templates use %<fractional>, and whether thousand separator
-      # logic is needed (only when there is an amount or integral placeholder)
-      all_templates = templates.join
+      # Detect whether templates use %<fractional> and/or %<d-symbol>
+      all_templates = templates.compact.join
       needs_fractional = all_templates.include?('%<fractional>')
       needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
+      symbol = currency.symbol
+      dsymbol = currency.disambiguate_symbol || symbol
 
       lambda do |amount, cur|
         format_template, adjusted_amount =
@@ -62,9 +63,11 @@ module Mint
           end
 
         args = { amount: adjusted_amount,
-                 symbol: cur.symbol,
+                 symbol: symbol,
                  currency: cur.code,
-                 integral: adjusted_amount.to_i }
+                 integral: adjusted_amount.to_i,
+                 dsymbol: dsymbol
+              }
 
         args[:fractional] = ((amount.abs % 1) * cur.fractional_multiplier).to_i if needs_fractional
 

@@ -34,7 +34,7 @@ Metrics/MethodLength:
     - "test/**/*"
 
 Metrics/ParameterLists:
-  Max: 6
+  Max: 7
 
 Metrics/PerceivedComplexity:
   Max: 10

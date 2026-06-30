@@ -22,6 +22,17 @@ class MoneyFormatTest < Minitest::Test
     assert_equal 'R$3.457', gas.to_s
   end
 
+  def test_format_with_disambiguate_symbol
+    usd = Mint.money(10, 'USD')
+
+    assert_equal '$10.00', usd.format
+    assert_equal 'US$10.00', usd.format(format: '%<dsymbol>s%<amount>f')
+    assert_equal 'US$ 10.00', usd.format(format: '%<dsymbol>s %<amount>f')
+    assert_equal 'C$10.00', Mint.money(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')
+    assert_equal 'A$10.00', Mint.money(10, 'AUD').format(format: '%<dsymbol>s%<amount>f')
+    assert_equal '€10.00', Mint.money(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')
+  end
+
   def test_thousand_delimiter_format
     money = Mint.money(123_456_789.01, 'USD')
 

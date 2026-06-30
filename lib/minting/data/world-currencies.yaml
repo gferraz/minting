@@ -1,20 +1,13 @@
 ---
-# Currency registry. Each item contains:
-# code: ISO 4217 alphabetic code
-# country: primary ISO 3166-1 alpha-3 country code (when applicable/known)
-# subunit: decimal places
-# symbol: display symbol
-# priority: parser/display priority
-# name: English name of the currency
-
 - code: USD
   country: USA
   subunit: 2
   symbol: "$"
   name: United States Dollar
   priority: 1000
+  disambiguate_symbol: US$
 - code: EUR
-  country: null
+  country:
   subunit: 2
   symbol: "€"
   name: Euro
@@ -49,12 +42,14 @@
   symbol: "$"
   name: Canadian Dollar
   priority: 740
+  disambiguate_symbol: C$
 - code: AUD
   country: AUS
   subunit: 2
   symbol: "$"
   name: Australian Dollar
   priority: 730
+  disambiguate_symbol: A$
 - code: CHF
   country: CHE
   subunit: 2
@@ -67,12 +62,14 @@
   symbol: HK$
   name: Hong Kong Dollar
   priority: 710
+  disambiguate_symbol: HK$
 - code: SGD
   country: SGP
   subunit: 2
   symbol: S$
   name: Singapore Dollar
   priority: 700
+  disambiguate_symbol: S$
 - code: KRW
   country: KOR
   subunit: 0
@@ -85,30 +82,35 @@
   symbol: kr
   name: Swedish Krona
   priority: 680
+  disambiguate_symbol: SEK
 - code: NOK
   country: NOR
   subunit: 2
   symbol: kr
   name: Norwegian Krone
   priority: 670
+  disambiguate_symbol: NOK
 - code: DKK
   country: DNK
   subunit: 2
   symbol: kr
   name: Danish Krone
   priority: 660
+  disambiguate_symbol: DKK
 - code: NZD
   country: NZL
   subunit: 2
   symbol: "$"
   name: New Zealand Dollar
   priority: 650
+  disambiguate_symbol: NZ$
 - code: MXN
   country: MEX
   subunit: 2
   symbol: "$"
   name: Mexican Peso
   priority: 640
+  disambiguate_symbol: MEX$
 - code: BRL
   country: BRA
   subunit: 2
@@ -151,6 +153,7 @@
   symbol: "₨"
   name: Pakistani Rupee
   priority: 112
+  disambiguate_symbol: PKR
 - code: NGN
   country: NGA
   subunit: 2
@@ -170,11 +173,12 @@
   name: Bangladeshi Taka
   priority: 109
 - code: XOF
-  country: null
+  country:
   subunit: 0
   symbol: CFA
   name: West African CFA franc
   priority: 108
+  disambiguate_symbol: CFA
 - code: RUB
   country: RUS
   subunit: 2
@@ -193,6 +197,7 @@
   symbol: Br
   name: Ethiopian Birr
   priority: 105
+  disambiguate_symbol: ETB
 - code: ZWL
   country: ZWE
   subunit: 2
@@ -248,11 +253,12 @@
   name: Tanzanian Shilling
   priority: 96
 - code: XAF
-  country: null
+  country:
   subunit: 0
   symbol: FCFA
   name: Central African CFA franc
   priority: 95
+  disambiguate_symbol: FCFA
 - code: DJF
   country: DJI
   subunit: 0
@@ -271,12 +277,14 @@
   symbol: K
   name: Myanmar Kyat
   priority: 92
+  disambiguate_symbol: MMK
 - code: COP
   country: COL
   subunit: 2
   symbol: "$"
   name: Colombian Peso
   priority: 91
+  disambiguate_symbol: COL$
 - code: ERN
   country: ERI
   subunit: 2
@@ -295,6 +303,7 @@
   symbol: "$"
   name: Argentine Peso
   priority: 88
+  disambiguate_symbol: "$m/n"
 - code: DZD
   country: DZA
   subunit: 2
@@ -385,6 +394,7 @@
   symbol: "₨"
   name: Nepalese Rupee
   priority: 73
+  disambiguate_symbol: NPR
 - code: VES
   country: VEN
   subunit: 2
@@ -397,18 +407,21 @@
   symbol: "£"
   name: South Sudanese Pound
   priority: 71
+  disambiguate_symbol: SSP
 - code: TWD
   country: TWN
   subunit: 2
   symbol: NT$
   name: New Taiwan Dollar
   priority: 70
+  disambiguate_symbol: NT$
 - code: LKR
   country: LKA
   subunit: 2
   symbol: "₨"
   name: Sri Lankan Rupee
   priority: 69
+  disambiguate_symbol: SLRs
 - code: MWK
   country: MWI
   subunit: 2
@@ -421,6 +434,7 @@
   symbol: "$"
   name: Chilean Peso
   priority: 67
+  disambiguate_symbol: CLP
 - code: KZT
   country: KAZ
   subunit: 2
@@ -433,6 +447,7 @@
   symbol: ZK
   name: Zambian Kwacha
   priority: 65
+  disambiguate_symbol: ZMW
 - code: RON
   country: ROU
   subunit: 2
@@ -463,6 +478,7 @@
   symbol: FBu
   name: Burundian Franc
   priority: 60
+  disambiguate_symbol: FBu
 - code: BOB
   country: BOL
   subunit: 2
@@ -493,12 +509,14 @@
   symbol: RD$
   name: Dominican Peso
   priority: 55
+  disambiguate_symbol: RD$
 - code: HNL
   country: HND
   subunit: 2
   symbol: L
   name: Honduran Lempira
   priority: 54
+  disambiguate_symbol: HNL
 - code: JOD
   country: JOR
   subunit: 3
@@ -511,6 +529,7 @@
   symbol: L
   name: Albanian Lek
   priority: 52
+  disambiguate_symbol: Lek
 - code: MKD
   country: MKD
   subunit: 2
@@ -541,6 +560,7 @@
   symbol: K
   name: Papua New Guinean Kina
   priority: 47
+  disambiguate_symbol: PGK
 - code: TJS
   country: TJK
   subunit: 2
@@ -553,6 +573,7 @@
   symbol: Br
   name: Belarusian Ruble
   priority: 45
+  disambiguate_symbol: BYN
 - code: BAM
   country: BIH
   subunit: 2
@@ -595,6 +616,7 @@
   symbol: C$
   name: Nicaraguan Córdoba
   priority: 39
+  disambiguate_symbol: NIO$
 - code: PYG
   country: PRY
   subunit: 0
@@ -619,6 +641,7 @@
   symbol: Fr
   name: Guinean Franc
   priority: 35
+  disambiguate_symbol: FG
 - code: GMD
   country: GMB
   subunit: 2
@@ -631,12 +654,14 @@
   symbol: Le
   name: Sierra Leonean Leone
   priority: 33
+  disambiguate_symbol: SLL
 - code: STN
   country: STP
   subunit: 2
   symbol: Db
   name: São Tomé and Príncipe Dobra
   priority: 31
+  disambiguate_symbol: STN
 - code: CRC
   country: CRI
   subunit: 2
@@ -679,6 +704,7 @@
   symbol: CF
   name: Comorian Franc
   priority: 26
+  disambiguate_symbol: CF
 - code: GEL
   country: GEO
   subunit: 2
@@ -697,6 +723,7 @@
   symbol: "₨"
   name: Seychellois Rupee
   priority: 24
+  disambiguate_symbol: SRe
 - code: AMD
   country: ARM
   subunit: 2
@@ -709,6 +736,7 @@
   symbol: J$
   name: Jamaican Dollar
   priority: 23
+  disambiguate_symbol: J$
 - code: QAR
   country: QAT
   subunit: 2
@@ -734,7 +762,7 @@
   name: Moldovan Leu
   priority: 20
 - code: ANG
-  country: null
+  country:
   subunit: 2
   symbol: ƒ
   name: Netherlands Antillean Guilder
@@ -745,24 +773,28 @@
   symbol: N$
   name: Namibian Dollar
   priority: 19
+  disambiguate_symbol: N$
 - code: CVE
   country: CPV
   subunit: 2
-  symbol: $
+  symbol: "$"
   name: Cape Verdean Escudo
   priority: 18
+  disambiguate_symbol: Esc
 - code: LSL
   country: LSO
   subunit: 2
   symbol: L
   name: Lesotho Loti
   priority: 18
+  disambiguate_symbol: M
 - code: GIP
   country: GIB
   subunit: 2
-  symbol: £
+  symbol: "£"
   name: Gibraltar Pound
   priority: 17
+  disambiguate_symbol: GIP
 - code: BHD
   country: BHR
   subunit: 3
@@ -772,69 +804,80 @@
 - code: FKP
   country: FLK
   subunit: 2
-  symbol: £
+  symbol: "£"
   name: Falkland Islands Pound
   priority: 16
+  disambiguate_symbol: FK£
 - code: TTD
   country: TTO
   subunit: 2
   symbol: TT$
   name: Trinidad and Tobago Dollar
   priority: 16
+  disambiguate_symbol: TT$
 - code: SZL
   country: SWZ
   subunit: 2
   symbol: L
   name: Eswatini Lilangeni
   priority: 15
+  disambiguate_symbol: SZL
 - code: FJD
   country: FJI
   subunit: 2
   symbol: FJ$
   name: Fijian Dollar
   priority: 14
+  disambiguate_symbol: FJ$
 - code: GYD
   country: GUY
   subunit: 2
   symbol: G$
   name: Guyanese Dollar
   priority: 13
+  disambiguate_symbol: G$
 - code: SBD
   country: SLB
   subunit: 2
   symbol: SI$
   name: Solomon Islands Dollar
   priority: 12
+  disambiguate_symbol: SI$
 - code: SRD
   country: SUR
   subunit: 2
   symbol: Sr$
   name: Surinamese Dollar
   priority: 11
+  disambiguate_symbol: SRD
 - code: XCD
-  country: null
+  country:
   subunit: 2
   symbol: EC$
   name: East Caribbean Dollar
   priority: 10
+  disambiguate_symbol: EX$
 - code: BND
   country: BRN
   subunit: 2
   symbol: B$
   name: Brunei Dollar
   priority: 9
+  disambiguate_symbol: BND
 - code: BSD
   country: BHS
   subunit: 2
   symbol: B$
   name: Bahamian Dollar
   priority: 8
+  disambiguate_symbol: BSD
 - code: BZD
   country: BLZ
   subunit: 2
   symbol: BZ$
   name: Belize Dollar
   priority: 7
+  disambiguate_symbol: BZ$
 - code: ISK
   country: ISL
   subunit: 0
@@ -847,6 +890,7 @@
   symbol: Bds$
   name: Barbadian Dollar
   priority: 5
+  disambiguate_symbol: Bds$
 - code: VUV
   country: VUT
   subunit: 0
@@ -854,7 +898,7 @@
   name: Vanuatu Vatu
   priority: 4
 - code: XPF
-  country: null
+  country:
   subunit: 0
   symbol: "₣"
   name: CFP Franc
@@ -865,6 +909,7 @@
   symbol: WS$
   name: Samoan Tala
   priority: 2
+  disambiguate_symbol: WS$
 - code: TOP
   country: TON
   subunit: 2
@@ -872,9 +917,9 @@
   name: Tongan Paʻanga
   priority: 1
 - code: XXX
-  country: null
+  country:
   subunit: 4
-  symbol: ¤
+  symbol: "¤"
   name: No Currency
   priority: 0
 - code: AWG
@@ -889,18 +934,21 @@
   symbol: "$"
   name: Bermudian Dollar
   priority: 0
+  disambiguate_symbol: BD$
 - code: CDF
   country: COD
   subunit: 2
   symbol: Fr
   name: Congolese Franc
   priority: 0
+  disambiguate_symbol: FC
 - code: CUP
   country: CUB
   subunit: 2
   symbol: "$"
   name: Cuban Peso
   priority: 0
+  disambiguate_symbol: "$MN"
 - code: FOK
   country: FRO
   subunit: 2
@@ -910,19 +958,19 @@
 - code: GGP
   country: GGY
   subunit: 2
-  symbol: £
+  symbol: "£"
   name: Guernsey Pound
   priority: 0
 - code: IMP
   country: IMN
   subunit: 2
-  symbol: £
+  symbol: "£"
   name: Manx Pound
   priority: 0
 - code: JEP
   country: JEY
   subunit: 2
-  symbol: £
+  symbol: "£"
   name: Jersey Pound
   priority: 0
 - code: KID
@@ -937,12 +985,14 @@
   symbol: "$"
   name: Cayman Islands Dollar
   priority: 0
+  disambiguate_symbol: CI$
 - code: LRD
   country: LBR
   subunit: 2
   symbol: "$"
   name: Liberian Dollar
   priority: 0
+  disambiguate_symbol: L$
 - code: MGA
   country: MDG
   subunit: 2
@@ -967,12 +1017,14 @@
   symbol: "£"
   name: Sudanese Pound
   priority: 0
+  disambiguate_symbol: SDG
 - code: SHP
   country: SHN
   subunit: 2
   symbol: "£"
   name: Saint Helena Pound
   priority: 0
+  disambiguate_symbol: SHP
 - code: SLE
   country: SLE
   subunit: 2
@@ -986,7 +1038,7 @@
   name: Tuvaluan Dollar
   priority: 0
 - code: XDR
-  country: null
+  country:
   subunit: 0
   symbol: SDR
   name: Special Drawing Rights
