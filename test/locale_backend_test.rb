@@ -36,9 +36,9 @@ class LocaleBackendTest < Minitest::Test
 
   def test_to_s_uses_locale_format_template
     Mint.locale_backend = -> { { format: '%<amount>f %<symbol>s' } }
-    money = Mint.money(99.95, 'USD')
+    money = Mint.money(199.95, 'USD')
 
-    assert_equal '99.95 $', money.to_s
+    assert_equal '199.95 $', money.to_s
   end
 
   def test_to_s_uses_locale_format_and_separators
@@ -92,7 +92,7 @@ class LocaleBackendTest < Minitest::Test
       { decimal: ',', thousand: '.' }
     }
 
-    3.times { Mint.money(1.23, 'USD').to_s }
+    3.times { Mint.money(1.23, 'USD').to_fs }
 
     assert_equal 3, call_count
   end

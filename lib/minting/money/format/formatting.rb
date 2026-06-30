@@ -13,7 +13,7 @@ module Mint
     # @private
     def self.compile_templates(format_hash, subunit)
       [
-        format_hash[:positive] || '%<symbol>s%<amount>f',
+        format_hash[:positive] || DEFAULT_FORMAT,
         format_hash[:negative],
         format_hash[:zero]
       ].map do |sign_format|
@@ -49,33 +49,36 @@ module Mint
       all_templates = templates.compact.join
       needs_fractional = all_templates.include?('%<fractional>')
       needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
+      multiplier = currency.fractional_multiplier
       symbol = currency.symbol
-      dsymbol = currency.disambiguate_symbol || symbol
 
-      lambda do |amount, cur|
-        format_template, adjusted_amount =
-          if negative_template && amount < 0
-            [negative_template, -amount]
-          elsif zero_template && amount == 0
-            [zero_template, amount]
-          else
-            [positive_template, amount]
-          end
+      args = {
+        currency: currency.code,
+        dsymbol: currency.disambiguate_symbol || symbol,
+        symbol: symbol
+      }
 
-        args = { amount: adjusted_amount,
-                 symbol: symbol,
-                 currency: cur.code,
-                 integral: adjusted_amount.to_i,
-                 dsymbol: dsymbol
-              }
+      lambda do |amount|
+        format_template = if negative_template && amount < 0
+                            amount = -amount
+                            negative_template
+                          elsif zero_template && amount == 0
+                            zero_template
+                          else
+                            positive_template
+                          end
 
-        args[:fractional] = ((amount.abs % 1) * cur.fractional_multiplier).to_i if needs_fractional
+        args[:amount] = amount
+        args[:integral] = amount.to_i
+        args[:fractional] = ((amount.abs % 1) * multiplier).to_i if needs_fractional
 
         result = Kernel.format(format_template, **args)
         result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
 
-        if needs_integral && has_thousand_separator && (adjusted_amount >= 1000 || adjusted_amount <= -1000)
+        if needs_integral && has_thousand_separator && (amount >= 1000 || amount <= -1000)
+          # Split on the decimal separator between digits only — symbols may contain '.' (e.g. د.إ).
           parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
+          # Insert the thousands delimiter before each run of 3 digits from the right.
           parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
           result = parts.join(decimal)
         end
@@ -121,7 +124,7 @@ module Mint
 
       formatter = Money.compiled_formatters[key] ||= Money.compile_formatter(format, currency, decimal, thousand)
 
-      formatter.call(amount, currency)
+      formatter.call(amount)
     end
   end
 end

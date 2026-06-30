@@ -3,6 +3,12 @@
 module Mint
   # :nodoc:
   class Money
+
+
+    # The default display format pattern for formatting monetary values.
+    # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.
+    DEFAULT_FORMAT = '%<symbol>s%<amount>f'.freeze
+
     PRESETS = {
       amount: { format: '%<amount>f' },
       accounting: { format: { negative: '(%<symbol>s%<amount>f)' } },
@@ -101,7 +107,23 @@ module Mint
       width ? formatted.rjust(width) : formatted
     end
 
-    def to_s = format
+    def to_s
+      return format unless Mint.locale_backend.nil?
+
+      result = Kernel.format("%s%.#{currency.subunit}f", currency.symbol, amount)
+      return result if amount > -1000 && amount < 1000
+
+      if currency.subunit > 0
+        # Split on the decimal point between digits only — symbols may contain '.' (e.g. د.إ).
+        parts = result.split(/(?<=\d)\.(?=\d)/, 2)
+        # Insert ',' before each run of 3 digits from the right (1234567 → 1,234,567).
+        parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, '\1,')
+        parts.join('.')
+      else
+        # Zero-subunit currencies have no decimal part; group the whole numeric portion.
+        result.gsub(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/, '\1,')
+      end
+    end
 
     alias to_fs :format
   end
