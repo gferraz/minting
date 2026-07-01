@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bigdecimal'
+require 'bigdecimal/util'
 require 'erb'
 
 module Mint

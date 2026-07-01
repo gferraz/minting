@@ -10,11 +10,6 @@ class MoneyConversionTest < Minitest::Test
   end
 
   def test_bigdecimal_conversion
-    assert_raises(NoMethodError) { Mint.money(9.99, 'USD').to_d }
-
-    require 'bigdecimal'
-    require 'bigdecimal/util'
-
     assert_equal '9.99'.to_d,           Mint.money(9.99, 'USD').to_d
     assert_equal '123_456_789.01'.to_d, Mint.money(123_456_789.01, 'USD').to_d
   end

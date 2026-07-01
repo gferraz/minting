@@ -17,8 +17,6 @@ module Mint
   # Money objects are immutable and support arithmetic, comparison,
   # formatting, allocation, and parsing operations.
   class Money
-
-
     attr_reader :amount, :currency
 
     # Returns the ISO 3-letter currency code string.
