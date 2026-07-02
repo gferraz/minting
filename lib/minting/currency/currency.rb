@@ -68,20 +68,37 @@ module Mint
 
   # Resolves an object into a {Currency}, returning +nil+ when it can't.
   #
-  # Accepts +nil+, +String+, {Currency}, or {Money}.
-  # Passing a {Money} extracts its currency
+  # Accepts +nil+, +String+, {Currency}, {Money}, or any object implementing
+  # +#to_currency+ (must return {Currency}) or +#currency_code+ (must return +String+).
   #
-  # @param object [String, Currency, Money, nil] a currency code, object, or +nil+
+  # @param object [String, Currency, Money, nil, #to_currency, #currency_code]
+  #   a currency code, object, or +nil+
   # @return [Currency, nil] the resolved Currency, or +nil+ if +object+ is +nil+
   #   or the code is not registered
-  # @raise [ArgumentError] if +object+ is an unsupported type (e.g. +Integer+)
+  # @raise [ArgumentError] if +object+ is an unsupported type, or if the method
+  #   used to resolve it returns a value of the wrong type
   def Currency.resolve(object)
     case object
     when NilClass then nil
     when Currency then object
     when Money    then object.currency
     when String   then Currency.for_code object
-    else          raise ArgumentError, "currency must be [Currency], [Money], [String] or nil (#{object})"
+    else
+      if object.respond_to?(:to_currency)
+        result = object.to_currency
+        unless result.is_a?(Currency)
+          raise ArgumentError, "#to_currency must return a [Mint::Currency], got #{result.class}"
+        end
+
+        result
+      elsif object.respond_to?(:currency_code)
+        result = object.currency_code
+        raise ArgumentError, "#currency_code must return a [String], got #{result.class}" unless result.is_a?(String)
+
+        Currency.for_code result
+      else
+        raise ArgumentError, "currency must be [Mint::Currency], [Money], [String] or nil (#{object})"
+      end
     end
   end
 

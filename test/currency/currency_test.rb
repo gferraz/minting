@@ -64,4 +64,75 @@ class CurrencyTest < Minitest::Test
   def test_resolve_bang_resolves_valid_code
     assert_equal @dollar, Mint::Currency.resolve!('USD')
   end
+
+  def test_resolve_accepts_object_with_to_currency
+    dollar = @dollar
+    obj = Object.new
+    obj.define_singleton_method(:to_currency) { dollar }
+
+    assert_equal dollar, Mint::Currency.resolve(obj)
+  end
+
+  def test_resolve_accepts_object_with_currency_code
+    real = @real
+    obj = Object.new
+    obj.define_singleton_method(:currency_code) { 'BRL' }
+
+    assert_equal real, Mint::Currency.resolve(obj)
+  end
+
+  def test_resolve_raises_on_to_currency_wrong_return_type
+    obj = Object.new
+    obj.define_singleton_method(:to_currency) { 'USD' }
+    assert_raises(ArgumentError) { Mint::Currency.resolve(obj) }
+  end
+
+  def test_resolve_raises_on_currency_code_wrong_return_type
+    obj = Object.new
+    obj.define_singleton_method(:currency_code) { 123 }
+    assert_raises(ArgumentError) { Mint::Currency.resolve(obj) }
+  end
+
+  def test_resolve_returns_nil_on_currency_code_unregistered
+    obj = Object.new
+    obj.define_singleton_method(:currency_code) { 'NOPE' }
+
+    assert_nil Mint::Currency.resolve(obj)
+  end
+
+  def test_resolve_bang_raises_on_currency_code_unregistered
+    obj = Object.new
+    obj.define_singleton_method(:currency_code) { 'NOPE' }
+    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!(obj) }
+  end
+
+  def test_resolve_bang_works_with_to_currency
+    real = @real
+    obj = Object.new
+    obj.define_singleton_method(:to_currency) { real }
+
+    assert_equal real, Mint::Currency.resolve!(obj)
+  end
+
+  def test_resolve_to_currency_takes_precedence_over_currency_code
+    dollar = @dollar
+    obj = Object.new
+    obj.define_singleton_method(:to_currency) { dollar }
+    obj.define_singleton_method(:currency_code) { 'BRL' }
+
+    assert_equal dollar, Mint::Currency.resolve(obj)
+  end
+
+  def test_resolve_unsupported_object_still_raises
+    assert_raises(ArgumentError) { Mint::Currency.resolve(42) }
+    assert_raises(ArgumentError) { Mint::Currency.resolve(:USD) }
+    assert_raises(ArgumentError) { Mint::Currency.resolve([]) }
+  end
+
+  def test_resolve_existing_paths_still_work
+    assert_equal @dollar, Mint::Currency.resolve('USD')
+    assert_equal @dollar, Mint::Currency.resolve(@dollar)
+    assert_equal @dollar, Mint::Currency.resolve(Mint.money(10, 'USD'))
+    assert_nil Mint::Currency.resolve(nil)
+  end
 end

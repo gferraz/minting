@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### Features
+- `Currency.resolve` now accepts any object responding to `#to_currency` (must return a `Currency`) or `#currency_code` (must return a `String`). Enables seamless resolution from AR models, service objects, or custom wrappers without manual extraction.
+
+### Fixes
+- `Money#initialize` now calls `.to_r` on the amount, guaranteeing `@amount` is always a `Rational`. Fixes a hash/`eql?` contract violation where zero-subunit currencies (JPY, KRW, etc.) stored an `Integer` amount with a different hash from the equivalent `Rational`, and fixes an `ArgumentError` in `Integer#to_d` on BigDecimal 4.1.2+.
+
 ## [v1.9.7](https://github.com/gferraz/minting/releases/tag/v1.9.7) (2026-07-01)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.6...v1.9.7)

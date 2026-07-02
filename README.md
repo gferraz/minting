@@ -199,6 +199,21 @@ Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 
 ```
 
+### Polymorphic currency resolution
+
+`Currency.resolve` also accepts objects that implement `#to_currency` or `#currency_code`:
+
+```ruby
+class Product
+  def currency_code = 'USD'
+end
+
+Mint::Currency.resolve(Product.new)  #=> #<Currency code="USD" ...>
+Mint::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is unknown
+```
+
+`#to_currency` takes precedence when both methods exist. It must return a `Currency` object; `#currency_code` must return a `String`. Wrong types raise `ArgumentError`.
+
 ## API notes
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
