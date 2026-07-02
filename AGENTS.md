@@ -9,6 +9,23 @@ Guidance for AI coding agents working in the `minting` Ruby gem.
 The gem is namespaced under `Mint`; top-level `Money`/`Currency` are an
 opt-in alias (see below).
 
+## Release readiness & publicization
+
+- The project is approaching a stable 2.0 release. Prioritize compatibility,
+documentation accuracy, and clean release notes over speculative API changes.
+- Keep `README.md`, `CHANGELOG.md`, and `ROADMAP.md` in sync. README examples
+are exercised by `test/minting_test.rb#test_readme_usage` and should reflect
+public behavior.
+- Add every public-facing change to `CHANGELOG.md` under `## [Unreleased]`.
+- Preserve key public API contracts: `Mint::Money`, `Mint::Currency`, `Mint`
+helpers, `Money#format`, and the `Money#to_s` no-args compatibility rule.
+- Respect zero-equality semantics (`Money.from(0,'USD') == Money.from(0,'EUR')`
+and `== 0`) and the `Currency` opt-in alias behavior.
+- When modifying numeric/rounding behavior, run `bundle exec rake bench:check`
+and update baselines with `bundle exec rake bench:baseline` for performance
+improvements.
+- Clean `pkg/` artifacts before commit when preparing gem packaging.
+
 ## Essential commands
 
 ```bash
