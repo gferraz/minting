@@ -131,7 +131,7 @@ module Mint
     # @param amount [Numeric] The monetary amount
     # @param currency [Currency] The currency object
     def initialize(amount, currency)
-      @amount = amount
+      @amount = amount.to_r
       @currency = currency
       freeze
     end
