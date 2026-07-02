@@ -1,11 +1,15 @@
-# Minting
-
-**Fast, precise, and developer-friendly money handling for Ruby.**
-
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 [![CI](https://github.com/gferraz/minting/actions/workflows/ci.yml/badge.svg)](https://github.com/gferraz/minting/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gferraz/minting)
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-blue)](https://www.rubydoc.info/gems/minting/frames)
+
+# Minting
+
+**Fast, precise, and developer-friendly money handling for Ruby.**
+
+
+
+> **Status:** Minting is approaching a stable 2.0 release. The core API (`Money`, `Currency`, formatting, parsing) is settling and breaking changes from here should be rare. See [Roadmap](#roadmap) for what's left before the tag.
 
 ```ruby
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
@@ -333,7 +337,10 @@ Minting itself has no Rails dependency. For `ActiveRecord` type casting, validat
 
 ## Roadmap
 
-- Exchange-rate conversion infrastructure
+Toward a stable 2.0: (no later than August 2026)
+
+- Exchange-rate conversion infrastructure (provider abstraction, stateless injection)
+- API surface review — locking in the public interface for `Money`, `Currency`, and formatting before the tag
 
 ## License
 
