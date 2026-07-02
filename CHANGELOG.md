@@ -2,11 +2,27 @@
 
 ## [Unreleased]
 
+## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.6...v1.9.8)
+
+
 ### Features
 - `Currency.resolve` now accepts any object responding to `#to_currency` (must return a `Currency`) or `#currency_code` (must return a `String`). Enables seamless resolution from AR models, service objects, or custom wrappers without manual extraction.
+- `locale:` kwarg on `Money#format` / `#to_fs` — accepts symbols and strings, passed through as-is to the `Mint.locale_backend` callable (matching Rails `I18n.locale` convention).
+- `Mint.locale_backend` callable now receives the locale argument (arity-0 callables called without args). Enables per-locale formatting: `money.format(locale: :de)`.
+- Rails I18n key names (`:separator`, `:delimiter`) accepted alongside minting names (`:decimal`, `:thousand`) in locale backend hash — direct pass-through from `I18n.t('number.currency.format')` without mapping.
+- String and symbol keys in locale backend hashes are treated interchangeably.
 
 ### Fixes
 - `Money#initialize` now calls `.to_r` on the amount, guaranteeing `@amount` is always a `Rational`. Fixes a hash/`eql?` contract violation where zero-subunit currencies (JPY, KRW, etc.) stored an `Integer` amount with a different hash from the equivalent `Rational`, and fixes an `ArgumentError` in `Integer#to_d` on BigDecimal 4.1.2+.
+
+### Internal
+- Locale resolution helpers moved from `Mint::Money` private methods to `Mint` module methods (`Mint.resolve_locale_for`, `Mint.fetch_locale_key`, `Mint.resolve_locale_backend`).
+
+### Documentation
+- New "Locale formatting" section in README with ready-to-paste example (en, pt, de, fr, ja locales).
+- Rails I18n one-liner example for `Mint.locale_backend`.
 
 ## [v1.9.7](https://github.com/gferraz/minting/releases/tag/v1.9.7) (2026-07-01)
 

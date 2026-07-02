@@ -214,6 +214,50 @@ Mint::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is u
 
 `#to_currency` takes precedence when both methods exist. It must return a `Currency` object; `#currency_code` must return a `String`. Wrong types raise `ArgumentError`.
 
+## Locale formatting
+
+Minting doesn't ship built-in locale data, but the `Mint.locale_backend` hook lets you wire in locale-specific decimal/thousand separators and format templates. Here's a ready-to-paste quick start with common locales:
+
+```ruby
+LOCALE_DATA = {
+  'en'    => { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' },
+  'pt'    => { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' },
+  'pt-BR' => { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' },
+  'de'    => { decimal: ',', thousand: '.', format: '%<amount>f %<currency>s' },
+  'fr'    => { decimal: ',', thousand: ' ', format: '%<amount>f %<symbol>s' },
+  'ja'    => { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' },
+}.freeze
+
+Mint.locale_backend = ->(locale) { LOCALE_DATA[locale.to_s] || {} }
+
+Mint.money(1234.56, 'USD').format(locale: :en)  #=> "$1,234.56"
+Mint.money(9.99, 'BRL').format(locale: 'pt')    #=> "R$9,99"
+Mint.money(9.99, 'EUR').format(locale: :de)     #=> "9,99 EUR"
+Mint.money(9.99, 'EUR').format(locale: 'fr')    #=> "9,99 €"
+Mint.money(9.99, 'USD').format(locale: :ja)     #=> "$9.99"
+```
+
+Pass `locale:` as a keyword to `format` / `to_fs`. Accepts both symbols (`:en`, `:'pt-BR'`) and strings (`'pt-BR'`, `'en-US'`) — passed through as-is, matching Rails `I18n.locale` convention. The backend returns a hash with `:decimal`, `:thousand`, and optionally `:format` (defaults to `'%<symbol>s%<amount>f'`). String and symbol keys are treated interchangeably — use whichever you prefer. Return `{}` or `nil` for unknown locales — defaults apply.
+
+Rails I18n key names (`:separator`, `:delimiter`) are also accepted — no mapping needed:
+
+```ruby
+Mint.locale_backend = ->(locale = nil) {
+  I18n.with_locale(locale || I18n.default_locale) do
+    I18n.t('number.currency.format', default: {})
+  end
+}
+```
+
+Minting names take precedence when both are present (e.g. `{ decimal: '.', separator: ',' }` uses `'.'`).
+
+Arity-0 callables (`-> { ... }`) are called without arguments and work unchanged:
+
+```ruby
+Mint.locale_backend = -> { { decimal: ',', thousand: '.' } }
+Mint.money(9.99, 'BRL').format  #=> "R$9,99"
+```
+
 ## API notes
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.

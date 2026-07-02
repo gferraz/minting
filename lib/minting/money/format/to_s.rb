@@ -37,6 +37,11 @@ module Mint
     #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise +","+.
     # @param decimal [String, nil] Decimal separator (e.g., '.' or ',').
     #   When +nil+, falls back to +Mint.locale_backend+ if set, otherwise +"."+.
+    # @param locale [Symbol, String, nil] Locale key passed to the +Mint.locale_backend+
+    #   callable when resolving locale-aware separators and format. Ignored when
+    #   +Mint.locale_backend+ is a Hash or nil. Accepts symbols (+:en+, +:'pt-BR'+)
+    #   and strings (+"pt-BR"+), passed through as-is (matching Rails +I18n.locale+
+    #   convention).
     # @return [String] Formatted money string
     #
     # @raise [ArgumentError] if +preset+ is not a recognised name, or if
@@ -78,9 +83,11 @@ module Mint
     #   money.format(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
     #
     # @example Locale-aware formatting (with Mint.locale_backend set)
-    #   money.format  # decimal and thousand come from locale_backend
+    #   money.format                       # decimal and thousand come from locale_backend
+    #   money.format(locale: :en)          # locale passed to backend callable
+    #   money.format(locale: 'pt-BR')      # strings work too
     #
-    def format(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil)
+    def format(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil, locale: nil)
       if preset
         config = PRESETS.fetch(preset) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
         format ||= config[:format]
@@ -91,7 +98,7 @@ module Mint
 
       validate_separators!(decimal:, thousand:)
 
-      format, decimal, thousand = resolve_locale_for(format, decimal, thousand)
+      format, decimal, thousand = Mint.resolve_locale_for(format, decimal, thousand, locale:)
 
       case format
       when {}, '' then raise ArgumentError, 'format must not be empty'

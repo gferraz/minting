@@ -114,4 +114,108 @@ class LocaleBackendTest < Minitest::Test
 
     assert_equal '$1-234.56', Mint.money(1234.56, 'USD').format(decimal: '.')
   end
+
+  def test_locale_kwarg_passed_to_backend_callable
+    call_count = 0
+    Mint.locale_backend = ->(locale) {
+      call_count += 1
+      case locale
+      when :en  then { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' }
+      when :de  then { decimal: ',', thousand: '.', format: '%<amount>f %<currency>s' }
+      when :br  then { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' }
+      else {}
+      end
+    }
+
+    assert_equal '$1,234.56',        Mint.money(1234.56, 'USD').format(locale: :en)
+    assert_equal '1.234,56 EUR',     Mint.money(1234.56, 'EUR').format(locale: :de)
+    assert_equal 'R$9,99',           Mint.money(9.99, 'BRL').format(locale: :br)
+    assert_equal 3, call_count
+  end
+
+  def test_locale_kwarg_indifferent_symbol_string
+    called_with = nil
+    Mint.locale_backend = ->(locale) {
+      called_with = locale
+      {}
+    }
+
+    Mint.money(1, 'USD').format(locale: :en)
+    assert_equal :en, called_with
+
+    Mint.money(1, 'USD').format(locale: 'en')
+    assert_equal 'en', called_with
+  end
+
+  def test_locale_backend_indifferent_key_access
+    Mint.locale_backend = -> { { decimal: ',', thousand: '.', format: '%<amount>f %<currency>s' } }
+
+    assert_equal '1.234,56 EUR', Mint.money(1234.56, 'EUR').to_s
+  end
+
+  def test_locale_backend_mixed_keys
+    Mint.locale_backend = -> { { 'decimal' => ',', thousand: '.', format: '%<symbol>s%<amount>f' } }
+
+    assert_equal 'R$9,99', Mint.money(9.99, 'BRL').format
+  end
+
+  def test_locale_kwarg_with_string_key
+    data = {
+      'en-US' => { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' },
+      'pt-BR' => { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' },
+    }
+    Mint.locale_backend = ->(locale) { data[locale] || {} }
+
+    assert_equal '$1,234.56', Mint.money(1234.56, 'USD').format(locale: 'en-US')
+    assert_equal 'R$9,99',    Mint.money(9.99, 'BRL').format(locale: 'pt-BR')
+  end
+
+  def test_locale_kwarg_falls_back_to_defaults_for_unknown_locale
+    Mint.locale_backend = ->(locale) {
+      { en: { decimal: ',' } }[locale] || {}
+    }
+
+    assert_equal '$9.99', Mint.money(9.99, 'USD').format(locale: :unknown)
+  end
+
+  def test_locale_kwarg_with_hash_backend_ignores_locale
+    Mint.locale_backend = { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' }
+
+    assert_equal '$1.234,56', Mint.money(1234.56, 'USD').format(locale: :anything)
+  end
+
+  def test_arity_zero_lambda_still_works_without_locale
+    call_count = 0
+    Mint.locale_backend = lambda {
+      call_count += 1
+      { decimal: ',', thousand: '.' }
+    }
+
+    assert_equal 'R$9,99', Mint.money(9.99, 'BRL').format
+    assert_equal 1, call_count
+  end
+
+  def test_i18n_key_names_separator_and_delimiter
+    Mint.locale_backend = -> { { separator: ',', delimiter: '.', format: '%<amount>f %<currency>s' } }
+
+    assert_equal '1.234,56 EUR', Mint.money(1234.56, 'EUR').to_s
+  end
+
+  def test_i18n_key_names_fallback_to_defaults
+    Mint.locale_backend = -> { { separator: ',' } }
+
+    assert_equal 'R$9,99', Mint.money(9.99, 'BRL').format
+  end
+
+  def test_mint_key_names_take_precedence_over_i18n
+    Mint.locale_backend = -> { { decimal: '.', separator: ',' } }
+
+    assert_equal '$9.99', Mint.money(9.99, 'USD').format
+  end
+
+  def test_mint_key_names_string_take_precedence_over_i18n
+    Mint.locale_backend = -> { { 'decimal' => '.', separator: ',' } }
+
+    assert_equal '$9.99', Mint.money(9.99, 'USD').format
+  end
 end

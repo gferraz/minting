@@ -105,6 +105,8 @@ All these features are already expressible via `Kernel.format`-style templates i
 | `with_currency("EUR")` | Swap currency without converting | Missing | Low |
 | Subunit converters | `.subunits(format: :stripe)` / `from_subunits(100, 'ISK', format: :stripe)` — pluggable subunit formats for payment provider interop | Missing | Low |
 | Custom converters | Subclass `Money::Converters::Converter` to define custom subunit logic | Missing | Low |
+| `from_hash` / `from_json` | Symmetrical deserializers for `to_hash` / `to_json` — `Money.from_hash(currency: "USD", amount: "9.99")` | Missing | **Medium — fill the round-trip gap** |
+| `to_msgpack` / `from_msgpack` | Binary serialization via `msgpack` gem | Missing | Low (add if there's demand) |
 
 ### P2-H Infrastructure
 
