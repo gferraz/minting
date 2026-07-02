@@ -126,6 +126,8 @@ Minting allocates more Ruby objects per Money instance due to the `Rational` amo
 
 ## Notes
 
+- **Money gem 7.0.2** has significantly improved performance over earlier versions in several areas.
+- **Shopify Money 4.1.1** is a standalone fork of the Money gem (not a wrapper). It stores amounts as `BigDecimal` internally, which makes `to_d` extremely fast but allocation/split operations slower due to string → Rational conversion.
 - Division by another `Money` or by `Float` raises in Shopify Money to prevent precision loss — use `#split` instead. Minting supports both.
 - `to_d` is slower in Minting because it converts via `Rational#to_f` → `BigDecimal`. Use `to_r` for zero-allocation conversion.
 - Competitive benchmarks are fully isolated via per-directory `Gemfile`s. Run `rake bench:against:money` or `rake bench:against:shopify`.

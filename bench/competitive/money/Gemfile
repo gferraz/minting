@@ -1,0 +1,8 @@
+source 'https://rubygems.org'
+
+gem 'money'
+gem 'benchmark'
+gem 'benchmark-ips'
+gem 'minitest'
+gem 'bigdecimal'
+gem 'simplecov'

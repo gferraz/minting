@@ -38,8 +38,8 @@ coverage and minitest/autorun won't be loaded.
 ### Performance / benchmarks
 
 Benchmarks are Minitest-based (require `benchmark/ips`) and live under
-`test/performance/`. The CI gate is `rake bench:check`, which compares core
-ops against `test/performance/check/results/baseline-<platform>.json`.
+`bench/`. The CI gate is `rake bench:check`, which compares core
+ops against `bench/check/results/baseline-<platform>.json`.
 
 ```bash
 bundle exec rake bench:all                # core + memory + regression + competitive/money
@@ -55,7 +55,7 @@ bundle exec rake bench:competitive:all    # both
 
 Notes:
 - `bench:check` runs `bin/bench_check`, which shells out to
-  `test/performance/check/runner.rb`. The runner **exits early on Ruby < 4.x**
+  `bench/check/runner.rb`. The runner **exits early on Ruby < 4.x**
   with a no-op result — the gate only meaningfully runs on Ruby 4.0+.
 - Competitive Shopify benches set `BUNDLE_WITHOUT=money_bench` to avoid
   loading both `money` and `shopify-money` together.
@@ -340,7 +340,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/data/world-currencies.yaml` | 150+ ISO-4217 currencies, loaded lazily by `Registry.world_currencies` |
 | `test/test_helper.rb` | SimpleCov + minitest/autorun + requires `minting` |
 | `test/minting_test.rb#test_readme_usage` | README contract test — keep in sync with README |
-| `test/performance/check/runner.rb` | core bench runner (Ruby 4.x only) |
+| `bench/check/runner.rb` | core bench runner (Ruby 4.x only) |
 | `bin/bench_check` | `bench:check` gate script (threshold 0.80x baseline by default) |
 
 ## Deprecated APIs (don't use in new code)

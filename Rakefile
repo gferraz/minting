@@ -15,46 +15,42 @@ Rake::TestTask.new(:test) do |t|
 end
 
 Rake::TestTask.new('bench:all') do |t|
-  t.libs = %w[lib test]
-  t.pattern = 'test/performance/{core,memory,regression,competitive/money}/*_benchmark.rb'
+  t.libs = %w[lib bench]
+  t.pattern = 'bench/{core,memory,regression}/*_benchmark.rb'
 end
 
 Rake::TestTask.new('bench:core') do |t|
-  t.libs = %w[lib test]
-  t.pattern = 'test/performance/core/parse_benchmark.rb'
+  t.libs = %w[lib bench]
+  t.pattern = 'bench/core/parse_benchmark.rb'
 end
 
 Rake::TestTask.new('bench:memory') do |t|
-  t.libs = %w[lib test]
-  t.pattern = 'test/performance/memory/*_benchmark.rb'
+  t.libs = %w[lib bench]
+  t.pattern = 'bench/memory/*_benchmark.rb'
 end
 
 Rake::TestTask.new('bench:regression') do |t|
-  t.libs = %w[lib test]
-  t.pattern = 'test/performance/regression/*_benchmark.rb'
+  t.libs = %w[lib bench]
+  t.pattern = 'bench/regression/*_benchmark.rb'
 end
 
 desc 'Run competitive benchmarks (Money gem)'
-task 'bench:competitive' do
-  sh 'bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/money/**/*_benchmark.rb\")].each { |f| require f }"'
+task 'bench:against:money' do
+  dir = 'bench/competitive/money'
+  sh "BUNDLE_GEMFILE=#{dir}/Gemfile bundle exec ruby -Ilib -I#{dir} -Ibench -e \"Dir[File.join(__dir__, '#{dir}/**/*_benchmark.rb')].each { |f| require f }\""
 end
 
 desc 'Run competitive benchmarks (Shopify Money)'
-task 'bench:competitive:shopify' do
-  sh 'BUNDLE_WITHOUT=money_bench bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/shopify/**/*_benchmark.rb\")].each { |f| require f }"'
-end
-
-desc 'Run all competitive benchmarks (both Money and Shopify)'
-task 'bench:competitive:all' do
-  sh 'bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/money/**/*_benchmark.rb\")].each { |f| require f }"'
-  sh 'BUNDLE_WITHOUT=money_bench bundle exec ruby -Ilib -Itest -e "Dir[File.join(__dir__, \"test/performance/competitive/shopify/**/*_benchmark.rb\")].each { |f| require f }"'
+task 'bench:against:shopify' do
+  dir = 'bench/competitive/shopify'
+  sh "BUNDLE_GEMFILE=#{dir}/Gemfile bundle exec ruby -Ilib -I#{dir} -Ibench -e \"Dir[File.join(__dir__, '#{dir}/**/*_benchmark.rb')].each { |f| require f }\""
 end
 
 desc 'Run core benchmarks and update the baseline'
 task 'bench:baseline' do
   platform = RUBY_PLATFORM
-  baseline = "test/performance/check/results/baseline-#{platform}.json"
-  sh "ruby test/performance/check/runner.rb #{baseline}"
+  baseline = "bench/check/results/baseline-#{platform}.json"
+  sh "ruby bench/check/runner.rb #{baseline}"
   puts "Baseline updated for #{platform}."
 end
 

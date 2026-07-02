@@ -5,7 +5,7 @@ module Mint
   class Money
     # The default display format pattern for formatting monetary values.
     # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.
-    DEFAULT_FORMAT = '%<symbol>s%<amount>f'.freeze
+    DEFAULT_FORMAT = '%<symbol>s%<amount>f'
 
     PRESETS = {
       amount: { format: '%<amount>f' },
@@ -100,7 +100,7 @@ module Mint
       else        raise ArgumentError, 'Invalid format. Only String or Hash are accepted'
       end
 
-      formatted = format_amount(format, decimal: decimal, thousand: thousand)
+      formatted = format_amount(format, decimal:, thousand:)
 
       width ? formatted.rjust(width) : formatted
     end
@@ -109,6 +109,7 @@ module Mint
 
     def to_s
       return format unless Mint.locale_backend.nil?
+
       subunit  = currency.subunit
       integral = to_i.to_s
       integral.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000

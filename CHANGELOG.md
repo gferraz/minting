@@ -2,11 +2,23 @@
 
 ## [Unreleased]
 
+## [v1.9.7](https://github.com/gferraz/minting/releases/tag/v1.9.7) (2026-07-01)
+
+[Full Changelog](https://github.com/gferraz/minting/compare/v1.9.6...v1.9.7)
+
 ### Features
 - `%<dsymbol>s` format placeholder — uses `currency.disambiguate_symbol` (e.g. `"US$"`, `"C$"`, `"A$"`) when available, falling back to the primary symbol. Allows per-template disambiguation: `money.format(format: '%<dsymbol>s%<amount>f')` → `"US$10.00"`.
 
 ### Performance
 - Formatting is now compiled into reusable lambdas at the class level — bakes subunit precision, resolves sign templates, and pre-detects placeholder usage (`%<amount>`, `%<integral>`, `%<fractional>`, `%<dsymbol>`) once per unique format configuration, eliminating per-call gsub, method dispatch, and conditional computation. 1.4–2.2x formatting speedup depending on scenario.
+
+### Code Organization
+- Benchmarks moved from `test/performance/` to `bench/` at project root — decoupled from the test harness, no SimpleCov overhead in benchmark runs.
+- New `bench/benchmark_helper.rb` requires only `minting`, `minitest`, `benchmark/ips`, and `bigdecimal` directly.
+- Core, memory, and regression benchmarks are now Minting-only (Money-gem references removed).
+- Competitive benchmarks (`money/`, `shopify/`) isolated via per-directory `Gemfile`s — no more shared setup, no more bundle conflicts between `money` and `shopify-money`.
+- Rakefile updated with `bench:against:money` and `bench:against:shopify` tasks.
+- `bin/bench_check` paths updated for the new `bench/` location.
 
 ## [v1.9.6](https://github.com/gferraz/minting/releases/tag/v1.9.6) (2026-06-29)
 

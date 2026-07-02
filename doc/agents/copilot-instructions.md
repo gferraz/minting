@@ -4,7 +4,7 @@ Repository overview
 - Location of main code: lib/minting and its subfolders (mint/, money/)
 - Public API surface: Mint (factory/helpers), Mint::Money, Mint::Currency
 - Data: built-in currencies in lib/minting/data/currencies.yaml
-- Tests: Minitest (unit) + performance benchmarks under test/performance
+- Tests: Minitest (unit) + performance benchmarks under bench/
 
 Build, test and lint commands
 
@@ -43,7 +43,7 @@ High-level architecture (big picture)
 - Currency: lightweight value object (code, subunit, symbol, priority, minimum_amount).
 - Money: immutable value object stored as Rational and rounded to currency.subunit. Core concerns split across lib/minting/money/* (arithmetics, formatting, conversion, coercion, allocation, parsing, comparable).
 - Refinements: Numeric/String/Refinements in lib/minting/mint/refinements.rb expose helpers like 10.dollars, 4.to_money('USD'), and require `using Mint` in scope.
-- Performance tests: separate bench tasks under Rake; test/performance holds benchmark suites.
+- Performance tests: separate bench tasks under Rake; bench/ holds benchmark suites.
 
 Key conventions and repo-specific rules
 
@@ -59,7 +59,7 @@ Files and places to check first during edits
 - lib/minting/money - core behavior and arithmetic
 - lib/minting/mint - currency registry, refinements, and factory API
 - lib/minting/data/currencies.yaml - canonical currency definitions
-- test/ - unit tests; test/performance - benchmark suites
+- test/ - unit tests; bench/ - benchmark suites
 
 Notes for Copilot sessions
 

@@ -10,6 +10,7 @@ module Mint
     MODES = {
       half_up: ->(amount, ndigits) { amount.round(ndigits, half: :up) },
       half_down: ->(amount, ndigits) { amount.round(ndigits, half: :down) },
+      half_even: ->(amount, ndigits) { amount.round(ndigits, half: :even) },
       floor: ->(amount, ndigits) { amount.floor(ndigits) },
       ceil: ->(amount, ndigits) { amount.ceil(ndigits) },
       truncate: ->(amount, ndigits) { amount.truncate(ndigits) },

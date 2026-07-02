@@ -1,0 +1,49 @@
+# frozen_string_literal: true
+
+require_relative 'benchmark_helper'
+
+class CompetitiveFormattingBenchmark < Minitest::Test
+  include BenchmarkHelper
+  include ShopifyBenchHelper
+
+  def setup
+    configure_shopify_money_gem
+    @test_amounts = test_amounts
+  end
+
+  def test_formatting_methods
+    with_bench('String Formatting: Minting vs Shopify Money') do
+      @test_amounts.each do |amount|
+        mint_money = Mint::Money.from(amount, 'USD')
+        money = Money.new(amount, 'USD')
+
+        puts "\nAmount: #{amount}"
+
+        Benchmark.ips do |x|
+          x.report('Mint to_s') { mint_money.to_s }
+          x.report('Shopify to_s') { money.to_s }
+          x.report('Mint inspect') { mint_money.inspect }
+          x.report('Shopify inspect') { money.inspect }
+          x.compare!
+        end
+      end
+    end
+  end
+
+  def test_json_formatting_methods
+    with_bench('String Formatting: Minting vs Shopify Money') do
+      @test_amounts.each do |amount|
+        mint_money = Mint::Money.from(amount, 'USD')
+        money = Money.new(amount, 'USD')
+
+        puts "\nAmount: #{amount}"
+
+        Benchmark.ips do |x|
+          x.report('Mint to_json') { mint_money.to_json }
+          x.report('Shopify to_json') { money.to_json }
+          x.compare!
+        end
+      end
+    end
+  end
+end

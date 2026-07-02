@@ -5,7 +5,7 @@ require 'json'
 require 'tempfile'
 
 platform = RUBY_PLATFORM
-results_dir = File.expand_path('../test/performance/check/results', __dir__)
+results_dir = File.expand_path('../bench/check/results', __dir__)
 baseline_path = File.join(results_dir, "baseline-#{platform}.json")
 threshold = (ARGV[0] || 0.80).to_f
 
@@ -17,7 +17,7 @@ end
 baseline = JSON.parse(File.read(baseline_path))
 current_json = Tempfile.new(%w[bench_current .json])
 
-unless system("bundle exec ruby test/performance/check/runner.rb #{current_json.path}")
+unless system("bundle exec ruby bench/check/runner.rb #{current_json.path}")
   puts 'Benchmark runner failed.'
   exit 1
 end

@@ -12,7 +12,7 @@ Fast, precise, and developer-friendly money handling for Ruby.
 ```ruby
 require 'minting'
 
-price = Mint.money(19.99, 'USD')       #=> [USD 19.99]
+price = Money.from(19.99, 'USD')       #=> [USD 19.99]
 tax   = price * 0.08                   #=> [USD 1.60]
 total = price + tax                    #=> [USD 21.59]
 
@@ -23,8 +23,8 @@ total.currency_code                    #=> "USD"
 ### Exact precision
 Amounts are stored as `Rational` and rounded to the currency subunit. No floating-point surprises, ever.
 
-### Blazing performance
-Minting is faster than the Money gem for everyday operations and **over 10× faster for formatting**. See full benchmarks in the [Performance Guide](test/performance/BENCHMARKS.md).
+### Good performance
+Minting is fast! See full benchmarks in the [Performance Guide](bench/BENCHMARKS.md).
 
 ### Clean, modern API
 Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
@@ -55,38 +55,38 @@ gem 'minting'
 require 'minting'
 
 # Create money
-ten = Mint.money(10, 'USD')            #=> [USD 10.00]
+ten = Money.from(10, 'USD')            #=> [USD 10.00]
 
-1.dollar == Mint.money(1, 'USD') #=> true
+1.dollar == Money.from(1, 'USD') #=> true
 ten = 10.dollars                 #=> [USD 10.00]
 4.to_money('USD')                #=> [USD 4.00]
 
 # Comparisons
 ten == 10.dollars                #=> true
-ten == Mint.money(10, 'EUR')     #=> false
-ten > Mint.money(9.99, 'USD')    #=> true
+ten == Money.from(10, 'EUR')     #=> false
+ten > Money.from(9.99, 'USD')    #=> true
 
 # Zero equality semantics
 # Any zero amount is treated as equal, regardless of currency
-Mint.money(0, 'USD') == Mint.money(0, 'EUR')   #=> true
-Mint.money(0, 'USD') == 0                      #=> true
-Mint.money(0, 'USD') == 0.0                    #=> true
+Money.from(0, 'USD') == Money.from(0, 'EUR')   #=> true
+Money.from(0, 'USD') == 0                      #=> true
+Money.from(0, 'USD') == 0.0                    #=> true
 
 # Non-zero numerics are not equal to Money objects
-Mint.money(10, 'USD') == 10                    #=> false
+Money.from(10, 'USD') == 10                    #=> false
 
 # Format (uses Kernel.format syntax)
-price = Mint.money(9.99, 'USD')
-loss  = Mint.money(-1234.56, 'USD')
+price = Money.from(9.99, 'USD')
+loss  = Money.from(-1234.56, 'USD')
 
 # Built-in named presets
 loss.format(:accounting)                      #=> "($1,234.56)"
-Mint.money(1234.56, 'EUR').format(:european)  #=> "1.234,56 €"
+Money.from(1234.56, 'EUR').format(:european)  #=> "1.234,56 €"
 price.format(:amount)                         #=> "9.99"
 price.format(:currency)                       #=> "USD 9.99"
 
 # Presets can be overridden with explicit kwargs
-Mint.money(1234.56, 'EUR').format(:european, format: '%<amount>f %<currency>s')
+Money.from(1234.56, 'EUR').format(:european, format: '%<amount>f %<currency>s')
 #=> "1.234,56 EUR"
 
 # Or use direct format strings
@@ -97,7 +97,7 @@ price.format(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
 (-price).format(format: '%<amount>f')         #=> "-9.99",
 
 # Format with padding
-price_in_euros = Mint.money(12.34, 'EUR')
+price_in_euros = Money.from(12.34, 'EUR')
 
 price.format(format: '--%<amount>7d')               #=> "--      9"
 price.format(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
@@ -107,21 +107,21 @@ price_in_euros.format(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34
 
 # Integral & fractional parts
 price.format(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
-Mint.money(0.99, 'USD').format(format: '%<integral>d dollars and %<fractional>02d cents')
+Money.from(0.99, 'USD').format(format: '%<integral>d dollars and %<fractional>02d cents')
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
-loss = Mint.money(-1234.56, 'USD')
+loss = Money.from(-1234.56, 'USD')
 loss.format(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
-Mint.money(0, 'BRL').format(format: { zero: '--' })          #=> "--"
+Money.from(0, 'BRL').format(format: { zero: '--' })          #=> "--"
 # All three keys at once:
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
-Mint.money(1234.56, 'USD').format(format: fmt)               #=> "$1,234.56"
+Money.from(1234.56, 'USD').format(format: fmt)               #=> "$1,234.56"
 
 # Disambiguated symbol (e.g. "US$" vs "C$" vs "A$")
-Mint.money(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
-Mint.money(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
-Mint.money(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00"  (no dsymbol, falls back to symbol)
+Money.from(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
+Money.from(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
+Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00"  (no dsymbol, falls back to symbol)
 
 # Json serialization
 
@@ -152,8 +152,8 @@ ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 
 # Clamping to a range
 
-price = Mint.money(50, 'USD')
-min_price = Mint.money(75, 'USD')
+price = Money.from(50, 'USD')
+min_price = Money.from(75, 'USD')
 
 price.clamp(0, 100)                    #=> [USD 50.00]  (returns self, no new object)
 price.clamp(0, 25)                     #=> [USD 25.00]  (clamped to max)
@@ -206,8 +206,8 @@ Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 **Rounding modes** — Wrap operations in `Mint.with_rounding(mode)` to change how amounts are rounded to the subunit:
 
 ```ruby
-Mint.with_rounding(:half_down) { Mint.money(1.005, 'USD') }  #=> [USD 1.00]
-Mint.with_rounding(:ceil)      { Mint.money(1.001, 'USD') }  #=> [USD 1.01]
+Mint.with_rounding(:half_down) { Money.from(1.005, 'USD') }  #=> [USD 1.00]
+Mint.with_rounding(:ceil)      { Money.from(1.001, 'USD') }  #=> [USD 1.01]
 Mint.with_rounding(:floor)     { Mint.parse('1.009', 'USD') } #=> [USD 1.00]
 ```
 
@@ -217,7 +217,7 @@ Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:dow
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
 
-**Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Mint.money(0, 'USD') == Mint.money(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
+**Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Money.from(0, 'USD') == Money.from(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
 
 **Zero helper** — `Currency.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
 
