@@ -1,41 +1,63 @@
 # Minting
 
-Fast, precise, and developer-friendly money handling for Ruby.
+**Fast, precise, and developer-friendly money handling for Ruby.**
 
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 [![CI](https://github.com/gferraz/minting/actions/workflows/ci.yml/badge.svg)](https://github.com/gferraz/minting/actions/workflows/ci.yml)
 [![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gferraz/minting)
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-blue)](https://www.rubydoc.info/gems/minting/frames)
 
-## Quick start
-
 ```ruby
-require 'minting'
-
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
 tax   = price * 0.08                   #=> [USD 1.60]
 total = price + tax                    #=> [USD 21.59]
 
 total.to_s                             #=> "$21.59"
-total.currency_code                    #=> "USD"
 ```
 
-### Exact precision
-Amounts are stored as `Rational` and rounded to the currency subunit. No floating-point surprises, ever.
+Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 0.2` problems simply don't happen here, at any scale.
 
-### Good performance
-Minting is fast! See full benchmarks in the [Performance Guide](bench/BENCHMARKS.md).
+## Table of contents
 
-### Clean, modern API
-Intuitive interface, descriptive error messages, and sensible defaults. Works the way you expect.
+- [Why Minting](#why-minting)
+- [How it compares](#how-it-compares)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Creating & comparing money](#creating--comparing-money)
+  - [Formatting](#formatting)
+  - [Fractional units & allocation](#fractional-units--allocation)
+  - [Parsing strings](#parsing-strings)
+  - [Currency lookup](#currency-lookup)
+  - [Locale formatting](#locale-formatting)
+- [API notes](#api-notes)
+- [Optional top-level `Money` and `Currency`](#optional-top-level-money-and-currency)
+- [Rails integration](#rails-integration)
+- [Roadmap](#roadmap)
+- [License](#license)
 
-### Rails-ready
-Use with the [attribute-money](https://github.com/gferraz/attribute-money) companion gem for drop-in ActiveRecord type casting, validators, and form helpers.
+## Why Minting
 
-### Quality code
-- **100% test coverage** — every line exercised
-- **94/100 RubyCritic score** — clean, maintainable code
-- **CI-tested on Ruby 3.3 and 4.0**
+Minting started as a personal project to learn what it actually takes to build and maintain a real open source Ruby gem — not as a reaction against any existing library. That origin shows in how it's built: it's grown deliberately, with an emphasis on correctness and a clean API.
+
+What it's become along the way:
+
+- **Exact by construction** — amounts are `Rational` internally, rounded to the currency's subunit only when needed. No silent precision loss from repeated arithmetic.
+- **No Rails dependency** — Minting is a plain Ruby gem. Use it in a script, a Sinatra app, a background job runner, or a Rails app — your choice, not the gem's.
+- **Formatting that doesn't fight you** — `Kernel.format`-style templates, named presets (`:accounting`, `:european`), per-sign formats (parentheses for negatives), and a pluggable locale hook.
+- **Built for real-world currency handling** — 150+ ISO-4217 currencies, correct subunit handling (JPY has none, KWD has three), proportional allocation/split that doesn't lose cents to rounding.
+- **Measured, not assumed, performance** — see the [Performance Guide](bench/BENCHMARKS.md) for actual benchmarks rather than claims.
+- **Rails-ready without being Rails-only** — pair with the companion [MoneyAttribute](https://github.com/gferraz/money-attribute) gem for `ActiveRecord` type casting, validators, and form helpers.
+
+## How it compares
+
+A few structural differences from the `money` gem (and `money-rails`), for anyone evaluating both:
+
+| | **Minting** | **Money** |
+|---|---|---|
+| Internal representation | `Rational` | `BigDecimal` (float-backed input coercion) |
+| Rails integration | via `money_attribute` gem | via `money-rails` gem |
+| Exchange rates | Pluggable provider architecture *(planned)* | Built-in bank/exchange abstraction |
+| Currency data | Ships with the gem | Ships with the gem |
 
 ## Installation
 
@@ -51,20 +73,21 @@ gem 'minting'
 
 ## Usage
 
+### Creating & comparing money
+
 ```ruby
 require 'minting'
 
-# Create money
 ten = Money.from(10, 'USD')            #=> [USD 10.00]
 
-1.dollar == Money.from(1, 'USD') #=> true
-ten = 10.dollars                 #=> [USD 10.00]
-4.to_money('USD')                #=> [USD 4.00]
+1.dollar == Money.from(1, 'USD')       #=> true
+ten = 10.dollars                       #=> [USD 10.00]
+4.to_money('USD')                      #=> [USD 4.00]
 
 # Comparisons
-ten == 10.dollars                #=> true
-ten == Money.from(10, 'EUR')     #=> false
-ten > Money.from(9.99, 'USD')    #=> true
+ten == 10.dollars                      #=> true
+ten == Money.from(10, 'EUR')           #=> false
+ten > Money.from(9.99, 'USD')          #=> true
 
 # Zero equality semantics
 # Any zero amount is treated as equal, regardless of currency
@@ -75,7 +98,22 @@ Money.from(0, 'USD') == 0.0                    #=> true
 # Non-zero numerics are not equal to Money objects
 Money.from(10, 'USD') == 10                    #=> false
 
-# Format (uses Kernel.format syntax)
+# Ranges and enumeration are supported
+1.dollar..10.dollars                      #=> [USD 1.00]..[USD 10.00]
+(1.dollar..3.dollars).step(1.dollar).to_a #=> [[USD 1.00], [USD 2.00], [USD 3.00]]
+
+# Clamping to a range
+price = Money.from(50, 'USD')
+min_price = Money.from(75, 'USD')
+
+price.clamp(0, 100)          #=> [USD 50.00]  (returns self, no new object)
+price.clamp(0, 25)           #=> [USD 25.00]  (clamped to max)
+price.clamp(min_price, 100)  #=> [USD 75.00]  (clamped to min, Money or Numeric bounds both work)
+```
+
+### Formatting
+
+```ruby
 price = Money.from(9.99, 'USD')
 loss  = Money.from(-1234.56, 'USD')
 
@@ -90,11 +128,11 @@ Money.from(1234.56, 'EUR').format(:european, format: '%<amount>f %<currency>s')
 #=> "1.234,56 EUR"
 
 # Or use direct format strings
-price.format                                  #=> "$9.99",
-price.format(format: '%<amount>d')            #=> "9",
-price.format(format: '%<symbol>s%<amount>f')  #=> "$9.99",
-price.format(format: '%<symbol>s%<amount>+f') #=> "$+9.99",
-(-price).format(format: '%<amount>f')         #=> "-9.99",
+price.format                                  #=> "$9.99"
+price.format(format: '%<amount>d')            #=> "9"
+price.format(format: '%<symbol>s%<amount>f')  #=> "$9.99"
+price.format(format: '%<symbol>s%<amount>+f') #=> "$+9.99"
+(-price).format(format: '%<amount>f')         #=> "-9.99"
 
 # Format with padding
 price_in_euros = Money.from(12.34, 'EUR')
@@ -102,7 +140,6 @@ price_in_euros = Money.from(12.34, 'EUR')
 price.format(format: '--%<amount>7d')               #=> "--      9"
 price.format(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
 (-price).format(format: '  %<amount>10f')           #=> "       -9.99"
-
 price_in_euros.format(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 # Integral & fractional parts
@@ -111,65 +148,40 @@ Money.from(0.99, 'USD').format(format: '%<integral>d dollars and %<fractional>02
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
-loss = Money.from(-1234.56, 'USD')
 loss.format(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
 Money.from(0, 'BRL').format(format: { zero: '--' })          #=> "--"
-# All three keys at once:
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
 Money.from(1234.56, 'USD').format(format: fmt)               #=> "$1,234.56"
 
 # Disambiguated symbol (e.g. "US$" vs "C$" vs "A$")
 Money.from(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
 Money.from(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
-Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00"  (no dsymbol, falls back to symbol)
+Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00" (falls back to symbol)
 
-# Json serialization
+# JSON / Hash serialization
+price.to_json   #=> "{\"currency\": \"USD\", \"amount\": \"9.99\"}"
+price.to_hash   #=> {currency: "USD", amount: "9.99"}
+```
 
-price.to_json # => "{\"currency\": \"USD\", \"amount\": \"9.99\"}"
+### Fractional units & allocation
 
-# Hash conversion
-
-price.to_hash #=> {currency: "USD", amount: "9.99"}
-
-
+```ruby
 # Fractional units (inverse of #fractional) - exact integer arithmetic
-
-price.subunits                        #=> 999
-Mint::Money.from_subunits(999, 'USD') #=> [USD 9.99]
+price.subunits                         #=> 999
+Mint::Money.from_subunits(999, 'USD')  #=> [USD 9.99]
 Mint::Money.from_subunits(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
 
-
 # No currency (ISO 4217 XXX)
-
 Mint::Money.no_currency(100) #=> [XXX 100]
 Mint::Money.no_currency(0)   #=> [XXX 0]
 
-
 # Proportional allocation and split
-
-ten.split(3)                           #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
-ten.allocate([1, 2, 3])                #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
-
-# Clamping to a range
-
-price = Money.from(50, 'USD')
-min_price = Money.from(75, 'USD')
-
-price.clamp(0, 100)                    #=> [USD 50.00]  (returns self, no new object)
-price.clamp(0, 25)                     #=> [USD 25.00]  (clamped to max)
-price.clamp(min_price, 100)                   #=> [USD 75.00]  (clamped to min)
-
-# Clamp accepts Money bounds or Numeric amounts
-price.clamp(min_price, 100) #=> [USD 75.00]
-
-# Ranges and enumeration are supported
-
-1.dollar..10.dollars                      #=> [USD 1.00]..[USD 10.00]
-(1.dollar..3.dollars).step(1.dollar).to_a #=> [[USD 1.00], [USD 2.00], [USD 3.00]]
-
+ten = 10.dollars
+ten.split(3)                 #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
+ten.allocate([1, 2, 3])       #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 ```
 
-## Parsing strings
+### Parsing strings
 
 ```ruby
 Mint.parse('$19.99')           #=> [USD 19.99]
@@ -180,13 +192,13 @@ Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
 
 Notes:
 - Pass a currency code when the string has no symbol or code.
-- `1,234` means 1234, not 1.234 and `1,23` means 1.23, not 123
+- `1,234` means 1234, not 1.234, and `1,23` means 1.23, not 123.
 - `1,234.00` is unambiguous (thousands + decimal).
 - Accounting negatives like `($1.23)` or `(USD 10.00)` are supported — the parser detects parentheses and negates the amount.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
 - The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Mint.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
 
-## Currency lookup
+### Currency lookup
 
 ```ruby
 # By ISO code (direct hash lookup, string only)
@@ -196,12 +208,9 @@ Mint::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
 Mint::Currency.for_symbol('$')        #=> #<Currency code="USD" ...>
 Mint::Currency.for_symbol('R$')       #=> #<Currency code="BRL" ...>
 Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
-
 ```
 
-### Polymorphic currency resolution
-
-`Currency.resolve` also accepts objects that implement `#to_currency` or `#currency_code`:
+**Polymorphic currency resolution** — `Currency.resolve` also accepts objects that implement `#to_currency` or `#currency_code`:
 
 ```ruby
 class Product
@@ -214,9 +223,9 @@ Mint::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is u
 
 `#to_currency` takes precedence when both methods exist. It must return a `Currency` object; `#currency_code` must return a `String`. Wrong types raise `ArgumentError`.
 
-## Locale formatting
+### Locale formatting
 
-Minting doesn't ship built-in locale data, but the `Mint.locale_backend` hook lets you wire in locale-specific decimal/thousand separators and format templates. Here's a ready-to-paste quick start with common locales:
+Minting doesn't ship built-in locale data, but the `Mint.locale_backend` hook lets you wire in locale-specific decimal/thousand separators and format templates:
 
 ```ruby
 LOCALE_DATA = {
@@ -237,7 +246,7 @@ Mint.money(9.99, 'EUR').format(locale: 'fr')    #=> "9,99 €"
 Mint.money(9.99, 'USD').format(locale: :ja)     #=> "$9.99"
 ```
 
-Pass `locale:` as a keyword to `format` / `to_fs`. Accepts both symbols (`:en`, `:'pt-BR'`) and strings (`'pt-BR'`, `'en-US'`) — passed through as-is, matching Rails `I18n.locale` convention. The backend returns a hash with `:decimal`, `:thousand`, and optionally `:format` (defaults to `'%<symbol>s%<amount>f'`). String and symbol keys are treated interchangeably — use whichever you prefer. Return `{}` or `nil` for unknown locales — defaults apply.
+Pass `locale:` as a keyword to `format` / `to_fs`. Accepts both symbols (`:en`, `:'pt-BR'`) and strings (`'pt-BR'`, `'en-US'`) — passed through as-is, matching Rails' `I18n.locale` convention. The backend returns a hash with `:decimal`, `:thousand`, and optionally `:format` (defaults to `'%<symbol>s%<amount>f'`). String and symbol keys are interchangeable. Return `{}` or `nil` for unknown locales — defaults apply.
 
 Rails I18n key names (`:separator`, `:delimiter`) are also accepted — no mapping needed:
 
@@ -265,22 +274,22 @@ Mint.money(9.99, 'BRL').format  #=> "R$9,99"
 **Rounding modes** — Wrap operations in `Mint.with_rounding(mode)` to change how amounts are rounded to the subunit:
 
 ```ruby
-Mint.with_rounding(:half_down) { Money.from(1.005, 'USD') }  #=> [USD 1.00]
-Mint.with_rounding(:ceil)      { Money.from(1.001, 'USD') }  #=> [USD 1.01]
+Mint.with_rounding(:half_down) { Money.from(1.005, 'USD') }   #=> [USD 1.00]
+Mint.with_rounding(:ceil)      { Money.from(1.001, 'USD') }   #=> [USD 1.01]
 Mint.with_rounding(:floor)     { Mint.parse('1.009', 'USD') } #=> [USD 1.00]
 ```
 
 Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
 
-> **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Mint.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes (the common case), there is **no performance cost**.
+> **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Mint.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Money.from(0, 'USD') == Money.from(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
 
-**Zero helper** — `Currency.zero('USD')` returns a frozen zero-Money, useful as a default value for discounts, totals, or counters.
 
-**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. Nonetheless, you don't need to register a currency to use it with most of the features.
+
+**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
 
@@ -291,7 +300,7 @@ By default, `require "minting"` exposes `Mint::Money` as the top-level `Money` c
 ```ruby
 require "minting"
 
-price = Money.from(10, "USD")                   # equivalent to Mint::Money.from
+price = Money.from(10, "USD")   # equivalent to Mint::Money.from
 tax   = Money.from(2.50, "USD")
 ```
 
@@ -304,7 +313,7 @@ require "minting/mint/aliases"  # opt-in top-level Currency
 cur = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 ```
 
-For Rails applications, you can enable the top-level `Currency` constant in an initializer:
+For Rails applications, enable it in an initializer:
 
 ```ruby
 # config/initializers/minting.rb
@@ -315,6 +324,12 @@ If another `Money` is already defined when `require "minting"` runs (e.g. the `m
 
 **Good fit:** Application code, especially Rails apps.
 **Not recommended:** Reusable gems/libraries — stick to `Mint::Money` to avoid conflicts.
+
+## Rails integration
+
+Minting itself has no Rails dependency. For `ActiveRecord` type casting, validators, and form helpers, pair it with the companion gem:
+
+- **[MoneyAttribute](https://github.com/gferraz/money-attribute)** — a `money_attribute` macro for models, with `ActiveRecord::Type` integration and `composed_of`-based support for multi-column (amount + currency) attributes.
 
 ## Roadmap
 
