@@ -37,7 +37,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 
 ## Why Minting
 
-Minting started as a personal project to learn what it actually takes to build and maintain a real open source Ruby gem — not as a reaction against any existing library. That origin shows in how it's built: it's grown deliberately, with an emphasis on correctness and a clean API.
+Minting started as a personal project to learn what it actually takes to build and maintain a real open source Ruby gem — not exactly as a reaction against any existing library. That origin shows in how it's built: it's grown deliberately, with an emphasis on correctness and a clean API.
 
 What it's become along the way:
 
