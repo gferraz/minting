@@ -78,7 +78,7 @@ module Mint
         if needs_integral && has_thousand_separator && (amount >= 1000 || amount <= -1000)
           # Split on the decimal separator between digits only — symbols may contain '.' (e.g. د.إ).
           parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
-          # Insert the thousands delimiter before each run of 3 digits from the right.
+          # Match a digit followed by groups of 3 digits, then a non-digit or end — inserts thousand separators.
           parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
           result = parts.join(decimal)
         end

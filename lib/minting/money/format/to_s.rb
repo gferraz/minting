@@ -105,6 +105,7 @@ module Mint
       width ? formatted.rjust(width) : formatted
     end
 
+    # Match a digit followed by groups of 3 digits until end of string — inserts thousand separators.
     THOUSAND_RE = /(\d)(?=(\d{3})+\z)/
 
     def to_s
