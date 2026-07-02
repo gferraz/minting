@@ -117,7 +117,7 @@ class LocaleBackendTest < Minitest::Test
 
   def test_locale_kwarg_passed_to_backend_callable
     call_count = 0
-    Mint.locale_backend = ->(locale) {
+    Mint.locale_backend = lambda { |locale|
       call_count += 1
       case locale
       when :en  then { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' }
@@ -135,15 +135,17 @@ class LocaleBackendTest < Minitest::Test
 
   def test_locale_kwarg_indifferent_symbol_string
     called_with = nil
-    Mint.locale_backend = ->(locale) {
+    Mint.locale_backend = lambda { |locale|
       called_with = locale
       {}
     }
 
     Mint.money(1, 'USD').format(locale: :en)
+
     assert_equal :en, called_with
 
     Mint.money(1, 'USD').format(locale: 'en')
+
     assert_equal 'en', called_with
   end
 
@@ -162,7 +164,7 @@ class LocaleBackendTest < Minitest::Test
   def test_locale_kwarg_with_string_key
     data = {
       'en-US' => { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' },
-      'pt-BR' => { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' },
+      'pt-BR' => { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' }
     }
     Mint.locale_backend = ->(locale) { data[locale] || {} }
 
@@ -171,7 +173,7 @@ class LocaleBackendTest < Minitest::Test
   end
 
   def test_locale_kwarg_falls_back_to_defaults_for_unknown_locale
-    Mint.locale_backend = ->(locale) {
+    Mint.locale_backend = lambda { |locale|
       { en: { decimal: ',' } }[locale] || {}
     }
 
