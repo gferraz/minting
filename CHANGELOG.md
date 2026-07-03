@@ -4,11 +4,11 @@
 
 ### Infrastructure
 - Make `Money::Currency` the canonical name to access `Currency` class
+- Abbreviate `minting/mint/aliases` to `minting/aliases` **Breaking change**
 
 ## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.6...v1.9.8)
-
 
 ### Features
 - `Currency.resolve` now accepts any object responding to `#to_currency` (must return a `Currency`) or `#currency_code` (must return a `String`). Enables seamless resolution from AR models, service objects, or custom wrappers without manual extraction.
