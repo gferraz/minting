@@ -6,7 +6,7 @@
 # because application domain models are commonly named Currency (e.g. a
 # Rails model). Require this file to opt in:
 #
-#   require 'minting/mint/aliases'
+#   require 'minting/aliases'
 #
 if defined?(Currency) && Currency != Money::Currency
   warn "minting: top-level Currency is already defined (#{Currency}); skipping alias. Use Money::Currency"

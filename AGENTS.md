@@ -63,11 +63,11 @@ bundle exec rake bench:all                # core + memory + regression + competi
 bundle exec rake bench:core
 bundle exec rake bench:memory
 bundle exec rake bench:regression
-bundle exec rake bench:check              # CI gate — fails if ops drop below 0.80x of baseline
-bundle exec rake bench:baseline           # regenerate the platform baseline (run before committing a perf improvement)
-bundle exec rake bench:competitive        # Minting vs the `money` gem (needs `money` group installed)
-bundle exec rake bench:competitive:shopify# vs `shopify-money` (uses BUNDLE_WITHOUT=money_bench)
-bundle exec rake bench:competitive:all    # both
+bundle exec rake bench:check               # CI gate — fails if ops drop below 0.80x of baseline
+bundle exec rake bench:baseline            # regenerate the platform baseline (run before committing a perf improvement)
+bundle exec rake bench:competitive         # Minting vs the `money` gem (needs `money` group installed)
+bundle exec rake bench:competitive:shopify # vs `shopify-money` (uses BUNDLE_WITHOUT=money_bench)
+bundle exec rake bench:competitive:all     # both
 ```
 
 Notes:
@@ -107,12 +107,12 @@ first), it warns and skips — use `Mint::Money` in that case. This is a
 
 `Currency` is **not** auto-bound, because application domain models are
 commonly named `Currency` (e.g. a Rails model). Opt in via
-`require 'minting/mint/aliases'`, which binds `Currency = Money::Currency`
+`require 'minting/aliases'`, which binds `Currency = Money::Currency`
 with the same warn-and-skip guard.
 
 There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 (removed in v2.0). The only opt-in path for `Currency` is
-`require 'minting/mint/aliases'`.
+`require 'minting/aliases'`.
 
 ### Two namespaces, one registry
 
@@ -301,7 +301,7 @@ handles non-numeric steps natively, so the patch is gated by
 - **`Money` is auto-bound at require time.** `require 'minting'` sets
   `::Money = Mint::Money`. If `::Money` is already defined (e.g. the `money`
   gem loaded first), it warns and skips. `Currency` is **not** auto-bound —
-  use `require 'minting/mint/aliases'` to opt in. There is no
+  use `require 'minting/aliases'` to opt in. There is no
   `Mint.use_top_level_constants!` (removed in v2.0) and no `lib/minting/dsl.rb`.
 - **Money-gem co-loading requires order.** If both minting and the `money`
   gem are loaded in the same process (e.g. competitive benchmarks),
@@ -345,7 +345,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/mint/rounding.rb` | lazy rounding-mode module + global `normalize_amount` patch |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
-| `lib/minting/mint/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
+| `lib/minting/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
 | `lib/minting/money/money.rb` | `Money` core; requires all `money/*` mixins |
 | `lib/minting/money/constructors.rb` | `from`, `from_subunits`, `no_currency`, `parse`, `copy_with`, `zero`, deprecated `create`/`mint` |
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |

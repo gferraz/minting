@@ -312,7 +312,7 @@ tax   = Money.from(2.50, "USD")
 
 ```ruby
 require "minting"
-require "minting/mint/aliases"  # opt-in top-level Currency
+require "minting/aliases"  # opt-in top-level Currency
 
 cur = Currency.new(code: "EUR", symbol: "€", subunit: 2, priority: 0)
 ```
@@ -321,10 +321,10 @@ For Rails applications, enable it in an initializer:
 
 ```ruby
 # config/initializers/minting.rb
-require "minting/mint/aliases"
+require "minting/aliases"
 ```
 
-If another `Money` is already defined when `require "minting"` runs (e.g. the `money` gem was loaded first), Minting warns and skips the auto-bind — use `Mint::Money` in that case. The same applies to `Currency` via `minting/mint/aliases`.
+If another `Money` is already defined when `require "minting"` runs (e.g. the `money` gem was loaded first), Minting warns and skips the auto-bind — use `Mint::Money` in that case. The same applies to `Currency` via `minting/aliases`.
 
 **Good fit:** Application code, especially Rails apps.
 **Not recommended:** Reusable gems/libraries — stick to `Mint::Money` to avoid conflicts.

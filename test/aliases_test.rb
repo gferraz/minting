@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class DslTest < Minitest::Test
+class AliasesTest < Minitest::Test
   def setup
     @original_money_defined = Object.const_defined?(:Money)
     @original_money = Object.const_get(:Money) if @original_money_defined
@@ -20,13 +20,13 @@ class DslTest < Minitest::Test
 
   def test_currency_is_not_auto_bound
     refute Object.const_defined?(:Currency),
-           'Currency should not be auto-bound; require minting/mint/aliases to opt in'
+           'Currency should not be auto-bound; require minting/aliases to opt in'
   end
 
   def test_aliases_binds_currency
     remove_const(:Currency)
 
-    require 'minting/mint/aliases'
+    require 'minting/aliases'
 
     assert Object.const_defined?(:Currency)
     assert_equal Money::Currency, Currency
@@ -55,6 +55,6 @@ class DslTest < Minitest::Test
   # Re-loads aliases.rb to exercise the already-defined branch without
   # re-triggering the require guard (require returns false on second load).
   def load_aliases_file
-    load File.expand_path('../lib/minting/mint/aliases.rb', __dir__)
+    load File.expand_path('../lib/minting/aliases.rb', __dir__)
   end
 end
