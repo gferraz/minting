@@ -49,7 +49,7 @@ module Mint
     #
     # @return [Money] a frozen zero-Money instance
     # @example
-    #   Mint::Currency.for_code('USD').zero  #=> [USD 0.00]
+    #   Money::Currency.for_code('USD').zero  #=> [USD 0.00]
     def zero = Registry.zero_for(self)
   end
 
@@ -87,7 +87,7 @@ module Mint
       if object.respond_to?(:to_currency)
         result = object.to_currency
         unless result.is_a?(Currency)
-          raise ArgumentError, "#to_currency must return a [Mint::Currency], got #{result.class}"
+          raise ArgumentError, "#to_currency must return a [Money::Currency], got #{result.class}"
         end
 
         result
@@ -97,7 +97,7 @@ module Mint
 
         Currency.for_code result
       else
-        raise ArgumentError, "currency must be [Mint::Currency], [Money], [String] or nil (#{object})"
+        raise ArgumentError, "currency must be [Money::Currency], [Money], [String] or nil (#{object})"
       end
     end
   end

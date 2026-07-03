@@ -29,7 +29,7 @@ lib/
 │   ├── data/
 │   │   └── currencies.yaml      # built-in ISO 4217 database
 │   ├── mint/
-│   │   ├── currency.rb          # Mint::Currency model
+│   │   ├── currency.rb          # Money::Currency model
 │   │   ├── refinements.rb       # Scoped Numeric/String refinements
 │   │   └── registry.rb          # Global lookup & registration
 │   ├── money/
@@ -70,7 +70,7 @@ lib/
 
 The gem exhibits top-tier Ruby development practices:
 
-- **Immutability & Safety**: Both `Mint::Currency` and `Mint::Money` objects are frozen upon initialization:
+- **Immutability & Safety**: Both `Money::Currency` and `Mint::Money` objects are frozen upon initialization:
   ```ruby
   def initialize(amount, currency)
     # ...

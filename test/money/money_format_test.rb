@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class MoneyFormatTest < Minitest::Test
-  FUEL = Mint::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
+  FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
   def usd_9_99 = Mint.money(9.99, 'USD')
   def usd_123_456_789_01 = Mint.money(123_456_789.01, 'USD')

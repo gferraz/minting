@@ -2,7 +2,7 @@ Repository overview
 
 - Language: Ruby gem (minting)
 - Location of main code: lib/minting and its subfolders (mint/, money/)
-- Public API surface: Mint (factory/helpers), Mint::Money, Mint::Currency
+- Public API surface: Mint (factory/helpers), Mint::Money, Money::Currency
 - Data: built-in currencies in lib/minting/data/currencies.yaml
 - Tests: Minitest (unit) + performance benchmarks under test/performance
 

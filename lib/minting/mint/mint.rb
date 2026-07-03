@@ -14,7 +14,7 @@ module Mint
   # @param amount [Numeric] the financial value
   # @param currency_code [String, Currency, Money, nil] Currency code, object,
   #   Money whose currency to reuse, or +nil+. Passed through
-  #   {Mint::Currency.resolve!} so all accepted types resolve to a registered
+  #   {Money::Currency.resolve!} so all accepted types resolve to a registered
   #   currency.
   # @return [Money] the instantiated Money object
   # @raise [ArgumentError] if the amount is not a Numeric

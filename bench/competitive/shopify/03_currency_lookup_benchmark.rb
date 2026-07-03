@@ -13,7 +13,7 @@ class CompetitiveCurrencyLookupBenchmark < Minitest::Test
   def test_currency_lookup
     with_bench('Currency Lookup: Minting vs Shopify Money') do
       Benchmark.ips do |x|
-        x.report('Mint currency') { Mint::Currency.for_code('USD') }
+        x.report('Mint currency') { Money::Currency.for_code('USD') }
         x.report('Shopify currency') { Money::Currency.find('USD') }
         x.compare!
       end

@@ -11,34 +11,34 @@ class MintTest < Minitest::Test
   end
 
   def test_register
-    sgx = Mint::Currency.register(code: 'SGX', subunit: 2, symbol: '^')
+    sgx = Money::Currency.register(code: 'SGX', subunit: 2, symbol: '^')
 
-    assert_equal Mint::Currency.for_code('SGX'), sgx
+    assert_equal Money::Currency.for_code('SGX'), sgx
   end
 
   def test_zero
-    assert_equal Mint.money(0, 'USD'), Mint::Currency.zero('USD')
-    assert_equal Mint.money(0, 'BRL'), Mint::Currency.zero('BRL')
-    assert_equal Mint.money(0, 'JPY'), Mint::Currency.zero('JPY')
+    assert_equal Mint.money(0, 'USD'), Money::Currency.zero('USD')
+    assert_equal Mint.money(0, 'BRL'), Money::Currency.zero('BRL')
+    assert_equal Mint.money(0, 'JPY'), Money::Currency.zero('JPY')
   end
 
   def test_zero_with_currency_object
-    assert_equal Mint.money(0, 'USD'), Mint::Currency.zero(Mint::Currency.for_code('USD'))
+    assert_equal Mint.money(0, 'USD'), Money::Currency.zero(Money::Currency.for_code('USD'))
   end
 
   def test_zero_returns_same_object
-    assert_same Mint::Currency.zero('USD'), Mint::Currency.zero('USD')
+    assert_same Money::Currency.zero('USD'), Money::Currency.zero('USD')
   end
 
   def test_zero_unknown_currency
-    assert_raises(Mint::UnknownCurrency) { Mint::Currency.zero('UNKNOWN') }
-    assert_raises(Mint::UnknownCurrency) { Mint::Currency.zero(nil) }
+    assert_raises(Mint::UnknownCurrency) { Money::Currency.zero('UNKNOWN') }
+    assert_raises(Mint::UnknownCurrency) { Money::Currency.zero(nil) }
   end
 
   def test_mint_zero_returns_singleton
     zero_from_create = Mint.money(0, 'USD')
     zero_from_mint  = Mint.money(10, 'USD').copy_with(amount: 0)
-    zero_from_zero  = Mint::Currency.zero('USD')
+    zero_from_zero  = Money::Currency.zero('USD')
 
     assert_same zero_from_zero, zero_from_create
     assert_same zero_from_zero, zero_from_mint
@@ -49,7 +49,7 @@ class MintTest < Minitest::Test
   end
 
   def test_concurrent_zero_returns_same_object
-    threads = Array.new(10) { Thread.new { Mint::Currency.zero('USD') } }
+    threads = Array.new(10) { Thread.new { Money::Currency.zero('USD') } }
     results = threads.map(&:value)
 
     assert(results.all? { |z| z.equal?(results.first) })
@@ -57,7 +57,7 @@ class MintTest < Minitest::Test
 
   def test_concurrent_zero_different_currencies
     codes = %w[USD BRL JPY PEN EUR]
-    threads = codes.cycle.first(20).map { |code| Thread.new { Mint::Currency.zero(code) } }
+    threads = codes.cycle.first(20).map { |code| Thread.new { Money::Currency.zero(code) } }
     results = threads.map(&:value)
 
     codes.each do |code|
@@ -70,19 +70,19 @@ class MintTest < Minitest::Test
 
   def test_concurrent_register
     codes = %w[AAA BBB CCC DDD]
-    threads = codes.map { |code| Thread.new { Mint::Currency.register(code:) } }
+    threads = codes.map { |code| Thread.new { Money::Currency.register(code:) } }
     results = threads.map(&:value)
 
-    results.each { |currency| assert_kind_of Mint::Currency, currency }
-    codes.each { |code| refute_nil Mint::Currency.for_code(code) }
+    results.each { |currency| assert_kind_of Money::Currency, currency }
+    codes.each { |code| refute_nil Money::Currency.for_code(code) }
   end
 
   def test_concurrent_register_raises_on_duplicate
-    Mint::Currency.register(code: 'ZZZ_')
+    Money::Currency.register(code: 'ZZZ_')
 
     threads = Array.new(5) do
       Thread.new do
-        Mint::Currency.register(code: 'ZZZ_')
+        Money::Currency.register(code: 'ZZZ_')
       rescue StandardError
         nil
       end
@@ -95,19 +95,19 @@ class MintTest < Minitest::Test
   def test_concurrent_reads_during_registration
     reader = Thread.new do
       100.times do
-        Mint::Currency.for_code('USD')
+        Money::Currency.for_code('USD')
         Mint::Registry.currencies.values
       end
     end
 
     writer = Thread.new do
-      Mint::Currency.register(code: 'EEE')
+      Money::Currency.register(code: 'EEE')
     end
 
     reader.join
     writer.join
 
-    assert Mint::Currency.for_code('EEE')
+    assert Money::Currency.for_code('EEE')
   end
 
   def test_mint_core_extensions

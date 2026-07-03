@@ -29,7 +29,7 @@ class DslTest < Minitest::Test
     require 'minting/mint/aliases'
 
     assert Object.const_defined?(:Currency)
-    assert_equal Mint::Currency, Currency
+    assert_equal Money::Currency, Currency
   end
 
   def test_aliases_warns_when_currency_already_defined

@@ -17,7 +17,7 @@ documentation accuracy, and clean release notes over speculative API changes.
 are exercised by `test/minting_test.rb#test_readme_usage` and should reflect
 public behavior.
 - Add every public-facing change to `CHANGELOG.md` under `## [Unreleased]`.
-- Preserve key public API contracts: `Mint::Money`, `Mint::Currency`, `Mint`
+- Preserve key public API contracts: `Mint::Money`, `Money::Currency`, `Mint`
 helpers, `Money#format`, and the `Money#to_s` no-args compatibility rule.
 - Respect zero-equality semantics (`Money.from(0,'USD') == Money.from(0,'EUR')`
 and `== 0`) and the `Currency` opt-in alias behavior.
@@ -107,7 +107,7 @@ first), it warns and skips — use `Mint::Money` in that case. This is a
 
 `Currency` is **not** auto-bound, because application domain models are
 commonly named `Currency` (e.g. a Rails model). Opt in via
-`require 'minting/mint/aliases'`, which binds `Currency = Mint::Currency`
+`require 'minting/mint/aliases'`, which binds `Currency = Money::Currency`
 with the same warn-and-skip guard.
 
 There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
@@ -116,7 +116,7 @@ There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 
 ### Two namespaces, one registry
 
-- `Mint::Currency` — a `Data.define` value object (`code`, `subunit`,
+- `Money::Currency` — a `Data.define` value object (`code`, `subunit`,
   `symbol`, `priority`, `country`, `name`, `fractional_multiplier`).
   Immutable. Constructed via `Currency.new(...)` or `Currency.register(...)`.
 - `Mint::Money` — an immutable value object (frozen on `initialize`) holding
@@ -345,7 +345,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/mint/rounding.rb` | lazy rounding-mode module + global `normalize_amount` patch |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
-| `lib/minting/mint/aliases.rb` | opt-in `Currency = Mint::Currency` (warn-and-skip if already defined) |
+| `lib/minting/mint/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
 | `lib/minting/money/money.rb` | `Money` core; requires all `money/*` mixins |
 | `lib/minting/money/constructors.rb` | `from`, `from_subunits`, `no_currency`, `parse`, `copy_with`, `zero`, deprecated `create`/`mint` |
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |

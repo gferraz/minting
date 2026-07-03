@@ -2,23 +2,23 @@
 
 class CurrencyTest < Minitest::Test
   def setup
-    @real ||= Mint::Currency.for_code('BRL')
-    @dollar ||= Mint::Currency.for_code('USD')
-    @yen ||= Mint::Currency.for_code('JPY')
+    @real ||= Money::Currency.for_code('BRL')
+    @dollar ||= Money::Currency.for_code('USD')
+    @yen ||= Money::Currency.for_code('JPY')
     nil
   end
 
   def test_currency_construction
-    sgda = Mint::Currency.new(code: 'SGDA', subunit: 2, symbol: '^')
+    sgda = Money::Currency.new(code: 'SGDA', subunit: 2, symbol: '^')
 
-    assert_equal sgda, Mint::Currency.register(code: 'SGDA', subunit: 2, symbol: '^')
+    assert_equal sgda, Money::Currency.register(code: 'SGDA', subunit: 2, symbol: '^')
 
     assert_raises IndexError, 'Currency: USD already exists' do
-      Mint::Currency.register(code: 'USD', subunit: 2, symbol: '$')
+      Money::Currency.register(code: 'USD', subunit: 2, symbol: '$')
     end
 
     assert_raises ArgumentError, 'Currency code must be String or Symbol' do
-      Mint::Currency.register(code: 'USD4', subunit: 2, symbol: '$')
+      Money::Currency.register(code: 'USD4', subunit: 2, symbol: '$')
     end
   end
 
@@ -46,11 +46,11 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_finder
-    assert_equal 'BRL', Mint::Currency.for_code('BRL').code
+    assert_equal 'BRL', Money::Currency.for_code('BRL').code
   end
 
   def test_resolve_bang_raises_unknown_currency_for_unregistered_code
-    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!('NOPE') }
+    assert_raises(Mint::UnknownCurrency) { Money::Currency.resolve!('NOPE') }
   end
 
   def test_unknown_currency_inherits_from_argument_error
@@ -58,11 +58,11 @@ class CurrencyTest < Minitest::Test
   end
 
   def test_resolve_bang_raises_unknown_currency_for_nil
-    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!(nil) }
+    assert_raises(Mint::UnknownCurrency) { Money::Currency.resolve!(nil) }
   end
 
   def test_resolve_bang_resolves_valid_code
-    assert_equal @dollar, Mint::Currency.resolve!('USD')
+    assert_equal @dollar, Money::Currency.resolve!('USD')
   end
 
   def test_resolve_accepts_object_with_to_currency
@@ -70,7 +70,7 @@ class CurrencyTest < Minitest::Test
     obj = Object.new
     obj.define_singleton_method(:to_currency) { dollar }
 
-    assert_equal dollar, Mint::Currency.resolve(obj)
+    assert_equal dollar, Money::Currency.resolve(obj)
   end
 
   def test_resolve_accepts_object_with_currency_code
@@ -78,32 +78,32 @@ class CurrencyTest < Minitest::Test
     obj = Object.new
     obj.define_singleton_method(:currency_code) { 'BRL' }
 
-    assert_equal real, Mint::Currency.resolve(obj)
+    assert_equal real, Money::Currency.resolve(obj)
   end
 
   def test_resolve_raises_on_to_currency_wrong_return_type
     obj = Object.new
     obj.define_singleton_method(:to_currency) { 'USD' }
-    assert_raises(ArgumentError) { Mint::Currency.resolve(obj) }
+    assert_raises(ArgumentError) { Money::Currency.resolve(obj) }
   end
 
   def test_resolve_raises_on_currency_code_wrong_return_type
     obj = Object.new
     obj.define_singleton_method(:currency_code) { 123 }
-    assert_raises(ArgumentError) { Mint::Currency.resolve(obj) }
+    assert_raises(ArgumentError) { Money::Currency.resolve(obj) }
   end
 
   def test_resolve_returns_nil_on_currency_code_unregistered
     obj = Object.new
     obj.define_singleton_method(:currency_code) { 'NOPE' }
 
-    assert_nil Mint::Currency.resolve(obj)
+    assert_nil Money::Currency.resolve(obj)
   end
 
   def test_resolve_bang_raises_on_currency_code_unregistered
     obj = Object.new
     obj.define_singleton_method(:currency_code) { 'NOPE' }
-    assert_raises(Mint::UnknownCurrency) { Mint::Currency.resolve!(obj) }
+    assert_raises(Mint::UnknownCurrency) { Money::Currency.resolve!(obj) }
   end
 
   def test_resolve_bang_works_with_to_currency
@@ -111,7 +111,7 @@ class CurrencyTest < Minitest::Test
     obj = Object.new
     obj.define_singleton_method(:to_currency) { real }
 
-    assert_equal real, Mint::Currency.resolve!(obj)
+    assert_equal real, Money::Currency.resolve!(obj)
   end
 
   def test_resolve_to_currency_takes_precedence_over_currency_code
@@ -120,19 +120,19 @@ class CurrencyTest < Minitest::Test
     obj.define_singleton_method(:to_currency) { dollar }
     obj.define_singleton_method(:currency_code) { 'BRL' }
 
-    assert_equal dollar, Mint::Currency.resolve(obj)
+    assert_equal dollar, Money::Currency.resolve(obj)
   end
 
   def test_resolve_unsupported_object_still_raises
-    assert_raises(ArgumentError) { Mint::Currency.resolve(42) }
-    assert_raises(ArgumentError) { Mint::Currency.resolve(:USD) }
-    assert_raises(ArgumentError) { Mint::Currency.resolve([]) }
+    assert_raises(ArgumentError) { Money::Currency.resolve(42) }
+    assert_raises(ArgumentError) { Money::Currency.resolve(:USD) }
+    assert_raises(ArgumentError) { Money::Currency.resolve([]) }
   end
 
   def test_resolve_existing_paths_still_work
-    assert_equal @dollar, Mint::Currency.resolve('USD')
-    assert_equal @dollar, Mint::Currency.resolve(@dollar)
-    assert_equal @dollar, Mint::Currency.resolve(Mint.money(10, 'USD'))
-    assert_nil Mint::Currency.resolve(nil)
+    assert_equal @dollar, Money::Currency.resolve('USD')
+    assert_equal @dollar, Money::Currency.resolve(@dollar)
+    assert_equal @dollar, Money::Currency.resolve(Mint.money(10, 'USD'))
+    assert_nil Money::Currency.resolve(nil)
   end
 end

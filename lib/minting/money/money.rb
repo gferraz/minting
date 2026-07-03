@@ -19,6 +19,9 @@ module Mint
   class Money
     attr_reader :amount, :currency
 
+    # Money::Currency is the canonical way to access Currency class
+    Currency = Mint::Currency
+
     # Returns the ISO 3-letter currency code string.
     #
     # @return [String] the ISO currency code (e.g., "USD", "EUR", "BRL")

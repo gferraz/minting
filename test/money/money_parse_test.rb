@@ -12,7 +12,7 @@ class MoneyParseTest < Minitest::Test
 
   def test_parse_with_explicit_currency_object_or_symbol
     assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', Mint::Currency.for_code('USD'))
+    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', Money::Currency.for_code('USD'))
   end
 
   def test_parse_trims_whitespace
@@ -52,7 +52,7 @@ class MoneyParseTest < Minitest::Test
 
   def test_parse_symbol_registered_after_symbol_index_is_cached
     Mint.parse('$1')
-    currency = Mint::Currency.register(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
+    currency = Money::Currency.register(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
 
     assert_equal currency, Mint.parse('T$1').currency
     assert_equal currency, Mint.parse('PT_ST 12.23').currency

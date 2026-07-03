@@ -8,7 +8,7 @@ require 'minting/version'
 # and skip so both libraries can coexist in the same process without
 # corrupting either class.
 if defined?(Money) && Money != Mint::Money
-  warn "minting: top-level Money is already defined (#{Money}); skipping auto-bind. Use Mint::Money."
+  warn "minting: top-level Money is already defined (#{Money}); skipping auto-bind! Use Mint::Money."
 else
   Money = Mint::Money unless defined?(Money)
 end

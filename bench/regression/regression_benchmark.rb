@@ -64,7 +64,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
     assert_performance_constant 0.99 do |_n|
       code = currencies.sample
-      Mint::Currency.for_code(code)
+      Money::Currency.for_code(code)
       Mint.money(100, code)
     end
   end

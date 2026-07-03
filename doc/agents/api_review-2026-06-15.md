@@ -127,7 +127,7 @@ This is odd: the param type is a `Currency` in the docs, but you call `other.cur
       other_currency =
         case other
         when Mint::Money   then other.currency
-        when Mint::Currency then other
+        when Money::Currency then other
         else
           Currency.resolve!(other)
         end

@@ -59,7 +59,7 @@ end
 
 # When loaded, patch Currency to delegate rounding through this module.
 # Remove the default fast-path method first to avoid redefinition warnings.
-Mint::Currency.remove_method(:normalize_amount)
-Mint::Currency.define_method(:normalize_amount) do |amount|
+Money::Currency.remove_method(:normalize_amount)
+Money::Currency.define_method(:normalize_amount) do |amount|
   Mint::Rounding.apply(amount, subunit)
 end

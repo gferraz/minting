@@ -206,12 +206,12 @@ Notes:
 
 ```ruby
 # By ISO code (direct hash lookup, string only)
-Mint::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
+Money::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
 
 # By display symbol (highest-priority currency for ambiguous symbols)
-Mint::Currency.for_symbol('$')        #=> #<Currency code="USD" ...>
-Mint::Currency.for_symbol('R$')       #=> #<Currency code="BRL" ...>
-Mint::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
+Money::Currency.for_symbol('$')        #=> #<Currency code="USD" ...>
+Money::Currency.for_symbol('R$')       #=> #<Currency code="BRL" ...>
+Money::Currency.for_symbol('€')        #=> #<Currency code="EUR" ...>
 ```
 
 **Polymorphic currency resolution** — `Currency.resolve` also accepts objects that implement `#to_currency` or `#currency_code`:
@@ -221,8 +221,8 @@ class Product
   def currency_code = 'USD'
 end
 
-Mint::Currency.resolve(Product.new)  #=> #<Currency code="USD" ...>
-Mint::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is unknown
+Money::Currency.resolve(Product.new)  #=> #<Currency code="USD" ...>
+Money::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is unknown
 ```
 
 `#to_currency` takes precedence when both methods exist. It must return a `Currency` object; `#currency_code` must return a `String`. Wrong types raise `ArgumentError`.
