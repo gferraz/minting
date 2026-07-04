@@ -7,24 +7,12 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 - 🔶 = partial / moved to companion gem
 - ❌ = not planned (revisit if demand rises)
 
----
-
-## Planned
-
-| Item | Description |
-|------|-------------|
-| **P3-1** | Add `SECURITY.md` and `CODE_OF_CONDUCT.md` |
-| **P3-2** | Document `Currency.all` iteration in README | ✅ |
-| **P3-3** | Decide and document `Gemfile.lock` policy (gem convention: don't commit) | ✅ |
-| **P3-4** | Clean up `pkg/` artifacts — `rake clobber` covers it via `CLOBBER` | ✅ |
-
----
-
 ## Not planned (unless demand rises)
 
 Everything below is intentionally out of scope for the low-level minting gem.
 The existing surface (arithmetic, formatting, parsing, allocation, serialization)
 covers the vast majority of real-world usage.
+
 
 ### P2-A Arithmetic & numeric operations
 
@@ -60,7 +48,7 @@ covers the vast majority of real-world usage.
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| Drop trailing zeros | `"$1.1"` | ❌ Not planned (achievable via template, but no drop-in boolean flag) | — |
+| Drop trailing zeros | `"$1.1"` | ✅ Already possible — `.format(format: '%<amount>.1f')` | — |
 
 ### P2-E Rounding & precision strategies
 
@@ -76,7 +64,6 @@ covers the vast majority of real-world usage.
 | ISO numeric code | `currency.iso_numeric` (e.g. `"840"`) | ❌ Not planned | — |
 | HTML entity | `currency.html_entity` (e.g. `"&#36;"`) | ❌ Not planned | — |
 | Smallest denomination | `currency.smallest_denomination` | ❌ Not planned | — |
-| `Currency.all` | ✅ `Money::Currency.all` returns all registered currencies | ✅ Done | — |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | ❌ Not planned | — |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | ❌ Not planned | — |
 | Crypto currencies | YAML-backed crypto currency support | ❌ Not planned | — |
@@ -98,7 +85,13 @@ covers the vast majority of real-world usage.
 |---------|-------------|---------|----------|
 | RuboCop cops | `Money/MissingCurrency`, `Money/ZeroMoney` | ❌ Not planned | — |
 | RBS type signatures | Full `sig/` directory for type checking | ❌ Not planned | — |
-| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro | 🔶 Planned in `attribute-money` | — |
+| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro | ✅ Done in `attribute-money` | — |
+
+### P3 Polish
+
+| Item | Description |
+|------|-------------|
+| **P3-1** | Add `SECURITY.md` and `CODE_OF_CONDUCT.md` | ❌ Not planned |
 
 ---
 
@@ -160,10 +153,16 @@ All expressible via `Kernel.format`-style templates:
 - `String#to_money(code)` — quick string-to-money (uses `to_r`, not parser)
 - `Range#step` with `Money` step — via `RangeStepPatch` on Ruby < 4.0, native on 4.0+
 
+### P3 Polish
+
+- `Currency.all` — public access to all registered currencies
+- `Gemfile.lock` policy — gitignore, don't commit (gem convention)
+- `pkg/` artifacts — `rake clobber` covers cleanup via `CLOBBER.include`
+
 ### Infrastructure
 
-Immutable value objects - `Money` frozen on initialize 
-Thread-safe registry - `Monitor` + copy-on-write hash replacement 
-Range stepping - `(1..10).step(Mint.money(1, 'USD'))` 
-80+% test coverage - SimpleCov-verified 
-0 RuboCop offenses - Clean on `lib/`
+- Immutable value objects - `Money` frozen on initialize 
+- Thread-safe registry - `Monitor` + copy-on-write hash replacement 
+- Range stepping - `(1..10).step(Mint.money(1, 'USD'))` 
+- 80+% test coverage - SimpleCov-verified 
+- 0 RuboCop offenses - Clean on `lib/`
