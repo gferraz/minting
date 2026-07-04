@@ -55,7 +55,7 @@ module Mint
     #   Mint.money(1234.56, 'USD').fractional  #=> 56
     #   Mint.money(1000, 'JPY').fractional     #=> 0
     #   Mint.money(123.456, 'IQD').fractional  #=> 456
-    def fractional = ((amount.abs % 1) * currency.fractional_multiplier).to_i
+    def fractional = ((amount - amount.to_i) * currency.fractional_multiplier).to_i
 
     # Generates a stable hash key for Money instances.
     #

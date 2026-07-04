@@ -31,14 +31,6 @@ module Mint
       %(<data class='money' title='#{title}'>#{ERB::Util.html_escape(body)}</data>)
     end
 
-    # Truncates and converts the monetary amount to an Integer.
-    #
-    # @return [Integer] the integer representation of the money amount
-    # @example
-    #   Mint.money(9.99, 'USD').to_i  #=> 9
-    #   Mint.money(-9.99, 'USD').to_i #=> -9
-    def to_i = amount.to_i
-
     # Returns a Hash representation of the money instance.
     #
     # @return [Hash] hash with :currency (String) and :amount (String) keys

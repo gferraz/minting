@@ -93,7 +93,7 @@ class MoneyTest < Minitest::Test
     assert_equal 1000, Mint.money(1000, 'JPY').integral
     assert_equal 0,    Mint.money(1000, 'JPY').fractional
     assert_equal(-9, Mint.money(-9.99, 'USD').integral)
-    assert_equal 99,   Mint.money(-9.99, 'USD').fractional
+    assert_equal(-99, Mint.money(-9.99, 'USD').fractional)
     assert_equal 0,    Mint.money(0, 'USD').integral
     assert_equal 0,    Mint.money(0, 'USD').fractional
   end

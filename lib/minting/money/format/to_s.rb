@@ -118,13 +118,13 @@ module Mint
     def to_s
       return format unless Mint.locale_backend.nil?
 
-      subunit  = currency.subunit
-      integral = to_i.to_s
-      integral.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
+      subunit = currency.subunit
+      whole = integral.to_s
+      whole.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
       if subunit > 0
-        "#{currency.symbol}#{integral}.#{fractional.to_s.rjust(subunit, '0')}"
+        "#{currency.symbol}#{whole}.#{fractional.abs.to_s.rjust(subunit, '0')}"
       else
-        "#{currency.symbol}#{integral}"
+        "#{currency.symbol}#{whole}"
       end
     end
 
