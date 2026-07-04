@@ -41,6 +41,15 @@ module Mint
     #   Mint.money(123.456, 'IQD').subunits  #=> 123456
     def subunits = (amount * currency.fractional_multiplier).to_i
 
+    # Returns the whole-unit (integral) part of the amount.
+    # @example
+    #   Mint.money(1234.56, 'USD').integral  #=> 1234
+    #   Mint.money(1000, 'JPY').integral     #=> 1000
+    #   Mint.money(-9.99, 'USD').integral    #=> -9
+    def integral = amount.to_i
+
+    alias to_i integral
+
     # Returns the fractional part of the amount.
     # @example
     #   Mint.money(1234.56, 'USD').fractional  #=> 56

@@ -10,6 +10,7 @@
 - `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
 - `Money.from_hash(hash)` — deserializer symmetric with `to_hash`, accepts `{ currency:, amount: }`
 - Crypto currency support — opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
+- `Money#integral` — returns the whole-unit part of the amount (complement to `#fractional`). `#to_i` is now an alias of `#integral`.
 
 ### Deprecations
 - `Mint.parse` and `Mint.parse!` deprecated — use `Money.parse` and `Money.parse!` instead. Will be removed in v2.

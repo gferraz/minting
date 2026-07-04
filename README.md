@@ -167,11 +167,13 @@ Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00" (f
 price.to_hash   #=> {currency: "USD", amount: "9.99"}
 ```
 
-### Fractional units & allocation
+### Integral & fractional parts
 
 ```ruby
-# Fractional units (inverse of #fractional) - exact integer arithmetic
-price.subunits                         #=> 999
+price.integral    #=> 9         # whole-unit part
+price.fractional  #=> 99        # fractional part (subunits within one unit)
+price.subunits    #=> 999       # total amount in smallest unit
+
 Mint::Money.from_subunits(999, 'USD')  #=> [USD 9.99]
 Mint::Money.from_subunits(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
 

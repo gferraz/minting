@@ -87,7 +87,25 @@ class MoneyTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.from(3, Object.new) }
   end
 
-  def test_fractional
+  def test_integral_and_fractional
+    assert_equal 1234, Mint.money(1234.56, 'USD').integral
+    assert_equal 56,   Mint.money(1234.56, 'USD').fractional
+    assert_equal 1000, Mint.money(1000, 'JPY').integral
+    assert_equal 0,    Mint.money(1000, 'JPY').fractional
+    assert_equal(-9, Mint.money(-9.99, 'USD').integral)
+    assert_equal 99,   Mint.money(-9.99, 'USD').fractional
+    assert_equal 0,    Mint.money(0, 'USD').integral
+    assert_equal 0,    Mint.money(0, 'USD').fractional
+  end
+
+  def test_to_i_is_alias_of_integral
+    m = Mint.money(1234.56, 'USD')
+
+    assert_equal m.integral, m.to_i
+    assert_equal m.method(:to_i), m.method(:integral)
+  end
+
+  def test_subunits
     assert_equal 123_456, Mint.money(1234.56, 'USD').subunits
     assert_equal 123_00, Mint.money(123, 'USD').subunits
     assert_equal 123_99, Mint.money(123.9912, 'USD').subunits
