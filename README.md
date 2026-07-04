@@ -188,10 +188,10 @@ ten.allocate([1, 2, 3])       #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
 ### Parsing strings
 
 ```ruby
-Mint.parse('$19.99')           #=> [USD 19.99]
-Mint.parse('19,99 €')          #=> [EUR 19.99]
-Mint.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
-Mint.parse('USD 1,234.56')     #=> [USD 1234.56]
+Money.parse('$19.99')           #=> [USD 19.99]
+Money.parse('19,99 €')          #=> [EUR 19.99]
+Money.parse('1.234,56', 'EUR')  #=> [EUR 1234.56]
+Money.parse('USD 1,234.56')     #=> [USD 1234.56]
 ```
 
 Notes:
@@ -200,7 +200,7 @@ Notes:
 - `1,234.00` is unambiguous (thousands + decimal).
 - Accounting negatives like `($1.23)` or `(USD 10.00)` are supported — the parser detects parentheses and negates the amount.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
-- The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Mint.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
+- The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Money.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
 
 ### Currency lookup
 
@@ -320,17 +320,17 @@ Mint.money(9.99, 'BRL').format  #=> "R$9,99"
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
 
-**Rounding modes** — Wrap operations in `Mint.with_rounding(mode)` to change how amounts are rounded to the subunit:
+**Rounding modes** — Wrap operations in `Money.with_rounding(mode)` to change how amounts are rounded to the subunit:
 
 ```ruby
-Mint.with_rounding(:half_down) { Money.from(1.005, 'USD') }   #=> [USD 1.00]
-Mint.with_rounding(:ceil)      { Money.from(1.001, 'USD') }   #=> [USD 1.01]
-Mint.with_rounding(:floor)     { Mint.parse('1.009', 'USD') } #=> [USD 1.00]
+Money.with_rounding(:half_down) { Money.from(1.005, 'USD') }   #=> [USD 1.00]
+Money.with_rounding(:ceil)      { Money.from(1.001, 'USD') }   #=> [USD 1.01]
+Money.with_rounding(:floor)     { Money.parse('1.009', 'USD') } #=> [USD 1.00]
 ```
 
 Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
 
-> **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Mint.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
+> **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Money.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
 
 **Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
 

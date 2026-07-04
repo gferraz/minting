@@ -92,7 +92,7 @@ MODES.each do |mode_name, rounding_mode|
   ITERS.each do |name, n|
     GC.start
     real = if rounding_mode
-             Benchmark.measure { Mint.with_rounding(rounding_mode) { bench_block.call(name, n) } }.real
+             Benchmark.measure { Money.with_rounding(rounding_mode) { bench_block.call(name, n) } }.real
            else
              Benchmark.measure { bench_block.call(name, n) }.real
            end

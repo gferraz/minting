@@ -11,6 +11,10 @@
 - `Money.from_hash(hash)` — deserializer symmetric with `to_hash`, accepts `{ currency:, amount: }`
 - Crypto currency support — opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
 
+### Deprecations
+- `Mint.parse` and `Mint.parse!` deprecated — use `Money.parse` and `Money.parse!` instead. Will be removed in v2.
+- `Mint.with_rounding` deprecated — use `Money.with_rounding` instead. Will be removed in v2.
+
 ### Removals
 - Remove `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
 - Remove `test_numeric_json_format` test (covered by `attribute-money`)

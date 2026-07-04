@@ -12,6 +12,7 @@ require_relative 'parse'
 require_relative 'conversion'
 require_relative 'format/formatting'
 require_relative 'format/to_s'
+require_relative 'rounding'
 
 module Mint
   # Represents a monetary value paired with a currency.
