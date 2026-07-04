@@ -34,7 +34,7 @@ module Mint
     # @return [Array<Currency>] the newly registered Currency objects
     def self.register_crypto(*codes)
       entries = crypto_currencies
-      index = entries.each_with_index.to_h { |c, i| [c.code, i] }
+      index = entries.each_with_index.to_h { |currency, index| [currency.code, index] }
       missing = codes.reject { |code| index.key?(code) }
       raise ArgumentError, "Unknown crypto code(s): #{missing.join(', ')}" unless missing.empty?
 

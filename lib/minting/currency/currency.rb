@@ -40,9 +40,17 @@ module Mint
     # @return [Rational] smallest representable amount (1/fractional_multiplier)
     def minimum_amount = Rational(1, fractional_multiplier)
 
-    # Normalizes numeric amounts for this currency
-    # 1. Converts to Rational
-    # 2. Rounds to respect currency subunit
+    # Normalizes a numeric amount for this currency.
+    #
+    # @param amount [Numeric] the monetary amount to normalize
+    # @return [Rational] the amount converted to +Rational+ and rounded to
+    #   the currency's subunit precision (half-up by default)
+    # @example
+    #   usd = Money::Currency.for_code('USD')
+    #   usd.normalize_amount(10.567)  #=> (10567/1000)
+    #   usd.normalize_amount("5.25")  #=> (21/4)
+    #
+    # @see Mint::Rounding.apply Custom rounding modes via {Money.with_rounding}
     def normalize_amount(amount) = amount.to_r.round(subunit)
 
     # Returns the cached frozen zero-Money for this currency.

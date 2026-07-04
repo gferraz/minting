@@ -2,7 +2,6 @@ require 'bundler/audit/task'
 require 'bundler/gem_tasks'
 require 'rake/testtask'
 require 'rubocop/rake_task'
-require 'rubycritic/rake_task'
 require 'yard'
 
 CLOBBER.include %w[doc/css doc/js doc/Mint doc/*.html tmp .yardoc pkg]
@@ -63,10 +62,6 @@ Bundler::Audit::Task.new
 
 RuboCop::RakeTask.new(:cop) do |task|
   task.patterns = ['lib']
-end
-
-RubyCritic::RakeTask.new do |task|
-  task.name = 'critic'
 end
 
 YARD::Rake::YardocTask.new do |t|

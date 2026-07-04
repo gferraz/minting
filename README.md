@@ -244,7 +244,7 @@ Minting ships with opt-in definitions for ~25 popular crypto currencies (BTC, ET
 ```ruby
 Currency.register_crypto('BTC', 'ETH', 'SOL')
 
-Mint.parse("0.01 BTC")    #=> [BTC 0.01000000]
+Money.parse("0.01 BTC")    #=> [BTC 0.01000000]
 Mint.money(1, 'ETH')      #=> [ETH 1.000000000000000000]
 ```
 

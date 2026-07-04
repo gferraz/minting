@@ -1,10 +1,15 @@
 # Changelog
 
-## [Unreleased]
+## [v2.0.0](https://github.com/gferraz/minting/releases/tag/v2.0.0) (2026-07-04)
 
-### Infrastructure
-- Make `Money::Currency` the canonical name to access `Currency` class
-- Abbreviate `minting/mint/aliases` to `minting/aliases` **Breaking change**
+### Breaking Changes
+- Drop Ruby 3.3 support — minimum Ruby version is now 4.0
+- `Mint.parse` and `Mint.parse!` removed — use `Money.parse` and `Money.parse!`
+- `Mint.with_rounding` removed — use `Money.with_rounding`
+- `Mint.world_currencies` removed — use `Currency.world_currencies`
+- `Money#mint` removed — use `Money#copy_with`
+- `Money::Currency` is the canonical name to access the `Currency` class
+- `minting/mint/aliases` abbreviated to `minting/aliases`
 
 ### Features
 - `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
@@ -15,14 +20,9 @@
 ### Bugfixes
 - `Money#fractional` now returns a signed value matching the amount's sign (previously always positive for negative amounts). The invariant `integral * multiplier + fractional == subunits` now holds for all amounts.
 
-### Deprecations
-- `Mint.parse` and `Mint.parse!` deprecated — use `Money.parse` and `Money.parse!` instead. Will be removed in v2.
-- `Mint.with_rounding` deprecated — use `Money.with_rounding` instead. Will be removed in v2.
-- `Mint.world_currencies` deprecated — use `Currency.world_currencies` instead. Will be removed in v2.
-
 ### Removals
-- Remove `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
-- Remove `test_numeric_json_format` test (covered by `attribute-money`)
+- `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+- `test_numeric_json_format` test (covered by `attribute-money`)
 
 ## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
 
