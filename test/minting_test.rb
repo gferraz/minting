@@ -61,10 +61,6 @@ class MintingTest < Minitest::Test
 
     assert_equal '$1,234.56', Mint.money(1234.56, 'USD').format(format: fmt)
 
-    # Json serialization
-
-    assert_equal '{"currency": "USD", "amount": "9.99"}', price.to_json
-
     # Hash conversion
     assert_equal({ currency: 'USD', amount: '9.99' }, price.to_hash)
 

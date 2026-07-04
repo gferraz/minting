@@ -49,14 +49,26 @@ module Mint
       { currency: currency_code, amount: Kernel.format("%0.#{currency.subunit}f", amount) }
     end
 
-    # Serializes the money instance to a standard JSON object containing the amount and currency.
-    # Highly optimized to run without external dependencies.
+    # Deserializes a Hash into a Money instance.
     #
-    # @return [String] the JSON serialized string representation
-    def to_json(*_args)
-      Kernel.format(
-        %({"currency": "#{currency_code}", "amount": "%0.#{currency.subunit}f"}), amount
-      )
+    # Accepts both symbol and string keys, matching the output of {#to_hash}.
+    #
+    # @param hash [Hash] a hash with +:currency+ (or +"currency"+) and
+    #   +:amount+ (or +"amount"+) keys
+    # @return [Money] the deserialized Money instance
+    # @raise [Mint::UnknownCurrency] if the currency can't be resolved
+    # @raise [ArgumentError] if amount is not parseable as a Rational
+    #
+    # @example
+    #   Money.from_hash(currency: "USD", amount: "9.99")
+    #   #=> [USD 9.99]
+    # @example Round-trip
+    #   m = Mint.money(134120, "BRL")
+    #   Money.from_hash(m.to_hash) == m  #=> true
+    def self.from_hash(hash)
+      currency = Currency.resolve!(hash[:currency] || hash['currency'])
+      amount = currency.normalize_amount(Rational(hash[:amount] || hash['amount']))
+      amount.zero? ? currency.zero : new(amount, currency)
     end
 
     # Returns the exact internal Rational representation of the monetary amount.

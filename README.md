@@ -162,8 +162,7 @@ Money.from(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
 Money.from(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
 Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00" (falls back to symbol)
 
-# JSON / Hash serialization
-price.to_json   #=> "{\"currency\": \"USD\", \"amount\": \"9.99\"}"
+# Hash serialization
 price.to_hash   #=> {currency: "USD", amount: "9.99"}
 ```
 

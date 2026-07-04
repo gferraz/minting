@@ -147,4 +147,50 @@ class MoneyTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.from_subunits(100, 'ZZZ') }
     assert_raises(ArgumentError) { Mint::Money.from_subunits(100, Object.new) }
   end
+
+  def test_from_hash
+    assert_equal Mint.money(9.99, 'USD'),
+                 Mint::Money.from_hash(currency: 'USD', amount: '9.99')
+    assert_equal Mint.money(0, 'USD'),
+                 Mint::Money.from_hash(currency: 'USD', amount: '0.00')
+    assert_equal Mint.money(134_120, 'BRL'),
+                 Mint::Money.from_hash(currency: 'BRL', amount: '134120.00')
+    assert_equal Mint.money(15, 'JPY'),
+                 Mint::Money.from_hash(currency: 'JPY', amount: '15')
+    assert_equal Mint.money(-50.50, 'EUR'),
+                 Mint::Money.from_hash(currency: 'EUR', amount: '-50.50')
+  end
+
+  def test_from_hash_round_trip
+    [9.99, 100, 0, 0.01, 1_234_567.89, -5.50].each do |amount|
+      m = Mint.money(amount, 'USD')
+
+      assert_equal m, Mint::Money.from_hash(m.to_hash),
+                   "from_hash round trip failed for #{amount}"
+    end
+  end
+
+  def test_from_hash_zero_returns_singleton
+    assert_same Mint::Money.zero('USD'),
+                Mint::Money.from_hash(currency: 'USD', amount: '0.00')
+  end
+
+  def test_from_hash_with_string_keys
+    assert_equal Mint.money(9.99, 'USD'),
+                 Mint::Money.from_hash('currency' => 'USD', 'amount' => '9.99')
+  end
+
+  def test_from_hash_rejects_unknown_currency
+    assert_raises(Mint::UnknownCurrency) { Mint::Money.from_hash(currency: 'ZZZ', amount: '1') }
+  end
+
+  def test_from_hash_rejects_invalid_amount
+    assert_raises(ArgumentError) { Mint::Money.from_hash(currency: 'USD', amount: 'not_a_number') }
+  end
+
+  def test_three_way_round_trip
+    m = Mint.money(3.457, 'USD')
+
+    assert_equal m, Mint::Money.from_hash(m.to_hash)
+  end
 end

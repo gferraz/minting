@@ -6,6 +6,10 @@
 - Make `Money::Currency` the canonical name to access `Currency` class
 - Abbreviate `minting/mint/aliases` to `minting/aliases` **Breaking change**
 
+### Removals
+- Remove `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+- Remove `test_numeric_json_format` test (covered by `attribute-money`)
+
 ## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
 
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.9.6...v1.9.8)

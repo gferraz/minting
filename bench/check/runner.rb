@@ -27,7 +27,8 @@ ITERS = {
   formatting: 500_000,
   parsing: 100_000,
   split: 200_000,
-  allocate: 200_000
+  allocate: 200_000,
+  from_hash: 200_000,
 }.freeze
 
 MODES = {
@@ -40,6 +41,8 @@ m2 = -67.89.dollars
 split_money = 100.dollars
 parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500']
 parse_count = parse_inputs.size
+from_hash_input = { currency: 'USD', amount: '123.45' }
+
 
 bench_block = lambda do |name, n|
   case name
@@ -53,6 +56,8 @@ bench_block = lambda do |name, n|
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
   when :split          then n.times { split_money.split(12) }
   when :allocate       then n.times { split_money.allocate((1..24).to_a) }
+  when :from_hash      then n.times { Mint::Money.from_hash(from_hash_input) }
+
   end
 end
 

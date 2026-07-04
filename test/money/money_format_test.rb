@@ -62,16 +62,6 @@ class MoneyFormatTest < Minitest::Test
                  (-usd_9_99).format(format: '%<amount>f', width: 12)
   end
 
-  def test_numeric_json_format
-    brl = Mint.money(134_120, 'BRL')
-    jpy = Mint.money(15, 'JPY')
-    gas = Mint.money(3.457, FUEL)
-
-    assert_equal '{"currency": "BRL", "amount": "134120.00"}', brl.to_json
-    assert_equal '{"currency": "JPY", "amount": "15"}', jpy.to_json
-    assert_equal '{"currency": "BRL_FUEL", "amount": "3.457"}', gas.to_json
-  end
-
   def test_hash_format
     brl = Mint.money(134_120, 'BRL')
     jpy = Mint.money(15, 'JPY')

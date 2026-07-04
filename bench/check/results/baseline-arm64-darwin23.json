@@ -1,93 +1,101 @@
 {
   "metadata": {
     "gem_version": "1.9.8",
-    "generated_at": "2026-07-04T11:06:44Z",
+    "generated_at": "2026-07-04T13:47:58Z",
     "ruby_version": "4.0.5",
     "ruby_platform": "arm64-darwin23"
   },
   "results": {
     "no_rounding": {
       "creation": {
-        "ips": 1333995,
-        "elapsed": 0.3748
+        "ips": 1324566,
+        "elapsed": 0.3775
       },
       "addition": {
-        "ips": 1231242,
-        "elapsed": 0.8122
+        "ips": 1239234,
+        "elapsed": 0.8069
       },
       "subtraction": {
-        "ips": 1296889,
-        "elapsed": 0.7711
+        "ips": 1305843,
+        "elapsed": 0.7658
       },
       "multiplication": {
-        "ips": 2133042,
-        "elapsed": 0.2344
+        "ips": 2155776,
+        "elapsed": 0.2319
       },
       "division": {
-        "ips": 2039410,
-        "elapsed": 0.2452
+        "ips": 2053675,
+        "elapsed": 0.2435
       },
       "comparison": {
-        "ips": 3393224,
-        "elapsed": 0.2947
+        "ips": 3397120,
+        "elapsed": 0.2944
       },
       "formatting": {
-        "ips": 266912,
-        "elapsed": 1.8733
+        "ips": 263954,
+        "elapsed": 1.8943
       },
       "parsing": {
-        "ips": 151930,
-        "elapsed": 0.6582
+        "ips": 152071,
+        "elapsed": 0.6576
       },
       "split": {
-        "ips": 359626,
-        "elapsed": 0.5561
+        "ips": 358494,
+        "elapsed": 0.5579
       },
       "allocate": {
-        "ips": 67479,
-        "elapsed": 2.9639
+        "ips": 67228,
+        "elapsed": 2.975
+      },
+      "from_hash": {
+        "ips": 1524170,
+        "elapsed": 0.1312
       }
     },
     "half_down": {
       "creation": {
-        "ips": 1011288,
-        "elapsed": 0.4944
+        "ips": 1008134,
+        "elapsed": 0.496
       },
       "addition": {
-        "ips": 957571,
-        "elapsed": 1.0443
+        "ips": 954378,
+        "elapsed": 1.0478
       },
       "subtraction": {
-        "ips": 993656,
-        "elapsed": 1.0064
+        "ips": 992175,
+        "elapsed": 1.0079
       },
       "multiplication": {
-        "ips": 1439943,
-        "elapsed": 0.3472
+        "ips": 1442710,
+        "elapsed": 0.3466
       },
       "division": {
-        "ips": 1391657,
-        "elapsed": 0.3593
+        "ips": 1402053,
+        "elapsed": 0.3566
       },
       "comparison": {
-        "ips": 3402066,
-        "elapsed": 0.2939
+        "ips": 3385836,
+        "elapsed": 0.2953
       },
       "formatting": {
-        "ips": 266556,
-        "elapsed": 1.8758
+        "ips": 265478,
+        "elapsed": 1.8834
       },
       "parsing": {
-        "ips": 145725,
-        "elapsed": 0.6862
+        "ips": 146148,
+        "elapsed": 0.6842
       },
       "split": {
-        "ips": 324955,
-        "elapsed": 0.6155
+        "ips": 328509,
+        "elapsed": 0.6088
       },
       "allocate": {
-        "ips": 49431,
-        "elapsed": 4.046
+        "ips": 49405,
+        "elapsed": 4.0482
+      },
+      "from_hash": {
+        "ips": 1121699,
+        "elapsed": 0.1783
       }
     }
   }
