@@ -51,10 +51,11 @@ class CurrencyTest < Minitest::Test
 
   def test_all_returns_all_registered_currencies
     all = Money::Currency.all
+
     assert all.key?('USD')
     assert all.key?('BRL')
     assert all.key?('JPY')
-    assert all.frozen?
+    assert_predicate all, :frozen?
   end
 
   def test_resolve_bang_raises_unknown_currency_for_unregistered_code
