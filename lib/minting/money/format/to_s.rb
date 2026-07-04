@@ -56,8 +56,5 @@ module Mint
         "#{currency.symbol}#{major}"
       end
     end
-
-    # Alias for {#format}. Takes the same arguments.
-    alias to_fs :format
   end
 end
