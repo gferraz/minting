@@ -50,7 +50,7 @@ desc 'Run core benchmarks and update the baseline'
 task 'bench:baseline' do
   platform = RUBY_PLATFORM
   baseline = "bench/check/results/baseline-#{platform}.json"
-  sh "ruby bench/check/runner.rb #{baseline}"
+  sh "bundle exec ruby bench/check/runner.rb #{baseline}"
   puts "Baseline updated for #{platform}."
 end
 

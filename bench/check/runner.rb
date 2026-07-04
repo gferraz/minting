@@ -36,7 +36,7 @@ MODES = {
 }.freeze
 
 m1 = 123.45.dollars
-m2 = 67.89.dollars
+m2 = -67.89.dollars
 split_money = 100.dollars
 parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500']
 parse_count = parse_inputs.size
@@ -49,10 +49,10 @@ bench_block = lambda do |name, n|
   when :multiplication then n.times { m1 * 2 }
   when :division       then n.times { m1 / 2 }
   when :comparison     then n.times { m1 == m2 }
-  when :formatting     then n.times { m1.to_s }
+  when :formatting     then n.times { m1.to_s; m2.format(:accounting) }
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
-  when :split          then n.times { split_money.split(3) }
-  when :allocate       then n.times { split_money.allocate([1, 2, 3]) }
+  when :split          then n.times { split_money.split(12) }
+  when :allocate       then n.times { split_money.allocate((1..24).to_a) }
   end
 end
 
