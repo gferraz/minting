@@ -5,7 +5,7 @@ require 'rubocop/rake_task'
 require 'rubycritic/rake_task'
 require 'yard'
 
-CLOBBER.include %w[doc/css doc/js doc/Mint doc/*.html tmp .yardoc]
+CLOBBER.include %w[doc/css doc/js doc/Mint doc/*.html tmp .yardoc pkg]
 
 Rake::TestTask.new(:test) do |t|
   t.libs << 'test'

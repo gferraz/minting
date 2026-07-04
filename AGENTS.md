@@ -25,6 +25,7 @@ and `== 0`) and the `Currency` opt-in alias behavior.
 and update baselines with `bundle exec rake bench:baseline` for performance
 improvements.
 - Clean `pkg/` artifacts before commit when preparing gem packaging.
+- `Gemfile.lock` is gitignored per gem convention. Do not commit it.
 
 ## Essential commands
 

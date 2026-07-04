@@ -115,6 +115,15 @@ module Mint
     resolve(object) or raise Mint::UnknownCurrency, "Could not resolve (#{object}) into a currency"
   end
 
+  # Returns all registered currencies as a frozen hash keyed by ISO code.
+  #
+  # @return [Hash{String => Currency}] frozen hash of all registered currencies
+  # @example Iterate over all currencies
+  #   Currency.all.each { |code, currency| puts "#{code}: #{currency.name}" }
+  # @example Count of registered currencies
+  #   Currency.all.size  #=> 154
+  def Currency.all = Registry.currencies
+
   # Looks up a registered currency by its alpha code.
   #
   # @param code [String] the currency code

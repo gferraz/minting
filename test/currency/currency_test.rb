@@ -49,6 +49,14 @@ class CurrencyTest < Minitest::Test
     assert_equal 'BRL', Money::Currency.for_code('BRL').code
   end
 
+  def test_all_returns_all_registered_currencies
+    all = Money::Currency.all
+    assert all.key?('USD')
+    assert all.key?('BRL')
+    assert all.key?('JPY')
+    assert all.frozen?
+  end
+
   def test_resolve_bang_raises_unknown_currency_for_unregistered_code
     assert_raises(Mint::UnknownCurrency) { Money::Currency.resolve!('NOPE') }
   end

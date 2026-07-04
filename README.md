@@ -204,6 +204,10 @@ Notes:
 ### Currency lookup
 
 ```ruby
+# All registered currencies (150+ ISO 4217 + custom)
+Money::Currency.all.size                 #=> 154
+Money::Currency.all.each { |code, c| puts "#{code}: #{c.name}" }
+
 # By ISO code (direct hash lookup, string only)
 Money::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
 
