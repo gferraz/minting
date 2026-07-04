@@ -43,6 +43,14 @@ module Mint
      thousand.nil? ? (fetch_locale_key(lc, :thousand) || ',') : thousand]
   end
 
+  # Looks up a locale key from a hash, trying both symbol and string forms.
+  #
+  # Supports aliases: +:decimal+ checks +:decimal+ and +:separator+,
+  # +:thousand+ checks +:thousand+ and +:delimiter+, +:format+ checks +:format+.
+  #
+  # @param hash [Hash] locale config hash
+  # @param key [Symbol] the primary key (+:decimal+, +:thousand+, or +:format+)
+  # @return [String, nil] the value found, or nil
   # @api private
   def self.fetch_locale_key(hash, key)
     aliases = { decimal: %i[decimal separator], thousand: %i[thousand delimiter], format: [:format] }
@@ -53,6 +61,18 @@ module Mint
     nil
   end
 
+  # Resolves the locale backend configuration into a Hash.
+  #
+  # Handles three backend types:
+  # - +Hash+: returned as-is
+  # - +Proc+/callable: called with the locale (or no args for 0-arity),
+  #   result must be a Hash or nil
+  # - +nil+: returns empty Hash
+  #
+  # Invalid return values or backends emit a warning and return +{}+.
+  #
+  # @param locale [Symbol, String, nil] locale passed to the backend callable
+  # @return [Hash] locale configuration (possibly empty)
   # @api private
   def self.resolve_locale_backend(locale = nil)
     case bk = Mint.locale_backend

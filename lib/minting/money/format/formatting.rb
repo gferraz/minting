@@ -3,6 +3,13 @@
 module Mint
   # :nodoc:
   class Money
+    # Cache of compiled formatter lambdas, keyed by +[format_config, currency_code, decimal, thousand].hash+.
+    #
+    # Each lambda is lazily compiled by {.compile_formatter} on first use and
+    # reused across calls with the same parameters.
+    #
+    # @return [Hash{Integer => Proc}] compiled formatter cache
+    # @api private
     def self.compiled_formatters
       @compiled_formatters ||= {}
     end
