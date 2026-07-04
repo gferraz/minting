@@ -12,6 +12,9 @@
 - Crypto currency support — opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
 - `Money#integral` — returns the whole-unit part of the amount (complement to `#fractional`). `#to_i` is now an alias of `#integral`.
 
+### Bugfixes
+- `Money#fractional` now returns a signed value matching the amount's sign (previously always positive for negative amounts). The invariant `integral * multiplier + fractional == subunits` now holds for all amounts.
+
 ### Deprecations
 - `Mint.parse` and `Mint.parse!` deprecated — use `Money.parse` and `Money.parse!` instead. Will be removed in v2.
 - `Mint.with_rounding` deprecated — use `Money.with_rounding` instead. Will be removed in v2.

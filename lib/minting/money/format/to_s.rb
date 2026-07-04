@@ -119,12 +119,13 @@ module Mint
       return format unless Mint.locale_backend.nil?
 
       subunit = currency.subunit
-      whole = integral.to_s
-      whole.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
+      major = integral.to_s
+      major.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
       if subunit > 0
-        "#{currency.symbol}#{whole}.#{fractional.abs.to_s.rjust(subunit, '0')}"
+        minor = fractional.abs.to_s.rjust(subunit, '0')
+        "#{currency.symbol}#{major}.#{minor}"
       else
-        "#{currency.symbol}#{whole}"
+        "#{currency.symbol}#{major}"
       end
     end
 

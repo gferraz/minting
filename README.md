@@ -29,7 +29,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 - [Usage](#usage)
   - [Creating & comparing money](#creating--comparing-money)
   - [Formatting](#formatting)
-  - [Fractional units & allocation](#fractional-units--allocation)
+  - [Integral & fractional parts](#integral--fractional-parts)
   - [Parsing strings](#parsing-strings)
   - [Currency lookup](#currency-lookup)
   - [Crypto currencies](#crypto-currencies)
@@ -173,6 +173,7 @@ price.to_hash   #=> {currency: "USD", amount: "9.99"}
 price.integral    #=> 9         # whole-unit part
 price.fractional  #=> 99        # fractional part (subunits within one unit)
 price.subunits    #=> 999       # total amount in smallest unit
+price.to_i        #=> 9         # alias of integral
 
 Mint::Money.from_subunits(999, 'USD')  #=> [USD 9.99]
 Mint::Money.from_subunits(1234, 'JPY') #=> [JPY 1234]  # subunit 0 -> no scaling
