@@ -81,6 +81,18 @@ class CryptoTest < Minitest::Test
     assert_equal 'USD', parsed.currency_code
   end
 
+  def test_currency_crypto_currencies_delegates
+    assert_same Mint::Registry.crypto_currencies, Money::Currency.crypto_currencies
+  end
+
+  def test_currency_register_crypto_delegates
+    assert_raises(KeyError) { Money::Currency.register_crypto('BTC') }
+  end
+
+  def test_currency_register_all_crypto_delegates
+    assert_raises(KeyError) { Money::Currency.register_all_crypto }
+  end
+
   def test_crypto_code_detection_in_parser
     parsed = Mint.parse('0.01 BTC')
 

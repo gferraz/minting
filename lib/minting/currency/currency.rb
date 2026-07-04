@@ -118,11 +118,11 @@ module Mint
   # Returns all registered currencies as a frozen hash keyed by ISO code.
   #
   # @return [Hash{String => Currency}] frozen hash of all registered currencies
-  # @example Iterate over all currencies
-  #   Currency.all.each { |code, currency| puts "#{code}: #{currency.name}" }
+  # @example Iterate over registered currencies
+  #   Currency.registered_currencies.each { |code, currency| puts "#{code}: #{currency.name}" }
   # @example Count of registered currencies
-  #   Currency.all.size  #=> 154
-  def Currency.all = Registry.currencies
+  #   Currency.registered_currencies.size  #=> 154
+  def Currency.registered_currencies = Registry.currencies
 
   # Looks up a registered currency by its alpha code.
   #
@@ -147,4 +147,36 @@ module Mint
   # @return [Money] a frozen zero-Money
   # @raise [Mint::UnknownCurrency] if the currency can't be resolved
   def Currency.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
+
+  # Returns the frozen hash of all built-in ISO 4217 world currencies.
+  #
+  # @return [Hash{String => Currency}] ISO-4217 world currencies mapped by code
+  # @api private
+  def Currency.world_currencies = Registry.world_currencies
+
+  # Returns the list of built-in crypto currency definitions.
+  #
+  # These are not registered by default — call {.register_crypto} to opt in.
+  #
+  # @return [Array<Currency>] frozen array of crypto currency definitions
+  def Currency.crypto_currencies = Registry.crypto_currencies
+
+  # Registers one or more crypto currencies into the shared currency registry.
+  #
+  # Raises on duplicate registration or unknown code — use +rescue+ if
+  # idempotent bulk registration is needed.
+  #
+  # @param codes [Array<String>] one or more crypto currency codes
+  # @raise [ArgumentError] if a code is not a known crypto currency
+  # @raise [KeyError] if the currency code is already registered
+  # @return [Array<Currency>] the newly registered Currency objects
+  def Currency.register_crypto(...) = Registry.register_crypto(...)
+
+  # Registers all built-in crypto currencies at once.
+  #
+  # Raises on the first duplicate — call +rescue+ if idempotency is needed.
+  #
+  # @raise [KeyError] if any currency code is already registered
+  # @return [Array<Currency>] the newly registered Currency objects
+  def Currency.register_all_crypto = Registry.register_all_crypto
 end

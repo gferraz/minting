@@ -7,7 +7,7 @@
 - Abbreviate `minting/mint/aliases` to `minting/aliases` **Breaking change**
 
 ### Features
-- `Currency.all` — public access to all registered currencies (frozen hash)
+- `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
 - `Money.from_hash(hash)` — deserializer symmetric with `to_hash`, accepts `{ currency:, amount: }`
 - Crypto currency support — opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
 

@@ -44,11 +44,6 @@ covers the vast majority of real-world usage.
 |---------|-----------|---------|----------|
 | South Asian numbering | `format(south_asian_number_formatting: true)` → `"1,00,000.00"` | ❌ Not planned | — |
 
-### P2-D Advanced formatting
-
-| Feature | Money gem | Minting | Priority |
-|---------|-----------|---------|----------|
-| Drop trailing zeros | `"$1.1"` | ✅ Already possible — `.format(format: '%<amount>.1f')` | — |
 
 ### P2-E Rounding & precision strategies
 
@@ -66,7 +61,6 @@ covers the vast majority of real-world usage.
 | Smallest denomination | `currency.smallest_denomination` | ❌ Not planned | — |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | ❌ Not planned | — |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | ❌ Not planned | — |
-| Crypto currencies (opt-in via `register_crypto`) | ✅ Built-in YAML data + `Registry.register_crypto` | ✅ P3-5 | — |
 | Custom currencies from YAML | `experimental_custom_currency_path` | ❌ Not planned | — |
 
 ### P2-G Serialization & conversion
@@ -85,7 +79,6 @@ covers the vast majority of real-world usage.
 |---------|-------------|---------|----------|
 | RuboCop cops | `Money/MissingCurrency`, `Money/ZeroMoney` | ❌ Not planned | — |
 | RBS type signatures | Full `sig/` directory for type checking | ❌ Not planned | — |
-| `money_column` AR integration | `money_column :sub_total` — ActiveRecord macro | ✅ Done in `attribute-money` | — |
 
 ### P3 Polish
 
@@ -112,7 +105,7 @@ covers the vast majority of real-world usage.
 ### I18n infrastructure
 
 - `Mint.locale_backend` hook — accepts any callable or Hash for locale-aware formatting defaults
-- Locale backend selection — ✅ `Mint.locale_backend = ->(locale) { ... }`
+- Locale backend selection — `Mint.locale_backend = ->(locale) { ... }`
 
 ### Advanced formatting
 
@@ -146,6 +139,7 @@ All expressible via `Kernel.format`-style templates:
 - `Money#to_hash` — `{ currency:, amount: }`
 - `Money#to_html` — `<data class='money'>` element
 - `Money.from_json` / `Money#to_json` — 🔶 moved to `attribute-money` gem
+- `money_column` AR integration — `money_column :sub_total` ActiveRecord macro in `attribute-money`
 
 ### Core extensions
 
@@ -155,7 +149,7 @@ All expressible via `Kernel.format`-style templates:
 
 ### P3 Polish
 
-- `Currency.all` — public access to all registered currencies
+- `Currency.registered_currencies` — public access to all registered currencies
 - `Gemfile.lock` policy — gitignore, don't commit (gem convention)
 - `pkg/` artifacts — `rake clobber` covers cleanup via `CLOBBER.include`
 - Crypto currency support — `Registry.crypto_currencies` + `Registry.register_crypto` (opt-in YAML-backed definitions for ~25 popular coins)

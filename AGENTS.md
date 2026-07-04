@@ -162,7 +162,7 @@ modes: `:half_up`, `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`
 
 ### Parser
 
-`Mint.parse` / `Mint.parse!` live on the `Mint` module itself
+`` / `Mint.parse!` live on the `Mint` module itself
 (`mint/parser/parser.rb`, `mint/parser/separators.rb`) via `extend self`.
 `Mint::Money.parse` delegates to `Mint.parse`.
 

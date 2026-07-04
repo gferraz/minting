@@ -49,8 +49,8 @@ class CurrencyTest < Minitest::Test
     assert_equal 'BRL', Money::Currency.for_code('BRL').code
   end
 
-  def test_all_returns_all_registered_currencies
-    all = Money::Currency.all
+  def test_registered_currencies_returns_all_registered_currencies
+    all = Money::Currency.registered_currencies
 
     assert all.key?('USD')
     assert all.key?('BRL')

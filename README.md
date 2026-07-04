@@ -206,8 +206,11 @@ Notes:
 
 ```ruby
 # All registered currencies (150+ ISO 4217 + custom)
-Money::Currency.all.size                 #=> 154
-Money::Currency.all.each { |code, c| puts "#{code}: #{c.name}" }
+Money::Currency.registered_currencies.size                 #=> 154
+Money::Currency.registered_currencies.each { |code, c| puts "#{code}: #{c.name}" }
+
+# Built-in ISO 4217 currencies (before custom registrations)
+Money::Currency.world_currencies.size    #=> 154
 
 # By ISO code (direct hash lookup, string only)
 Money::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
@@ -255,7 +258,18 @@ Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
 `register_crypto` raises `KeyError` on duplicate codes and `ArgumentError` on unknown codes. Register all at once:
 
 ```ruby
+# Register all at once:
 Currency.register_all_crypto   # raises KeyError on any conflict
+```
+
+`Currency.crypto_currencies` lists all available definitions without registering:
+
+```ruby
+Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
+# BTC: Bitcoin
+# ETH: Ethereum
+# SOL: Solana
+# ...
 ```
 
 ### Locale formatting
