@@ -67,7 +67,7 @@ covers the vast majority of real-world usage.
 
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
-| `to_money(currency)` | Convert self to Money, optionally exchanging | ❌ Not planned | — |
+| `to_money(currency)` | convert objects to Money, optionally exchanging | 🔶 conversion is done, but no exchange | — |
 | `with_currency("EUR")` | Swap currency without converting | ❌ Not planned | — |
 | Subunit converters | `.subunits(format: :stripe)` — pluggable formats for payment provider interop | ❌ Not planned | — |
 | Custom converters | Subclass `Money::Converters::Converter` | ❌ Not planned | — |

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Mint
+  # :nodoc:
   class Money
     # Executes a block with a specific rounding mode applied to all money
     # construction, parsing, change, allocation, and split operations.
