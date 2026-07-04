@@ -49,6 +49,29 @@ class CurrencyTest < Minitest::Test
     assert_equal 'BRL', Money::Currency.for_code('BRL').code
   end
 
+  def test_for_symbol_returns_currency_for_unique_symbol
+    brl = Money::Currency.for_symbol('R$')
+    assert_instance_of Money::Currency, brl
+    assert_equal 'BRL', brl.code
+  end
+
+  def test_for_symbol_returns_highest_priority_currency_for_shared_symbol
+    usd = Money::Currency.for_symbol('$')
+    assert_equal 'USD', usd.code
+  end
+
+  def test_for_symbol_returns_nil_for_unregistered_symbol
+    assert_nil Money::Currency.for_symbol('NONE')
+  end
+
+  def test_for_symbol_returns_nil_for_empty_string
+    assert_nil Money::Currency.for_symbol('')
+  end
+
+  def test_for_symbol_returns_nil_for_nil
+    assert_nil Money::Currency.for_symbol(nil)
+  end
+
   def test_registered_currencies_returns_all_registered_currencies
     all = Money::Currency.registered_currencies
 
