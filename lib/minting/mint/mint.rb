@@ -22,9 +22,13 @@ module Mint
   #   +Mint::UnknownCurrency+ inherits from +ArgumentError+.
   def self.money(amount, currency_code) = Money.from(amount, currency_code)
 
+  # @deprecated Use {Currency.world_currencies} instead. Will be removed in v2.
   # @return [Hash{String => Currency}] the frozen world-currencies hash
   # @api private
-  def self.world_currencies = Registry.world_currencies
+  def self.world_currencies
+    warn 'Mint.world_currencies is deprecated and will be removed in v2 — use Currency.world_currencies instead'
+    Currency.world_currencies
+  end
 
   # Executes a block with a specific rounding mode applied to all money
   # construction, parsing, change, allocation, and split operations.

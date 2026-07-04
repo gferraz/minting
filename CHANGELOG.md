@@ -14,6 +14,7 @@
 ### Deprecations
 - `Mint.parse` and `Mint.parse!` deprecated — use `Money.parse` and `Money.parse!` instead. Will be removed in v2.
 - `Mint.with_rounding` deprecated — use `Money.with_rounding` instead. Will be removed in v2.
+- `Mint.world_currencies` deprecated — use `Currency.world_currencies` instead. Will be removed in v2.
 
 ### Removals
 - Remove `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
