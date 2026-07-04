@@ -19,13 +19,19 @@ end
 
 ITERS = {
   creation: 500_000,
-  addition: 1_000_000,
-  subtraction: 1_000_000,
+  copy_with: 500_000,
+
+  addition: 500_000,
+  subtraction: 500_000,
   multiplication: 500_000,
   division: 500_000,
-  comparison: 1_000_000,
-  formatting: 500_000,
-  parsing: 100_000,
+  divisionby_f: 500_000,
+  ratio: 500_000,
+
+  comparison: 500_000,
+  formatting: 200_000,
+  to_s: 200_000,
+  parsing: 200_000,
   split: 200_000,
   allocate: 200_000,
   from_hash: 200_000,
@@ -47,12 +53,18 @@ from_hash_input = { currency: 'USD', amount: '123.45' }
 bench_block = lambda do |name, n|
   case name
   when :creation       then n.times { Mint.money(123.45, 'USD') }
+  when :copy_with      then n.times { m1.copy_with(amount: 23.22) }
+
   when :addition       then n.times { m1 + m2 }
   when :subtraction    then n.times { m1 - m2 }
   when :multiplication then n.times { m1 * 2 }
   when :division       then n.times { m1 / 2 }
+  when :division_by_f  then n.times { m1 / 2.45 }
+  when :ratio          then n.times { m1 / m2 }
   when :comparison     then n.times { m1 == m2 }
-  when :formatting     then n.times { m1.to_s; m2.format(:accounting) }
+
+  when :formatting     then n.times { m2.format(:accounting) }
+  when :to_s           then n.times { m1.to_s }
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
   when :split          then n.times { split_money.split(12) }
   when :allocate       then n.times { split_money.allocate((1..24).to_a) }
