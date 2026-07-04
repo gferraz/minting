@@ -9,11 +9,10 @@ module Mint
     # @return [Money] the sum of the addition
     # @raise [TypeError] if addition involves a different currency or incompatible types
     def +(addend)
-      case addend
-      in 0 then self
-      in Money if same_currency?(addend) then copy_with(amount: amount + addend.amount)
-      else raise TypeError, "#{addend} can't be added to #{self}"
-      end
+      return self if addend == 0
+      return copy_with(amount: amount + addend.amount) if addend.is_a?(Money) && currency == addend.currency
+
+      raise TypeError, "#{addend} can't be added to #{self}"
     end
 
     # Performs subtraction with another {Money} instance or standard zero Numeric.
@@ -22,10 +21,9 @@ module Mint
     # @return [Money] the difference of the subtraction
     # @raise [TypeError] if subtraction involves a different currency or incompatible types
     def -(subtrahend)
-      case subtrahend
-      when 0     then return self
-      when Money then return copy_with(amount: amount - subtrahend.amount) if same_currency?(subtrahend)
-      end
+      return self if subtrahend == 0
+      return copy_with(amount: amount - subtrahend.amount) if subtrahend.is_a?(Money) && currency == subtrahend.currency
+
       raise TypeError, "#{subtrahend} can't be subtracted from #{self}"
     end
 
@@ -52,10 +50,9 @@ module Mint
     # @raise [TypeError] if divisor is of incompatible type or different currency
     # @raise [ZeroDivisionError] if division by zero is attempted
     def /(divisor)
-      case divisor
-      when Numeric then return copy_with(amount: amount / divisor)
-      when Money   then return amount / divisor.amount if same_currency? divisor
-      end
+      return copy_with(amount: amount / divisor) if divisor.is_a? Numeric
+      return amount / divisor.amount if divisor.is_a?(Money) && currency == divisor.currency
+
       raise TypeError, "#{self} can't be divided by #{divisor}"
     end
 

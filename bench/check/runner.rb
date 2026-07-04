@@ -25,7 +25,7 @@ ITERS = {
   subtraction: 500_000,
   multiplication: 500_000,
   division: 500_000,
-  divisionby_f: 500_000,
+  division_by_f: 500_000,
   ratio: 500_000,
 
   comparison: 500_000,
@@ -69,6 +69,8 @@ bench_block = lambda do |name, n|
   when :split          then n.times { split_money.split(12) }
   when :allocate       then n.times { split_money.allocate((1..24).to_a) }
   when :from_hash      then n.times { Mint::Money.from_hash(from_hash_input) }
+
+  else raise ArgumentError, "Invalid benchmark key"
 
   end
 end
