@@ -32,6 +32,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
   - [Fractional units & allocation](#fractional-units--allocation)
   - [Parsing strings](#parsing-strings)
   - [Currency lookup](#currency-lookup)
+  - [Crypto currencies](#crypto-currencies)
   - [Locale formatting](#locale-formatting)
 - [API notes](#api-notes)
 - [Optional top-level `Money` and `Currency`](#optional-top-level-money-and-currency)
@@ -229,6 +230,33 @@ Money::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is 
 ```
 
 `#to_currency` takes precedence when both methods exist. It must return a `Currency` object; `#currency_code` must return a `String`. Wrong types raise `ArgumentError`.
+
+### Crypto currencies
+
+Minting ships with opt-in definitions for ~25 popular crypto currencies (BTC, ETH, SOL, ...). They are not registered by default — use `register_crypto` to enable them:
+
+```ruby
+Currency.register_crypto('BTC', 'ETH', 'SOL')
+
+Mint.parse("0.01 BTC")    #=> [BTC 0.01000000]
+Mint.money(1, 'ETH')      #=> [ETH 1.000000000000000000]
+```
+
+`Currency.crypto_currencies` lists all available definitions without registering:
+
+```ruby
+Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
+# BTC: Bitcoin
+# ETH: Ethereum
+# SOL: Solana
+# ...
+```
+
+`register_crypto` raises `KeyError` on duplicate codes and `ArgumentError` on unknown codes. Register all at once:
+
+```ruby
+Currency.register_all_crypto   # raises KeyError on any conflict
+```
 
 ### Locale formatting
 

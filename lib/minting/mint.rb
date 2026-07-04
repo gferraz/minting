@@ -10,5 +10,6 @@ require_relative 'mint/mint'
 require_relative 'mint/parser/parser'
 require_relative 'mint/parser/separators'
 require_relative 'mint/registry/registry'
+require_relative 'mint/registry/crypto'
 
 require_relative 'money/money'

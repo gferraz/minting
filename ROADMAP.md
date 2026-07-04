@@ -66,7 +66,7 @@ covers the vast majority of real-world usage.
 | Smallest denomination | `currency.smallest_denomination` | ❌ Not planned | — |
 | Inherit currency | `Money::Currency.inherit("USD", symbol: "CAD$")` | ❌ Not planned | — |
 | Unregister / reset | `Money::Currency.unregister(:usd)` / `reset!` | ❌ Not planned | — |
-| Crypto currencies | YAML-backed crypto currency support | ❌ Not planned | — |
+| Crypto currencies (opt-in via `register_crypto`) | ✅ Built-in YAML data + `Registry.register_crypto` | ✅ P3-5 | — |
 | Custom currencies from YAML | `experimental_custom_currency_path` | ❌ Not planned | — |
 
 ### P2-G Serialization & conversion
@@ -158,6 +158,7 @@ All expressible via `Kernel.format`-style templates:
 - `Currency.all` — public access to all registered currencies
 - `Gemfile.lock` policy — gitignore, don't commit (gem convention)
 - `pkg/` artifacts — `rake clobber` covers cleanup via `CLOBBER.include`
+- Crypto currency support — `Registry.crypto_currencies` + `Registry.register_crypto` (opt-in YAML-backed definitions for ~25 popular coins)
 
 ### Infrastructure
 
