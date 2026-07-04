@@ -65,7 +65,7 @@ bench_block = lambda do |name, n|
 
   when :formatting     then n.times { m2.format(:accounting) }
   when :to_s           then n.times { m1.to_s }
-  when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Mint.parse(s) } }
+  when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
   when :split          then n.times { split_money.split(12) }
   when :allocate       then n.times { split_money.allocate((1..24).to_a) }
   when :from_hash      then n.times { Mint::Money.from_hash(from_hash_input) }

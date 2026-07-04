@@ -11,75 +11,75 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_with_explicit_currency_object_or_symbol
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', Money::Currency.for_code('USD'))
+    assert_equal Mint.money(19.99, 'USD'), Money.parse('19.99', 'USD')
+    assert_equal Mint.money(19.99, 'USD'), Money.parse('19.99', Money::Currency.for_code('USD'))
   end
 
   def test_parse_trims_whitespace
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse(" \t\n$19.99 \n")
+    assert_equal Mint.money(19.99, 'USD'), Money.parse(" \t\n$19.99 \n")
   end
 
   def test_parse_with_symbol
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('$19.99')
-    assert_equal Mint.money(-19.99, 'USD'), Mint.parse('-19.99 $')
-    assert_equal Mint.money(12.34, 'EUR'), Mint.parse('12,34 €')
-    assert_equal Mint.money(1500, 'JPY'), Mint.parse('¥1500')
-    assert_equal Mint.money(2500, 'GBP'), Mint.parse('£2,500.00')
+    assert_equal Mint.money(19.99, 'USD'), Money.parse('$19.99')
+    assert_equal Mint.money(-19.99, 'USD'), Money.parse('-19.99 $')
+    assert_equal Mint.money(12.34, 'EUR'), Money.parse('12,34 €')
+    assert_equal Mint.money(1500, 'JPY'), Money.parse('¥1500')
+    assert_equal Mint.money(2500, 'GBP'), Money.parse('£2,500.00')
   end
 
   def test_parse_with_code
-    assert_equal Mint.money(1234.56, 'USD'), Mint.parse('USD 1,234.56')
-    assert_equal Mint.money(10, 'BRL'), Mint.parse('BRL 10')
-    assert_equal Mint.money(1234.56, 'USD'), Mint.parse('1,234.56 USD')
-    assert_equal Mint.money(-1.25, 'USD'), Mint.parse('-USD 1.25')
+    assert_equal Mint.money(1234.56, 'USD'), Money.parse('USD 1,234.56')
+    assert_equal Mint.money(10, 'BRL'), Money.parse('BRL 10')
+    assert_equal Mint.money(1234.56, 'USD'), Money.parse('1,234.56 USD')
+    assert_equal Mint.money(-1.25, 'USD'), Money.parse('-USD 1.25')
   end
 
   def test_parse_accounting_negative
-    assert_equal Mint.money(-19.99, 'USD'), Mint.parse('($19.99)')
-    assert_equal Mint.money(-10.00, 'USD'), Mint.parse('(USD 10.00)')
-    assert_equal Mint.money(-12.34, 'EUR'), Mint.parse('(12,34 €)')
-    assert_equal Mint.money(-5.00, 'USD'),  Mint.parse('(5.00)', 'USD')
+    assert_equal Mint.money(-19.99, 'USD'), Money.parse('($19.99)')
+    assert_equal Mint.money(-10.00, 'USD'), Money.parse('(USD 10.00)')
+    assert_equal Mint.money(-12.34, 'EUR'), Money.parse('(12,34 €)')
+    assert_equal Mint.money(-5.00, 'USD'),  Money.parse('(5.00)', 'USD')
   end
 
   def test_parse_accounting_negative_with_spaces
-    assert_equal Mint.money(-19.99, 'USD'), Mint.parse('( $19.99 )')
-    assert_equal Mint.money(-10.00, 'USD'), Mint.parse('( USD 10.00 )')
+    assert_equal Mint.money(-19.99, 'USD'), Money.parse('( $19.99 )')
+    assert_equal Mint.money(-10.00, 'USD'), Money.parse('( USD 10.00 )')
   end
 
   def test_parse_accounting_negative_zero
-    assert_equal Mint.money(0, 'USD'), Mint.parse('($0.00)')
+    assert_equal Mint.money(0, 'USD'), Money.parse('($0.00)')
   end
 
   def test_parse_symbol_registered_after_symbol_index_is_cached
-    Mint.parse('$1')
+    Money.parse('$1')
     currency = Money::Currency.register(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)
 
-    assert_equal currency, Mint.parse('T$1').currency
-    assert_equal currency, Mint.parse('PT_ST 12.23').currency
+    assert_equal currency, Money.parse('T$1').currency
+    assert_equal currency, Money.parse('PT_ST 12.23').currency
   end
 
   def test_parse_us_thousands
-    assert_equal Mint.money(1_234_567.89, 'USD'), Mint.parse('$1,234,567.89')
-    assert_equal Mint.money(1_234_567.00, 'USD'), Mint.parse('$1,234,567')
-    assert_equal Mint.money(1_234_567.11, 'USD'), Mint.parse('$1,234,567.11098')
-    assert_equal Mint.money(1_234_567.11, 'USD'), Mint.parse('$1.234.567,11098')
+    assert_equal Mint.money(1_234_567.89, 'USD'), Money.parse('$1,234,567.89')
+    assert_equal Mint.money(1_234_567.00, 'USD'), Money.parse('$1,234,567')
+    assert_equal Mint.money(1_234_567.11, 'USD'), Money.parse('$1,234,567.11098')
+    assert_equal Mint.money(1_234_567.11, 'USD'), Money.parse('$1.234.567,11098')
   end
 
   def test_parse_separator_variants
-    assert_equal Mint.money(1.20, 'USD'), Mint.parse('1,2', 'USD')
-    assert_equal Mint.money(1.23, 'USD'), Mint.parse('1,23', 'USD')
-    assert_equal Mint.money(1234, 'USD'), Mint.parse('1,234', 'USD')
-    assert_equal Mint.money(1.23, 'USD'), Mint.parse('1,2345', 'USD')
+    assert_equal Mint.money(1.20, 'USD'), Money.parse('1,2', 'USD')
+    assert_equal Mint.money(1.23, 'USD'), Money.parse('1,23', 'USD')
+    assert_equal Mint.money(1234, 'USD'), Money.parse('1,234', 'USD')
+    assert_equal Mint.money(1.23, 'USD'), Money.parse('1,2345', 'USD')
 
-    assert_equal Mint.money(1234.56, 'USD'), Mint.parse('1,234.56', 'USD')
-    assert_equal Mint.money(1234.56, 'USD'), Mint.parse('1.234,56', 'USD')
-    assert_equal Mint.money(1_234_567, 'USD'), Mint.parse('1.234.567', 'USD')
+    assert_equal Mint.money(1234.56, 'USD'), Money.parse('1,234.56', 'USD')
+    assert_equal Mint.money(1234.56, 'USD'), Money.parse('1.234,56', 'USD')
+    assert_equal Mint.money(1_234_567, 'USD'), Money.parse('1.234.567', 'USD')
   end
 
   def test_parse_with_code_among_spurious_uppercase_words
-    assert_equal Mint.money(10.00, 'USD'), Mint.parse('MAX 10.00 USD')
-    assert_equal Mint.money(10.00, 'XXX'), Mint.parse('AVG MIN MAX 10.00 XXX')
-    assert_equal Mint.money(10.00, 'EUR'), Mint.parse('10.00 EUR MAX')
+    assert_equal Mint.money(10.00, 'USD'), Money.parse('MAX 10.00 USD')
+    assert_equal Mint.money(10.00, 'XXX'), Money.parse('AVG MIN MAX 10.00 XXX')
+    assert_equal Mint.money(10.00, 'EUR'), Money.parse('10.00 EUR MAX')
   end
 
   def test_parse_errors
@@ -87,22 +87,22 @@ class MoneyParseTest < Minitest::Test
     assert_raises(ArgumentError) { Mint::Money.parse!(" \n\t ") }
     assert_raises(ArgumentError) { Mint::Money.parse!('12,344,123.12.123', 'USD') }
     assert_raises(ArgumentError) { Mint::Money.parse!(19.99, 'USD') }
-    assert_raises(ArgumentError) { Mint.parse!('19.99') }
-    assert_raises(ArgumentError) { Mint.parse!('abc', 'USD') }
-    assert_raises(ArgumentError) { Mint.parse!('10', 'ZZZ') }
+    assert_raises(ArgumentError) { Money.parse!('19.99') }
+    assert_raises(ArgumentError) { Money.parse!('abc', 'USD') }
+    assert_raises(ArgumentError) { Money.parse!('10', 'ZZZ') }
   end
 
   def test_parse_returns_nil_on_failure
-    assert_nil Mint.parse('')
-    assert_nil Mint.parse(" \n\t ")
-    assert_nil Mint.parse('12,344,123.12.123', 'USD')
-    assert_nil Mint.parse(19.99, 'USD')
-    assert_nil Mint.parse('19.99')
-    assert_nil Mint.parse('abc', 'USD')
-    assert_nil Mint.parse('10', 'ZZZ')
+    assert_nil Money.parse('')
+    assert_nil Money.parse(" \n\t ")
+    assert_nil Money.parse('12,344,123.12.123', 'USD')
+    assert_nil Money.parse(19.99, 'USD')
+    assert_nil Money.parse('19.99')
+    assert_nil Money.parse('abc', 'USD')
+    assert_nil Money.parse('10', 'ZZZ')
   end
 
   def test_parse_returns_money_on_success
-    assert_equal Mint.money(19.99, 'USD'), Mint.parse('19.99', 'USD')
+    assert_equal Mint.money(19.99, 'USD'), Money.parse('19.99', 'USD')
   end
 end

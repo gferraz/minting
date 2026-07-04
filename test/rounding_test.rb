@@ -141,10 +141,10 @@ class RoundingTest < Minitest::Test
 
   def test_parse_respects_mode
     Mint.with_rounding(:half_down) do
-      assert_equal parse('1.00'), Mint.parse('1.005', 'USD')
+      assert_equal parse('1.00'), Money.parse('1.005', 'USD')
     end
     Mint.with_rounding(:half_up) do
-      assert_equal parse('1.01'), Mint.parse('1.005', 'USD')
+      assert_equal parse('1.01'), Money.parse('1.005', 'USD')
     end
   end
 
@@ -168,5 +168,5 @@ class RoundingTest < Minitest::Test
 
   private
 
-  def parse(str) = Mint.parse(str, 'USD')
+  def parse(str) = Money.parse(str, 'USD')
 end

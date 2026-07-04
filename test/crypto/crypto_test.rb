@@ -76,7 +76,7 @@ class CryptoTest < Minitest::Test
   end
 
   def test_crypto_priority_in_parser
-    parsed = Mint.parse('$100')
+    parsed = Money.parse('$100')
 
     assert_equal 'USD', parsed.currency_code
   end
@@ -94,7 +94,7 @@ class CryptoTest < Minitest::Test
   end
 
   def test_crypto_code_detection_in_parser
-    parsed = Mint.parse('0.01 BTC')
+    parsed = Money.parse('0.01 BTC')
 
     assert_equal 'BTC', parsed.currency_code
     assert_equal Rational(1, 100), parsed.amount

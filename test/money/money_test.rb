@@ -50,7 +50,7 @@ class MoneyTest < Minitest::Test
 
     amounts.product(codes).each do |amount, code|
       original = Mint.money(amount, code)
-      parsed   = Mint.parse(original.inspect)
+      parsed   = Money.parse(original.inspect)
 
       assert_equal original, parsed,
                    "inspect round-trip failed: #{original.inspect} -> #{parsed.inspect}"
