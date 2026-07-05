@@ -26,19 +26,19 @@ module Mint
     #   if min is a Range, and max is not nil
     #
     # @example In range
-    #   Mint.money(5, 'USD').clamp(0, 10) #=> [USD 5.00]  (returns self)
+    #   Money.from(5, 'USD').clamp(0, 10) #=> [USD 5.00]  (returns self)
     #
     # @example Out of range, with Numeric bounds
-    #   Mint.money(50, 'USD').clamp(0, 10) #=> [USD 10.00]
+    #   Money.from(50, 'USD').clamp(0, 10) #=> [USD 10.00]
     #
     # @example Out of range, with Money bounds
-    #   loss  = Mint.money(-5, 'USD')
-    #   floor = Mint.money(0,  'USD')
-    #   ceil  = Mint.money(10, 'USD')
+    #   loss  = Money.from(-5, 'USD')
+    #   floor = Money.from(0,  'USD')
+    #   ceil  = Money.from(10, 'USD')
     #   loss.clamp(floor, ceil) #=> [USD 0.00]
     #
     # @example Subunit-0 currency (JPY)
-    #   Mint.money(500, 'JPY').clamp(0, 100) #=> [JPY 100]
+    #   Money.from(500, 'JPY').clamp(0, 100) #=> [JPY 100]
     def clamp(min_or_range, max = nil)
       if min_or_range.is_a?(Range)
         raise(ArgumentError, "Either amount range alone or two amounts accepted: #{max}") if max

@@ -10,7 +10,7 @@ module Mint
     # @raise [ArgumentError] if the proportions list is empty or sums to zero
     #
     # @example Proportional allocation
-    #   money = Mint.money(10.00, 'USD')
+    #   money = Money.from(10.00, 'USD')
     #   money.allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
     def allocate(proportions)
       whole = proportions.sum.to_r

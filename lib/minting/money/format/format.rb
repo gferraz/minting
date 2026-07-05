@@ -38,13 +38,13 @@ module Mint
     #   contains an unrecognised key.
     #
     # @example Basic formatting
-    #   money = Mint.money(1234.56, 'USD')
+    #   money = Money.from(1234.56, 'USD')
     #   money.format                               #=> "$1,234.56"
     #   money.format(thousand: '.', decimal: ',')  #=> "$1.234,56"
     #   money.format(decimal: ',', thousand: '')   #=> "$1234,56"
     #
     # @example Preset formats
-    #   loss = Mint.money(-1234.56, 'USD')
+    #   loss = Money.from(-1234.56, 'USD')
     #   loss.format(:accounting)                   #=> "($1,234.56)"
     #   money.format(:european)                    #=> "1.234,56 €"
     #   money.format(:amount)                      #=> "1234.56"
@@ -58,14 +58,14 @@ module Mint
     #
     # @example Integral & fractional parts
     #   money.format(format: '%<integral>d.%<fractional>02d')  #=> "1234.56"
-    #   price = Mint.money(0.99, 'USD')
+    #   price = Money.from(0.99, 'USD')
     #   price.format(format: '%<integral>d dollars and %<fractional>02d cents')
     #   #=> "0 dollars and 99 cents"
     #
     # @example Per-sign Hash format (accounting parentheses)
-    #   loss = Mint.money(-1234.56, 'USD')
+    #   loss = Money.from(-1234.56, 'USD')
     #   loss.format(format: { negative: '(%<symbol>s%<amount>f)' }) #=> "($1,234.56)"
-    #   Mint.money(0, 'BRL').format(format: { zero: '--' })        #=> "--"
+    #   Money.from(0, 'BRL').format(format: { zero: '--' })        #=> "--"
     #
     # @example Padding and alignment
     #   money.format(format: '%<amount>10.2f')                #=> "   1234.56"

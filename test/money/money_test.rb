@@ -2,18 +2,18 @@
 
 class MoneyTest < Minitest::Test
   def test_its_contructors
-    assert_instance_of Mint::Money, Mint.money(100, 'USD')
-    assert_predicate Mint.money(100, 'USD'), :frozen?
+    assert_instance_of Mint::Money, Money.from(100, 'USD')
+    assert_predicate Money.from(100, 'USD'), :frozen?
 
-    assert_raises(ArgumentError) { Mint.money('b', 'USD') }
-    assert_raises(ArgumentError) { Mint.money(10r, Object.new) }
-    assert_raises(Mint::UnknownCurrency) { Mint.money(1, 'NOT_A_CURRENCY') }
+    assert_raises(ArgumentError) { Money.from('b', 'USD') }
+    assert_raises(ArgumentError) { Money.from(10r, Object.new) }
+    assert_raises(Mint::UnknownCurrency) { Money.from(1, 'NOT_A_CURRENCY') }
   end
 
   def test_amount
-    assert_equal 100, Mint.money(100, 'USD').amount
-    assert_equal 1,   Mint.money(1, 'USD').amount
-    assert_equal 14,  Mint.money(14, Money::Currency.for_code('PEN')).amount
+    assert_equal 100, Money.from(100, 'USD').amount
+    assert_equal 1,   Money.from(1, 'USD').amount
+    assert_equal 14,  Money.from(14, Money::Currency.for_code('PEN')).amount
   end
 
   def test_no_currency
@@ -35,13 +35,13 @@ class MoneyTest < Minitest::Test
   end
 
   def test_hash
-    assert_equal Mint.money(2, 'USD').hash, Mint.money(2, 'USD').hash
-    refute_equal Mint.money(2, 'USD').hash, Mint.money(0, 'USD').hash
-    refute_equal Mint.money(2, 'USD').hash, Mint.money(2, 'BRL').hash
+    assert_equal Money.from(2, 'USD').hash, Money.from(2, 'USD').hash
+    refute_equal Money.from(2, 'USD').hash, Money.from(0, 'USD').hash
+    refute_equal Money.from(2, 'USD').hash, Money.from(2, 'BRL').hash
   end
 
   def test_inspect
-    assert_equal '[USD 10.34]', Mint.money(10.34, 'USD').inspect
+    assert_equal '[USD 10.34]', Money.from(10.34, 'USD').inspect
   end
 
   def test_inspect_round_trip
@@ -49,7 +49,7 @@ class MoneyTest < Minitest::Test
     codes   = Mint::Registry.currencies.keys.sample(8)
 
     amounts.product(codes).each do |amount, code|
-      original = Mint.money(amount, code)
+      original = Money.from(amount, code)
       parsed   = Money.parse(original.inspect)
 
       assert_equal original, parsed,
@@ -58,22 +58,22 @@ class MoneyTest < Minitest::Test
   end
 
   def test_same_currency
-    assert 10.34.to_money('USD').same_currency?(Mint.money(100, 'USD'))
-    refute 10.34.to_money('USD').same_currency?(Mint.money(10.34, 'BRL'))
+    assert 10.34.to_money('USD').same_currency?(Money.from(100, 'USD'))
+    refute 10.34.to_money('USD').same_currency?(Money.from(10.34, 'BRL'))
   end
 
   def test_zero
-    zero_soles = Mint.money(0r, Money::Currency.for_code('PEN'))
+    zero_soles = Money.from(0r, Money::Currency.for_code('PEN'))
 
     assert_predicate 0.dollars, :zero?
     assert_equal 0.dollars, zero_soles
     assert_equal 0, 0.dollars
     assert_equal 0, 0.dollars
-    refute_predicate Mint.money(100r, 'USD'), :zero?
+    refute_predicate Money.from(100r, 'USD'), :zero?
   end
 
   def test_nonzero
-    two_soles = Mint.money(2, Money::Currency.for_code('PEN'))
+    two_soles = Money.from(2, Money::Currency.for_code('PEN'))
 
     assert_predicate 2.dollars, :nonzero?
     refute_equal 2.dollars, two_soles
@@ -88,58 +88,58 @@ class MoneyTest < Minitest::Test
   end
 
   def test_integral_and_fractional
-    assert_equal 1234, Mint.money(1234.56, 'USD').integral
-    assert_equal 56,   Mint.money(1234.56, 'USD').fractional
-    assert_equal 1000, Mint.money(1000, 'JPY').integral
-    assert_equal 0,    Mint.money(1000, 'JPY').fractional
-    assert_equal(-9, Mint.money(-9.99, 'USD').integral)
-    assert_equal(-99, Mint.money(-9.99, 'USD').fractional)
-    assert_equal 0,    Mint.money(0, 'USD').integral
-    assert_equal 0,    Mint.money(0, 'USD').fractional
+    assert_equal 1234, Money.from(1234.56, 'USD').integral
+    assert_equal 56,   Money.from(1234.56, 'USD').fractional
+    assert_equal 1000, Money.from(1000, 'JPY').integral
+    assert_equal 0,    Money.from(1000, 'JPY').fractional
+    assert_equal(-9, Money.from(-9.99, 'USD').integral)
+    assert_equal(-99, Money.from(-9.99, 'USD').fractional)
+    assert_equal 0,    Money.from(0, 'USD').integral
+    assert_equal 0,    Money.from(0, 'USD').fractional
   end
 
   def test_to_i_is_alias_of_integral
-    m = Mint.money(1234.56, 'USD')
+    m = Money.from(1234.56, 'USD')
 
     assert_equal m.integral, m.to_i
     assert_equal m.method(:to_i), m.method(:integral)
   end
 
   def test_subunits
-    assert_equal 123_456, Mint.money(1234.56, 'USD').subunits
-    assert_equal 123_00, Mint.money(123, 'USD').subunits
-    assert_equal 123_99, Mint.money(123.9912, 'USD').subunits
+    assert_equal 123_456, Money.from(1234.56, 'USD').subunits
+    assert_equal 123_00, Money.from(123, 'USD').subunits
+    assert_equal 123_99, Money.from(123.9912, 'USD').subunits
   end
 
   def test_from_subunits
     # Subunit 2: USD cents
-    assert_equal Mint.money(1234.56, 'USD'),
+    assert_equal Money.from(1234.56, 'USD'),
                  Mint::Money.from_subunits(123_456, 'USD')
-    assert_equal Mint.money(0, 'USD'),
+    assert_equal Money.from(0, 'USD'),
                  Mint::Money.from_subunits(0, 'USD')
-    assert_equal Mint.money(0.01, 'USD'),
+    assert_equal Money.from(0.01, 'USD'),
                  Mint::Money.from_subunits(1, 'USD')
 
     # Subunit 0: JPY yen (multiplier == 1)
-    assert_equal Mint.money(1234, 'JPY'),
+    assert_equal Money.from(1234, 'JPY'),
                  Mint::Money.from_subunits(1234, 'JPY')
-    assert_equal Mint.money(0, 'JPY'),
+    assert_equal Money.from(0, 'JPY'),
                  Mint::Money.from_subunits(0, 'JPY')
 
     # Subunit 3: IQD fils (multiplier == 1000)
-    assert_equal Mint.money(123.456, 'IQD'),
+    assert_equal Money.from(123.456, 'IQD'),
                  Mint::Money.from_subunits(123_456, 'IQD')
 
     # Accepts Symbol and Currency
-    assert_equal Mint.money(1, 'USD'),
+    assert_equal Money.from(1, 'USD'),
                  Mint::Money.from_subunits(100, 'USD')
-    assert_equal Mint.money(1, 'USD'),
+    assert_equal Money.from(1, 'USD'),
                  Mint::Money.from_subunits(100, Money::Currency.for_code('USD'))
   end
 
   def test_from_subunits_round_trip
     [9.99, 100, 0, 0.01, 1_234_567.89].each do |amount|
-      m = Mint.money(amount, 'USD')
+      m = Money.from(amount, 'USD')
 
       assert_equal m, Mint::Money.from_subunits(m.subunits, 'USD'),
                    "round trip failed for #{amount}"
@@ -148,7 +148,7 @@ class MoneyTest < Minitest::Test
 
   def test_money_zero
     assert_same Mint::Money.zero('USD'), Mint::Money.zero('USD')
-    assert_equal Mint.money(0, 'USD'), Mint::Money.zero('USD')
+    assert_equal Money.from(0, 'USD'), Mint::Money.zero('USD')
   end
 
   def test_money_zero_raises_on_unknown_currency
@@ -167,21 +167,21 @@ class MoneyTest < Minitest::Test
   end
 
   def test_from_hash
-    assert_equal Mint.money(9.99, 'USD'),
+    assert_equal Money.from(9.99, 'USD'),
                  Mint::Money.from_hash(currency: 'USD', amount: '9.99')
-    assert_equal Mint.money(0, 'USD'),
+    assert_equal Money.from(0, 'USD'),
                  Mint::Money.from_hash(currency: 'USD', amount: '0.00')
-    assert_equal Mint.money(134_120, 'BRL'),
+    assert_equal Money.from(134_120, 'BRL'),
                  Mint::Money.from_hash(currency: 'BRL', amount: '134120.00')
-    assert_equal Mint.money(15, 'JPY'),
+    assert_equal Money.from(15, 'JPY'),
                  Mint::Money.from_hash(currency: 'JPY', amount: '15')
-    assert_equal Mint.money(-50.50, 'EUR'),
+    assert_equal Money.from(-50.50, 'EUR'),
                  Mint::Money.from_hash(currency: 'EUR', amount: '-50.50')
   end
 
   def test_from_hash_round_trip
     [9.99, 100, 0, 0.01, 1_234_567.89, -5.50].each do |amount|
-      m = Mint.money(amount, 'USD')
+      m = Money.from(amount, 'USD')
 
       assert_equal m, Mint::Money.from_hash(m.to_hash),
                    "from_hash round trip failed for #{amount}"
@@ -194,7 +194,7 @@ class MoneyTest < Minitest::Test
   end
 
   def test_from_hash_with_string_keys
-    assert_equal Mint.money(9.99, 'USD'),
+    assert_equal Money.from(9.99, 'USD'),
                  Mint::Money.from_hash('currency' => 'USD', 'amount' => '9.99')
   end
 
@@ -207,7 +207,7 @@ class MoneyTest < Minitest::Test
   end
 
   def test_three_way_round_trip
-    m = Mint.money(3.457, 'USD')
+    m = Money.from(3.457, 'USD')
 
     assert_equal m, Mint::Money.from_hash(m.to_hash)
   end

@@ -54,7 +54,7 @@ module Mint
     # @example JPY (subunit 0)
     #   Money.from_subunits(1234, 'JPY')    #=> [JPY 1234]
     # @example Round trip
-    #   m = Mint.money(9.99, 'USD')
+    #   m = Money.from(9.99, 'USD')
     #   Money.from_subunits(m.subunits, 'USD') == m #=> true
     def self.from_subunits(subunits, currency)
       raise ArgumentError, 'subunits must be an Integer' unless subunits.is_a?(Integer)
@@ -71,7 +71,7 @@ module Mint
     # @param amount [Numeric] The new monetary amount
     # @return [Money] A new Money object with the new amount, or self if the amount is unchanged
     # @example
-    #   price = Mint.money(10.00, 'USD')
+    #   price = Money.from(10.00, 'USD')
     #   price.copy_with(amount: 15.00)  #=> [USD 15.00]
     #   price.copy_with(amount: 10.00)  #=> [USD 10.00] (returns self)
     def copy_with(amount:)

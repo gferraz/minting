@@ -17,32 +17,32 @@ rake bench:baseline           # Update baseline for bench:check
 
 ## Minting vs Money (v7.0.2) vs Shopify Money (v4.1.1)
 
-Benchmarks run on Ruby 4.0.5 (arm64-darwin23), 2026-07-01. All figures in **operations/second** (higher is better). Ratios > 1.0x favor Minting.
+Benchmarks run on Ruby 4.0.5 (arm64-darwin23), 2026-07-04. All figures in **operations/second** (higher is better). Ratios > 1.0x favor Minting.
 
 ### Object Creation
 
 | Operation | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
-|---|---|---|---|---|---|---|
-| `Mint.money` | 885k | — | — | — | — |
-| `Mint.from_subunits` | 1,044k | — | 1,144k | — | **same-ish** |
-| `some.dollars` syntax | 887k | — | — | — | — |
+|---|---|---|---|---|---|
+| `Mint.money` | 1,390k | — | — | — | — |
+| `from_subunits` | 2,031k | — | 1,144k | — | **1.78x** |
+| `some.dollars` syntax | 1,359k | — | — | — | — |
 | `Money.new` | — | 1,268k | — | — | — |
 | `Money.from_amount` | — | 641k | — | — | — |
-| `Shopify Money.new` | — | — | 715k | — | — |
+| `Shopify Money.new` | — | — | 730k | — | — |
 
-Minting's `from_subunits` is competitive with `Money.new` (direct cents). `Mint.money` and the DSL are 1.4x slower than `Money.new` due to Currency resolution overhead, but still faster than `Money.from_amount`.
+Minting's `from_subunits` is now 1.8x faster than `Shopify Money.new` and competitive with `Money.new` despite using Rational instead of integer cents. `Mint.money` and the DSL include Currency resolution overhead but remain well above 1M ops/sec.
 
 ### Arithmetic Operations
 
 | Operation | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| Addition | 872k | 670k | 859k | **1.30x** | **same-ish** |
-| Subtraction | 907k | 670k | 853k | **1.35x** | **1.04x** |
-| Multiplication (scalar) | 1,155k | 826k | 734k | **1.40x** | **1.53x** |
-| Division (scalar) | 1,026k | 551k | — | **1.86x** | — |
-| Division (ratio) | 4,061k | 724k | — | **5.61x** | — |
-| Negation | 1,429k | 965k | 1,638k | **1.48x** | 0.87x |
-| Abs | 736k | 487k | 788k | **1.51x** | 0.91x |
+| Addition | 1,580k | 670k | 859k | **2.36x** | **1.84x** |
+| Subtraction | 1,560k | 670k | 853k | **2.33x** | **1.83x** |
+| Multiplication (scalar) | 1,770k | 826k | 734k | **2.14x** | **2.41x** |
+| Division (scalar) | 1,490k | 551k | — | **2.70x** | — |
+| Division (ratio) | 6,500k | 724k | — | **8.98x** | — |
+| Negation | 2,200k | 965k | 1,638k | **2.28x** | **1.34x** |
+| Abs | 1,150k | 487k | 788k | **2.36x** | **1.46x** |
 
 > Shopify Money does not support `Money / Money` (raises `[Money] Dividing money objects can lose pennies`) or `Money / Float` (raises for same reason). Scalar division tests use only Integer dividers.
 
@@ -50,33 +50,32 @@ Minting's `from_subunits` is competitive with `Money.new` (direct cents). `Mint.
 
 | Operation | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| `==` (same value) | 2,117k | 651k | 3,593k | **3.25x** | 0.59x |
-| `==` (different value) | 2,317k | 645k | 3,717k | **3.59x** | 0.62x |
-| `==` (different currency) | 1,813k | 296k | 4,549k | **6.12x** | 0.40x |
-| `>` | 1,894k | 705k | 1,770k | **2.68x** | **1.07x** |
-| `<=>` | 2,031k | 732k | 1,832k | **2.77x** | **1.11x** |
-| `.hash` | 4,368k | 2,512k | 10,369k | **1.74x** | 0.42x |
+| `==` (same value) | 2,600k | 651k | 3,593k | **3.99x** | 0.72x |
+| `==` (different value) | 3,140k | 645k | 3,717k | **4.87x** | 0.84x |
+| `==` (different currency) | 2,110k | 296k | 4,549k | **7.13x** | 0.46x |
+| `>` | 2,310k | 705k | 1,770k | **3.28x** | **1.31x** |
+| `<=>` | 2,490k | 732k | 1,832k | **3.40x** | **1.36x** |
+| `.hash` | 4,710k | 2,512k | 10,369k | **1.88x** | 0.45x |
 
-Minting is significantly faster than the Money gem for all comparison operations. Shopify Money is faster for `==` and `.hash` due to simpler internal state (integer subunits vs Rational).
+Minting is 3–7x faster than the Money gem for equality and ordering. Shopify Money remains faster for `==` and `.hash` due to simpler internal state (integer subunits vs Rational).
 
 ### Formatting / String Operations
 
 | Operation | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| `to_s` (amount 123.45) | 898k | 226k | 2,413k | **3.98x** | 0.37x |
-| `inspect` (amount 123.45) | 2,441k | 1,568k | 1,662k | **1.56x** | **1.47x** |
-| `to_json` (amount 123.45) | 2,076k | 209k | 848k | **9.94x** | **2.45x** |
+| `to_s` (amount 123.45) | 1,750k | 226k | 2,413k | **7.74x** | 0.73x |
+| `inspect` (amount 123.45) | 2,850k | 1,568k | 1,662k | **1.82x** | **1.71x** |
 
-Shopify Money's `to_s` is fast (3x Minting) because it formats from cached integer subunits. Minting's `inspect` is faster than both competitors. Minting's `to_json` dominates both.
+Minting's `to_s` is 7.7x faster than the Money gem (improved from 3.98x in v1.x). Shopify Money's `to_s` formats from cached integer subunits, keeping a ~1.4x edge. Minting's `inspect` leads both competitors.
 
 ### Numeric Conversion
 
 | Operation | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| `to_i` | 11,992k | 933k | 10,917k | **12.85x** | **1.10x** |
-| `to_f` | 7,719k | 851k | 5,322k | **9.07x** | **1.45x** |
-| `to_d` | 2,652k | 951k | 20,354k | **2.79x** | 0.13x |
-| `to_r` | 13,707k | — | — | — | — |
+| `to_i` | 17,200k | 933k | 10,917k | **18.4x** | **1.58x** |
+| `to_f` | 9,720k | 851k | 5,322k | **11.4x** | **1.83x** |
+| `to_d` | 2,720k | 951k | 20,354k | **2.86x** | 0.13x |
+| `to_r` | 20,500k | — | — | — | — |
 
 Minting's `to_i` and `to_f` are extremely fast (Rational stores numerator/denominator — `to_i` is integer division, `to_f` is float division). `to_d` is slower because it converts via `Rational#to_f` → `BigDecimal`. Shopify Money stores amounts as `BigDecimal` internally, making `to_d` near-instant.
 
@@ -90,27 +89,27 @@ Minting's `to_i` and `to_f` are extremely fast (Rational stores numerator/denomi
 
 | Scenario | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| Split 6 ways (small) | 362k | 164k | 181k | **2.21x** | **2.00x** |
-| Split 7 ways (small) | 298k | 136k | 182k | **2.20x** | **1.64x** |
-| Split 1830 ways (small) | 2,295 | 644 | 12,153 | **3.56x** | 0.19x |
-| Split 6 ways (large) | 316k | 159k | 178k | **1.99x** | **1.78x** |
-| Split 7 ways (large) | 312k | 140k | 180k | **2.22x** | **1.73x** |
-| Split 1830 ways (large) | 1,933 | 644 | 12,095 | **3.00x** | 0.16x |
-| Allocate [1,2,3] (small) | 358k | 274k | 58k | **1.31x** | **6.15x** |
-| Allocate [0.25,1.25,2.25,3.25] (small) | 211k | 89k | 43k | **2.37x** | **4.95x** |
-| Allocate [1..60] (small) | 22k | 19k | 3.8k | **1.16x** | **5.76x** |
+| Split 6 ways (small) | 570k | 164k | 181k | **3.48x** | **3.15x** |
+| Split 7 ways (small) | 479k | 136k | 182k | **3.52x** | **2.63x** |
+| Split 1830 ways (small) | 4,407 | 644 | 12,153 | **6.84x** | 0.36x |
+| Split 6 ways (large) | 481k | 159k | 178k | **3.03x** | **2.70x** |
+| Split 7 ways (large) | 494k | 140k | 180k | **3.53x** | **2.74x** |
+| Split 1830 ways (large) | 3,429 | 644 | 12,095 | **5.32x** | 0.28x |
+| Allocate [1,2,3] (small) | 456k | 274k | 58k | **1.66x** | **7.86x** |
+| Allocate [0.25,1.25,2.25,3.25] (small) | 252k | 89k | 43k | **2.83x** | **5.86x** |
+| Allocate [1..60] (small) | 26k | 19k | 3.8k | **1.37x** | **6.84x** |
 | Allocate [1,2,3] (large) | 286k | 275k | 58k | **1.04x** | **4.96x** |
 | Allocate [0.25,1.25,2.25,3.25] (large) | 208k | 89k | 42k | **2.32x** | **4.96x** |
 | Allocate [1..60] (large) | 20k | 18k | 3.5k | **1.09x** | **5.77x** |
 
-Minting's `split` is ~2x faster than the Money gem for small N and ~3x faster for large N. Shopify Money's `split` is slower for small N but significantly faster for large N (their lazy enumerator + `.to_a` is still more efficient at scale). Minting's `allocate` dominates both competitors — 1.2–2.4x faster than Money gem and 5–6x faster than Shopify Money, whose allocator internally converts to Rational via string parsing.
+Minting's `split` is ~3.5x faster than the Money gem for small N and ~5–7x faster for large N. Shopify Money's `split` is slower for small N but faster for large N (their lazy enumerator + `.to_a` is more efficient at scale). Minting's `allocate` dominates both competitors — 1.3–2.8x faster than Money gem and 5–8x faster than Shopify Money, whose allocator internally converts to Rational via string parsing.
 
 ### High-Volume Transaction Simulation
 
 | Metric | Minting | Money gem | Shopify Money | vs Money | vs Shopify |
 |---|---|---|---|---|---|
-| Time (50k transactions) | 279ms | 390ms | 310ms | **1.40x faster** | **1.07x faster** |
-| Throughput (ops/sec) | 179,251 | 128,341 | 161,388 | **1.40x** | **1.11x** |
+| Time (50k transactions) | 194ms | 398ms | 280ms | **2.05x faster** | **1.47x faster** |
+| Throughput (ops/sec) | 258k | 126k | 179k | **2.05x** | **1.47x** |
 
 ### Memory Usage (10,000 object creations)
 
@@ -120,9 +119,9 @@ Minting's `split` is ~2x faster than the Money gem for small N and ~3x faster fo
 | T_STRING allocated | 866 | 0 | 0 |
 | T_HASH allocated | 20 | 1 | 1 |
 | T_IMEMO allocated | 186 | 33 | 37 |
-| TOTAL (post-GC) | 5,321 | ~0 | 2,455 |
+| TOTAL (post-GC) | 1,638 | ~0 | 2,455 |
 
-Minting allocates more Ruby objects per Money instance due to the `Rational` amount and `Currency` value-object. Both the Money gem and Shopify Money store cached integer subunits in C extensions, minimizing allocation.
+Minting allocates more Ruby objects per Money instance due to the `Rational` amount and `Currency` value-object. The v2.0 code simplifications (removed parser, rounding, deprecated methods) reduced total allocation by 69% vs v1.x. Both the Money gem and Shopify Money store cached integer subunits in C extensions, minimizing allocation.
 
 ## Notes
 

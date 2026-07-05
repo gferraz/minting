@@ -55,7 +55,7 @@ class CryptoTest < Minitest::Test
   end
 
   def test_registered_crypto_works_with_money
-    btc = Mint.money(1, 'BTC')
+    btc = Money.from(1, 'BTC')
 
     assert_equal 1, btc.amount
     assert_equal 'BTC', btc.currency_code
@@ -63,16 +63,16 @@ class CryptoTest < Minitest::Test
   end
 
   def test_registered_crypto_formats
-    btc = Mint.money(0.01, 'BTC')
+    btc = Money.from(0.01, 'BTC')
 
     assert_match('₿0.01000000', btc.to_s)
   end
 
   def test_registered_crypto_arithmetics
-    a = Mint.money(1, 'BTC')
-    b = Mint.money(2, 'BTC')
+    a = Money.from(1, 'BTC')
+    b = Money.from(2, 'BTC')
 
-    assert_equal Mint.money(3, 'BTC'), a + b
+    assert_equal Money.from(3, 'BTC'), a + b
   end
 
   def test_crypto_priority_in_parser

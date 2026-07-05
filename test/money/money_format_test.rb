@@ -3,8 +3,8 @@
 class MoneyFormatTest < Minitest::Test
   FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
-  def usd_9_99 = Mint.money(9.99, 'USD')
-  def usd_123_456_789_01 = Mint.money(123_456_789.01, 'USD')
+  def usd_9_99 = Money.from(9.99, 'USD')
+  def usd_123_456_789_01 = Money.from(123_456_789.01, 'USD')
 
   def test_numeric_simple_format
     assert_equal '$9.99',    usd_9_99.to_s
@@ -15,7 +15,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_more_numeric_simple_format
-    gas = Mint.money(3.457, FUEL)
+    gas = Money.from(3.457, FUEL)
 
     assert_equal '-9.99',    (-usd_9_99).format(format: '%<amount>f')
     assert_equal '9.99',     usd_9_99.format(format: '%<amount>f')
@@ -23,25 +23,25 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_format_with_disambiguate_symbol
-    usd = Mint.money(10, 'USD')
+    usd = Money.from(10, 'USD')
 
     assert_equal '$10.00', usd.format
     assert_equal 'US$10.00', usd.format(format: '%<dsymbol>s%<amount>f')
     assert_equal 'US$ 10.00', usd.format(format: '%<dsymbol>s %<amount>f')
-    assert_equal 'C$10.00', Mint.money(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')
-    assert_equal 'A$10.00', Mint.money(10, 'AUD').format(format: '%<dsymbol>s%<amount>f')
-    assert_equal '€10.00', Mint.money(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')
+    assert_equal 'C$10.00', Money.from(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')
+    assert_equal 'A$10.00', Money.from(10, 'AUD').format(format: '%<dsymbol>s%<amount>f')
+    assert_equal '€10.00', Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')
   end
 
   def test_thousand_delimiter_format
-    money = Mint.money(123_456_789.01, 'USD')
+    money = Money.from(123_456_789.01, 'USD')
 
     assert_equal '$123,456,789.01', money.to_s
     assert_equal '$-123,456,789.01', (-money).to_s
   end
 
   def test_decimal_separator_format
-    money = Mint.money(123_456_789.01, 'USD')
+    money = Money.from(123_456_789.01, 'USD')
 
     assert_equal '123-456-789|01', money.format(format: '%<amount>f', thousand: '-', decimal: '|')
     assert_equal '123.456.789|01', money.format(format: '%<amount>f', thousand: '.', decimal: '|')
@@ -50,7 +50,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_numeric_padding_format
-    brl = Mint.money(12.34, 'BRL')
+    brl = Money.from(12.34, 'BRL')
 
     assert_equal 'xx      9',
                  usd_9_99.format(format: 'xx%<amount>7d')
@@ -63,9 +63,9 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_hash_format
-    brl = Mint.money(134_120, 'BRL')
-    jpy = Mint.money(15, 'JPY')
-    gas = Mint.money(3.457, FUEL)
+    brl = Money.from(134_120, 'BRL')
+    jpy = Money.from(15, 'JPY')
+    gas = Money.from(3.457, FUEL)
 
     assert_equal({ currency: 'BRL', amount: '134120.00' }, brl.to_hash)
     assert_equal({ currency: 'JPY', amount: '15' }, jpy.to_hash)
@@ -73,9 +73,9 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_numeric_html_format
-    brl = Mint.money(10.05, 'BRL')
-    jpy = Mint.money(15_000, 'JPY')
-    gas = Mint.money(3.457, FUEL)
+    brl = Money.from(10.05, 'BRL')
+    jpy = Money.from(15_000, 'JPY')
+    gas = Money.from(3.457, FUEL)
 
     assert_equal "<data class='money' title='BRL 10.05'>R$10.05</data>", brl.to_html
     assert_equal "<data class='money' title='JPY 15000'>¥15,000</data>", jpy.to_html
@@ -84,9 +84,9 @@ class MoneyFormatTest < Minitest::Test
 
   # Real-world currency formatting tests
   def test_european_currency_formats
-    eur = Mint.money(9234.56, 'EUR')
-    gbp = Mint.money(987.65, 'GBP')
-    chf = Mint.money(456.78, 'CHF')
+    eur = Money.from(9234.56, 'EUR')
+    gbp = Money.from(987.65, 'GBP')
+    chf = Money.from(456.78, 'CHF')
 
     # European style: symbol after amount
     assert_equal '9,234.56 €', eur.format(format: '%<amount>f %<symbol>s', thousand: ',', decimal: '.')
@@ -99,10 +99,10 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_asian_currency_formats
-    jpy = Mint.money(123_456, 'JPY')
-    krw = Mint.money(987_654, 'KRW')
-    cny = Mint.money(1234.56, 'CNY')
-    inr = Mint.money(9876.54, 'INR')
+    jpy = Money.from(123_456, 'JPY')
+    krw = Money.from(987_654, 'KRW')
+    cny = Money.from(1234.56, 'CNY')
+    inr = Money.from(9876.54, 'INR')
 
     # Japanese Yen (no decimals)
     assert_equal '¥123,456', jpy.to_s
@@ -119,19 +119,19 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_middle_eastern_currency_formats
-    sar = Mint.money(987.65, 'SAR')
-    ils = Mint.money(456.78, 'ILS')
+    sar = Money.from(987.65, 'SAR')
+    ils = Money.from(456.78, 'ILS')
 
     # Middle Eastern currencies - often RTL but displayed LTR in code
-    assert_equal 'د.إ1,234.56', Mint.money(1234.56, 'AED').to_s
+    assert_equal 'د.إ1,234.56', Money.from(1234.56, 'AED').to_s
     assert_equal '﷼987.65', sar.to_s
     assert_equal '₪456.78', ils.to_s
   end
 
   def test_high_precision_currency_formats
-    kwd = Mint.money(123.456, 'KWD')
-    bhd = Mint.money(987.654, 'BHD')
-    omr = Mint.money(456.789, 'OMR')
+    kwd = Money.from(123.456, 'KWD')
+    bhd = Money.from(987.654, 'BHD')
+    omr = Money.from(456.789, 'OMR')
 
     assert_equal 'د.ك123.456', kwd.to_s
     assert_equal '.د.ب987.654', bhd.to_s
@@ -139,8 +139,8 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_accounting_formats
-    profit = Mint.money(1234.56, 'USD')
-    loss = Mint.money(-1234.56, 'USD')
+    profit = Money.from(1234.56, 'USD')
+    loss = Money.from(-1234.56, 'USD')
 
     # Standard accounting format with parentheses for negative
     assert_equal '$1,234.56', profit.format(format: { negative: '%<symbol>s(%<amount>f)' })
@@ -152,8 +152,8 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_invoice_receipt_formats
-    total = Mint.money(1299.99, 'USD')
-    tax = Mint.money(104.00, 'USD')
+    total = Money.from(1299.99, 'USD')
+    tax = Money.from(104.00, 'USD')
 
     # Receipt/invoice style formatting
     assert_equal '$   1,299.99', total.format(format: '%<symbol>s%<amount>10.2f')
@@ -165,7 +165,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_web_display_formats
-    price = Mint.money(49.99, 'USD')
+    price = Money.from(49.99, 'USD')
 
     # E-commerce pricing display
     assert_equal '$49.99', price.to_s
@@ -176,7 +176,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_mobile_app_formats
-    balance = Mint.money(12_345.67, 'USD')
+    balance = Money.from(12_345.67, 'USD')
 
     # Compact mobile display - abbreviated amounts
     assert_equal '$12,345', balance.format(format: '%<symbol>s%<amount>d')
@@ -189,7 +189,7 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_financial_report_formats
-    revenue = Mint.money(1_234_567.89, 'USD')
+    revenue = Money.from(1_234_567.89, 'USD')
 
     # Financial statement format with padding
     assert_equal '  $1,234,567.89', revenue.format(width: 15)
@@ -200,11 +200,11 @@ class MoneyFormatTest < Minitest::Test
 
     assert_equal '$1.23M', millions.format(format: '%<symbol>s%<amount>fM')
     assert_equal '$1,234.6K', thousands.format(format: '%<symbol>s%<amount>0.1fK')
-    assert_equal '--', Mint.money(0, 'BRL').format(format: { zero: '--' })
+    assert_equal '--', Money.from(0, 'BRL').format(format: { zero: '--' })
   end
 
   def test_international_space_conventions
-    amount = Mint.money(1234.56, 'EUR')
+    amount = Money.from(1234.56, 'EUR')
 
     # French/European convention - space before currency symbol
     assert_equal '1,234.56 €', amount.format(format: '%<amount>f %<symbol>s')
@@ -215,8 +215,8 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_zero_and_negative_handling
-    zero = Mint.money(0, 'USD')
-    negative = Mint.money(-50.25, 'EUR')
+    zero = Money.from(0, 'USD')
+    negative = Money.from(-50.25, 'EUR')
 
     # Zero formatting
     assert_equal '$0.00', zero.to_s
@@ -232,9 +232,9 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_hash_format_with_all_signs
-    money = Mint.money(1234.56, 'USD')
-    loss  = Mint.money(-1234.56, 'USD')
-    zero  = Mint.money(0, 'USD')
+    money = Money.from(1234.56, 'USD')
+    loss  = Money.from(-1234.56, 'USD')
+    zero  = Money.from(0, 'USD')
 
     formats = {
       positive: '%<symbol>s%<amount>f',
@@ -250,25 +250,25 @@ class MoneyFormatTest < Minitest::Test
   def test_hash_format_missing_positive_falls_back_to_default
     # Only :negative is set; positives must still format sensibly via the
     # module default.
-    money = Mint.money(1234.56, 'USD')
+    money = Money.from(1234.56, 'USD')
 
     assert_equal '$1,234.56', money.format(format: { negative: '(%<symbol>s%<amount>f)' })
   end
 
   def test_hash_format_missing_negative_falls_back_to_positive
     # No :negative set; negatives use the positive template
-    loss = Mint.money(-50.25, 'EUR')
+    loss = Money.from(-50.25, 'EUR')
 
     assert_equal '[€-50.25]', loss.format(format: { positive: '[%<symbol>s%<amount>f]' })
   end
 
   def test_hash_format_zero_without_zero_key_uses_positive
-    assert_equal '¤0.0000', Mint.money(0, 'XXX').format(format: { positive: '%<symbol>s%<amount>f' })
+    assert_equal '¤0.0000', Money.from(0, 'XXX').format(format: { positive: '%<symbol>s%<amount>f' })
   end
 
   def test_hash_format_with_european_separators
-    money = Mint.money(1234.56, 'EUR')
-    loss  = Mint.money(-1234.56, 'EUR')
+    money = Money.from(1234.56, 'EUR')
+    loss  = Money.from(-1234.56, 'EUR')
 
     formats = {
       positive: '%<amount>f %<symbol>s',
@@ -289,16 +289,16 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_preset_accounting
-    profit = Mint.money(1234.56, 'USD')
-    loss = Mint.money(-1234.56, 'USD')
+    profit = Money.from(1234.56, 'USD')
+    loss = Money.from(-1234.56, 'USD')
 
     assert_equal '$1,234.56', profit.format(:accounting)
     assert_equal '($1,234.56)', loss.format(:accounting)
-    assert_equal '$0.00', Mint.money(0, 'USD').format(:accounting)
+    assert_equal '$0.00', Money.from(0, 'USD').format(:accounting)
   end
 
   def test_preset_european
-    eur = Mint.money(1234.56, 'EUR')
+    eur = Money.from(1234.56, 'EUR')
 
     assert_equal '1.234,56 €', eur.format(:european)
     assert_equal '-1.234,56 €', (-eur).format(:european)
@@ -311,7 +311,7 @@ class MoneyFormatTest < Minitest::Test
 
   def test_preset_currency
     assert_equal 'USD 9.99', usd_9_99.format(:currency)
-    assert_equal 'EUR -1,234.56', Mint.money(-1234.56, 'EUR').format(:currency)
+    assert_equal 'EUR -1,234.56', Money.from(-1234.56, 'EUR').format(:currency)
   end
 
   def test_preset_unknown
@@ -320,14 +320,14 @@ class MoneyFormatTest < Minitest::Test
   end
 
   def test_preset_with_override
-    eur = Mint.money(1234.56, 'EUR')
+    eur = Money.from(1234.56, 'EUR')
 
     assert_equal '1.234|56 €', eur.format(:european, decimal: '|')
     assert_equal '1.234,56 EUR', eur.format(:european, format: '%<amount>f %<currency>s')
   end
 
   def test_format_with_integral_and_fractional_parts
-    m = Mint.money(1234.56, 'USD')
+    m = Money.from(1234.56, 'USD')
 
     assert_equal '1234', m.format(format: '%<integral>d', thousand: '')
     assert_equal '1,234 + 56/100', m.format(format: '%<integral>d + %<fractional>d/100')
@@ -339,7 +339,7 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '56 cents', m.format(format: '%<fractional>d cents')
 
     # Composes with hash format too
-    loss = Mint.money(-1234.56, 'USD')
+    loss = Money.from(-1234.56, 'USD')
 
     assert_equal '($1,234/56)', loss.format(format: { negative: '(%<symbol>s%<integral>d/%<fractional>d)' })
 
@@ -347,7 +347,7 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '-1,234_56', loss.format(format: '%<integral>d_%<fractional>d')
 
     # Currency with subunit of 0
-    jpy = Mint.money(1234, 'JPY')
+    jpy = Money.from(1234, 'JPY')
 
     assert_equal '1,234_', jpy.format(format: '%<integral>d_%<fractional>d')
   end
@@ -386,7 +386,7 @@ class MoneyFormatTest < Minitest::Test
 
   def test_validate_decimal_and_thousand_different_ok
     assert_equal '$9.99', usd_9_99.format(decimal: '.', thousand: ',')
-    money = Mint.money(1234.56, 'USD')
+    money = Money.from(1234.56, 'USD')
 
     assert_equal '1,234.56', money.format(decimal: '.', thousand: ',', format: '%<amount>f')
   end

@@ -12,7 +12,7 @@ module Mint
     # @raise [ArgumentError] if quantity is not a positive integer
     #
     # @example Even split
-    #   money = Mint.money(10.00, 'USD')
+    #   money = Money.from(10.00, 'USD')
     #   money.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
     def split(slices)
       raise ArgumentError, 'Slices quantity must be an poitive integer' unless slices.positive? && slices.integer?

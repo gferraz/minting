@@ -42,7 +42,7 @@ class MoneyAllocationTest < Minitest::Test
     assert_equal 2, installments.count(2.52.dollars)
     assert_equal price, installments.sum
 
-    five = Mint.money(5, 'USD')
+    five = Money.from(5, 'USD')
     installments = five.split(3)
 
     assert_equal 1.66.dollars, installments[0]
@@ -51,7 +51,7 @@ class MoneyAllocationTest < Minitest::Test
   end
 
   def test_split_negative_money
-    debt = Mint.money(-10, 'USD')
+    debt = Money.from(-10, 'USD')
 
     installments = debt.split(3)
 
@@ -60,17 +60,17 @@ class MoneyAllocationTest < Minitest::Test
   end
 
   def test_split_zero_subunit_currency
-    price = Mint.money(10, 'JPY')
+    price = Money.from(10, 'JPY')
 
     installments = price.split(3)
 
-    assert_equal [Mint.money(4, 'JPY'), Mint.money(3, 'JPY'), Mint.money(3, 'JPY')],
+    assert_equal [Money.from(4, 'JPY'), Money.from(3, 'JPY'), Money.from(3, 'JPY')],
                  installments
     assert_equal price, installments.sum
   end
 
   def test_money_allocation
-    value = Mint.money(10.0, 'USD')
+    value = Money.from(10.0, 'USD')
     proportions = [1, 2, 3]
     allocation = value.allocate(proportions)
 
@@ -91,7 +91,7 @@ class MoneyAllocationTest < Minitest::Test
     assert_equal value, allocation.sum
 
     proportion = [0.333, 0.333, 0.333]
-    five = Mint.money(5.0, 'USD')
+    five = Money.from(5.0, 'USD')
     allocation = five.allocate(proportion)
 
     assert_equal 3, allocation.size
@@ -99,7 +99,7 @@ class MoneyAllocationTest < Minitest::Test
   end
 
   def test_allocate_negative_money
-    debt = Mint.money(-10, 'USD')
+    debt = Money.from(-10, 'USD')
 
     allocation = debt.allocate([1, 2, 3])
 
@@ -117,7 +117,7 @@ class MoneyAllocationTest < Minitest::Test
   end
 
   def test_allocate_conserves_awkward_remainders
-    price = Mint.money(0.05, 'USD')
+    price = Money.from(0.05, 'USD')
 
     allocation = price.allocate([1, 1, 1, 1])
 

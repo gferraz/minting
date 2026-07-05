@@ -29,7 +29,7 @@ module Mint
     #
     # @return [String] the ISO currency code (e.g., "USD", "EUR", "BRL")
     # @example
-    #   Mint.money(100, 'USD').currency_code  #=> "USD"
+    #   Money.from(100, 'USD').currency_code  #=> "USD"
     def currency_code = currency.code
 
     # Returns the monetary amount expressed in the currency's smallest unit (fractional units).
@@ -37,25 +37,25 @@ module Mint
     #
     # @return [Integer] the amount in fractional units
     # @example
-    #   Mint.money(1234.56, 'USD').subunits  #=> 123456
-    #   Mint.money(1000, 'JPY').subunits     #=> 1000
-    #   Mint.money(123.456, 'IQD').subunits  #=> 123456
+    #   Money.from(1234.56, 'USD').subunits  #=> 123456
+    #   Money.from(1000, 'JPY').subunits     #=> 1000
+    #   Money.from(123.456, 'IQD').subunits  #=> 123456
     def subunits = (amount * currency.fractional_multiplier).to_i
 
     # Returns the whole-unit (integral) part of the amount.
     # @example
-    #   Mint.money(1234.56, 'USD').integral  #=> 1234
-    #   Mint.money(1000, 'JPY').integral     #=> 1000
-    #   Mint.money(-9.99, 'USD').integral    #=> -9
+    #   Money.from(1234.56, 'USD').integral  #=> 1234
+    #   Money.from(1000, 'JPY').integral     #=> 1000
+    #   Money.from(-9.99, 'USD').integral    #=> -9
     def integral = amount.to_i
 
     alias to_i integral
 
     # Returns the fractional part of the amount.
     # @example
-    #   Mint.money(1234.56, 'USD').fractional  #=> 56
-    #   Mint.money(1000, 'JPY').fractional     #=> 0
-    #   Mint.money(123.456, 'IQD').fractional  #=> 456
+    #   Money.from(1234.56, 'USD').fractional  #=> 56
+    #   Money.from(1000, 'JPY').fractional     #=> 0
+    #   Money.from(123.456, 'IQD').fractional  #=> 456
     def fractional = ((amount - amount.to_i) * currency.fractional_multiplier).to_i
 
     # Generates a stable hash key for Money instances.

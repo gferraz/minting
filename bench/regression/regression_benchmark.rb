@@ -15,21 +15,21 @@ class RegressionBenchmark < Minitest::Benchmark
   # Test that money creation scales linearly
   def bench_money_creation_linear
     assert_performance_linear 0.99 do |n|
-      n.times { |i| Mint.money((i % 1000) + 1, 'USD') }
+      n.times { |i| Money.from((i % 1000) + 1, 'USD') }
     end
   end
 
   # Test that money creation doesn't get slower over time (constant time)
   def bench_money_creation_constant
     assert_performance_constant 0.99 do |_n|
-      Mint.money(rand(1..1000), 'USD')
+      Money.from(rand(1..1000), 'USD')
     end
   end
 
   # Test that arithmetic operations remain constant time
   def bench_arithmetic_constant
-    money1 = Mint.money(100, 'USD')
-    Mint.money(50, 'USD')
+    money1 = Money.from(100, 'USD')
+    Money.from(50, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       money1 / 2
@@ -38,9 +38,9 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that comparison operations remain constant time
   def bench_comparison_constant
-    money1 = Mint.money(100, 'USD')
-    Mint.money(50, 'USD')
-    Mint.money(100, 'USD')
+    money1 = Money.from(100, 'USD')
+    Money.from(50, 'USD')
+    Money.from(100, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       money1.hash
@@ -49,12 +49,11 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that string operations remain constant time
   def bench_string_operations_constant
-    money = Mint.money(123.45, 'USD')
+    money = Money.from(123.45, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       money.to_s
       money.inspect
-      money.to_json
     end
   end
 
@@ -65,13 +64,13 @@ class RegressionBenchmark < Minitest::Benchmark
     assert_performance_constant 0.99 do |_n|
       code = currencies.sample
       Money::Currency.for_code(code)
-      Mint.money(100, code)
+      Money.from(100, code)
     end
   end
 
   # Test that allocation algorithms scale appropriately
   def bench_split_algorithm_linear
-    money = Mint.money(1000, 'USD')
+    money = Money.from(1000, 'USD')
 
     # Split should scale linearly with the number of parts
     assert_performance_linear 0.95 do |n|
@@ -82,7 +81,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that allocation with proportions scales linearly
   def bench_allocate_algorithm_linear
-    money = Mint.money(1000, 'USD')
+    money = Money.from(1000, 'USD')
 
     assert_performance_linear 0.95 do |n|
       parts = [n, 2].max
@@ -93,7 +92,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that hash generation remains constant
   def bench_hash_generation_constant
-    money = Mint.money(123.45, 'USD')
+    money = Money.from(123.45, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       money.hash
@@ -111,7 +110,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test coercion performance
   def bench_coercion_constant
-    money = Mint.money(100, 'USD')
+    money = Money.from(100, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       5 * money # Should trigger coercion
@@ -120,7 +119,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test conversion methods remain constant
   def bench_conversion_constant
-    money = Mint.money(123.45, 'USD')
+    money = Money.from(123.45, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       money.to_i
@@ -132,8 +131,8 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that zero and nonzero checks are constant
   def bench_zero_checks_constant
-    zero_money = Mint.money(0, 'USD')
-    nonzero_money = Mint.money(100, 'USD')
+    zero_money = Money.from(0, 'USD')
+    nonzero_money = Money.from(100, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       zero_money.zero?
@@ -146,12 +145,12 @@ class RegressionBenchmark < Minitest::Benchmark
   # Test memory stability - ensure no memory leaks
   def bench_memory_stability
     # This test ensures memory usage doesn't grow over time
-    Mint.money(100, 'USD')
+    Money.from(100, 'USD')
 
     (1..100).each do |iteration|
       # Create many objects and let them be garbage collected
       1000.times do
-        temp_money = Mint.money(rand(1..1000), 'USD')
+        temp_money = Money.from(rand(1..1000), 'USD')
         temp_money.to_s
         temp_money.hash
       end
@@ -166,8 +165,8 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test performance with different currency subunits
   def bench_subunit_performance_constant
-    usd_money = Mint.money(100.50, 'USD')  # 2 subunits
-    jpy_money = Mint.money(100, 'JPY')     # 0 subunits
+    usd_money = Money.from(100.50, 'USD')  # 2 subunits
+    jpy_money = Money.from(100, 'JPY')     # 0 subunits
 
     assert_performance_constant 0.99 do |_n|
       usd_money.split(3)
@@ -177,7 +176,7 @@ class RegressionBenchmark < Minitest::Benchmark
 
   # Test that type checking doesn't degrade performance
   def bench_type_checking_constant
-    money = Mint.money(100, 'USD')
+    money = Money.from(100, 'USD')
 
     assert_performance_constant 0.99 do |_n|
       # These should all do type checking internally
@@ -188,21 +187,21 @@ class RegressionBenchmark < Minitest::Benchmark
       end
 
       # Valid operations
-      Mint.money(50, 'USD')
+      Money.from(50, 'USD')
       money * 2
     end
   end
 
   # Stress test with complex operations
   def bench_complex_operations_constant
-    money = Mint.money(1000, 'USD')
+    money = Money.from(1000, 'USD')
 
     assert_performance_constant 0.95 do |_n|
       # Chain multiple operations
-      result = money + Mint.money(100, 'USD')
+      result = money + Money.from(100, 'USD')
       result *= 1.5
       result /= 2
-      result -= Mint.money(50, 'USD')
+      result -= Money.from(50, 'USD')
       result = result.abs
       result.split(3)
       result.allocate([1, 2, 3])

@@ -9,7 +9,7 @@ class CompetitiveNumericConversionBenchmark < Minitest::Test
   def setup
     configure_shopify_money_gem
     @amount = 22_123_678.232
-    @mint_money = Mint.money(@amount, 'USD')
+    @mint_money = Money.from(@amount, 'USD')
     @money = Money.new(@amount, 'USD')
   end
 

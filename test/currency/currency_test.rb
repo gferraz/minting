@@ -166,7 +166,7 @@ class CurrencyTest < Minitest::Test
   def test_resolve_existing_paths_still_work
     assert_equal @dollar, Money::Currency.resolve('USD')
     assert_equal @dollar, Money::Currency.resolve(@dollar)
-    assert_equal @dollar, Money::Currency.resolve(Mint.money(10, 'USD'))
+    assert_equal @dollar, Money::Currency.resolve(Money.from(10, 'USD'))
     assert_nil Money::Currency.resolve(nil)
   end
 end

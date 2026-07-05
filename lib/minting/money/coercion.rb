@@ -9,7 +9,7 @@ module Mint
     # @param other [Numeric] the left-hand operand to coerce
     # @return [Array(CoercedNumber, Money)] coerced operand array
     # @example
-    #   price = Mint.money(10, 'USD')
+    #   price = Money.from(10, 'USD')
     #   5 * price  #=> [USD 50.00] (via coercion)
     def coerce(other)
       [CoercedNumber.new(other), self]

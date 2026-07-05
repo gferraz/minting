@@ -34,21 +34,21 @@ class RoundingTest < Minitest::Test
   def test_floor
     Money.with_rounding(:floor) do
       assert_equal parse('1.00'), parse('1.009')
-      assert_equal parse('-1.01'), Mint.money(-1.001r, 'USD')
+      assert_equal parse('-1.01'), Money.from(-1.001r, 'USD')
     end
   end
 
   def test_ceil
     Money.with_rounding(:ceil) do
       assert_equal parse('1.01'), parse('1.001')
-      assert_equal parse('-1.00'), Mint.money(-1.009r, 'USD')
+      assert_equal parse('-1.00'), Money.from(-1.009r, 'USD')
     end
   end
 
   def test_truncate
     Money.with_rounding(:truncate) do
       assert_equal parse('1.00'), parse('1.009')
-      assert_equal parse('-1.00'), Mint.money(-1.009r, 'USD')
+      assert_equal parse('-1.00'), Money.from(-1.009r, 'USD')
     end
   end
 
@@ -81,7 +81,7 @@ class RoundingTest < Minitest::Test
   end
 
   def test_unknown_mode_raises
-    assert_raises(ArgumentError) { Money.with_rounding(:bogus) { Mint.money(1, 'USD') } }
+    assert_raises(ArgumentError) { Money.with_rounding(:bogus) { Money.from(1, 'USD') } }
   end
 
   def test_does_not_leak_into_raw_rational_operations

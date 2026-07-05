@@ -40,9 +40,9 @@ module Mint
     # @return [String] formatted money string
     #
     # @example
-    #   Mint.money(1234.56, 'USD').to_s  #=> "$1,234.56"
-    #   Mint.money(0.99, 'USD').to_s     #=> "$0.99"
-    #   Mint.money(100, 'JPY').to_s      #=> "¥100"
+    #   Money.from(1234.56, 'USD').to_s  #=> "$1,234.56"
+    #   Money.from(0.99, 'USD').to_s     #=> "$0.99"
+    #   Money.from(100, 'JPY').to_s      #=> "¥100"
     def to_s
       return format unless Mint.locale_backend.nil?
 

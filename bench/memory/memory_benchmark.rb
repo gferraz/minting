@@ -14,28 +14,27 @@ class MemoryBenchmark < Minitest::Test
     with_bench('Memory Allocation Profile') do
       # Test object allocation patterns
       measure_allocations('Money creation') do
-        1000.times { |i| Mint.money(@amounts[i], 'USD') }
+        1000.times { |i| Money.from(@amounts[i], 'USD') }
       end
 
       measure_allocations('Arithmetic operations') do
-        m1 = Mint.money(100, 'USD')
-        Mint.money(50, 'USD')
+        m1 = Money.from(100, 'USD')
+        Money.from(50, 'USD')
         1000.times do
           m1 / 3
         end
       end
 
       measure_allocations('String formatting') do
-        money = Mint.money(123.45, 'USD')
+        money = Money.from(123.45, 'USD')
         1000.times do
           money.to_s
-          money.to_json
           money.inspect
         end
       end
 
       measure_allocations('Allocation algorithms') do
-        money = Mint.money(1000, 'USD')
+        money = Money.from(1000, 'USD')
         100.times do
           money.split(7)
           money.allocate([1, 2, 3, 4])
@@ -49,12 +48,12 @@ class MemoryBenchmark < Minitest::Test
       # Measure GC pressure for different operations
       measure_gc_stats('Heavy money creation') do
         10_000.times do |i|
-          Mint.money(@amounts[i % @amounts.size], @currencies[i % @currencies.size])
+          Money.from(@amounts[i % @amounts.size], @currencies[i % @currencies.size])
         end
       end
 
       measure_gc_stats('Complex arithmetic chains') do
-        money_objects = Array.new(100) { |i| Mint.money(@amounts[i], 'USD') }
+        money_objects = Array.new(100) { |i| Money.from(@amounts[i], 'USD') }
         money_objects.each do |m1|
           money_objects.each do |m2|
             ((m1 + m2) * rand(1.0..5.0)) - (m1 / rand(2..5)).abs if m1.currency == m2.currency
@@ -71,7 +70,7 @@ class MemoryBenchmark < Minitest::Test
 
       # Create and discard many objects
       10.times do
-        money_array = Array.new(1000) { |i| Mint.money(@amounts[i % @amounts.size], 'USD') }
+        money_array = Array.new(1000) { |i| Money.from(@amounts[i % @amounts.size], 'USD') }
         # Perform operations
         money_array.each do |m|
           m * 2
@@ -103,16 +102,16 @@ class MemoryBenchmark < Minitest::Test
 
       Benchmark.ips do |x|
         x.report('Bulk money creation') do
-          1000.times { |i| Mint.money(large_amounts[i], 'USD') }
+          1000.times { |i| Money.from(large_amounts[i], 'USD') }
         end
 
         x.report('Bulk arithmetic') do
-          moneys = Array.new(100) { |i| Mint.money(large_amounts[i], 'USD') }
+          moneys = Array.new(100) { |i| Money.from(large_amounts[i], 'USD') }
           moneys.sum
         end
 
         x.report('Complex allocation') do
-          money = Mint.money(large_amounts.first, 'USD')
+          money = Money.from(large_amounts.first, 'USD')
           money.split(97) # Prime number for uneven distribution
         end
 

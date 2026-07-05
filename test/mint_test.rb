@@ -2,9 +2,9 @@
 
 class MintTest < Minitest::Test
   def test_money_minting
-    ten_reais = Mint.money(10, 'BRL')
+    ten_reais = Money.from(10, 'BRL')
 
-    assert_equal Mint.money(10.01, 'PEN'), Mint.money(10.01, 'PEN')
+    assert_equal Money.from(10.01, 'PEN'), Money.from(10.01, 'PEN')
 
     assert_equal ten_reais, ten_reais.copy_with(amount: 10)
     assert_equal ten_reais, ten_reais.copy_with(amount: 9.999)
@@ -17,13 +17,13 @@ class MintTest < Minitest::Test
   end
 
   def test_zero
-    assert_equal Mint.money(0, 'USD'), Money::Currency.zero('USD')
-    assert_equal Mint.money(0, 'BRL'), Money::Currency.zero('BRL')
-    assert_equal Mint.money(0, 'JPY'), Money::Currency.zero('JPY')
+    assert_equal Money.from(0, 'USD'), Money::Currency.zero('USD')
+    assert_equal Money.from(0, 'BRL'), Money::Currency.zero('BRL')
+    assert_equal Money.from(0, 'JPY'), Money::Currency.zero('JPY')
   end
 
   def test_zero_with_currency_object
-    assert_equal Mint.money(0, 'USD'), Money::Currency.zero(Money::Currency.for_code('USD'))
+    assert_equal Money.from(0, 'USD'), Money::Currency.zero(Money::Currency.for_code('USD'))
   end
 
   def test_zero_returns_same_object
@@ -36,8 +36,8 @@ class MintTest < Minitest::Test
   end
 
   def test_mint_zero_returns_singleton
-    zero_from_create = Mint.money(0, 'USD')
-    zero_from_mint  = Mint.money(10, 'USD').copy_with(amount: 0)
+    zero_from_create = Money.from(0, 'USD')
+    zero_from_mint  = Money.from(10, 'USD').copy_with(amount: 0)
     zero_from_zero  = Money::Currency.zero('USD')
 
     assert_same zero_from_zero, zero_from_create
@@ -111,16 +111,16 @@ class MintTest < Minitest::Test
   end
 
   def test_mint_core_extensions
-    assert_equal 1.dollar, Mint.money(1, 'USD')
-    assert_equal 1.euro, Mint.money(1, 'EUR')
-    assert_equal 3.reais, Mint.money(3, 'BRL')
-    assert_equal 4.to_money('USD'), Mint.money(4, 'USD')
-    assert_equal 4.2.dollars, Mint.money(4.2, 'USD')
-    assert_equal 5.3.euros, Mint.money(5.3, 'EUR')
-    assert_equal 5.4.to_money('EUR'), Mint.money(5.4, 'EUR')
-    assert_equal 5.5.to_money('EUR'), Mint.money(5.5, 'EUR')
-    assert_equal '5.61'.to_money('EUR'), Mint.money(5.61, 'EUR')
-    assert_equal '6.30'.to_money('USD'), Mint.money(6.30, 'USD')
+    assert_equal 1.dollar, Money.from(1, 'USD')
+    assert_equal 1.euro, Money.from(1, 'EUR')
+    assert_equal 3.reais, Money.from(3, 'BRL')
+    assert_equal 4.to_money('USD'), Money.from(4, 'USD')
+    assert_equal 4.2.dollars, Money.from(4.2, 'USD')
+    assert_equal 5.3.euros, Money.from(5.3, 'EUR')
+    assert_equal 5.4.to_money('EUR'), Money.from(5.4, 'EUR')
+    assert_equal 5.5.to_money('EUR'), Money.from(5.5, 'EUR')
+    assert_equal '5.61'.to_money('EUR'), Money.from(5.61, 'EUR')
+    assert_equal '6.30'.to_money('USD'), Money.from(6.30, 'USD')
   end
 
   def test_money_range_step

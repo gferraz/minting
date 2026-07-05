@@ -11,7 +11,7 @@ module Mint
     #
     # @return [BigDecimal] the decimal representation of the money amount
     # @example
-    #   Mint.money(9.99, 'USD').to_d  #=> 0.999e1
+    #   Money.from(9.99, 'USD').to_d  #=> 0.999e1
     def to_d = amount.to_d 0
 
     # Converts the monetary amount to a standard float.
@@ -35,7 +35,7 @@ module Mint
     #
     # @return [Hash] hash with :currency (String) and :amount (String) keys
     # @example
-    #   Mint.money(134120, 'BRL').to_hash
+    #   Money.from(134120, 'BRL').to_hash
     #   #=> { currency: "BRL", amount: "134120.00" }
     def to_hash
       { currency: currency_code, amount: Kernel.format("%0.#{currency.subunit}f", amount) }
@@ -55,7 +55,7 @@ module Mint
     #   Money.from_hash(currency: "USD", amount: "9.99")
     #   #=> [USD 9.99]
     # @example Round-trip
-    #   m = Mint.money(134120, "BRL")
+    #   m = Money.from(134120, "BRL")
     #   Money.from_hash(m.to_hash) == m  #=> true
     def self.from_hash(hash)
       currency = Currency.resolve!(hash[:currency] || hash['currency'])

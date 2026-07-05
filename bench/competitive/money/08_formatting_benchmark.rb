@@ -38,11 +38,6 @@ class CompetitiveFormattingBenchmark < Minitest::Test
 
         puts "\nAmount: #{amount}"
 
-        Benchmark.ips do |x|
-          x.report('Mint to_json') { mint_money.to_json }
-          x.report('Money to_json') { money.to_json }
-          x.compare!
-        end
       end
     end
   end

@@ -52,7 +52,7 @@ from_hash_input = { currency: 'USD', amount: '123.45' }
 
 bench_block = lambda do |name, n|
   case name
-  when :creation       then n.times { Mint.money(123.45, 'USD') }
+  when :creation       then n.times { Money.from(123.45, 'USD') }
   when :copy_with      then n.times { m1.copy_with(amount: 23.22) }
 
   when :addition       then n.times { m1 + m2 }

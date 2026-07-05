@@ -20,7 +20,7 @@ class AlgorithmBenchmark < Minitest::Test
         puts "\n--- #{size_name.capitalize} amounts ---"
 
         amounts.each do |amount|
-          money = Mint.money(amount, 'USD')
+          money = Money.from(amount, 'USD')
 
           Benchmark.ips do |x|
             x.report("split(2) - #{amount}") { money.split(2) }
@@ -37,7 +37,7 @@ class AlgorithmBenchmark < Minitest::Test
 
   def test_allocation_algorithm_performance
     with_bench('Allocation Algorithm Performance') do
-      money = Mint.money(1000.00, 'USD')
+      money = Money.from(1000.00, 'USD')
 
       # Different allocation patterns
       allocations = {
@@ -74,7 +74,7 @@ class AlgorithmBenchmark < Minitest::Test
 
       Benchmark.ips do |x|
         test_cases.each do |amount, currency|
-          money = Mint.money(amount, currency)
+          money = Money.from(amount, currency)
           x.report("split(17) - #{amount} #{currency}") { money.split(17) }
           x.report("allocate([1,2,3]) - #{amount} #{currency}") { money.allocate([1, 2, 3]) }
         end
@@ -97,7 +97,7 @@ class AlgorithmBenchmark < Minitest::Test
       split_sizes = [3, 7, 13, 17, 23] # Prime numbers create interesting remainders
 
       challenging_amounts.each do |amount|
-        money = Mint.money(amount, 'USD')
+        money = Money.from(amount, 'USD')
         puts "\nAmount: #{amount}"
 
         Benchmark.ips do |x|
@@ -112,7 +112,7 @@ class AlgorithmBenchmark < Minitest::Test
 
   def test_allocation_accuracy_vs_performance
     with_bench('Allocation Accuracy vs Performance') do
-      money = Mint.money(1000.00, 'USD')
+      money = Money.from(1000.00, 'USD')
 
       # Measure time and accuracy
       test_scenarios = [
@@ -147,7 +147,7 @@ class AlgorithmBenchmark < Minitest::Test
   def test_concurrent_operations_simulation
     with_bench('Concurrent Operations Simulation') do
       # Simulate high concurrency scenarios
-      money_pool = Array.new(100) { |_i| Mint.money(rand(100.0..1000.0), 'USD') }
+      money_pool = Array.new(100) { |_i| Money.from(rand(100.0..1000.0), 'USD') }
 
       Benchmark.ips do |x|
         x.report('sequential_splits') do
@@ -177,15 +177,15 @@ class AlgorithmBenchmark < Minitest::Test
     with_bench('Pathological Cases') do
       # Edge cases that might cause performance issues
       edge_cases = [
-        { desc: 'tiny_amount_many_splits', money: Mint.money(0.01, 'USD'), operation: :split,
+        { desc: 'tiny_amount_many_splits', money: Money.from(0.01, 'USD'), operation: :split,
           param: 1000 },
-        { desc: 'huge_amount_many_splits', money: Mint.money(999_999.99, 'USD'), operation: :split,
+        { desc: 'huge_amount_many_splits', money: Money.from(999_999.99, 'USD'), operation: :split,
           param: 1000 },
-        { desc: 'zero_subunit_currency', money: Mint.money(1000, 'JPY'), operation: :split,
+        { desc: 'zero_subunit_currency', money: Money.from(1000, 'JPY'), operation: :split,
           param: 17 },
-        { desc: 'many_tiny_allocations', money: Mint.money(100, 'USD'), operation: :allocate,
+        { desc: 'many_tiny_allocations', money: Money.from(100, 'USD'), operation: :allocate,
           param: Array.new(100, 0.01) },
-        { desc: 'extreme_ratios', money: Mint.money(1000, 'USD'), operation: :allocate,
+        { desc: 'extreme_ratios', money: Money.from(1000, 'USD'), operation: :allocate,
           param: [0.0001, 0.9999] }
       ]
 

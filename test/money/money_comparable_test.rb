@@ -2,16 +2,16 @@
 
 class MoneyComparableTest < Minitest::Test
   def test_equality
-    assert_equal 10.dollars, Mint.money(10r, 'USD')
-    refute_equal 10.dollars, Mint.money(11r, 'USD')
+    assert_equal 10.dollars, Money.from(10r, 'USD')
+    refute_equal 10.dollars, Money.from(11r, 'USD')
     refute_equal 10.dollars, Object.new
     refute_equal 10.dollars, 10
-    refute_equal 10.dollars, Mint.money(10r, 'JPY')
+    refute_equal 10.dollars, Money.from(10r, 'JPY')
     refute_equal 10.dollars, 2.dollars
   end
 
   def test_equal
-    ten_usd = Mint.money(10r, 'USD')
+    ten_usd = Money.from(10r, 'USD')
 
     assert       10.dollars.eql? ten_usd
     assert_equal 10.dollars.hash, ten_usd.hash
@@ -36,13 +36,13 @@ class MoneyComparableTest < Minitest::Test
   end
 
   def test_case_operator
-    assert_raises(TypeError) { Mint.money(1, 'BRL') <=> 2.dollars }
+    assert_raises(TypeError) { Money.from(1, 'BRL') <=> 2.dollars }
     assert_raises(TypeError) { 2 <=> 2.dollars }
     assert_equal(-1, 2.dollars <=> 10.dollars)
-    assert_equal 0, 10.dollars <=> Mint.money(10, 'USD')
+    assert_equal 0, 10.dollars <=> Money.from(10, 'USD')
     assert_equal 1, 10.dollars <=> 2.dollars
-    assert_equal 1, Mint.money(2, 'BRL') <=> 0
-    assert_equal(-1, 0 <=> Mint.money(2, 'BRL'))
+    assert_equal 1, Money.from(2, 'BRL') <=> 0
+    assert_equal(-1, 0 <=> Money.from(2, 'BRL'))
     refute_operator nil, :<=>, 4.dollars
     refute_operator Object.new, :<=>, 4.dollars
   end

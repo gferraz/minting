@@ -43,9 +43,9 @@ class MoneyClampTest < Minitest::Test
   def test_clamp_accepts_numeric_bounds
     # The common "price.clamp(0, 100)" idiom: Numeric is interpreted
     # as an amount in self's currency.
-    money = Mint.money(500, 'USD')
+    money = Money.from(500, 'USD')
 
-    assert_equal Mint.money(100, 'USD'), money.clamp(0, 100)
+    assert_equal Money.from(100, 'USD'), money.clamp(0, 100)
   end
 
   def test_clamp_mixed_bound_types
@@ -60,11 +60,11 @@ class MoneyClampTest < Minitest::Test
 
   def test_clamp_with_jpy
     # Subunit-0 currency must not introduce a scaling surprise.
-    money = Mint.money(500, 'JPY')
+    money = Money.from(500, 'JPY')
 
-    assert_equal Mint.money(100, 'JPY'), money.clamp(0, 100)
-    assert_equal Mint.money(0, 'JPY'), (-money).clamp(0, 1000)
-    assert_equal Mint.money(500, 'JPY'), money.clamp(100, 1000)
+    assert_equal Money.from(100, 'JPY'), money.clamp(0, 100)
+    assert_equal Money.from(0, 'JPY'), (-money).clamp(0, 1000)
+    assert_equal Money.from(500, 'JPY'), money.clamp(100, 1000)
   end
 
   def test_clamp_with_negative_numeric_bound
@@ -78,7 +78,7 @@ class MoneyClampTest < Minitest::Test
     money = 5.dollars
 
     assert_equal 5.dollars, money.clamp(nil, nil)
-    assert_equal Mint.money(4, 'USD'), money.clamp(nil, 4)
+    assert_equal Money.from(4, 'USD'), money.clamp(nil, 4)
     assert_equal 5.dollars, money.clamp(0, nil)
   end
 
@@ -90,7 +90,7 @@ class MoneyClampTest < Minitest::Test
   end
 
   def test_clamp_preserves_currency
-    eur = Mint.money(50, 'EUR')
+    eur = Money.from(50, 'EUR')
     result = eur.clamp(0, 100)
 
     assert_equal 'EUR', result.currency_code
@@ -100,10 +100,10 @@ class MoneyClampTest < Minitest::Test
     money = 5.dollars
 
     assert_raises(ArgumentError) do
-      money.clamp(Mint.money(0, 'EUR'), 10.dollars)
+      money.clamp(Money.from(0, 'EUR'), 10.dollars)
     end
     assert_raises(ArgumentError) do
-      money.clamp(0.dollars, Mint.money(10, 'EUR'))
+      money.clamp(0.dollars, Money.from(10, 'EUR'))
     end
   end
 

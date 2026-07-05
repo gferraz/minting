@@ -37,12 +37,6 @@ class CompetitiveFormattingBenchmark < Minitest::Test
         money = Money.new(amount, 'USD')
 
         puts "\nAmount: #{amount}"
-
-        Benchmark.ips do |x|
-          x.report('Mint to_json') { mint_money.to_json }
-          x.report('Shopify to_json') { money.to_json }
-          x.compare!
-        end
       end
     end
   end
