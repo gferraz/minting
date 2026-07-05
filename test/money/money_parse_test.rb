@@ -90,6 +90,9 @@ class MoneyParseTest < Minitest::Test
     assert_raises(ArgumentError) { Money.parse!('19.99') }
     assert_raises(ArgumentError) { Money.parse!('abc', 'USD') }
     assert_raises(ArgumentError) { Money.parse!('10', 'ZZZ') }
+    assert_equal Mint.money(10.00, 'USD'), Money.parse!('MAX 10.00 USD')
+    assert_equal Mint.money(10.00, 'XXX'), Money.parse!('AVG MIN MAX 10.00 XXX')
+    assert_equal Mint.money(10.00, 'EUR'), Money.parse!('10.00 EUR MAX')
   end
 
   def test_parse_returns_nil_on_failure

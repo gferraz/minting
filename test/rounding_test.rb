@@ -22,6 +22,15 @@ class RoundingTest < Minitest::Test
     end
   end
 
+  def test_half_even
+    Money.with_rounding(:half_even) do
+      assert_equal parse('1.00'), parse('1.005')
+      assert_equal parse('1.02'), parse('1.015')
+      assert_equal parse('1.02'), parse('1.025')
+      assert_equal parse('1.04'), parse('1.035')
+    end
+  end
+
   def test_floor
     Money.with_rounding(:floor) do
       assert_equal parse('1.00'), parse('1.009')

@@ -14,8 +14,9 @@
 # constant is preserved — use {Money::Currency} explicitly in that case.
 #
 # @see Money::Currency
-if defined?(Currency) && Currency != Money::Currency
-  warn "minting: top-level Currency is already defined (#{Currency}); skipping alias. Use Money::Currency"
-else
-  Currency = Money::Currency unless defined?(Currency)
+
+Currency = Money::Currency unless defined?(Currency)
+
+if Currency != Money::Currency
+  warn "minting: top-level Currency was already defined (#{Currency}); skipping alias. Use Money::Currency"
 end

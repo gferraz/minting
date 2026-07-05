@@ -16,8 +16,8 @@ require 'minting/version'
 # @see Mint::Money
 # @note This is a **breaking change from v1.x** where both +Money+ and
 #   +Currency+ required explicit opt-in via +Mint.use_top_level_constants!+.
-if defined?(Money) && Money != Mint::Money
+Money = Mint::Money unless defined?(Money)
+
+if Money != Mint::Money
   warn "minting: top-level Money is already defined (#{Money}); skipping auto-bind! Use Mint::Money."
-else
-  Money = Mint::Money unless defined?(Money)
 end

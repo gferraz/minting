@@ -79,6 +79,15 @@ class LocaleBackendTest < Minitest::Test
     assert_match(/invalid locale/, err)
   end
 
+
+  def test_invalid_backend_is_ignored
+    Mint.locale_backend = -> { 34 }
+
+    _, err = capture_io { Mint.money(1234.56, 'USD').to_s }
+
+    assert_match(/invalid locale/, err)
+  end
+
   def test_backend_without_respond_to_call_is_ignored
     Mint.locale_backend = Object.new
 
