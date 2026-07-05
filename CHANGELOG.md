@@ -3,7 +3,6 @@
 ## [v2.0.0](https://github.com/gferraz/minting/releases/tag/v2.0.0) (2026-07-04)
 
 ### Breaking Changes
-- Drop Ruby 3.3 support — minimum Ruby version is now 4.0
 - `Mint.parse` and `Mint.parse!` removed — use `Money.parse` and `Money.parse!`
 - `Mint.with_rounding` removed — use `Money.with_rounding`
 - `Mint.world_currencies` removed — use `Currency.world_currencies`
@@ -19,6 +18,9 @@
 
 ### Bugfixes
 - `Money#fractional` now returns a signed value matching the amount's sign (previously always positive for negative amounts). The invariant `integral * multiplier + fractional == subunits` now holds for all amounts.
+
+### Code Organization
+- `Money#format` moved to its own file (`lib/minting/money/format/format.rb`) alongside its compiled-formatter infrastructure
 
 ### Removals
 - `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
