@@ -19,5 +19,5 @@ require 'minting/version'
 Money = Mint::Money unless defined?(Money)
 
 if Money != Mint::Money
-  warn "minting: top-level Money is already defined (#{Money}); skipping auto-bind! Use Mint::Money."
+  warn "minting: top-level Money was already defined (#{Money}); skipping auto-bind! Use Mint::Money."
 end

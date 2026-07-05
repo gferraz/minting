@@ -17,11 +17,13 @@ module Mint
       down: ->(amount, ndigits) { amount.truncate(ndigits) }
     }.freeze
 
+    THREAD_KEY = :minting_rounding_mode
+
     # Returns the currently active rounding mode, falling back to +:half_up+.
     # @api private
     # @return [Symbol]
     def self.current_mode
-      Thread.current[:minting_rounding_mode] || :half_up
+      Thread.current[THREAD_KEY] || :half_up
     end
 
     # Rounds +amount+ to +ndigits+ using the currently scoped rounding mode.
@@ -31,7 +33,7 @@ module Mint
     # @param ndigits [Integer]
     # @return [Rational]
     def self.apply(amount, ndigits)
-      mode = Thread.current[:minting_rounding_mode]
+      mode = Thread.current[THREAD_KEY]
       if mode
         MODES.fetch(mode).call(amount.to_r, ndigits)
       else
@@ -48,11 +50,11 @@ module Mint
     def self.with_mode(mode)
       raise ArgumentError, "Unknown rounding mode: #{mode}" unless MODES.key?(mode)
 
-      prev = Thread.current[:minting_rounding_mode]
-      Thread.current[:minting_rounding_mode] = mode
+      prev = Thread.current[THREAD_KEY]
+      Thread.current[THREAD_KEY] = mode
       yield
     ensure
-      Thread.current[:minting_rounding_mode] = prev
+      Thread.current[THREAD_KEY] = prev
     end
   end
 end

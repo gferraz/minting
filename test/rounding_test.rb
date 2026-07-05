@@ -101,9 +101,11 @@ class RoundingTest < Minitest::Test
     money = parse('1.00')
 
     Money.with_rounding(:half_down) do
+      assert_equal :half_down, Mint::Rounding.current_mode
       assert_equal parse('1.00'), money.copy_with(amount: 1.005r)
     end
     Money.with_rounding(:ceil) do
+      assert_equal :ceil, Mint::Rounding.current_mode
       assert_equal parse('1.01'), money.copy_with(amount: 1.001r)
     end
   end

@@ -79,7 +79,6 @@ class LocaleBackendTest < Minitest::Test
     assert_match(/invalid locale/, err)
   end
 
-
   def test_invalid_backend_is_ignored
     Mint.locale_backend = -> { 34 }
 

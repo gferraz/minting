@@ -51,12 +51,14 @@ class CurrencyTest < Minitest::Test
 
   def test_for_symbol_returns_currency_for_unique_symbol
     brl = Money::Currency.for_symbol('R$')
+
     assert_instance_of Money::Currency, brl
     assert_equal 'BRL', brl.code
   end
 
   def test_for_symbol_returns_highest_priority_currency_for_shared_symbol
     usd = Money::Currency.for_symbol('$')
+
     assert_equal 'USD', usd.code
   end
 
