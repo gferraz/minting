@@ -70,8 +70,7 @@ module Mint
       template, decimal, thousand = resolve_overrides(template, decimal, thousand, locale_opts)
 
       case template
-      when {}, '' then raise ArgumentError, 'template must not be empty'
-      when Hash   then validate_format_hash(template)
+      when Hash   then nil # validated in Formatter.for
       when String then template = { positive: template }
       else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
