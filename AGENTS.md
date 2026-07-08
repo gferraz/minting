@@ -205,9 +205,6 @@ USD) by a gsub in `format/formatting.rb`. For zero-subunit currencies (JPY),
 per-sign templates (used by the `:accounting` preset). Missing keys fall back
 to `%<symbol>s%<amount>f`; unknown keys raise `ArgumentError`.
 
-Named presets (`Money::Formatter::PRESETS`): `:amount`, `:accounting`, `:european`,
-`:currency`. Use `format_preset` or `Formatter.named` to apply them.
-
 `Mint.locale_backend=` (a callable or Hash returning
 `{ decimal:, thousand:, format: }`) supplies defaults when the corresponding
 kwarg is nil. This is how `attribute-money` wires I18n. See
@@ -351,7 +348,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |
 | `lib/minting/money/comparable.rb` | `==`, `eql?`, `<=>`, `same_currency?`, `zero?` — see Equality section |
 | `lib/minting/money/coercion.rb` | `coerce` + private `CoercedNumber` |
-| `lib/minting/money/format/` | `formatter.rb` (`Formatter`, `PRESETS`), `formatting.rb` (validators), `format.rb` (`#format`, `#to_fs`, `#format_preset`), `to_s.rb` (`#to_s`) |
+| `lib/minting/money/format/` | `formatter.rb` (`Formatter`), `formatting.rb` (validators), `format.rb` (`#format`, `#to_fs`), `to_s.rb` (`#to_s`) |
 | `lib/minting/money/allocation/` | `allocation.rb` (`allocate`), `split.rb` (`split`, `allocate_left_over`) |
 | `lib/minting/money/clamp.rb`, `conversion.rb` | `clamp`, conversions (`to_d`/`to_f`/`to_i`/`to_r`/`to_json`/`to_hash`/`to_html`) |
 | `lib/minting/data/world-currencies.yaml` | 150+ ISO-4217 currencies, loaded lazily by `Registry.world_currencies` |

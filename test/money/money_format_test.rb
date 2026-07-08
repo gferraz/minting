@@ -288,43 +288,6 @@ class MoneyFormatTest < Minitest::Test
     assert_raises(ArgumentError) { usd_9_99.format({ 'negative' => 'x' }) }
   end
 
-  def test_preset_accounting
-    profit = Money.from(1234.56, 'USD')
-    loss = Money.from(-1234.56, 'USD')
-
-    assert_equal '$1,234.56', profit.format_preset(:accounting)
-    assert_equal '($1,234.56)', loss.format_preset(:accounting)
-    assert_equal '$0.00', Money.from(0, 'USD').format_preset(:accounting)
-  end
-
-  def test_preset_european
-    eur = Money.from(1234.56, 'EUR')
-
-    assert_equal '1.234,56 €', eur.format_preset(:european)
-    assert_equal '-1.234,56 €', (-eur).format_preset(:european)
-  end
-
-  def test_preset_amount
-    assert_equal '9.99', usd_9_99.format_preset(:amount)
-    assert_equal '-9.99', (-usd_9_99).format_preset(:amount)
-  end
-
-  def test_preset_currency
-    assert_equal 'USD 9.99', usd_9_99.format_preset(:currency)
-    assert_equal 'EUR -1,234.56', Money.from(-1234.56, 'EUR').format_preset(:currency)
-  end
-
-  def test_preset_unknown
-    assert_raises(ArgumentError) { usd_9_99.format_preset(:bogus) }
-  end
-
-  def test_preset_with_override
-    eur = Money.from(1234.56, 'EUR')
-
-    assert_equal '1.234|56 €', eur.format_preset(:european, decimal: '|')
-    assert_equal '1.234,56 EUR', eur.format_preset(:european, format: '%<amount>f %<currency>s')
-  end
-
   def test_format_with_integral_and_fractional_parts
     m = Money.from(1234.56, 'USD')
 

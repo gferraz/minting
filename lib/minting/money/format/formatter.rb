@@ -10,47 +10,6 @@ module Mint
     #
     # @api private
     class Formatter
-      # Named format presets. Each preset is a format template with optional
-      # +:decimal+, +:thousand+ defaults.
-      #
-      # @example
-      #   Money::Formatter::PRESETS[:accounting]
-      #   #=> { format: { negative: '(%<symbol>s%<amount>f)' } }
-      #
-      # @return [Hash{Symbol => Hash{Symbol => Object}}]
-      PRESETS = {
-        amount: { format: '%<amount>f' },
-        accounting: { format: { negative: '(%<symbol>s%<amount>f)' } },
-        european: { format: '%<amount>f %<symbol>s', decimal: ',', thousand: '.' },
-        currency: { format: '%<currency>s %<amount>f' }
-      }.freeze
-
-      # Returns a cached {Formatter} for the named preset merged with any
-      # +**overrides+.
-      #
-      # @param name [Symbol] preset name (+:accounting+, +:european+, …)
-      # @param currency [Currency] the target currency
-      # @param overrides [Hash] optional overrides (+:format+, +:decimal+,
-      #   +:thousand+) that take precedence over the preset defaults
-      # @return [Formatter]
-      # @raise [ArgumentError] if +name+ is not a recognised preset
-      def self.named(name, currency, **overrides)
-        config = PRESETS.fetch(name) { raise ArgumentError, "Unknown format preset: #{name.inspect}" }
-
-        format   = overrides.fetch(:format, config[:format])
-        decimal  = overrides.fetch(:decimal, config.fetch(:decimal, '.'))
-        thousand = overrides.fetch(:thousand, config.fetch(:thousand, ','))
-
-        format_hash = case format
-                      when Hash   then format
-                      when String then { positive: format }
-                      when nil    then { positive: Money::DEFAULT_FORMAT }
-                      else raise ArgumentError, "Invalid format: #{format.inspect}"
-                      end
-
-        Money::Formatter.for(format_hash, currency, decimal, thousand)
-      end
-
       def self.cache
         @cache ||= {}
       end

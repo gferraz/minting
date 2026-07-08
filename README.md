@@ -120,19 +120,8 @@ price.clamp(min_price, 100)  #=> [USD 75.00]  (clamped to min, Money or Numeric 
 
 ```ruby
 price = Money.from(9.99, 'USD')
-loss  = Money.from(-1234.56, 'USD')
 
-# Built-in named presets (via format_preset)
-loss.format_preset(:accounting)                      #=> "($1,234.56)"
-Money.from(1234.56, 'EUR').format_preset(:european)  #=> "1.234,56 €"
-price.format_preset(:amount)                         #=> "9.99"
-price.format_preset(:currency)                       #=> "USD 9.99"
-
-# Presets can be overridden with explicit kwargs
-Money.from(1234.56, 'EUR').format_preset(:european, format: '%<amount>f %<currency>s')
-#=> "1.234,56 EUR"
-
-# Or use direct format strings
+# Use direct format strings
 price.format                                  #=> "$9.99"
 price.format('%<amount>d')            #=> "9"
 price.format('%<symbol>s%<amount>f')  #=> "$9.99"

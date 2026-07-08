@@ -65,7 +65,7 @@ bench_block = lambda do |name, n|
   when :comparison     then n.times { m1 == m2 }
 
   when :formatting     then n.times { m2.format( '%<dsymbol>s %<amount>f %<currency>s') }
-  when :preset_format  then n.times { m2.format_preset(:accounting) }
+  when :preset_format  then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
   when :to_s           then n.times { m1.to_s }
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
   when :split          then n.times { split_money.split(12) }
