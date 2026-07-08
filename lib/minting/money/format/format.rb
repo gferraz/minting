@@ -67,7 +67,14 @@ module Mint
     #
     def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil)
       locale_opts = Mint.resolve_locale_for(locale:)
-      template, decimal, thousand = resolve_overrides(template, decimal, thousand, locale_opts)
+
+      template ||= locale_opts[:format] || DEFAULT_FORMAT
+      decimal  ||= locale_opts[:decimal] || '.'
+
+      if thousand.nil?
+        thousand = locale_opts[:thousand] || ','
+        thousand = false if thousand == decimal
+      end
 
       case template
       when Hash   then nil # validated in Formatter.for
@@ -82,17 +89,5 @@ module Mint
 
     # Alias for {#format}. Takes the same arguments.
     alias to_fs :format
-
-    private
-
-    def resolve_overrides(template, decimal, thousand, locale_opts)
-      template  ||= locale_opts[:format]  || DEFAULT_FORMAT
-      decimal   ||= locale_opts[:decimal] || '.'
-      if thousand.nil?
-        thousand = locale_opts[:thousand] || ','
-        thousand = false if decimal == thousand
-      end
-      [template, decimal, thousand]
-    end
   end
 end
