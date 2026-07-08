@@ -51,7 +51,9 @@ module Mint
         [@format[:positive] || Money::DEFAULT_FORMAT, @format[:negative], @format[:zero]].map do |sign_format|
           next unless sign_format
 
+          # Inject subunit precision into %<amount>f (e.g. → %<amount>.2f)
           sign_format = sign_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+          # Strip %<fractional>d entirely for zero-subunit currencies (JPY, KRW…)
           sign_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
           sign_format
         end
@@ -96,10 +98,13 @@ module Mint
           args[:fractional] = ((amount.abs % 1) * multiplier).to_i if needs_fractional
 
           result = Kernel.format(format_template, **args)
+          # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
           result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
 
           if needs_integral && has_thousand_separator && (amount >= 1000 || amount <= -1000)
+            # Split on the decimal separator between digits only (symbols may contain '.' e.g. د.إ)
             parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
+            # Insert thousand separator before groups of 3 digits in the integral part
             parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
             result = parts.join(decimal)
           end
