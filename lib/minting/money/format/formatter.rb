@@ -1,0 +1,112 @@
+# frozen_string_literal: true
+
+module Mint
+  class Money
+    # Compiles and caches formatter lambdas for a fixed combination of format
+    # template, currency, and separator configuration.
+    #
+    # Use {.for} to obtain a cached instance; avoid +new+ directly unless you
+    # want an uncached formatter (typically only useful for testing).
+    #
+    # @api private
+    class Formatter
+      def self.cache
+        @cache ||= {}
+      end
+
+      # Returns a cached {Formatter} for the given configuration.
+      #
+      # @param format [Hash{Symbol => String}] per-sign templates
+      # @param currency [Currency] the target currency
+      # @param decimal [String] decimal separator
+      # @param thousand [String, nil] thousands delimiter (+nil+ disables)
+      # @return [Formatter]
+      def self.for(format, currency, decimal, thousand)
+        key = [format, currency.code, decimal, thousand].hash
+        cache[key] ||= new(format, currency, decimal, thousand)
+      end
+
+      def initialize(format, currency, decimal, thousand)
+        @format = format
+        @currency = currency
+        @decimal = decimal
+        @thousand = thousand
+        @compiled_lambda = nil
+      end
+
+      # Formats +amount+ using the configured template and separators.
+      #
+      # @param amount [Rational] the monetary amount
+      # @return [String]
+      def call(amount)
+        @compiled_lambda ||= compile_formatter
+        @compiled_lambda.call(amount)
+      end
+
+      private
+
+      def compile_templates
+        subunit = @currency.subunit
+
+        [@format[:positive] || Money::DEFAULT_FORMAT, @format[:negative], @format[:zero]].map do |sign_format|
+          next unless sign_format
+
+          sign_format = sign_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+          sign_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
+          sign_format
+        end
+      end
+
+      def compile_formatter # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+        has_decimal_substitution = @decimal != '.'
+        escaped_decimal = Regexp.escape(@decimal)
+        has_thousand_separator = @thousand && !@thousand.empty?
+
+        templates = compile_templates
+        positive_template, negative_template, zero_template = templates
+
+        all_templates = templates.compact.join
+        needs_fractional = all_templates.include?('%<fractional>')
+        needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
+        multiplier = @currency.fractional_multiplier
+        symbol = @currency.symbol
+
+        template_args = {
+          currency: @currency.code,
+          dsymbol: @currency.disambiguate_symbol || symbol,
+          symbol: symbol
+        }.freeze
+
+        decimal = @decimal
+        thousand = @thousand
+
+        lambda do |amount|
+          format_template = if negative_template && amount < 0
+                              amount = -amount
+                              negative_template
+                            elsif zero_template && amount == 0
+                              zero_template
+                            else
+                              positive_template
+                            end
+
+          args = template_args.dup
+          args[:amount] = amount
+          args[:integral] = amount.to_i
+          args[:fractional] = ((amount.abs % 1) * multiplier).to_i if needs_fractional
+
+          result = Kernel.format(format_template, **args)
+          result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
+
+          if needs_integral && has_thousand_separator && (amount >= 1000 || amount <= -1000)
+            parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
+            parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
+            result = parts.join(decimal)
+          end
+
+          result
+        end
+      end
+    end
+  end
+end
