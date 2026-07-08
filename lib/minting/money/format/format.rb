@@ -96,7 +96,7 @@ module Mint
       else        raise ArgumentError, 'Invalid format. Only String or Hash are accepted'
       end
 
-      formatted = format_amount(format, decimal:, thousand:)
+      formatted = Formatter.for(format, currency, decimal, thousand).call(amount)
 
       width ? formatted.rjust(width) : formatted
     end
