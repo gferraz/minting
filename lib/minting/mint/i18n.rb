@@ -33,14 +33,20 @@ module Mint
     attr_accessor :locale_backend
   end
 
-  # Resolves format/decimal/thousand from locale_backend when not explicitly given.
+  # Resolves locale-aware formatting defaults from +Mint.locale_backend+.
+  #
+  # Returns a Hash with +:decimal+, +:thousand+, and +:format+ keys (any of
+  # which may be +nil+ if the backend doesn't provide them).
+  #
+  # @param locale [Symbol, String, nil] locale passed to the backend callable
+  # @return [Hash{Symbol => String, nil}]
   # @api private
-  def self.resolve_locale_for(format, decimal, thousand, locale: nil)
+  def self.resolve_locale_for(locale: nil)
     lc = resolve_locale_backend(locale)
 
-    [format || fetch_locale_key(lc, :format) || Mint::Money::DEFAULT_FORMAT,
-     decimal || fetch_locale_key(lc, :decimal) || '.',
-     thousand.nil? ? (fetch_locale_key(lc, :thousand) || ',') : thousand]
+    { decimal: fetch_locale_key(lc, :decimal),
+      thousand: fetch_locale_key(lc, :thousand),
+      format: fetch_locale_key(lc, :format) }
   end
 
   # Looks up a locale key from a hash, trying both symbol and string forms.

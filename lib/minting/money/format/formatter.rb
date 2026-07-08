@@ -19,9 +19,25 @@ module Mint
       # @param format [Hash{Symbol => String}] per-sign templates
       # @param currency [Currency] the target currency
       # @param decimal [String] decimal separator
-      # @param thousand [String, nil] thousands delimiter (+nil+ disables)
+      # @param thousand [String, false] thousands delimiter (+false+ disables)
       # @return [Formatter]
       def self.for(format, currency, decimal, thousand)
+        case decimal
+        when nil      then decimal = '.'
+        when ''       then raise ArgumentError, "decimal separator must be a non-empty - #{decimal.inspect}"
+        when /\d/     then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
+        when thousand then raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}"
+        when String # :noop
+        else raise ArgumentError, "decimal must be a String, false, or nil, got #{decimal.inspect}"
+        end
+
+        case thousand
+        when false, nil # :noop
+        when /\d/ then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
+        when String # :noop
+        else raise ArgumentError, "thousand must be a String, false, or nil, got #{thousand.inspect}"
+        end
+
         key = [format, currency.code, decimal, thousand].hash
         cache[key] ||= new(format, currency, decimal, thousand)
       end

@@ -66,9 +66,8 @@ module Mint
     #   money.format(locale: 'pt-BR')      # strings work too
     #
     def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil)
-      validate_separators!(decimal:, thousand:)
-
-      template, decimal, thousand = Mint.resolve_locale_for(template, decimal, thousand, locale:)
+      locale_opts = Mint.resolve_locale_for(locale:)
+      template, decimal, thousand = resolve_overrides(template, decimal, thousand, locale_opts)
 
       case template
       when {}, '' then raise ArgumentError, 'template must not be empty'
@@ -84,5 +83,17 @@ module Mint
 
     # Alias for {#format}. Takes the same arguments.
     alias to_fs :format
+
+    private
+
+    def resolve_overrides(template, decimal, thousand, locale_opts)
+      template  ||= locale_opts[:format]  || DEFAULT_FORMAT
+      decimal   ||= locale_opts[:decimal] || '.'
+      if thousand.nil?
+        thousand = locale_opts[:thousand] || ','
+        thousand = false if decimal == thousand
+      end
+      [template, decimal, thousand]
+    end
   end
 end
