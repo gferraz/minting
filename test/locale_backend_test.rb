@@ -62,7 +62,7 @@ class LocaleBackendTest < Minitest::Test
   def test_explicit_format_overrides_backend
     Mint.locale_backend = -> { { format: '%<symbol>s%<amount>f' } }
 
-    assert_equal '99.95', Money.from(99.95, 'USD').format(format: '%<amount>f')
+    assert_equal '99.95', Money.from(99.95, 'USD').format( '%<amount>f')
   end
 
   def test_partial_locale_falls_back_to_defaults

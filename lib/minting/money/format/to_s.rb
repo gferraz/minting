@@ -7,23 +7,6 @@ module Mint
     # Uses `%<symbol>s` for the currency symbol and `%<amount>f` for the rounded amount.
     DEFAULT_FORMAT = '%<symbol>s%<amount>f'
 
-    # Named format presets for use with {#format}.
-    #
-    # Each preset defines a +:format+ template and optional +:decimal+,
-    # +:thousand+, and +:width+ overrides.
-    #
-    # @example
-    #   Mint::Money::PRESETS[:accounting]
-    #   #=> { format: { negative: '(%<symbol>s%<amount>f)' } }
-    #
-    # @return [Hash{Symbol => Hash{Symbol => Object}}] a frozen hash of presets
-    PRESETS = {
-      amount: { format: '%<amount>f' },
-      accounting: { format: { negative: '(%<symbol>s%<amount>f)' } },
-      european: { format: '%<amount>f %<symbol>s', decimal: ',', thousand: '.' },
-      currency: { format: '%<currency>s %<amount>f' }
-    }.freeze
-
     # Match a digit followed by groups of 3 digits until end of string — inserts thousand separators.
     THOUSAND_RE = /(\d)(?=(\d{3})+\z)/
 

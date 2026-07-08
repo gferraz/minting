@@ -122,46 +122,46 @@ price.clamp(min_price, 100)  #=> [USD 75.00]  (clamped to min, Money or Numeric 
 price = Money.from(9.99, 'USD')
 loss  = Money.from(-1234.56, 'USD')
 
-# Built-in named presets
-loss.format(:accounting)                      #=> "($1,234.56)"
-Money.from(1234.56, 'EUR').format(:european)  #=> "1.234,56 €"
-price.format(:amount)                         #=> "9.99"
-price.format(:currency)                       #=> "USD 9.99"
+# Built-in named presets (via format_preset)
+loss.format_preset(:accounting)                      #=> "($1,234.56)"
+Money.from(1234.56, 'EUR').format_preset(:european)  #=> "1.234,56 €"
+price.format_preset(:amount)                         #=> "9.99"
+price.format_preset(:currency)                       #=> "USD 9.99"
 
 # Presets can be overridden with explicit kwargs
-Money.from(1234.56, 'EUR').format(:european, format: '%<amount>f %<currency>s')
+Money.from(1234.56, 'EUR').format_preset(:european, format: '%<amount>f %<currency>s')
 #=> "1.234,56 EUR"
 
 # Or use direct format strings
 price.format                                  #=> "$9.99"
-price.format(format: '%<amount>d')            #=> "9"
-price.format(format: '%<symbol>s%<amount>f')  #=> "$9.99"
-price.format(format: '%<symbol>s%<amount>+f') #=> "$+9.99"
-(-price).format(format: '%<amount>f')         #=> "-9.99"
+price.format('%<amount>d')            #=> "9"
+price.format('%<symbol>s%<amount>f')  #=> "$9.99"
+price.format('%<symbol>s%<amount>+f') #=> "$+9.99"
+(-price).format('%<amount>f')         #=> "-9.99"
 
 # Format with padding
 price_in_euros = Money.from(12.34, 'EUR')
 
-price.format(format: '--%<amount>7d')               #=> "--      9"
-price.format(format: '  %<amount>10f %<currency>s') #=> "        9.99 USD"
-(-price).format(format: '  %<amount>10f')           #=> "       -9.99"
-price_in_euros.format(format: '%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
+price.format('--%<amount>7d')               #=> "--      9"
+price.format('  %<amount>10f %<currency>s') #=> "        9.99 USD"
+(-price).format('  %<amount>10f')           #=> "       -9.99"
+price_in_euros.format('%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 
 # Integral & fractional parts
-price.format(format: '%<integral>d %<fractional>d/100')        #=> "9 99/100"
-Money.from(0.99, 'USD').format(format: '%<integral>d dollars and %<fractional>02d cents')
+price.format('%<integral>d %<fractional>d/100')        #=> "9 99/100"
+Money.from(0.99, 'USD').format('%<integral>d dollars and %<fractional>02d cents')
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
-loss.format(format: { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
-Money.from(0, 'BRL').format(format: { zero: '--' })          #=> "--"
+loss.format( { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
+Money.from(0, 'BRL').format( { zero: '--' })          #=> "--"
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
-Money.from(1234.56, 'USD').format(format: fmt)               #=> "$1,234.56"
+Money.from(1234.56, 'USD').format( fmt)               #=> "$1,234.56"
 
 # Disambiguated symbol (e.g. "US$" vs "C$" vs "A$")
-Money.from(10, 'USD').format(format: '%<dsymbol>s%<amount>f')  #=> "US$10.00"
-Money.from(10, 'CAD').format(format: '%<dsymbol>s%<amount>f')  #=> "C$10.00"
-Money.from(10, 'EUR').format(format: '%<dsymbol>s%<amount>f')  #=> "€10.00" (falls back to symbol)
+Money.from(10, 'USD').format('%<dsymbol>s%<amount>f')  #=> "US$10.00"
+Money.from(10, 'CAD').format('%<dsymbol>s%<amount>f')  #=> "C$10.00"
+Money.from(10, 'EUR').format('%<dsymbol>s%<amount>f')  #=> "€10.00" (falls back to symbol)
 
 # Hash serialization
 price.to_hash   #=> {currency: "USD", amount: "9.99"}

@@ -30,6 +30,7 @@ ITERS = {
 
   comparison: 500_000,
   formatting: 200_000,
+  preset_format: 200_000,
   to_s: 200_000,
   parsing: 200_000,
   split: 200_000,
@@ -63,7 +64,8 @@ bench_block = lambda do |name, n|
   when :ratio          then n.times { m1 / m2 }
   when :comparison     then n.times { m1 == m2 }
 
-  when :formatting     then n.times { m2.format(:accounting) }
+  when :formatting     then n.times { m2.format( '%<dsymbol>s %<amount>f %<currency>s') }
+  when :preset_format  then n.times { m2.format_preset(:accounting) }
   when :to_s           then n.times { m1.to_s }
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
   when :split          then n.times { split_money.split(12) }
