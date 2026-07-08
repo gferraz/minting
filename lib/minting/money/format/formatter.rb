@@ -22,9 +22,23 @@ module Mint
       # @param thousand [String, false] thousands delimiter (+false+ disables)
       # @return [Formatter]
       def self.for(format, currency, decimal, thousand)
+        validate_format!(format)
+        validate_separators!(decimal:, thousand:)
+
+        key = [format, currency.code, decimal, thousand].hash
+        cache[key] ||= new(format, currency, decimal, thousand)
+      end
+
+      def self.validate_format!(format)
+        raise ArgumentError, 'template must not be empty' if format == {}
+
+        unknown = format.keys - %i[positive negative zero]
+        raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
+      end
+
+      def self.validate_separators!(decimal:, thousand:)
         case decimal
-        when nil      then decimal = '.'
-        when ''       then raise ArgumentError, "decimal separator must be a non-empty - #{decimal.inspect}"
+        when '', nil  then raise ArgumentError, "decimal separator must be a non-empty - #{decimal.inspect}"
         when /\d/     then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
         when thousand then raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}"
         when String # :noop
@@ -37,9 +51,6 @@ module Mint
         when String # :noop
         else raise ArgumentError, "thousand must be a String, false, or nil, got #{thousand.inspect}"
         end
-
-        key = [format, currency.code, decimal, thousand].hash
-        cache[key] ||= new(format, currency, decimal, thousand)
       end
 
       def initialize(format, currency, decimal, thousand)
