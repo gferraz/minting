@@ -72,7 +72,7 @@ module Mint
         @currency = currency
         @decimal = decimal
         @thousand = thousand
-        @compiled_lambda = nil
+        @compiled_formatter = nil
       end
 
       # Formats +amount+ using the configured template and separators.
@@ -80,8 +80,8 @@ module Mint
       # @param amount [Rational] the monetary amount
       # @return [String]
       def call(amount)
-        @compiled_lambda ||= compile_formatter
-        @compiled_lambda.call(amount)
+        @compiled_formatter ||= compile_formatter
+        @compiled_formatter.call(amount)
       end
 
       private
@@ -105,12 +105,12 @@ module Mint
         escaped_decimal = Regexp.escape(@decimal)
         has_thousand_separator = @thousand && !@thousand.empty?
 
-        templates = compile_templates
-        positive_template, negative_template, zero_template = templates
+        all_templates = compile_templates
+        positive_template, negative_template, zero_template = all_templates
 
-        all_templates = templates.compact.join
-        needs_fractional = all_templates.include?('%<fractional>')
-        needs_integral = all_templates.include?('%<amount>') || all_templates.include?('%<integral>')
+        templates = all_templates.compact.join
+        needs_fractional = templates.include?('%<fractional>')
+        needs_integral = templates.include?('%<amount>') || templates.include?('%<integral>')
         multiplier = @currency.fractional_multiplier
         symbol = @currency.symbol
 
@@ -139,6 +139,7 @@ module Mint
           args[:fractional] = ((amount.abs % 1) * multiplier).to_i if needs_fractional
 
           result = Kernel.format(format_template, **args)
+
           # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
           result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
 
