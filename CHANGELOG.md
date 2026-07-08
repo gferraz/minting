@@ -108,8 +108,7 @@
 [Full Changelog](https://github.com/gferraz/minting/compare/v1.8.2...v1.9.0)
 
 ### New features
-- `Money::PRESETS` — frozen hash of named format presets (`:accounting`, `:european`, `:amount`, `:currency`). Pass as the first argument to `to_s` for quick access: `money.to_s(:accounting)`.
-- `Money#to_s` now accepts an optional positional `preset` parameter — expands the preset and merges with any explicit kwargs.
+- `Money#to_s` now accepts an optional positional `preset` parameter — expands the preset and merges with any explicit kwargs. (Removed in v2.0 — use `format` with a template string directly.)
 - Validates `decimal` and `thousand` separators — rejects invalid types and identical non-empty values.
 
 ### Improvements

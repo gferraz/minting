@@ -39,11 +39,6 @@ module Mint
     #   money.format(thousand: '.', decimal: ',')  #=> "$1.234,56"
     #   money.format(decimal: ',', thousand: '')   #=> "$1234,56"
     #
-    # @example Named presets (use Formatter.named)
-    #   loss = Money.from(-1234.56, 'USD')
-    #   Money::Formatter.named(:accounting, loss.currency).call(loss.amount)
-    #   #=> "($1,234.56)"
-    #
     # @example Custom templates
     #   money.format('%<amount>f')                              #=> "1234.56"
     #   money.format('%<currency>s %<amount>f')                 #=> "USD 1234.56"
@@ -89,20 +84,5 @@ module Mint
 
     # Alias for {#format}. Takes the same arguments.
     alias to_fs :format
-
-    # Formats using a named preset from {Formatter::PRESETS}.
-    #
-    # @param name [Symbol] preset name (+:accounting+, +:european+, …)
-    # @param overrides [Hash] optional overrides (+:format+, +:decimal+,
-    #   +:thousand+) that take precedence over the preset defaults
-    # @return [String]
-    # @raise [ArgumentError] if +name+ is not a recognised preset
-    #
-    # @example
-    #   Money.from(1234.56, 'EUR').format_preset(:european)
-    #   #=> "1.234,56 €"
-    def format_preset(name, **overrides)
-      Formatter.named(name, currency, **overrides).call(amount)
-    end
   end
 end
