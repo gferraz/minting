@@ -43,11 +43,14 @@ module Mint
   # @api private
   def self.resolve_locale_for(locale: nil)
     lc = resolve_locale_backend(locale)
+    return EMPTY_LOCALE if lc.empty?
 
     { decimal: fetch_locale_key(lc, :decimal),
       thousand: fetch_locale_key(lc, :thousand),
-      format: fetch_locale_key(lc, :format) }
+      format: fetch_locale_key(lc, :format) }.freeze
   end
+
+  EMPTY_LOCALE = { decimal: nil, thousand: nil, format: nil }.freeze
 
   # Looks up a locale key from a hash, trying both symbol and string forms.
   #
