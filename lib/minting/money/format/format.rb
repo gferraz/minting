@@ -3,19 +3,16 @@
 module Mint
   # :nodoc:
   class Money
-    # Formats money as a string with customizable format, thousand delimiter, and decimal
+    # Formats money as a string with a customizable template, thousand delimiter,
+    # and decimal separator.
     #
-    # @param preset [Symbol, nil] Named format preset, one of:
-    #   +:accounting+, +:european+, +:amount+, +:currency+.
-    #   When provided, expands to the preset's format options and merges
-    #   with any explicit keyword arguments (kwargs override the preset).
-    # @param format [String, Hash, nil] Either a Format string with placeholders
+    # @param template [String, Hash, nil] Either a format string with placeholders
     #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d, %<dsymbol>s),
     #   or a Hash with per-sign keys (:positive, :negative, :zero) each
     #   holding a format string. A Hash is convenient for sign-aware formats
     #   such as accounting parentheses:
     #
-    #     money.format(format: { negative: '(%<symbol>s%<amount>f)' })
+    #     money.format({ negative: '(%<symbol>s%<amount>f)' })
     #
     #   Missing keys fall back to the module default, so a Hash with only
     #   :negative will still format positives sensibly. The valid keys are
@@ -33,9 +30,8 @@ module Mint
     #   convention).
     # @return [String] Formatted money string
     #
-    # @raise [ArgumentError] if +preset+ is not a recognised name, or if
-    #   +format+ is not a String or Hash, the Hash is empty, or the Hash
-    #   contains an unrecognised key.
+    # @raise [ArgumentError] if +template+ is not a String or Hash, the Hash is
+    #   empty, or the Hash contains an unrecognised key.
     #
     # @example Basic formatting
     #   money = Money.from(1234.56, 'USD')
@@ -43,65 +39,70 @@ module Mint
     #   money.format(thousand: '.', decimal: ',')  #=> "$1.234,56"
     #   money.format(decimal: ',', thousand: '')   #=> "$1234,56"
     #
-    # @example Preset formats
+    # @example Named presets (use Formatter.named)
     #   loss = Money.from(-1234.56, 'USD')
-    #   loss.format(:accounting)                   #=> "($1,234.56)"
-    #   money.format(:european)                    #=> "1.234,56 €"
-    #   money.format(:amount)                      #=> "1234.56"
-    #   money.format(:currency)                    #=> "USD 1234.56"
+    #   Money::Formatter.named(:accounting, loss.currency).call(loss.amount)
+    #   #=> "($1,234.56)"
     #
-    # @example Custom formats
-    #   money.format(format: '%<amount>f')                    #=> "1234.56"
-    #   money.format(format: '%<currency>s %<amount>f')       #=> "USD 1234.56"
-    #   money.format(format: '%<amount>f %<symbol>s')         #=> "1234.56 $"
-    #   money.format(format: '%<symbol>s%<amount>+f')         #=> "$+1234.56"
+    # @example Custom templates
+    #   money.format('%<amount>f')                              #=> "1234.56"
+    #   money.format('%<currency>s %<amount>f')                 #=> "USD 1234.56"
+    #   money.format('%<amount>f %<symbol>s')                   #=> "1234.56 $"
+    #   money.format('%<symbol>s%<amount>+f')                   #=> "$+1234.56"
     #
     # @example Integral & fractional parts
-    #   money.format(format: '%<integral>d.%<fractional>02d')  #=> "1234.56"
+    #   money.format('%<integral>d.%<fractional>02d')            #=> "1234.56"
     #   price = Money.from(0.99, 'USD')
-    #   price.format(format: '%<integral>d dollars and %<fractional>02d cents')
+    #   price.format('%<integral>d dollars and %<fractional>02d cents')
     #   #=> "0 dollars and 99 cents"
     #
     # @example Per-sign Hash format (accounting parentheses)
     #   loss = Money.from(-1234.56, 'USD')
-    #   loss.format(format: { negative: '(%<symbol>s%<amount>f)' }) #=> "($1,234.56)"
-    #   Money.from(0, 'BRL').format(format: { zero: '--' })        #=> "--"
+    #   loss.format({ negative: '(%<symbol>s%<amount>f)' })      #=> "($1,234.56)"
+    #   Money.from(0, 'BRL').format({ zero: '--' })             #=> "--"
     #
     # @example Padding and alignment
-    #   money.format(format: '%<amount>10.2f')                #=> "   1234.56"
-    #   money.format(format: '%<symbol>s%<amount>010.2f')     #=> "$0001234.56"
+    #   money.format('%<amount>10.2f')                          #=> "   1234.56"
+    #   money.format('%<symbol>s%<amount>010.2f')               #=> "$0001234.56"
     #
     # @example Locale-aware formatting (with Mint.locale_backend set)
     #   money.format                       # decimal and thousand come from locale_backend
     #   money.format(locale: :en)          # locale passed to backend callable
     #   money.format(locale: 'pt-BR')      # strings work too
     #
-    def format(preset = nil, format: nil, decimal: nil, thousand: nil, width: nil, locale: nil)
-      if preset
-        config = PRESETS.fetch(preset) { raise ArgumentError, "Unknown format preset: #{preset.inspect}" }
-        format ||= config[:format]
-        decimal ||= config[:decimal]
-        thousand ||= config[:thousand]
-        width ||= config[:width]
-      end
-
+    def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil)
       validate_separators!(decimal:, thousand:)
 
-      format, decimal, thousand = Mint.resolve_locale_for(format, decimal, thousand, locale:)
+      template, decimal, thousand = Mint.resolve_locale_for(template, decimal, thousand, locale:)
 
-      case format
-      when {}, '' then raise ArgumentError, 'format must not be empty'
-      when Hash   then validate_format_hash(format)
-      when String then format = { positive: format }
-      else        raise ArgumentError, 'Invalid format. Only String or Hash are accepted'
+      case template
+      when {}, '' then raise ArgumentError, 'template must not be empty'
+      when Hash   then validate_format_hash(template)
+      when String then template = { positive: template }
+      else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
 
-      formatted = Formatter.for(format, currency, decimal, thousand).call(amount)
+      formatted = Formatter.for(template, currency, decimal, thousand).call(amount)
 
       width ? formatted.rjust(width) : formatted
     end
 
     # Alias for {#format}. Takes the same arguments.
     alias to_fs :format
+
+    # Formats using a named preset from {Formatter::PRESETS}.
+    #
+    # @param name [Symbol] preset name (+:accounting+, +:european+, …)
+    # @param overrides [Hash] optional overrides (+:format+, +:decimal+,
+    #   +:thousand+) that take precedence over the preset defaults
+    # @return [String]
+    # @raise [ArgumentError] if +name+ is not a recognised preset
+    #
+    # @example
+    #   Money.from(1234.56, 'EUR').format_preset(:european)
+    #   #=> "1.234,56 €"
+    def format_preset(name, **overrides)
+      Formatter.named(name, currency, **overrides).call(amount)
+    end
   end
 end
