@@ -29,22 +29,22 @@ ITERS = {
   ratio: 500_000,
 
   comparison: 500_000,
-  formatting: 200_000,
-  preset_format: 200_000,
-  format_default: 200_000,
-  format_amount_currency: 200_000,
-  format_dsymbol: 200_000,
-  format_integral_frac: 200_000,
-  format_full: 200_000,
-  format_thousand: 200_000,
-  format_decimal_comma: 200_000,
-  format_negative_hash: 200_000,
-  format_zero_template: 200_000,
-  to_s: 200_000,
-  parsing: 200_000,
-  split: 200_000,
-  allocate: 200_000,
-  from_hash: 200_000,
+  formatting: 100_000,
+  preset_format: 100_000,
+  format_default: 100_000,
+  format_amount_currency: 100_000,
+  format_dsymbol: 100_000,
+  format_integral_frac: 100_000,
+  format_full: 100_000,
+  format_thousand: 100_000,
+  format_decimal_comma: 100_000,
+  format_negative_hash: 100_000,
+  format_zero_template: 100_000,
+  to_s: 100_000,
+  parsing: 100_000,
+  split: 100_000,
+  allocate: 100_000,
+  from_hash: 100_000,
 }.freeze
 
 MODES = {
@@ -52,7 +52,7 @@ MODES = {
   half_down: :half_down
 }.freeze
 
-m1 = 123.45.dollars
+m1 = 123_456_789.01.dollars
 m2 = -67.89.dollars
 m0 = Money.from(0, 'USD')
 split_money = 100.dollars

@@ -1,213 +1,213 @@
 {
   "metadata": {
     "gem_version": "2.0.0",
-    "generated_at": "2026-07-09T13:11:20Z",
+    "generated_at": "2026-07-09T15:01:38Z",
     "ruby_version": "4.0.5",
     "ruby_platform": "arm64-darwin23"
   },
   "results": {
     "no_rounding": {
       "creation": {
-        "ips": 1360311,
-        "elapsed": 0.3676
+        "ips": 1395451,
+        "elapsed": 0.3583
       },
       "copy_with": {
-        "ips": 1761841,
-        "elapsed": 0.2838
+        "ips": 1805002,
+        "elapsed": 0.277
       },
       "addition": {
-        "ips": 1647544,
-        "elapsed": 0.3035
+        "ips": 1529309,
+        "elapsed": 0.3269
       },
       "subtraction": {
-        "ips": 1624532,
-        "elapsed": 0.3078
+        "ips": 1507245,
+        "elapsed": 0.3317
       },
       "multiplication": {
-        "ips": 2265909,
-        "elapsed": 0.2207
+        "ips": 1965463,
+        "elapsed": 0.2544
       },
       "division": {
-        "ips": 2262689,
-        "elapsed": 0.221
+        "ips": 1995578,
+        "elapsed": 0.2506
       },
       "division_by_f": {
-        "ips": 1596449,
-        "elapsed": 0.3132
+        "ips": 1519295,
+        "elapsed": 0.3291
       },
       "ratio": {
-        "ips": 6451113,
-        "elapsed": 0.0775
+        "ips": 5846244,
+        "elapsed": 0.0855
       },
       "comparison": {
-        "ips": 3429073,
-        "elapsed": 0.1458
+        "ips": 3418803,
+        "elapsed": 0.1462
       },
       "formatting": {
-        "ips": 466529,
-        "elapsed": 0.4287
+        "ips": 475484,
+        "elapsed": 0.2103
       },
       "preset_format": {
-        "ips": 512383,
-        "elapsed": 0.3903
+        "ips": 516921,
+        "elapsed": 0.1935
       },
       "format_default": {
-        "ips": 508716,
-        "elapsed": 0.3931
+        "ips": 152421,
+        "elapsed": 0.6561
       },
       "format_amount_currency": {
-        "ips": 503293,
-        "elapsed": 0.3974
+        "ips": 516068,
+        "elapsed": 0.1938
       },
       "format_dsymbol": {
-        "ips": 498287,
-        "elapsed": 0.4014
+        "ips": 506365,
+        "elapsed": 0.1975
       },
       "format_integral_frac": {
-        "ips": 532163,
-        "elapsed": 0.3758
+        "ips": 153043,
+        "elapsed": 0.6534
       },
       "format_full": {
-        "ips": 459914,
-        "elapsed": 0.4349
+        "ips": 475737,
+        "elapsed": 0.2102
       },
       "format_thousand": {
-        "ips": 514284,
-        "elapsed": 0.3889
+        "ips": 152806,
+        "elapsed": 0.6544
       },
       "format_decimal_comma": {
-        "ips": 392625,
-        "elapsed": 0.5094
+        "ips": 392554,
+        "elapsed": 0.2547
       },
       "format_negative_hash": {
-        "ips": 509892,
-        "elapsed": 0.3922
+        "ips": 514464,
+        "elapsed": 0.1944
       },
       "format_zero_template": {
-        "ips": 743550,
-        "elapsed": 0.269
+        "ips": 752066,
+        "elapsed": 0.133
       },
       "to_s": {
-        "ips": 1833298,
-        "elapsed": 0.1091
+        "ips": 426656,
+        "elapsed": 0.2344
       },
       "parsing": {
-        "ips": 157916,
-        "elapsed": 1.2665
+        "ips": 160291,
+        "elapsed": 0.6239
       },
       "split": {
-        "ips": 374383,
-        "elapsed": 0.5342
+        "ips": 386910,
+        "elapsed": 0.2585
       },
       "allocate": {
-        "ips": 66497,
-        "elapsed": 3.0077
+        "ips": 70993,
+        "elapsed": 1.4086
       },
       "from_hash": {
-        "ips": 1576802,
-        "elapsed": 0.1268
+        "ips": 1575523,
+        "elapsed": 0.0635
       }
     },
     "half_down": {
       "creation": {
-        "ips": 978185,
-        "elapsed": 0.5112
+        "ips": 1067031,
+        "elapsed": 0.4686
       },
       "copy_with": {
-        "ips": 1036162,
-        "elapsed": 0.4825
+        "ips": 1283608,
+        "elapsed": 0.3895
       },
       "addition": {
-        "ips": 1147502,
-        "elapsed": 0.4357
+        "ips": 1134904,
+        "elapsed": 0.4406
       },
       "subtraction": {
-        "ips": 1165928,
-        "elapsed": 0.4288
+        "ips": 1122443,
+        "elapsed": 0.4455
       },
       "multiplication": {
-        "ips": 1486352,
-        "elapsed": 0.3364
+        "ips": 1373132,
+        "elapsed": 0.3641
       },
       "division": {
-        "ips": 1481938,
-        "elapsed": 0.3374
+        "ips": 1375728,
+        "elapsed": 0.3634
       },
       "division_by_f": {
-        "ips": 1167990,
-        "elapsed": 0.4281
+        "ips": 1131780,
+        "elapsed": 0.4418
       },
       "ratio": {
-        "ips": 6423680,
-        "elapsed": 0.0778
+        "ips": 5806999,
+        "elapsed": 0.0861
       },
       "comparison": {
-        "ips": 3410176,
-        "elapsed": 0.1466
+        "ips": 3432793,
+        "elapsed": 0.1457
       },
       "formatting": {
-        "ips": 462693,
-        "elapsed": 0.4323
+        "ips": 477336,
+        "elapsed": 0.2095
       },
       "preset_format": {
-        "ips": 499022,
-        "elapsed": 0.4008
+        "ips": 514260,
+        "elapsed": 0.1945
       },
       "format_default": {
-        "ips": 504017,
-        "elapsed": 0.3968
+        "ips": 151815,
+        "elapsed": 0.6587
       },
       "format_amount_currency": {
-        "ips": 484257,
-        "elapsed": 0.413
+        "ips": 516393,
+        "elapsed": 0.1937
       },
       "format_dsymbol": {
-        "ips": 481647,
-        "elapsed": 0.4152
+        "ips": 510272,
+        "elapsed": 0.196
       },
       "format_integral_frac": {
-        "ips": 522857,
-        "elapsed": 0.3825
+        "ips": 161527,
+        "elapsed": 0.6191
       },
       "format_full": {
-        "ips": 450471,
-        "elapsed": 0.444
+        "ips": 470343,
+        "elapsed": 0.2126
       },
       "format_thousand": {
-        "ips": 491971,
-        "elapsed": 0.4065
+        "ips": 151276,
+        "elapsed": 0.661
       },
       "format_decimal_comma": {
-        "ips": 371310,
-        "elapsed": 0.5386
+        "ips": 392497,
+        "elapsed": 0.2548
       },
       "format_negative_hash": {
-        "ips": 442559,
-        "elapsed": 0.4519
+        "ips": 515188,
+        "elapsed": 0.1941
       },
       "format_zero_template": {
-        "ips": 688350,
-        "elapsed": 0.2906
+        "ips": 748873,
+        "elapsed": 0.1335
       },
       "to_s": {
-        "ips": 1780341,
-        "elapsed": 0.1123
+        "ips": 422472,
+        "elapsed": 0.2367
       },
       "parsing": {
-        "ips": 152732,
-        "elapsed": 1.3095
+        "ips": 153369,
+        "elapsed": 0.652
       },
       "split": {
-        "ips": 349802,
-        "elapsed": 0.5718
+        "ips": 352321,
+        "elapsed": 0.2838
       },
       "allocate": {
-        "ips": 51238,
-        "elapsed": 3.9033
+        "ips": 51657,
+        "elapsed": 1.9359
       },
       "from_hash": {
-        "ips": 1157099,
-        "elapsed": 0.1728
+        "ips": 1165800,
+        "elapsed": 0.0858
       }
     }
   }
