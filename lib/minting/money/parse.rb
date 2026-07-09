@@ -67,7 +67,7 @@ module Mint
       def parse_amount(input)
         accounting_negative = input.start_with?('(') && input.end_with?(')')
 
-        numeric_input = input.scan(/[\d.,-]/).join
+        numeric_input = input.gsub(/[^\d.,-]/, '')
         numeric = parse_separators(numeric_input)
         return nil unless numeric
 
