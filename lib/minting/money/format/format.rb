@@ -77,12 +77,12 @@ module Mint
       end
 
       case template
-      when Hash   then nil # validated in Formatter.for
+      when Hash # :noop - validated in Formatter.for
       when String then template = { positive: template }
       else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
 
-      formatted = Formatter.for(template, currency, decimal, thousand).format(amount)
+      formatted = Formatter.for(template, decimal, thousand).format(amount, currency)
 
       width ? formatted.rjust(width) : formatted
     end

@@ -311,7 +311,7 @@ class MoneyFormatTest < Minitest::Test
     # Currency with subunit of 0
     jpy = Money.from(1234, 'JPY')
 
-    assert_equal '1,234_', jpy.format('%<integral>d_%<fractional>d')
+    assert_equal '1,234_0', jpy.format('%<integral>d_%<fractional>d')
   end
 
   def test_validate_decimal_invalid_type
