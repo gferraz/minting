@@ -82,7 +82,7 @@ module Mint
       else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
 
-      formatted = Formatter.for(template, currency, decimal, thousand).call(amount)
+      formatted = Formatter.for(template, currency, decimal, thousand).format(amount)
 
       width ? formatted.rjust(width) : formatted
     end
