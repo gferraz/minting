@@ -74,7 +74,7 @@ module Mint
       else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
 
-      formatted = Formatter.for(template, decimal, thousand).format(amount, currency)
+      formatted = Formatter.for(template, decimal, thousand).format(self)
 
       width ? formatted.rjust(width) : formatted
     end
