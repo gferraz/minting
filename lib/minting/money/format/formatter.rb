@@ -67,6 +67,7 @@ module Mint
       def format(money)
         amount = money.amount
         currency = money.currency
+        symbol = currency.symbol
 
         template = @templates[amount <=> 0] || @positive_template
         display_amount = template == @negative_template ? -amount : amount
@@ -74,8 +75,8 @@ module Mint
         template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
         result = Kernel.format(template,
                                currency: currency.code,
-                               dsymbol: currency.disambiguate_symbol || currency.symbol,
-                               symbol: currency.symbol,
+                               dsymbol: currency.disambiguate_symbol || symbol,
+                               symbol: symbol,
                                amount: display_amount,
                                integral: display_amount.to_i,
                                fractional: @needs_fractional ? money.fractional.abs : 0)

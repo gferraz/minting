@@ -11,7 +11,7 @@ require 'bigdecimal'
 
 module BenchmarkHelper
   def test_amounts
-    @test_amounts ||= [1.00, 10.50, 123.45, 999.99, 1234.56]
+    @test_amounts ||= [1.00, -10.50, 1234.45, -88_999.99, 123_456_789_012_345.67]
   end
 
   def random_amounts(size: 1000, range: -1000.00..1000.00)
