@@ -17,19 +17,18 @@ module Mint
       # Returns a cached {Formatter} for the given configuration.
       #
       # @param format [Hash{Symbol => String}] per-sign templates
-      # @param currency [Currency] the target currency
       # @param decimal [String] decimal separator
       # @param thousand [String, false] thousands delimiter (+false+ disables)
       # @return [Formatter]
-      def self.for(format, currency, decimal, thousand)
+      def self.for(format, decimal, thousand)
         decimal ||= '.'
-        key = [format, currency.code, decimal, thousand].hash
+        key = [format, decimal, thousand].hash
         return cache[key] if cache.key?(key)
 
         validate_format!(format)
         validate_separators!(decimal:, thousand:)
 
-        cache[key] = new(format, currency, decimal, thousand)
+        cache[key] = new(format, decimal, thousand)
       end
 
       def self.validate_format!(format)
@@ -56,47 +55,48 @@ module Mint
         end
       end
 
-      def initialize(format, currency, decimal, thousand)
+      def initialize(format, decimal, thousand)
         @format = format
-        @currency = currency
         @decimal = decimal
         @thousand = thousand
-        compile!
+        compile
       end
 
-      # Formats +amount+ using the configured template and separators.
-      #
-      # @param amount [Rational] the monetary amount
-      # @return [String]
-      def format(amount)
-        template, display_amount = resolve_template(amount)
-        result = Kernel.format(template, **build_args(display_amount))
+      SUBUNIT_PLACEHOLDER = "\uE000".freeze
+
+      def format(amount, currency)
+        template = @templates[amount <=> 0] || @positive_template
+        display_amount = template == @negative_template ? -amount : amount
+
+        template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s)
+        result = Kernel.format(template, **build_args(display_amount, currency))
         apply_separators(result, amount)
       end
 
       private
 
-      def resolve_template(amount)
-        if @negative_template && amount < 0
-          [@negative_template, -amount]
-        elsif @zero_template && amount == 0
-          [@zero_template, amount]
-        else
-          [@positive_template, amount]
-        end
+      def resolve_template(sign)
+        @templates[sign] || @positive_template
       end
 
-      def build_args(amount)
-        args = @template_args.dup
-        args[:amount] = amount
-        args[:integral] = amount.to_i
-        args[:fractional] = ((amount.abs % 1) * @multiplier).to_i if @needs_fractional
+      def build_args(amount, currency)
+        args = {
+          currency: currency.code,
+          dsymbol: currency.disambiguate_symbol || currency.symbol,
+          symbol: currency.symbol,
+          amount: amount,
+          integral: amount.to_i
+        }
+        if @needs_fractional
+          multiplier = 10**currency.subunit
+          args[:fractional] = ((amount.abs % 1) * multiplier).to_i
+        end
         args
       end
 
       def apply_separators(result, original_amount)
         # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
-        result = result.gsub(/(?<=\d)\.(?=\d)/, @decimal) if @needs_decimal_substitution
+        result = result.gsub(/(?<=\d)\.(?=\d)/, @decimal) if @decimal != '.'
 
         if @needs_thousand_substitution && (original_amount >= 1000 || original_amount <= -1000)
           # Split on the decimal separator between digits only (symbols may contain '.' e.g. د.إ)
@@ -110,40 +110,26 @@ module Mint
       end
 
       def compile_templates
-        subunit = @currency.subunit
-
-        [@format[:positive] || Money::DEFAULT_FORMAT, @format[:negative], @format[:zero]].map do |sign_format|
-          next unless sign_format
-
-          # Inject subunit precision into %<amount>f (e.g. → %<amount>.2f)
-          sign_format = sign_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
-
-          # Strip %<fractional>d entirely for zero-subunit currencies (JPY, KRW…)
-          sign_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
-          sign_format
+        format_templates = [@format[:negative], @format[:zero], @format[:positive] || Money::DEFAULT_FORMAT]
+        format_templates.map! do |sign_format|
+          # Inject placeholder for subunit precision into %<amount>f (replaced with actual at call time)
+          sign_format = sign_format&.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f")
+          sign_format.freeze
         end
+
+        @negative_template, @zero_template, @positive_template = format_templates
+        @templates = { -1 => @negative_template, 0 => @zero_template, 1 => @positive_template }.freeze
+        format_templates
       end
 
-      def compile!
+      def compile
+        templates_values = compile_templates
+        joined_template = templates_values.join
+
         @escaped_decimal = Regexp.escape(@decimal)
-        @positive_template, @negative_template, @zero_template = templates = compile_templates
-
-        @needs_decimal_substitution = @decimal != '.'
-
-        joined_template = templates.join
         @needs_fractional = joined_template.include?('%<fractional>')
-
-        @needs_thousand_substitution = @thousand &&
-                                       !@thousand.empty? &&
-                                       (joined_template.include?('%<amount>') || joined_template.include?('%<integral>'))
-
-        @multiplier = @currency.fractional_multiplier
-
-        @template_args = {
-          currency: @currency.code,
-          dsymbol: @currency.disambiguate_symbol || @currency.symbol,
-          symbol: @currency.symbol
-        }.freeze
+        @needs_thousand_substitution = @thousand && !@thousand.empty? && (joined_template.include?('%<amount>') ||
+                         joined_template.include?('%<integral>'))
       end
     end
   end
