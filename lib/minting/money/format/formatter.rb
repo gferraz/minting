@@ -63,6 +63,8 @@ module Mint
       end
 
       SUBUNIT_PLACEHOLDER = "\uE000"
+      THOUSAND_RE = /(\d)(?=(?:\d{3})+(?:[^\d]|$))/
+      DECIMAL_DOT_RE = /(?<=\d)\.(?=\d)/
 
       def format(money)
         amount = money.amount
@@ -86,14 +88,11 @@ module Mint
       private
 
       def apply_separators(result, original_amount)
-        # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
-        result = result.gsub(/(?<=\d)\.(?=\d)/, @decimal) if @decimal != '.'
+        result = result.gsub(DECIMAL_DOT_RE, @decimal) if @decimal != '.'
 
         if @needs_thousand_substitution && (original_amount >= 1000 || original_amount <= -1000)
-          # Split on the decimal separator between digits only (symbols may contain '.' e.g. د.إ)
-          parts = result.split(/(?<=\d)#{@escaped_decimal}(?=\d)/, 2)
-          # Insert thousand separator before groups of 3 digits in the integral part
-          parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + @thousand }
+          parts = result.split(@split_regex, 2)
+          parts[0].gsub!(THOUSAND_RE, @thousand_replacement)
           result = parts.join(@decimal)
         end
 
@@ -117,11 +116,12 @@ module Mint
         templates_values = compile_templates
         joined_template = templates_values.join
 
-        @escaped_decimal = Regexp.escape(@decimal)
+        @split_regex = /(?<=\d)#{Regexp.escape(@decimal)}(?=\d)/
         @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
         @needs_thousand_substitution = @thousand && !@thousand.empty? && (joined_template.include?('%<amount>') ||
                          joined_template.include?('%<integral>'))
+        @thousand_replacement = "\\1#{@thousand}" if @needs_thousand_substitution
       end
     end
   end
