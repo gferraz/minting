@@ -1,133 +1,141 @@
 {
   "metadata": {
     "gem_version": "2.0.0",
-    "generated_at": "2026-07-05T01:39:20Z",
+    "generated_at": "2026-07-09T12:48:47Z",
     "ruby_version": "4.0.5",
     "ruby_platform": "arm64-darwin23"
   },
   "results": {
     "no_rounding": {
       "creation": {
-        "ips": 1373909,
-        "elapsed": 0.3639
+        "ips": 1412003,
+        "elapsed": 0.3541
       },
       "copy_with": {
-        "ips": 1770601,
-        "elapsed": 0.2824
+        "ips": 1806998,
+        "elapsed": 0.2767
       },
       "addition": {
-        "ips": 1647848,
-        "elapsed": 0.3034
+        "ips": 1666644,
+        "elapsed": 0.3
       },
       "subtraction": {
-        "ips": 1616862,
-        "elapsed": 0.3092
+        "ips": 1639124,
+        "elapsed": 0.305
       },
       "multiplication": {
-        "ips": 2233938,
-        "elapsed": 0.2238
+        "ips": 2262362,
+        "elapsed": 0.221
       },
       "division": {
-        "ips": 2208012,
-        "elapsed": 0.2264
+        "ips": 2247939,
+        "elapsed": 0.2224
       },
       "division_by_f": {
-        "ips": 1574838,
-        "elapsed": 0.3175
+        "ips": 1602569,
+        "elapsed": 0.312
       },
       "ratio": {
-        "ips": 5925715,
-        "elapsed": 0.0844
+        "ips": 6392799,
+        "elapsed": 0.0782
       },
       "comparison": {
-        "ips": 3429308,
+        "ips": 3429238,
         "elapsed": 0.1458
       },
       "formatting": {
-        "ips": 356355,
-        "elapsed": 0.5612
+        "ips": 464627,
+        "elapsed": 0.4305
+      },
+      "preset_format": {
+        "ips": 513423,
+        "elapsed": 0.3895
       },
       "to_s": {
-        "ips": 1853499,
-        "elapsed": 0.1079
+        "ips": 1900165,
+        "elapsed": 0.1053
       },
       "parsing": {
-        "ips": 160151,
-        "elapsed": 1.2488
+        "ips": 160228,
+        "elapsed": 1.2482
       },
       "split": {
-        "ips": 384549,
-        "elapsed": 0.5201
+        "ips": 388001,
+        "elapsed": 0.5155
       },
       "allocate": {
-        "ips": 70713,
-        "elapsed": 2.8284
+        "ips": 71525,
+        "elapsed": 2.7962
       },
       "from_hash": {
-        "ips": 1577349,
-        "elapsed": 0.1268
+        "ips": 1605665,
+        "elapsed": 0.1246
       }
     },
     "half_down": {
       "creation": {
-        "ips": 1046838,
-        "elapsed": 0.4776
+        "ips": 1072793,
+        "elapsed": 0.4661
       },
       "copy_with": {
-        "ips": 1268292,
-        "elapsed": 0.3942
+        "ips": 1289730,
+        "elapsed": 0.3877
       },
       "addition": {
-        "ips": 1198811,
-        "elapsed": 0.4171
+        "ips": 1208106,
+        "elapsed": 0.4139
       },
       "subtraction": {
-        "ips": 1187051,
-        "elapsed": 0.4212
+        "ips": 1199279,
+        "elapsed": 0.4169
       },
       "multiplication": {
-        "ips": 1492372,
-        "elapsed": 0.335
+        "ips": 1497526,
+        "elapsed": 0.3339
       },
       "division": {
-        "ips": 1484085,
-        "elapsed": 0.3369
+        "ips": 1500605,
+        "elapsed": 0.3332
       },
       "division_by_f": {
-        "ips": 1162831,
-        "elapsed": 0.43
+        "ips": 1177546,
+        "elapsed": 0.4246
       },
       "ratio": {
-        "ips": 6286224,
-        "elapsed": 0.0795
+        "ips": 6316561,
+        "elapsed": 0.0792
       },
       "comparison": {
-        "ips": 3376690,
-        "elapsed": 0.1481
+        "ips": 3423485,
+        "elapsed": 0.1461
       },
       "formatting": {
-        "ips": 354538,
-        "elapsed": 0.5641
+        "ips": 465585,
+        "elapsed": 0.4296
+      },
+      "preset_format": {
+        "ips": 516048,
+        "elapsed": 0.3876
       },
       "to_s": {
-        "ips": 1868932,
-        "elapsed": 0.107
+        "ips": 1885085,
+        "elapsed": 0.1061
       },
       "parsing": {
-        "ips": 153943,
-        "elapsed": 1.2992
+        "ips": 152568,
+        "elapsed": 1.3109
       },
       "split": {
-        "ips": 349269,
-        "elapsed": 0.5726
+        "ips": 354620,
+        "elapsed": 0.564
       },
       "allocate": {
-        "ips": 51266,
-        "elapsed": 3.9012
+        "ips": 51699,
+        "elapsed": 3.8685
       },
       "from_hash": {
-        "ips": 1158755,
-        "elapsed": 0.1726
+        "ips": 1141207,
+        "elapsed": 0.1753
       }
     }
   }
