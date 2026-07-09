@@ -73,13 +73,12 @@ module Mint
 
         template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
         result = Kernel.format(template,
-          currency: currency.code,
-          dsymbol: currency.disambiguate_symbol || currency.symbol,
-          symbol: currency.symbol,
-          amount: display_amount,
-          integral: display_amount.to_i,
-          fractional: @needs_fractional ? money.fractional.abs : 0
-        )
+                               currency: currency.code,
+                               dsymbol: currency.disambiguate_symbol || currency.symbol,
+                               symbol: currency.symbol,
+                               amount: display_amount,
+                               integral: display_amount.to_i,
+                               fractional: @needs_fractional ? money.fractional.abs : 0)
         apply_separators(result, amount)
       end
 
