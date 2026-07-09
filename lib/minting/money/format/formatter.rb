@@ -62,7 +62,7 @@ module Mint
         compile
       end
 
-      SUBUNIT_PLACEHOLDER = "\uE000".freeze
+      SUBUNIT_PLACEHOLDER = "\uE000"
 
       def format(amount, currency)
         template = @templates[amount <=> 0] || @positive_template

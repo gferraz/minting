@@ -66,15 +66,7 @@ module Mint
     #   money.format(locale: 'pt-BR')      # strings work too
     #
     def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil)
-      locale_opts = Mint.resolve_locale_for(locale:)
-
-      template ||= locale_opts[:format] || DEFAULT_FORMAT
-      decimal  ||= locale_opts[:decimal] || '.'
-
-      if thousand.nil?
-        thousand = locale_opts[:thousand] || ','
-        thousand = false if thousand == decimal
-      end
+      template, decimal, thousand = resolve_format_options(template, decimal:, thousand:, locale:)
 
       case template
       when Hash # :noop - validated in Formatter.for
@@ -89,5 +81,20 @@ module Mint
 
     # Alias for {#format}. Takes the same arguments.
     alias to_fs :format
+
+    private
+
+    def resolve_format_options(template, decimal:, thousand:, locale:)
+      backend_opts = Mint.resolve_locale_for(locale:)
+
+      template ||= backend_opts[:format] || DEFAULT_FORMAT
+      decimal ||= backend_opts[:decimal] || '.'
+      if thousand.nil?
+        thousand = backend_opts[:thousand] || ','
+        thousand = false if thousand == decimal
+      end
+
+      [template, decimal, thousand]
+    end
   end
 end

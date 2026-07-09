@@ -42,6 +42,8 @@ module Mint
   # @return [Hash{Symbol => String, nil}]
   # @api private
   def self.resolve_locale_for(locale: nil)
+    return EMPTY_LOCALE if Mint.locale_backend.nil?
+
     lc = resolve_locale_backend(locale)
     return EMPTY_LOCALE if lc.empty?
 
