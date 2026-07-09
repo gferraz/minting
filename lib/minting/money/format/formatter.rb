@@ -64,27 +64,26 @@ module Mint
 
       SUBUNIT_PLACEHOLDER = "\uE000"
 
-      def format(amount, currency)
+      def format(money)
+        amount = money.amount
+        currency = money.currency
+
         template = @templates[amount <=> 0] || @positive_template
         display_amount = template == @negative_template ? -amount : amount
 
         template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
-        result = Kernel.format(template, **format_arguments(display_amount, currency))
+        result = Kernel.format(template,
+          currency: currency.code,
+          dsymbol: currency.disambiguate_symbol || currency.symbol,
+          symbol: currency.symbol,
+          amount: display_amount,
+          integral: display_amount.to_i,
+          fractional: @needs_fractional ? money.fractional.abs : 0
+        )
         apply_separators(result, amount)
       end
 
       private
-
-      def format_arguments(amount, currency)
-        args = {
-          currency: currency.code,
-          dsymbol: currency.disambiguate_symbol || currency.symbol,
-          symbol: currency.symbol,
-          amount: amount,
-          integral: amount.to_i,
-          fractional: @needs_fractional ? fractional : 0
-        }
-      end
 
       def apply_separators(result, original_amount)
         # Replace the decimal point inserted by Kernel.format with the locale's decimal separator

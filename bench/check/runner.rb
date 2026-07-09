@@ -31,6 +31,15 @@ ITERS = {
   comparison: 500_000,
   formatting: 200_000,
   preset_format: 200_000,
+  format_default: 200_000,
+  format_amount_currency: 200_000,
+  format_dsymbol: 200_000,
+  format_integral_frac: 200_000,
+  format_full: 200_000,
+  format_thousand: 200_000,
+  format_decimal_comma: 200_000,
+  format_negative_hash: 200_000,
+  format_zero_template: 200_000,
   to_s: 200_000,
   parsing: 200_000,
   split: 200_000,
@@ -45,6 +54,7 @@ MODES = {
 
 m1 = 123.45.dollars
 m2 = -67.89.dollars
+m0 = Money.from(0, 'USD')
 split_money = 100.dollars
 parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500']
 parse_count = parse_inputs.size
@@ -64,8 +74,17 @@ bench_block = lambda do |name, n|
   when :ratio          then n.times { m1 / m2 }
   when :comparison     then n.times { m1 == m2 }
 
-  when :formatting     then n.times { m2.format( '%<dsymbol>s %<amount>f %<currency>s') }
-  when :preset_format  then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
+  when :formatting            then n.times { m2.format('%<dsymbol>s %<amount>f %<currency>s') }
+  when :preset_format         then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
+  when :format_default        then n.times { m1.format }
+  when :format_amount_currency then n.times { m2.format('%<amount>f %<currency>s') }
+  when :format_dsymbol        then n.times { m2.format('%<dsymbol>s %<amount>f') }
+  when :format_integral_frac  then n.times { m1.format('%<integral>d.%<fractional>02d') }
+  when :format_full           then n.times { m2.format('%<symbol>s%<amount>f (%<currency>s)') }
+  when :format_thousand       then n.times { m1.format(thousand: ',') }
+  when :format_decimal_comma  then n.times { m2.format(decimal: ',', thousand: '.') }
+  when :format_negative_hash  then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
+  when :format_zero_template  then n.times { m0.format({ zero: '--' }) }
   when :to_s           then n.times { m1.to_s }
   when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
   when :split          then n.times { split_money.split(12) }
