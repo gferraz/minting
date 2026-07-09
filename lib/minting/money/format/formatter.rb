@@ -68,30 +68,22 @@ module Mint
         template = @templates[amount <=> 0] || @positive_template
         display_amount = template == @negative_template ? -amount : amount
 
-        template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s)
-        result = Kernel.format(template, **build_args(display_amount, currency))
+        template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
+        result = Kernel.format(template, **format_arguments(display_amount, currency))
         apply_separators(result, amount)
       end
 
       private
 
-      def resolve_template(sign)
-        @templates[sign] || @positive_template
-      end
-
-      def build_args(amount, currency)
+      def format_arguments(amount, currency)
         args = {
           currency: currency.code,
           dsymbol: currency.disambiguate_symbol || currency.symbol,
           symbol: currency.symbol,
           amount: amount,
-          integral: amount.to_i
+          integral: amount.to_i,
+          fractional: @needs_fractional ? fractional : 0
         }
-        if @needs_fractional
-          multiplier = 10**currency.subunit
-          args[:fractional] = ((amount.abs % 1) * multiplier).to_i
-        end
-        args
       end
 
       def apply_separators(result, original_amount)
@@ -127,6 +119,7 @@ module Mint
         joined_template = templates_values.join
 
         @escaped_decimal = Regexp.escape(@decimal)
+        @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
         @needs_thousand_substitution = @thousand && !@thousand.empty? && (joined_template.include?('%<amount>') ||
                          joined_template.include?('%<integral>'))
