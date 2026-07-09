@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class MoneyFormatTest < Minitest::Test
+  class CollisionHash < Hash
+    def hash = 1
+  end
+
   FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
   def usd_9_99 = Money.from(9.99, 'USD')
@@ -70,6 +74,19 @@ class MoneyFormatTest < Minitest::Test
     assert_equal({ currency: 'BRL', amount: '134120.00' }, brl.to_hash)
     assert_equal({ currency: 'JPY', amount: '15' }, jpy.to_hash)
     assert_equal({ currency: 'BRL_FUEL', amount: '3.457' }, gas.to_hash)
+  end
+
+  def test_formatter_cache_handles_colliding_hashes
+    format_a = CollisionHash.new
+    format_a[:positive] = '%<symbol>s%<amount>f'
+
+    format_b = CollisionHash.new
+    format_b[:positive] = '%<amount>f %<currency>s'
+
+    formatter_a = Money::Formatter.for(format_a, '.', ',')
+    formatter_b = Money::Formatter.for(format_b, '.', ',')
+
+    refute_same formatter_a, formatter_b
   end
 
   def test_numeric_html_format

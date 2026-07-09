@@ -21,6 +21,7 @@ group :development do
   gem 'rubycritic'
   gem 'ruby-prof'
   gem 'simplecov'
+  gem 'solargraph'
   gem 'yard'
 end
 
