@@ -43,7 +43,7 @@ module Mint
         case decimal
         when ''       then raise ArgumentError, "decimal separator must be a non-empty - #{decimal.inspect}"
         when /\d/     then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
-        when thousand then raise ArgumentError, "decimal and thousand cannot be identical: #{decimal.inspect}"
+        when thousand then raise ArgumentError, "decimal and thousand cannot be identical - #{decimal.inspect}"
         when String # :noop
         else raise ArgumentError, "decimal must be a String, false, or nil, got #{decimal.inspect}"
         end
@@ -61,19 +61,53 @@ module Mint
         @currency = currency
         @decimal = decimal
         @thousand = thousand
-        @compiled_formatter = nil
+        compile!
       end
 
       # Formats +amount+ using the configured template and separators.
       #
       # @param amount [Rational] the monetary amount
       # @return [String]
-      def call(amount)
-        @compiled_formatter ||= compile_formatter
-        @compiled_formatter.call(amount)
+      def format(amount)
+        template, display_amount = resolve_template(amount)
+        result = Kernel.format(template, **build_args(display_amount))
+        apply_separators(result, amount)
       end
 
       private
+
+      def resolve_template(amount)
+        if @negative_template && amount < 0
+          [@negative_template, -amount]
+        elsif @zero_template && amount == 0
+          [@zero_template, amount]
+        else
+          [@positive_template, amount]
+        end
+      end
+
+      def build_args(amount)
+        args = @template_args.dup
+        args[:amount] = amount
+        args[:integral] = amount.to_i
+        args[:fractional] = ((amount.abs % 1) * @multiplier).to_i if @needs_fractional
+        args
+      end
+
+      def apply_separators(result, original_amount)
+        # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
+        result = result.gsub(/(?<=\d)\.(?=\d)/, @decimal) if @needs_decimal_substitution
+
+        if @needs_thousand_substitution && (original_amount >= 1000 || original_amount <= -1000)
+          # Split on the decimal separator between digits only (symbols may contain '.' e.g. د.إ)
+          parts = result.split(/(?<=\d)#{@escaped_decimal}(?=\d)/, 2)
+          # Insert thousand separator before groups of 3 digits in the integral part
+          parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + @thousand }
+          result = parts.join(@decimal)
+        end
+
+        result
+      end
 
       def compile_templates
         subunit = @currency.subunit
@@ -83,65 +117,33 @@ module Mint
 
           # Inject subunit precision into %<amount>f (e.g. → %<amount>.2f)
           sign_format = sign_format.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{subunit}f")
+
           # Strip %<fractional>d entirely for zero-subunit currencies (JPY, KRW…)
           sign_format.gsub!(/%<fractional>[^%]*?d/, '') if subunit.zero?
           sign_format
         end
       end
 
-      def compile_formatter # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-        has_decimal_substitution = @decimal != '.'
-        escaped_decimal = Regexp.escape(@decimal)
-        has_thousand_separator = @thousand && !@thousand.empty?
+      def compile!
+        @escaped_decimal = Regexp.escape(@decimal)
+        @positive_template, @negative_template, @zero_template = templates = compile_templates
 
-        all_templates = compile_templates
-        positive_template, negative_template, zero_template = all_templates
+        @needs_decimal_substitution = @decimal != '.'
 
-        templates = all_templates.compact.join
-        needs_fractional = templates.include?('%<fractional>')
-        needs_integral = templates.include?('%<amount>') || templates.include?('%<integral>')
-        multiplier = @currency.fractional_multiplier
-        symbol = @currency.symbol
+        joined_template = templates.join
+        @needs_fractional = joined_template.include?('%<fractional>')
 
-        template_args = {
+        @needs_thousand_substitution = @thousand &&
+                                       !@thousand.empty? &&
+                                       (joined_template.include?('%<amount>') || joined_template.include?('%<integral>'))
+
+        @multiplier = @currency.fractional_multiplier
+
+        @template_args = {
           currency: @currency.code,
-          dsymbol: @currency.disambiguate_symbol || symbol,
-          symbol: symbol
+          dsymbol: @currency.disambiguate_symbol || @currency.symbol,
+          symbol: @currency.symbol
         }.freeze
-
-        decimal = @decimal
-        thousand = @thousand
-
-        lambda do |amount|
-          format_template = if negative_template && amount < 0
-                              amount = -amount
-                              negative_template
-                            elsif zero_template && amount == 0
-                              zero_template
-                            else
-                              positive_template
-                            end
-
-          args = template_args.dup
-          args[:amount] = amount
-          args[:integral] = amount.to_i
-          args[:fractional] = ((amount.abs % 1) * multiplier).to_i if needs_fractional
-
-          result = Kernel.format(format_template, **args)
-
-          # Replace the decimal point inserted by Kernel.format with the locale's decimal separator
-          result.gsub!(/(?<=\d)\.(?=\d)/, decimal) if has_decimal_substitution
-
-          if needs_integral && has_thousand_separator && (amount >= 1000 || amount <= -1000)
-            # Split on the decimal separator between digits only (symbols may contain '.' e.g. د.إ)
-            parts = result.split(/(?<=\d)#{escaped_decimal}(?=\d)/, 2)
-            # Insert thousand separator before groups of 3 digits in the integral part
-            parts[0].gsub!(/(\d)(?=(?:\d{3})+(?:[^\d]|$))/) { Regexp.last_match(1) + thousand }
-            result = parts.join(decimal)
-          end
-
-          result
-        end
       end
     end
   end
