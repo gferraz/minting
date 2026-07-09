@@ -17,12 +17,19 @@ module Mint
 
     # Scans +input+ for registered currency symbols and returns the first match.
     #
+    # Uses a single combined regex scan instead of iterating each symbol,
+    # then resolves to the highest-priority match in registration order.
+    #
     # @param input [String] the string to scan
     # @return [Currency, nil]
     # @api private
     def detect_currency(input)
+      symbols = input.scan(symbol_regex)
+      return nil if symbols.empty?
+
+      # Check scanned symbols against registration order (longest + priority)
       currency_symbols.each do |symbol, currency|
-        return currency if input.include?(symbol)
+        return currency if symbols.include?(symbol)
       end
       nil
     end
@@ -43,6 +50,16 @@ module Mint
                     .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
                     .uniq { |symbol, _| symbol }
                     .freeze
+      end
+    end
+
+    # Combined regex for scanning all registered currency symbols in one pass.
+    #
+    # @return [Regexp] union of all escaped currency symbols
+    # @api private
+    def symbol_regex
+      @symbol_regex || MUTEX.synchronize do
+        @symbol_regex = Regexp.union(currency_symbols.map(&:first)).freeze
       end
     end
   end
