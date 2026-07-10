@@ -24,9 +24,7 @@ module Mint
 
         currency = Currency.new(code:, subunit:, symbol:, priority:)
         @currencies = @currencies.merge(code => currency).freeze
-        @currency_symbols = nil
-        @currency_symbol_map = nil
-        @symbol_regex = nil
+        @symbols_list = nil
         currency
       end
     end

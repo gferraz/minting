@@ -5,61 +5,47 @@ module Mint
   module Registry
     extend self
 
-    # Looks up a currency by its display symbol.
-    #
-    # @param symbol [String] the display symbol (e.g. "$", "R$")
-    # @return [Currency, nil] the highest-priority currency for the symbol
-    # @api private
     def currency_for_symbol(symbol)
-      @currency_symbol_map || MUTEX.synchronize { @currency_symbol_map = currency_symbols.to_h.freeze }
-      @currency_symbol_map[symbol]
+      sync_symbols
+      @symbols_map[symbol]
     end
 
-    # Scans +input+ for registered currency symbols and returns the first match.
-    #
-    # Uses a single combined regex scan instead of iterating each symbol,
-    # then resolves to the highest-priority match in registration order.
-    #
-    # @param input [String] the string to scan
-    # @return [Currency, nil]
-    # @api private
-    def detect_currency(input)
-      symbols = input.scan(symbol_regex)
-      return nil if symbols.empty?
+    def symbol_shared?(symbol)
+      sync_symbols
+      @shared_symbols.include?(symbol)
+    end
 
-      # Check scanned symbols against registration order (longest + priority)
-      currency_symbols.each do |symbol, currency|
-        return currency if symbols.include?(symbol)
-      end
-      nil
+    def detect_currency(input)
+      sync_symbols
+      input.match(@symbols_regex) { |m| @symbols_map[m[0]] }
     end
 
     private
 
-    # Registered symbols sorted for detection: longest match wins, then parser priority.
-    # Duplicate symbols are deduplicated — the highest-priority currency wins.
-    #
-    # @return [Array<Array<String, Currency>>] sorted symbol-to-currency mappings
-    # @api private
-    def currency_symbols
-      @currency_symbols || MUTEX.synchronize do
-        @currency_symbols =
-          currencies.values
-                    .reject { |currency| currency.symbol.empty? }
-                    .map { |currency| [currency.symbol, currency] }
-                    .sort_by { |symbol, currency| [-symbol.length, -currency.priority] }
-                    .uniq { |symbol, _| symbol }
-                    .freeze
-      end
-    end
+    def sync_symbols
+      MUTEX.synchronize do
+        return if @symbols_list
 
-    # Combined regex for scanning all registered currency symbols in one pass.
-    #
-    # @return [Regexp] union of all escaped currency symbols
-    # @api private
-    def symbol_regex
-      @symbol_regex || MUTEX.synchronize do
-        @symbol_regex = Regexp.union(currency_symbols.map(&:first)).freeze
+        symbols_list = []
+        currencies.values.each do |currency|
+          next unless currency.symbol
+
+          symbols_list << [currency.symbol, currency]
+          symbols_list << [currency.disambiguate_symbol, currency] if currency.disambiguate_symbol
+        end
+
+        @shared_symbols = symbols_list.map(&:first).tally
+                                      .select { |_, count| count > 1 }
+                                      .keys
+                                      .to_set
+                                      .freeze
+
+        symbols_list.sort_by! { |sym, cur| [-sym.length, -cur.priority] }
+        symbols_list.uniq! { |sym, _| sym }
+
+        @symbols_list  = symbols_list.freeze
+        @symbols_map   = symbols_list.to_h.freeze
+        @symbols_regex = Regexp.union(@symbols_map.keys).freeze
       end
     end
   end
