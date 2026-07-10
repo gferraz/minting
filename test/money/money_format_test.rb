@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class MoneyFormatTest < Minitest::Test
-
   FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
   def usd_9_99 = Money.from(9.99, 'USD')
