@@ -30,6 +30,8 @@ module Mint
       subunit = subunit.to_i
       priority = priority.to_i
       fractional_multiplier = 10**subunit
+      symbol = nil if symbol && symbol.empty?
+      disambiguate_symbol = nil if [code, symbol].include? disambiguate_symbol
       super(code:, subunit:, symbol:, priority:, country:, name:,
             fractional_multiplier:, disambiguate_symbol:)
     end
@@ -59,6 +61,10 @@ module Mint
     # @example
     #   Money::Currency.for_code('USD').zero  #=> [USD 0.00]
     def zero = Registry.zero_for(self)
+
+    def dsymbol
+      disambiguate_symbol || (Registry.symbol_shared?(symbol) ? code : symbol)
+    end
   end
 
   # Registers a new currency, raising a KeyError if already registered.
