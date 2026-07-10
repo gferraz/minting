@@ -25,6 +25,7 @@ class MoneyParseTest < Minitest::Test
     assert_equal Money.from(12.34, 'EUR'), Money.parse('12,34 €')
     assert_equal Money.from(1500, 'JPY'), Money.parse('¥1500')
     assert_equal Money.from(2500, 'GBP'), Money.parse('£2,500.00')
+    assert_equal Money.from(2500, 'XAF'), Money.parse('FCFA2,500.00')
   end
 
   def test_parse_with_code
