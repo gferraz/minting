@@ -17,7 +17,7 @@ module Mint
       raise ArgumentError, 'Need at least 1 proportion element' if proportions.empty?
       raise ArgumentError, 'Proportions total must not be zero' if whole.zero?
 
-      amounts = proportions.map { |rate| currency.normalize_amount(Rational(amount * rate, whole)) }
+      amounts = proportions.map { |rate| currency.normalize_amount(amount * rate / whole) }
       allocate_left_over(amounts: amounts, left_over: amount - amounts.sum)
     end
   end
