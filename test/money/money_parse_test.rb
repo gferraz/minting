@@ -77,6 +77,22 @@ class MoneyParseTest < Minitest::Test
     assert_equal Money.from(1_234_567, 'USD'), Money.parse('1.234.567', 'USD')
   end
 
+  def test_parse_alphabetic_symbols_require_word_boundary
+    assert_equal Money.from(10, 'ZAR'), Money.parse('R 10')
+    assert_equal Money.from(10, 'BAM'), Money.parse('KM 10')
+    assert_equal Money.from(100, 'BRL'), Money.parse('R$100')
+    assert_equal Money.from(10, 'MYR'), Money.parse('RM 10')
+    assert_equal Money.from(10, 'LSL'), Money.parse('M 10')
+
+    assert_nil Money.parse('CAR 100')
+    assert_nil Money.parse('MA3 34.34')
+    assert_nil Money.parse('CAR$100')
+    assert_nil Money.parse('BOOM 100')
+    assert_nil Money.parse('ROCKMUSIC 100')
+    assert_nil Money.parse('XYZKM 100')
+    assert_nil Money.parse('XYZR 100')
+  end
+
   def test_parse_with_code_among_spurious_uppercase_words
     assert_equal Money.from(10.00, 'USD'), Money.parse('MAX 10.00 USD')
     assert_equal Money.from(10.00, 'XXX'), Money.parse('AVG MIN MAX 10.00 XXX')

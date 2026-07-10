@@ -22,12 +22,19 @@ module Mint
 
     private
 
+    def build_symbol_regex(symbols)
+      parts = symbols.map do |sym|
+        /(?<![a-zA-Z])#{Regexp.escape(sym)}(?![a-zA-Z])/
+      end
+      Regexp.union(parts).freeze
+    end
+
     def sync_symbols
       MUTEX.synchronize do
         return if @symbols_list
 
         symbols_list = []
-        currencies.values.each do |currency|
+        currencies.each_value do |currency|
           next unless currency.symbol
 
           symbols_list << [currency.symbol, currency]
@@ -45,7 +52,7 @@ module Mint
 
         @symbols_list  = symbols_list.freeze
         @symbols_map   = symbols_list.to_h.freeze
-        @symbols_regex = Regexp.union(@symbols_map.keys).freeze
+        @symbols_regex = build_symbol_regex(@symbols_map.keys)
       end
     end
   end
