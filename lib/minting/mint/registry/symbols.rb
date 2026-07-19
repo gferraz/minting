@@ -23,10 +23,7 @@ module Mint
     private
 
     def build_symbol_regex(symbols)
-      parts = symbols.map do |sym|
-        /(?<![a-zA-Z])#{Regexp.escape(sym)}(?![a-zA-Z])/
-      end
-      Regexp.union(parts).freeze
+      /(?<![a-zA-Z])#{Regexp.union(symbols)}(?![a-zA-Z])/.freeze
     end
 
     def sync_symbols
