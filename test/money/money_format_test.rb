@@ -314,6 +314,13 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '1,234_0', jpy.format('%<integral>d_%<fractional>d')
   end
 
+  def test_format_with_literal_dot_in_template
+    m = Money.from(1234.56, 'USD')
+
+    assert_equal '1,234.5600 1234.00', m.format('%<amount>0.4f %<integral>d.00')
+    # assert_equal 'Discount: 3.2%, Price: 1,234.56', m.format('Discount: 3.2%%, Price: %<amount>f', thousand: ',')
+  end
+
   def test_validate_decimal_invalid_type
     assert_raises(ArgumentError) { usd_9_99.format(decimal: 123) }
     assert_raises(ArgumentError) { usd_9_99.format(decimal: true) }
