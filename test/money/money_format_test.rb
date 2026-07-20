@@ -321,6 +321,14 @@ class MoneyFormatTest < Minitest::Test
     # assert_equal 'Discount: 3.2%, Price: 1,234.56', m.format('Discount: 3.2%%, Price: %<amount>f', thousand: ',')
   end
 
+  def test_format_literal_dot_with_non_dot_decimal
+    m = Money.from(1234.56, 'USD')
+
+    assert_equal '1.234,56', m.format('%<amount>f', thousand: '.', decimal: ',')
+    assert_equal '1.5x 1.234,56', m.format('1.5x %<amount>f', thousand: '.', decimal: ',')
+    assert_equal '3.2% 1.234,56', m.format('3.2%% %<amount>f', thousand: '.', decimal: ',')
+  end
+
   def test_validate_decimal_invalid_type
     assert_raises(ArgumentError) { usd_9_99.format(decimal: 123) }
     assert_raises(ArgumentError) { usd_9_99.format(decimal: true) }
