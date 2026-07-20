@@ -64,7 +64,6 @@ module Mint
 
       SUBUNIT_PLACEHOLDER = "\uE000"
       THOUSAND_RE = /(\d)(?=(?:\d{3})+(?:[^\d]|$))/
-      DECIMAL_DOT_RE = /(?<=\d)\.(?=\d)/
 
       def format(money)
         amount = money.amount
@@ -81,27 +80,38 @@ module Mint
                                amount: display_amount,
                                integral: display_amount.to_i,
                                fractional: @needs_fractional ? money.fractional.abs : 0)
-        apply_separators(result, amount)
+        apply_separators(result, display_amount)
       end
 
       private
 
-      def apply_separators(result, original_amount)
-        if @needs_thousand_substitution && (original_amount >= 1000 || original_amount <= -1000)
-          m = result.match(DECIMAL_DOT_RE)
-          if m
-            dot = m.begin(0)
+      def apply_separators(result, display_amount)
+        if @needs_thousand_substitution && (display_amount >= 1000 || display_amount <= -1000)
+          dot = decimal_index(result, display_amount)
+          if dot
             int_part = result[0...dot]
-            frac_part = result[(dot + 1)..]
             int_part.gsub!(THOUSAND_RE, @thousand_replacement)
-            return "#{int_part}#{@decimal}#{frac_part}"
+            return "#{int_part}#{@decimal}#{result[(dot + 1)..]}"
           end
           result.gsub!(THOUSAND_RE, @thousand_replacement)
-        elsif @decimal != '.'
-          result = result.sub(DECIMAL_DOT_RE, @decimal)
+        elsif @decimal != '.' && (dot = decimal_index(result, display_amount))
+          return "#{result[0...dot]}#{@decimal}#{result[(dot + 1)..]}"
         end
-
         result
+      end
+
+      def decimal_index(result, display_amount)
+        search_start = 0
+        int_str = display_amount.abs.to_i.to_s
+        loop do
+          idx = result.index(int_str, search_start)
+          return nil unless idx
+
+          dot_pos = idx + int_str.length
+          return dot_pos if dot_pos < result.length && result[dot_pos] == '.'
+
+          search_start = idx + 1
+        end
       end
 
       def compile_templates
