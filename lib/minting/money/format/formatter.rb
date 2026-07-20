@@ -87,12 +87,18 @@ module Mint
       private
 
       def apply_separators(result, original_amount)
-        result = result.gsub(DECIMAL_DOT_RE, @decimal) if @decimal != '.'
-
         if @needs_thousand_substitution && (original_amount >= 1000 || original_amount <= -1000)
-          parts = result.split(@split_regex, 2)
-          parts[0].gsub!(THOUSAND_RE, @thousand_replacement)
-          result = parts.join(@decimal)
+          m = result.match(DECIMAL_DOT_RE)
+          if m
+            dot = m.begin(0)
+            int_part = result[0...dot]
+            frac_part = result[(dot + 1)..]
+            int_part.gsub!(THOUSAND_RE, @thousand_replacement)
+            return "#{int_part}#{@decimal}#{frac_part}"
+          end
+          result.gsub!(THOUSAND_RE, @thousand_replacement)
+        elsif @decimal != '.'
+          result = result.sub(DECIMAL_DOT_RE, @decimal)
         end
 
         result
@@ -115,7 +121,6 @@ module Mint
         templates_values = compile_templates
         joined_template = templates_values.join
 
-        @split_regex = /(?<=\d)#{Regexp.escape(@decimal)}(?=\d)/
         @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
         @needs_dsymbol = joined_template.include?('%<dsymbol>')
