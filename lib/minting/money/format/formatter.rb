@@ -22,8 +22,9 @@ module Mint
       # @param thousand [String, false] thousands delimiter (+false+ disables)
       def self.for(format, decimal, thousand)
         decimal ||= '.'
-        key = [format, decimal, thousand].hash
-        return cache[key] if cache.key?(key)
+        key = [format, decimal, thousand]
+        formatter = cache[key]
+        return formatter if formatter
 
         validate_format!(format)
         validate_separators!(decimal:, thousand:)
@@ -39,6 +40,9 @@ module Mint
       end
 
       SUBUNIT_PLACEHOLDER = "\uE000"
+      # Matches a digit followed by groups of exactly 3 digits that terminate
+      # at a non-digit or end-of-string. Used to insert thousand separators.
+      # e.g. "1234567" → "1" matches before "234" + "567" at string end.
       THOUSAND_RE = /(\d)(?=(?:\d{3})+(?:[^\d]|$))/
 
       def format(money)
@@ -116,18 +120,23 @@ module Mint
       end
 
       def compile_templates
-        format_templates = [@format[:negative], @format[:zero], @format[:positive] || Money::DEFAULT_FORMAT]
-        format_templates.map! do |sign_format|
-          sign_format = sign_format&.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f")
-          sign_format.freeze
-        end
-        @negative_template, @zero_template, @positive_template = format_templates
-        @templates = { -1 => @negative_template, 0 => @zero_template, 1 => @positive_template }.freeze
-        format_templates
+        @templates = { -1 => @format[:negative], 0 => @format[:zero], 1 => @format[:positive] || Money::DEFAULT_FORMAT }
+        @templates.compact!
+        # Inject subunit precision into %<amount>f specs that lack an explicit
+        # precision. Matches "%<amount>f" or "%+10<amount>f" (with optional
+        # flags/width before the named ref) and appends a placeholder for the
+        # currency subunit digits — e.g. "%<amount>f" → "%<amount>\uE000f".
+        # The placeholder is later replaced with the actual subunit count at
+        # format time (e.g. "\uE000" → "2" for USD, "0" for JPY).
+        @templates.transform_values! { |f| f.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f") }
+        @negative_template = @templates[-1]
+        @positive_template = @templates[1]
+        @templates
       end
 
       def compile
-        templates_values = compile_templates
+        compile_templates
+        templates_values = @templates.values
         joined_template = templates_values.join
         @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
