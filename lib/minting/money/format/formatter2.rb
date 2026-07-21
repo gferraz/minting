@@ -34,9 +34,35 @@ module Mint
       AMOUNT_PH_BASE = "\uE001"
       INTEGRAL_PH_BASE = "\uE002"
       TEMPLATE_DOT_PH = "\uE003"
+
+      # Matches a full %<amount> format spec in either flag-before or
+      # flag-after form:
+      #   Before:  %[-+ 0#]W.P<amount>f   (flags/width/precision before name)
+      #   After:   %<amount>[-+ 0#]W.Pf   (flags/width/precision after name)
+      # Captures: (before_flags, before_prec, after_flags, after_prec, type)
+      # type is 'f' (float) or 'd' (integer-truncated).
       AMOUNT_SPEC_RE = /%(?:([-+ 0#]*\d*)(?:\.(\d*))?<amount>|<amount>([-+ 0#]*\d*)(?:\.(\d*))?)([fd])/
+
+      # Matches a full %<integral> format spec in either form (same as above
+      # but for the integral-only placeholder). Always type 'd'.
+      # Captures: (before_flags, after_flags, type)
       INTEGRAL_SPEC_RE = /%(?:([-+ 0#]*\d*)<integral>|<integral>([-+ 0#]*\d*))(d)/
+
+      # Decomposes a combined flags+width string (e.g. "+ 0#10") into its
+      # parts: (flags, width, precision). Precision is optional (the trailing
+      # \.\d* group).
       SPEC_PARTS_RE = /^([-+ 0#]*)(\d*)(?:\.(\d*))?$/
+
+      # Matches a literal dot that immediately follows an amount or integral
+      # placeholder (e.g. "\uE0010." for the first amount placeholder).
+      # Used to replace template-literal dots with the decimal separator when
+      # the template contains numeric placeholders — dots NOT preceded by a
+      # placeholder are left alone (they belong to currency symbols or text).
+      TEMPLATE_DOT_RE = /([\uE001\uE002]\d+)\./
+
+      # Matches a digit followed by groups of exactly 3 digits that terminate
+      # at a non-digit or end-of-string. Used to insert thousand separators.
+      # e.g. "1234567" → "1" matches before "234" + "567" at string end.
       THOUSAND_RE = /(\d)(?=(?:\d{3})+(?:[^\d]|$))/
 
       def format(money)
@@ -90,6 +116,9 @@ module Mint
 
       def apply_thousand_if_int_match(str, value)
         int_str = value.abs.to_i.to_s
+        # Strip leading sign/space from the formatted string to get the bare
+        # integer digits, so we can compare against int_str to confirm this is
+        # a pure-integer format (no decimal, no extra text).
         formatted_int = str.sub(/\A[-+ ]/, '')
         formatted_int == int_str ? str.gsub(THOUSAND_RE, @thousand_replacement) : str
       end
@@ -145,8 +174,6 @@ module Mint
         end
         [result, amount_pairs, integral_pairs]
       end
-
-      TEMPLATE_DOT_RE = /([\uE001\uE002]\d+)\./
 
       def compile_amount_spec(captures, match_str)
         before_flags, before_prec, after_flags, after_prec, type = captures

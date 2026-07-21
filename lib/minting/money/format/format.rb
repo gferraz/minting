@@ -65,7 +65,7 @@ module Mint
     #   money.format(locale: :en)          # locale passed to backend callable
     #   money.format(locale: 'pt-BR')      # strings work too
     #
-    def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil, formatter_class: Formatter2)
+    def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil, formatter_class: Formatter)
       template, decimal, thousand = resolve_format_options(template, decimal:, thousand:, locale:)
 
       case template

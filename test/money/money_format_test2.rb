@@ -3,13 +3,15 @@
 class MoneyFormatTest2 < Minitest::Test
   F2 = Mint::Money::Formatter2
 
-  FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$') unless Money::Currency.for_code('BRL_FUEL')
+  unless Money::Currency.for_code('BRL_FUEL')
+    FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
+  end
 
   def usd_9_99 = Money.from(9.99, 'USD')
   def usd_123_456_789_01 = Money.from(123_456_789.01, 'USD')
 
-  def fmt(money, template = nil, **opts)
-    money.format(template, **opts, formatter_class: F2)
+  def fmt(money, template = nil, **)
+    money.format(template, **, formatter_class: F2)
   end
 
   def test_numeric_simple_format
