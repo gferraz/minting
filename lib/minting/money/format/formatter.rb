@@ -47,7 +47,7 @@ module Mint
         currency = money.currency
 
         template = @templates[amount <=> 0] || @positive_template
-        display_amount = template == @nx egative_template ? -amount : amount
+        display_amount = template == @negative_template ? -amount : amount
         integral = display_amount.to_i
 
         template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
