@@ -156,8 +156,7 @@ money creation/mutation from then on. The fast path is restored only by
 process restart, not by leaving the `with_rounding` block — the block just
 restores the *thread-local mode* (`Thread.current[:minting_rounding_mode]`),
 not the patched method. Mode is thread-local; the patch is global. Supported
-modes: `:half_up`, `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`
-(`:down` is an alias for `:truncate`).
+modes: `:half_up`, `:half_down`, `:half_even`.
 
 ### Parser
 

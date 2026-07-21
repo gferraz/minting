@@ -316,11 +316,11 @@ Mint.money(9.99, 'BRL').format  #=> "R$9,99"
 
 ```ruby
 Money.with_rounding(:half_down) { Money.from(1.005, 'USD') }   #=> [USD 1.00]
-Money.with_rounding(:ceil)      { Money.from(1.001, 'USD') }   #=> [USD 1.01]
-Money.with_rounding(:floor)     { Money.parse('1.009', 'USD') } #=> [USD 1.00]
+Money.with_rounding(:half_even) { Money.from(1.015, 'USD') }   #=> [USD 1.02]
+Money.with_rounding(:half_up)   { Money.from(1.005, 'USD') }   #=> [USD 1.01]
 ```
 
-Modes: `:half_up` (default), `:half_down`, `:floor`, `:ceil`, `:truncate`, `:down`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
+Modes: `:half_up` (default), `:half_down`, `:half_even`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
 
 > **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:half_up`) with zero dispatch overhead. The first call to `Money.with_rounding` loads the rounding module and patches `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
 

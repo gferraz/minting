@@ -4,17 +4,13 @@ module Mint
   # Rounding-mode dispatch table and block-scoped context.
   # @api private
   module Rounding
-    # Maps mode symbols to their corresponding +Rational+ rounding lambdas.
-    # @return [Hash{Symbol => Proc}]
+    # Maps mode symbols to their +half:+ kwarg values for +Rational#round+.
+    # @return [Hash{Symbol => Symbol}]
     # @api private
     MODES = {
-      half_up: ->(amount, ndigits) { amount.round(ndigits, half: :up) },
-      half_down: ->(amount, ndigits) { amount.round(ndigits, half: :down) },
-      half_even: ->(amount, ndigits) { amount.round(ndigits, half: :even) },
-      floor: ->(amount, ndigits) { amount.floor(ndigits) },
-      ceil: ->(amount, ndigits) { amount.ceil(ndigits) },
-      truncate: ->(amount, ndigits) { amount.truncate(ndigits) },
-      down: ->(amount, ndigits) { amount.truncate(ndigits) }
+      half_up: :up,
+      half_down: :down,
+      half_even: :even
     }.freeze
 
     THREAD_KEY = :minting_rounding_mode
@@ -35,7 +31,7 @@ module Mint
     def self.apply(amount, ndigits)
       mode = Thread.current[THREAD_KEY]
       if mode
-        MODES.fetch(mode).call(amount.to_r, ndigits)
+        amount.to_r.round(ndigits, half: MODES.fetch(mode))
       else
         amount.to_r.round(ndigits)
       end
