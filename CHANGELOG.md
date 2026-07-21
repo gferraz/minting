@@ -9,6 +9,7 @@
 - `Money#mint` removed — use `Money#copy_with`
 - `Money::Currency` is the canonical name to access the `Currency` class
 - `minting/mint/aliases` abbreviated to `minting/aliases`
+- `Money#format` `formatter_class:` kwarg removed — `Formatter` is now the sole formatter implementation
 
 ### Features
 - `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
@@ -21,9 +22,11 @@
 
 ### Code Organization
 - `Money#format` moved to its own file (`lib/minting/money/format/format.rb`) alongside its compiled-formatter infrastructure
+- `Formatter2` removed — `Formatter` consolidated as the single formatter implementation with simplified template compilation, separator handling, and regex documentation (never released)
 
 ### Removals
 - `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+- `Money::Formatter2` — removed; `Formatter` is the sole implementation
 - `test_numeric_json_format` test (covered by `attribute-money`)
 
 ## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
