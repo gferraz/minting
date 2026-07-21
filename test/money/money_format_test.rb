@@ -329,6 +329,13 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '3.2% 1.234,56', m.format('3.2%% %<amount>f', thousand: '.', decimal: ',')
   end
 
+  def test_format_template_text_coinciding_with_amount
+    m = Money.from(12_000, 'USD')
+
+    assert_equal '$12,000 discount on $12,000.00', m.format('$%<integral>d discount on %<symbol>s%<amount>f')
+    assert_equal '$12,000.00 discount on $12,000.00', m.format('$12,000.00 discount on %<symbol>s%<amount>f')
+  end
+
   def test_format_multiple_amount_occurrences
     m = Money.from(22_212.45, 'USD')
 
