@@ -9,7 +9,7 @@
 
 
 
-> **Status:** Minting is approaching a stable 2.0 release. The core API (`Money`, `Currency`, formatting, parsing) is settling and breaking changes from here should be rare. See [Roadmap](#roadmap) for what's left before the tag.
+> **Status:** Minting 2.0 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
 
 ```ruby
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
