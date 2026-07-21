@@ -65,7 +65,7 @@ module Mint
     #   money.format(locale: :en)          # locale passed to backend callable
     #   money.format(locale: 'pt-BR')      # strings work too
     #
-    def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil)
+    def format(template = nil, decimal: nil, thousand: nil, width: nil, locale: nil, formatter_class: Formatter2)
       template, decimal, thousand = resolve_format_options(template, decimal:, thousand:, locale:)
 
       case template
@@ -74,7 +74,7 @@ module Mint
       else        raise ArgumentError, 'Invalid template. Only String or Hash are accepted'
       end
 
-      formatted = Formatter.for(template, decimal, thousand).format(self)
+      formatted = formatter_class.for(template, decimal, thousand).format(self)
 
       width ? formatted.rjust(width) : formatted
     end

@@ -9,17 +9,17 @@ module Mint
     # want an uncached formatter (typically only useful for testing).
     #
     # @api private
-    class Formatter
+    class Formatter # rubocop:disable Metrics/ClassLength
+      extend FormatterValidator
+
       def self.cache
         @cache ||= {}
       end
 
       # Returns a cached {Formatter} for the given configuration.
-      #
       # @param format [Hash{Symbol => String}] per-sign templates
       # @param decimal [String] decimal separator
       # @param thousand [String, false] thousands delimiter (+false+ disables)
-      # @return [Formatter]
       def self.for(format, decimal, thousand)
         decimal ||= '.'
         key = [format, decimal, thousand].hash
@@ -29,30 +29,6 @@ module Mint
         validate_separators!(decimal:, thousand:)
 
         cache[key] = new(format, decimal, thousand)
-      end
-
-      def self.validate_format!(format)
-        raise ArgumentError, 'template must not be empty' if format == {}
-
-        unknown = format.keys - %i[positive negative zero]
-        raise ArgumentError, "Unknown format parameter(s): #{unknown.inspect}. " unless unknown.empty?
-      end
-
-      def self.validate_separators!(decimal:, thousand:)
-        case decimal
-        when ''       then raise ArgumentError, "decimal separator must be a non-empty - #{decimal.inspect}"
-        when /\d/     then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
-        when thousand then raise ArgumentError, "decimal and thousand cannot be identical - #{decimal.inspect}"
-        when String # :noop
-        else raise ArgumentError, "decimal must be a String, false, or nil, got #{decimal.inspect}"
-        end
-
-        case thousand
-        when false, nil # :noop
-        when /\d/ then raise ArgumentError, "decimal separator cannot be a numeral - #{decimal.inspect}"
-        when String # :noop
-        else raise ArgumentError, "thousand must be a String, false, or nil, got #{thousand.inspect}"
-        end
       end
 
       def initialize(format, decimal, thousand)
@@ -87,41 +63,64 @@ module Mint
 
       def apply_separators(result, display_amount)
         if @needs_thousand_substitution && (display_amount >= 1000 || display_amount <= -1000)
-          dot = decimal_index(result, display_amount)
-          if dot
-            int_part = result[0...dot]
-            int_part.gsub!(THOUSAND_RE, @thousand_replacement)
-            return "#{int_part}#{@decimal}#{result[(dot + 1)..]}"
-          end
-          result.gsub!(THOUSAND_RE, @thousand_replacement)
-        elsif @decimal != '.' && (dot = decimal_index(result, display_amount))
-          return "#{result[0...dot]}#{@decimal}#{result[(dot + 1)..]}"
+          apply_thousand_separators(result, display_amount)
+        elsif @decimal != '.'
+          replace_decimal_separators(result, display_amount)
+        else
+          result
         end
-        result
       end
 
-      def decimal_index(result, display_amount)
-        search_start = 0
+      def apply_thousand_separators(result, display_amount)
         int_str = display_amount.abs.to_i.to_s
+        found_dot = false
+        search_start = 0
         loop do
           idx = result.index(int_str, search_start)
-          return nil unless idx
+          break unless idx
 
           dot_pos = idx + int_str.length
-          return dot_pos if dot_pos < result.length && result[dot_pos] == '.'
-
-          search_start = idx + 1
+          if dot_pos < result.length && result[dot_pos] == '.'
+            found_dot = true
+            int_part = result[idx...dot_pos].gsub(THOUSAND_RE, @thousand_replacement)
+            result = "#{result[0...idx]}#{int_part}#{@decimal}#{result[(dot_pos + 1)..]}"
+            search_start = idx + int_part.length + @decimal.length
+          else
+            int_part = int_str.gsub(THOUSAND_RE, @thousand_replacement)
+            result = "#{result[0...idx]}#{int_part}#{result[dot_pos..]}"
+            search_start = idx + int_part.length
+          end
         end
+        return result if found_dot
+
+        # No decimal point found (e.g. %<integral>d) — apply thousand to whole string
+        result.gsub(THOUSAND_RE, @thousand_replacement)
+      end
+
+      def replace_decimal_separators(result, display_amount)
+        int_str = display_amount.abs.to_i.to_s
+        search_start = 0
+        loop do
+          idx = result.index(int_str, search_start)
+          break unless idx
+
+          dot_pos = idx + int_str.length
+          if dot_pos < result.length && result[dot_pos] == '.'
+            result = "#{result[0...dot_pos]}#{@decimal}#{result[(dot_pos + 1)..]}"
+            search_start = dot_pos + @decimal.length
+          else
+            search_start = idx + 1
+          end
+        end
+        result
       end
 
       def compile_templates
         format_templates = [@format[:negative], @format[:zero], @format[:positive] || Money::DEFAULT_FORMAT]
         format_templates.map! do |sign_format|
-          # Inject placeholder for subunit precision into %<amount>f (replaced with actual at call time)
           sign_format = sign_format&.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f")
           sign_format.freeze
         end
-
         @negative_template, @zero_template, @positive_template = format_templates
         @templates = { -1 => @negative_template, 0 => @zero_template, 1 => @positive_template }.freeze
         format_templates
@@ -130,7 +129,6 @@ module Mint
       def compile
         templates_values = compile_templates
         joined_template = templates_values.join
-
         @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
         @needs_dsymbol = joined_template.include?('%<dsymbol>')
