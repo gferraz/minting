@@ -9,7 +9,7 @@ module Mint
     # want an uncached formatter (typically only useful for testing).
     #
     # @api private
-    class Formatter # rubocop:disable Metrics/ClassLength
+    class Formatter
       extend FormatterValidator
 
       def self.cache
@@ -66,60 +66,18 @@ module Mint
       private
 
       def apply_separators(result, display_amount)
-        if @needs_thousand_substitution && (display_amount >= 1000 || display_amount <= -1000)
-          apply_thousand_separators(result, display_amount)
-        elsif @decimal != '.'
-          replace_decimal_separators(result, display_amount)
-        else
-          result
-        end
-      end
+        unsigned_integral = display_amount.abs.to_i
+        int_str = unsigned_integral.to_s
 
-      def apply_thousand_separators(result, display_amount)
-        int_str = display_amount.abs.to_i.to_s
-        found_dot = false
-        search_start = 0
-        loop do
-          idx = result.index(int_str, search_start)
-          break unless idx
-
-          dot_pos = idx + int_str.length
-          if dot_pos < result.length && result[dot_pos] == '.'
-            found_dot = true
-            int_part = result[idx...dot_pos].gsub(THOUSAND_RE, @thousand_replacement)
-            result = "#{result[0...idx]}#{int_part}#{@decimal}#{result[(dot_pos + 1)..]}"
-            search_start = idx + int_part.length + @decimal.length
-          else
-            int_part = int_str.gsub(THOUSAND_RE, @thousand_replacement)
-            result = "#{result[0...idx]}#{int_part}#{result[dot_pos..]}"
-            search_start = idx + int_part.length
-          end
-        end
-        return result if found_dot
-
-        # No decimal point found (e.g. %<integral>d) — apply thousand to whole string
-        result.gsub(THOUSAND_RE, @thousand_replacement)
-      end
-
-      def replace_decimal_separators(result, display_amount)
-        int_str = display_amount.abs.to_i.to_s
-        search_start = 0
-        loop do
-          idx = result.index(int_str, search_start)
-          break unless idx
-
-          dot_pos = idx + int_str.length
-          if dot_pos < result.length && result[dot_pos] == '.'
-            result = "#{result[0...dot_pos]}#{@decimal}#{result[(dot_pos + 1)..]}"
-            search_start = dot_pos + @decimal.length
-          else
-            search_start = idx + 1
-          end
+        result = result.sub("#{int_str}.", "#{int_str}#{@decimal}") if @decimal != '.'
+        if @needs_thousand_substitution && unsigned_integral >= 1000
+          formatted_int = int_str.gsub(THOUSAND_RE, @thousand_replacement)
+          result.gsub!(int_str, formatted_int)
         end
         result
       end
 
-      def compile_templates
+      def compile
         @templates = { -1 => @format[:negative], 0 => @format[:zero], 1 => @format[:positive] || Money::DEFAULT_FORMAT }
         @templates.compact!
         # Inject subunit precision into %<amount>f specs that lack an explicit
@@ -131,13 +89,8 @@ module Mint
         @templates.transform_values! { |f| f.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f") }
         @negative_template = @templates[-1]
         @positive_template = @templates[1]
-        @templates
-      end
 
-      def compile
-        compile_templates
-        templates_values = @templates.values
-        joined_template = templates_values.join
+        joined_template = @templates.values.join
         @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
         @needs_fractional = joined_template.include?('%<fractional>')
         @needs_dsymbol = joined_template.include?('%<dsymbol>')

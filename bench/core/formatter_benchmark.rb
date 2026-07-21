@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 require_relative '../benchmark_helper'
-require_relative '../../lib/minting/money/format/formatter2'
 
 class FormatterBenchmark < Minitest::Test
   include BenchmarkHelper
 
   F1 = Mint::Money::Formatter
-  F2 = Mint::Money::Formatter2
 
   TEMPLATES = {
     simple: { positive: '%<symbol>s%<amount>f' },
@@ -26,111 +24,84 @@ class FormatterBenchmark < Minitest::Test
     @jpy = Money.from(123_456, 'JPY')
   end
 
-  def test_formatter_comparison_simple
+  def test_formatter_simple
     with_bench('Simple Format (%<symbol>s%<amount>f)') do
       f1 = F1.for(TEMPLATES[:simple], '.', ',')
-      f2 = F2.for(TEMPLATES[:simple], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd) }
       end
     end
   end
 
-  def test_formatter_comparison_full
+  def test_formatter_full
     with_bench('Full Format (%<symbol>s%<amount>f (%<currency>s))') do
       f1 = F1.for(TEMPLATES[:full], '.', ',')
-      f2 = F2.for(TEMPLATES[:full], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd) }
       end
     end
   end
 
-  def test_formatter_comparison_accounting
+  def test_formatter_accounting
     with_bench('Accounting Format (negative hash)') do
       f1 = F1.for(TEMPLATES[:accounting], '.', ',')
-      f2 = F2.for(TEMPLATES[:accounting], '.', ',')
       neg = -@usd
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(neg) }
-        x.report('Formatter2 (preformat)') { f2.format(neg) }
-        x.compare!
+        x.report('Formatter') { f1.format(neg) }
       end
     end
   end
 
-  def test_formatter_comparison_integral_frac
+  def test_formatter_integral_frac
     with_bench('Integral+Fractional Format') do
       f1 = F1.for(TEMPLATES[:integral_frac], '.', ',')
-      f2 = F2.for(TEMPLATES[:integral_frac], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd) }
       end
     end
   end
 
-  def test_formatter_comparison_comma_decimal
+  def test_formatter_comma_decimal
     with_bench('Comma Decimal (%<symbol>s%<amount>f with , decimal)') do
       f1 = F1.for(DECIMAL_COMMA, ',', '.')
-      f2 = F2.for(DECIMAL_COMMA, ',', '.')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd) }
       end
     end
   end
 
-  def test_formatter_comparison_large_amount
+  def test_formatter_large_amount
     with_bench('Large Amount with Thousand Separators') do
       f1 = F1.for(TEMPLATES[:simple], '.', ',')
-      f2 = F2.for(TEMPLATES[:simple], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd_large) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd_large) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd_large) }
       end
     end
   end
 
-  def test_formatter_comparison_zero
+  def test_formatter_zero
     with_bench('Zero Amount') do
       f1 = F1.for(TEMPLATES[:simple], '.', ',')
-      f2 = F2.for(TEMPLATES[:simple], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@usd_zero) }
-        x.report('Formatter2 (preformat)') { f2.format(@usd_zero) }
-        x.compare!
+        x.report('Formatter') { f1.format(@usd_zero) }
       end
     end
   end
 
-  def test_formatter_comparison_jpy
+  def test_formatter_jpy
     with_bench('JPY (0 subunit)') do
       f1 = F1.for(TEMPLATES[:simple], '.', ',')
-      f2 = F2.for(TEMPLATES[:simple], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (original)') { f1.format(@jpy) }
-        x.report('Formatter2 (preformat)') { f2.format(@jpy) }
-        x.compare!
+        x.report('Formatter') { f1.format(@jpy) }
       end
     end
   end
 
-  def test_formatter_comparison_cached_hit
+  def test_formatter_cached_hit
     with_bench('Cached Formatter (hot path)') do
       F1.for(TEMPLATES[:simple], '.', ',')
-      F2.for(TEMPLATES[:simple], '.', ',')
       Benchmark.ips do |x|
-        x.report('Formatter  (cached)') { F1.for(TEMPLATES[:simple], '.', ',').format(@usd) }
-        x.report('Formatter2 (cached)') { F2.for(TEMPLATES[:simple], '.', ',').format(@usd) }
-        x.compare!
+        x.report('Formatter (cached)') { F1.for(TEMPLATES[:simple], '.', ',').format(@usd) }
       end
     end
   end
