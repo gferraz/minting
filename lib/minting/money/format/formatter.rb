@@ -12,16 +12,13 @@ module Mint
     class Formatter
       extend FormatterValidator
 
-      def self.cache
-        @cache ||= {}
-      end
+      def self.cache = @cache ||= {}
 
       # Returns a cached {Formatter} for the given configuration.
       # @param format [Hash{Symbol => String}] per-sign templates
       # @param decimal [String] decimal separator
       # @param thousand [String, false] thousands delimiter (+false+ disables)
       def self.for(format, decimal, thousand)
-        decimal ||= '.'
         key = [format, decimal, thousand]
         formatter = cache[key]
         return formatter if formatter
@@ -50,7 +47,8 @@ module Mint
         currency = money.currency
 
         template = @templates[amount <=> 0] || @positive_template
-        display_amount = template == @negative_template ? -amount : amount
+        display_amount = template == @nx egative_template ? -amount : amount
+        integral = display_amount.to_i
 
         template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
         result = Kernel.format(template,
@@ -58,18 +56,19 @@ module Mint
                                dsymbol: @needs_dsymbol && currency.dsymbol,
                                symbol: currency.symbol,
                                amount: display_amount,
-                               integral: display_amount.to_i,
+                               integral: integral,
                                fractional: @needs_fractional ? money.fractional.abs : 0)
-        apply_separators(result, display_amount)
+        apply_separators(result, integral)
       end
 
       private
 
-      def apply_separators(result, display_amount)
-        unsigned_integral = display_amount.abs.to_i
+      def apply_separators(result, integral)
+        unsigned_integral = integral.abs
         int_str = unsigned_integral.to_s
 
-        result = result.sub("#{int_str}.", "#{int_str}#{@decimal}") if @decimal != '.'
+        result.sub!("#{int_str}.", "#{int_str}#{@decimal}") if @decimal != '.'
+
         if @needs_thousand_substitution && unsigned_integral >= 1000
           formatted_int = int_str.gsub(THOUSAND_RE, @thousand_replacement)
           result.gsub!(int_str, formatted_int)
