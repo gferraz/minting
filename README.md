@@ -22,6 +22,41 @@ total = price + tax                    #=> [USD 21.59]
 total.to_s                             #=> "$21.59"
 ```
 
+## Quickstart
+
+Get started in 60 seconds:
+
+```ruby
+# Add to your Gemfile
+gem "minting"
+
+# Or install directly
+# gem install minting
+
+# Require the gem
+require "minting"
+
+# Create money objects
+price = Money.from(19.99, "USD")
+tax_rate = 0.08
+tax = price * tax_rate
+total = price + tax
+
+# Format as a string
+puts total.to_s # => "$21.59"
+
+# Parse from a string
+money = Money.parse("$15.99")
+puts money # => "$15.99"
+
+# Allocate money proportionally
+total = Money.from(100, "USD")
+shares = total.allocate([1, 2, 3]) # => [16.67, 33.33, 50.00]
+
+# Split into N equal parts
+parts = total.split(3) # => [33.34, 33.33, 33.33]
+```
+
 ## What's New in 2.0
 
 ### Breaking Changes
@@ -56,6 +91,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 
 ## Table of contents
 
+- [Quickstart](#quickstart)
 - [Why Minting](#why-minting)
 - [What's New in 2.0](#whats-new-in-20)
 - [How it compares](#how-it-compares)
