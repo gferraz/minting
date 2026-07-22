@@ -10,7 +10,6 @@
 - `Money::Currency` is the canonical name to access the `Currency` class
 - `minting/mint/aliases` abbreviated to `minting/aliases`
 - `Money#format` `formatter_class:` kwarg removed — `Formatter` is now the sole formatter implementation
-- Rounding modes `:floor`, `:ceil`, `:truncate`, `:down` removed — only `:half_up`, `:half_down`, `:half_even` (native `Rational#round` modes) are supported
 
 ### Features
 - `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
@@ -28,7 +27,6 @@
 ### Removals
 - `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
 - `Money::Formatter2` — removed; `Formatter` is the sole implementation
-- Rounding modes `:floor`, `:ceil`, `:truncate`, `:down` removed from `Money.with_rounding`
 - `test_numeric_json_format` test (covered by `attribute-money`)
 
 ## [v1.9.8](https://github.com/gferraz/minting/releases/tag/v1.9.8) (2026-07-01)
