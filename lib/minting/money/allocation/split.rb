@@ -15,7 +15,7 @@ module Mint
     #   money = Money.from(10.00, 'USD')
     #   money.split(3) #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
     def split(slices)
-      raise ArgumentError, 'Slices quantity must be an poitive integer' unless slices.positive? && slices.integer?
+      raise ArgumentError, 'Slices quantity must be a positive integer' unless slices.positive? && slices.integer?
 
       fraction = currency.normalize_amount(amount / slices)
       allocate_left_over(amounts: Array.new(slices, fraction),
