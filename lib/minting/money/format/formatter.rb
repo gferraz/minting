@@ -46,11 +46,13 @@ module Mint
         amount = money.amount
         currency = money.currency
 
-        template = @templates[amount <=> 0] || @positive_template
-        display_amount = template == @negative_template ? -amount : amount
+        templates = @has_placeholder ? @templates_by_subunit[currency.subunit] : @templates
+
+        template = templates[amount <=> 0] || templates[1]
+
+        display_amount = @has_negative_template && amount < 0 ? -amount : amount
         integral = display_amount.to_i
 
-        template = template.gsub(SUBUNIT_PLACEHOLDER, currency.subunit.to_s) if @has_placeholder
         result = Kernel.format(template,
                                currency: currency.code,
                                dsymbol: @needs_dsymbol && currency.dsymbol,
@@ -86,16 +88,22 @@ module Mint
         # The placeholder is later replaced with the actual subunit count at
         # format time (e.g. "\uE000" → "2" for USD, "0" for JPY).
         @templates.transform_values! { |f| f.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f") }
-        @negative_template = @templates[-1]
-        @positive_template = @templates[1]
+        @has_negative_template = @templates.key?(-1)
 
-        joined_template = @templates.values.join
-        @has_placeholder = joined_template.include?(SUBUNIT_PLACEHOLDER)
-        @needs_fractional = joined_template.include?('%<fractional>')
-        @needs_dsymbol = joined_template.include?('%<dsymbol>')
-        @needs_thousand_substitution = @thousand && !@thousand.empty? && (joined_template.include?('%<amount>') ||
-                         joined_template.include?('%<integral>'))
+        joined = @templates.values.join
+        @needs_fractional = joined.include?('%<fractional>')
+        @needs_dsymbol = joined.include?('%<dsymbol>')
+
+        @needs_thousand_substitution = @thousand && !@thousand.empty? &&
+                                       (joined.include?('%<amount>') || joined.include?('%<integral>'))
         @thousand_replacement = "\\1#{@thousand}" if @needs_thousand_substitution
+
+        @has_placeholder = joined.include?(SUBUNIT_PLACEHOLDER)
+        return unless @has_placeholder
+
+        @templates_by_subunit = Hash.new do |h, subunit|
+          h[subunit] = @templates.transform_values { |f| f.gsub(SUBUNIT_PLACEHOLDER, subunit.to_s) }
+        end
       end
     end
   end
