@@ -1,9 +1,8 @@
 [![Gem Version](https://badge.fury.io/rb/minting.svg)](https://badge.fury.io/rb/minting)
 [![CI](https://github.com/gferraz/minting/actions/workflows/ci.yml/badge.svg)](https://github.com/gferraz/minting/actions/workflows/ci.yml)
-[![Test Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/gferraz/minting)
+[![Test Coverage](https://img.shields.io/badge/coverage-94%25-brightgreen)](https://github.com/gferraz/minting)
 [![Documentation](https://img.shields.io/badge/docs-rubydoc.info-blue)](https://www.rubydoc.info/gems/minting/frames)
 [![RubyCritic Score](https://img.shields.io/badge/RubyCritic-93/100-brightgreen)](https://github.com/gferraz/minting)
-[![GitHub contributors](https://img.shields.io/github/contributors/gferraz/minting)](https://github.com/gferraz/minting/graphs/contributors)
 [![GitHub last commit](https://img.shields.io/github/last-commit/gferraz/minting)](https://github.com/gferraz/minting/commits/main)
 [![License](https://img.shields.io/github/license/gferraz/minting)](https://github.com/gferraz/minting/blob/main/LICENSE)
 
@@ -395,8 +394,6 @@ If another `Money` is already defined when `require "minting"` runs (e.g. the `m
 Minting itself has no Rails dependency. For `ActiveRecord` type casting, validators, and form helpers, pair it with the companion gem:
 
 - **[MoneyAttribute](https://github.com/gferraz/money-attribute)** — a `money_attribute` macro for models, with `ActiveRecord::Type` integration and `composed_of`-based support for multi-column (amount + currency) attributes.
-
-
 
 ## License
 
