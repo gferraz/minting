@@ -19,11 +19,42 @@ total = price + tax                    #=> [USD 21.59]
 total.to_s                             #=> "$21.59"
 ```
 
+## What's New in 2.0
+
+### Breaking Changes
+- `Mint.parse` and `Mint.parse!` removed — use `Money.parse` and `Money.parse!`
+- `Mint.with_rounding` removed — use `Money.with_rounding`
+- `Mint.world_currencies` removed — use `Currency.world_currencies`
+- `Money#mint` removed — use `Money#copy_with`
+- `Money::Currency` is the canonical name to access the `Currency` class
+- `minting/mint/aliases` abbreviated to `minting/aliases`
+- `Money#format` `formatter_class:` kwarg removed — `Formatter` is now the sole formatter implementation
+- `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+
+### New Features
+- **Crypto currency support**: Opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
+- `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
+- `Money.from_hash(hash)` — deserializer symmetric with `to_hash`, accepts `{ currency:, amount: }`
+- `Money#integral` — returns the whole-unit part of the amount (complement to `#fractional`). `#to_i` is now an alias of `#integral`.
+- `%<dsymbol>s` format placeholder — uses `currency.disambiguate_symbol` (e.g. "US$", "C$", "A$") when available, falling back to the primary symbol.
+- **Compiled formatting**: Formatting is now compiled into reusable lambdas at the class level — 1.4–2.2x formatting speedup depending on scenario.
+- **Locale-aware formatting**: `locale:` kwarg on `Money#format` / `#to_fs`, supports per-locale decimal/thousand separators and format templates via `Mint.locale_backend`. Works seamlessly with Rails I18n.
+- **Faster startup**: World currencies are now preloaded at gem initialization, eliminating lazy-loading overhead and mutex contention.
+
+### Bugfixes
+- `Money#fractional` now returns a signed value matching the amount's sign (previously always positive for negative amounts). The invariant `integral * multiplier + fractional == subunits` now holds for all amounts.
+- `Money#initialize` now calls `.to_r` on the amount, guaranteeing `@amount` is always a `Rational`. Fixes a hash/`eql?` contract violation for zero-subunit currencies and an `ArgumentError` in `Integer#to_d`.
+
+### Removed
+- `Money::Formatter2` — removed; `Formatter` is the sole implementation
+- `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+
 Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 0.2` problems simply don't happen here, at any scale.
 
 ## Table of contents
 
 - [Why Minting](#why-minting)
+- [What's New in 2.0](#whats-new-in-20)
 - [How it compares](#how-it-compares)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -254,16 +285,6 @@ Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
 Currency.register_all_crypto   # raises KeyError on any conflict
 ```
 
-`Currency.crypto_currencies` lists all available definitions without registering:
-
-```ruby
-Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
-# BTC: Bitcoin
-# ETH: Ethereum
-# SOL: Solana
-# ...
-```
-
 ### Locale formatting
 
 Minting doesn't ship built-in locale data, but the `Mint.locale_backend` hook lets you wire in locale-specific decimal/thousand separators and format templates:
@@ -332,12 +353,11 @@ Modes: `:half_up` (default), `:half_down`, `:half_even`. Applies to construction
 
 **Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
 
-**Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/currencies.yaml` and load when the registry is first accessed.
+**Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/world-currencies.yaml` and are preloaded at gem initialization.
 
-## Optional top-level `Money` and `Currency`
+## Optional top-level `Money` (opt-out) and `Currency` (opt-in)
 
 By default, `require "minting"` exposes `Mint::Money` as the top-level `Money` constant, so you can write `Money.from(10, "USD")` directly:
-
 ```ruby
 require "minting"
 
@@ -372,12 +392,7 @@ Minting itself has no Rails dependency. For `ActiveRecord` type casting, validat
 
 - **[MoneyAttribute](https://github.com/gferraz/money-attribute)** — a `money_attribute` macro for models, with `ActiveRecord::Type` integration and `composed_of`-based support for multi-column (amount + currency) attributes.
 
-## Roadmap
 
-Toward a stable 2.0: (no later than August 2026)
-
-- Exchange-rate conversion infrastructure (provider abstraction, stateless injection)
-- API surface review — locking in the public interface for `Money`, `Currency`, and formatting before the tag
 
 ## License
 
