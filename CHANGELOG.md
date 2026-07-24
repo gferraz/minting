@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Breaking Changes
+- Rounding mode symbols renamed to match `Rational#round` `half:` parameter: `:half_up` → `:up`, `:half_down` → `:down`, `:half_even` → `:even`. The `ROUNDINGS` mapping hash has been removed from `Currency`.
+
 ## [v2.0.0](https://github.com/gferraz/minting/releases/tag/v2.0.0) (2026-07-04)
 
 ### Breaking Changes
@@ -126,7 +131,7 @@
 - Fix test assertion for 0 XXX amount format.
 
 ### Performance
-- `rake bench:check` now also runs benchmarks under `Mint.with_rounding(:half_down)`, storing/checking baselines for both the fast path and rounding mode in a single combined JSON file.
+- `rake bench:check` now also runs benchmarks under `Mint.with_rounding(:down)`, storing/checking baselines for both the fast path and rounding mode in a single combined JSON file.
 - `rake bench:baseline` generates baselines for both modes at once.
 - `bin/bench_check` prints the best and worst ratio vs baseline per mode at the end.
 
@@ -165,7 +170,7 @@
 - `Mint.with_rounding(mode)` — block-scoped rounding mode via `Thread.current`, restores on exit
 - `Currency#normalize_amount` delegates to `Mint::Rounding.apply` — single dispatch point for all rounding
 - `allocate` and `split` use `currency.normalize_amount` instead of direct `.round(subunit)` — automatically respect block-scoped mode
-- Modes: `:half_up`, `:half_down`, `:half_even` — `Rational#round` native, no `BigDecimal` dependency
+- Modes: `:up`, `:down`, `:even` — `Rational#round` native, no `BigDecimal` dependency
 - `Currency.zero(currency)` — class method on `Currency`, new home for zero-money access
 - `Currency.for_code(code)` — direct hash lookup by currency code
 - `Currency.for_symbol(symbol)` — exact symbol match via frozen hash

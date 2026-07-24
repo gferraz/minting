@@ -77,7 +77,7 @@ module Mint
     def normalize_amount(amount)
       if Currency.custom_rounding_active?
         mode = Thread.current[Currency::ROUNDING_THREAD_KEY]
-        return amount.to_r.round(subunit, half: Currency::ROUNDINGS.fetch(mode)) if mode
+        return amount.to_r.round(subunit, half: mode) if mode
       end
 
       amount.to_r.round(subunit)

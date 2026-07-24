@@ -3,27 +3,27 @@
 require_relative 'test_helper'
 
 class RoundingTest < Minitest::Test
-  def test_default_mode_is_half_up
+  def test_default_mode_is_up
     assert_equal parse('1.01'), parse('1.005')
     assert_equal parse('1.00'), parse('1.004')
   end
 
-  def test_half_up
-    Money.with_rounding(:half_up) do
+  def test_up
+    Money.with_rounding(:up) do
       assert_equal parse('1.01'), parse('1.005')
       assert_equal parse('1.00'), parse('1.004')
     end
   end
 
-  def test_half_down
-    Money.with_rounding(:half_down) do
+  def test_down
+    Money.with_rounding(:down) do
       assert_equal parse('1.00'), parse('1.005')
       assert_equal parse('1.01'), parse('1.006')
     end
   end
 
-  def test_half_even
-    Money.with_rounding(:half_even) do
+  def test_even
+    Money.with_rounding(:even) do
       assert_equal parse('1.00'), parse('1.005')
       assert_equal parse('1.02'), parse('1.015')
       assert_equal parse('1.02'), parse('1.025')
@@ -32,8 +32,8 @@ class RoundingTest < Minitest::Test
   end
 
   def test_nesting_restores_outer
-    Money.with_rounding(:half_down) do
-      Money.with_rounding(:half_even) do
+    Money.with_rounding(:down) do
+      Money.with_rounding(:even) do
         assert_equal parse('1.00'), parse('1.005')
       end
       assert_equal parse('1.00'), parse('1.005')
@@ -41,14 +41,14 @@ class RoundingTest < Minitest::Test
   end
 
   def test_restores_default_after_block
-    Money.with_rounding(:half_down) { parse('1.005') }
+    Money.with_rounding(:down) { parse('1.005') }
 
     assert_equal parse('1.01'), parse('1.005')
   end
 
   def test_restores_on_exception
     assert_raises(RuntimeError) do
-      Money.with_rounding(:half_down) { raise 'boom' }
+      Money.with_rounding(:down) { raise 'boom' }
     end
     assert_equal parse('1.01'), parse('1.005')
   end
@@ -58,10 +58,10 @@ class RoundingTest < Minitest::Test
   end
 
   def test_does_not_leak_into_raw_rational_operations
-    Money.with_rounding(:half_down) do
+    Money.with_rounding(:down) do
       assert_in_delta(1.01, Rational(1005, 1000).round(2))
     end
-    Money.with_rounding(:half_even) do
+    Money.with_rounding(:even) do
       assert_in_delta(1.01, Rational(1005, 1000).round(2))
     end
   end
@@ -69,19 +69,19 @@ class RoundingTest < Minitest::Test
   def test_copy_with_respects_mode
     money = parse('1.00')
 
-    Money.with_rounding(:half_down) do
-      assert_equal :half_down, Mint::Currency.current_rounding_mode
+    Money.with_rounding(:down) do
+      assert_equal :down, Mint::Currency.current_rounding_mode
       assert_equal parse('1.00'), money.copy_with(amount: 1.005r)
     end
-    Money.with_rounding(:half_even) do
-      assert_equal :half_even, Mint::Currency.current_rounding_mode
+    Money.with_rounding(:even) do
+      assert_equal :even, Mint::Currency.current_rounding_mode
       assert_equal parse('1.02'), money.copy_with(amount: 1.015r)
     end
   end
 
   def test_allocate_respects_mode
     money = parse('10.00')
-    Money.with_rounding(:half_down) do
+    Money.with_rounding(:down) do
       result = money.allocate([1, 1, 1])
 
       assert_equal parse('3.34'), result[0]
@@ -89,7 +89,7 @@ class RoundingTest < Minitest::Test
       assert_equal parse('3.33'), result[2]
       assert_equal money, result.sum
     end
-    Money.with_rounding(:half_even) do
+    Money.with_rounding(:even) do
       result = money.allocate([1, 1, 1])
 
       assert_equal parse('3.34'), result[0]
@@ -101,7 +101,7 @@ class RoundingTest < Minitest::Test
 
   def test_split_respects_mode
     money = parse('10.00')
-    Money.with_rounding(:half_down) do
+    Money.with_rounding(:down) do
       result = money.split(3)
 
       assert_equal parse('3.34'), result[0]
@@ -109,7 +109,7 @@ class RoundingTest < Minitest::Test
       assert_equal parse('3.33'), result[2]
       assert_equal money, result.sum
     end
-    Money.with_rounding(:half_even) do
+    Money.with_rounding(:even) do
       result = money.split(3)
 
       assert_equal parse('3.34'), result[0]
@@ -120,23 +120,23 @@ class RoundingTest < Minitest::Test
   end
 
   def test_parse_respects_mode
-    Money.with_rounding(:half_down) do
+    Money.with_rounding(:down) do
       assert_equal parse('1.00'), Money.parse('1.005', 'USD')
     end
-    Money.with_rounding(:half_up) do
+    Money.with_rounding(:up) do
       assert_equal parse('1.01'), Money.parse('1.005', 'USD')
     end
   end
 
   def test_thread_isolation
     t1 = Thread.new do
-      Money.with_rounding(:half_down) do
+      Money.with_rounding(:down) do
         Thread.pass
         parse('1.005')
       end
     end
     t2 = Thread.new do
-      Money.with_rounding(:half_even) do
+      Money.with_rounding(:even) do
         Thread.pass
         parse('1.015')
       end

@@ -15,7 +15,7 @@ module Mint
     # When rounding modes are never used (the common case), the fast path
     # incurs zero overhead.
     #
-    # @param mode [Symbol] one of: +:half_up+, +:half_down+, +:half_even+
+    # @param mode [Symbol] one of: +:up+, +:down+, +:even+
     # @yield block to execute with the rounding mode active
     # @raise [ArgumentError] if +mode+ is not a recognised rounding mode
     def self.with_rounding(mode, &)

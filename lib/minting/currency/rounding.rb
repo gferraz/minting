@@ -4,13 +4,13 @@
 module Mint
   # :nodoc:
   class Currency
-    # Maps mode symbols to their +half:+ kwarg values for +Rational#round+.
-    # @return [Hash{Symbol, Symbol}]
     # @api private
-    ROUNDINGS = { half_up: :up, half_down: :down, half_even: :even }.freeze
+    VALID_ROUNDING_MODES = %i[up down even].freeze
 
     # @api private
     ROUNDING_THREAD_KEY = :minting_rounding_mode
+
+    @custom_rounding_active = false
 
     # @return [Boolean] whether a custom rounding mode has been activated
     # @api private
@@ -21,21 +21,24 @@ module Mint
     # @api private
     def self.activate_custom_rounding! = @custom_rounding_active = true
 
-    # Returns the currently active rounding mode, falling back to +:half_up+.
+    # Returns the currently active rounding mode, falling back to +:up+.
     # @api private
-    # @return [Symbol]
+    # @return [Symbol] one of +:up+, +:down+, +:even+
     def self.current_rounding_mode
-      Thread.current[ROUNDING_THREAD_KEY] || :half_up
+      Thread.current[ROUNDING_THREAD_KEY] || :up
     end
 
     # Sets a rounding mode for the duration of a block, restoring the
     # previous mode on exit (even on exception).
     # @api private
-    # @param mode [Symbol]
+    # @param mode [Symbol] one of +:up+, +:down+, +:even+
     # @yield block to execute with the mode active
     # @raise [ArgumentError] on unknown mode
     def self.rounding_mode(mode)
-      raise ArgumentError, "Unknown rounding mode: #{mode}" unless ROUNDINGS.key?(mode)
+      unless VALID_ROUNDING_MODES.include?(mode)
+        raise ArgumentError,
+              "Unknown rounding mode: #{mode} (expected :up, :down, or :even)"
+      end
 
       prev = Thread.current[ROUNDING_THREAD_KEY]
       Thread.current[ROUNDING_THREAD_KEY] = mode

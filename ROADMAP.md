@@ -122,7 +122,7 @@ All expressible via `Kernel.format`-style templates:
 
 ### Rounding
 
-- `Mint.with_rounding(:half_even)`, `:half_up`, `:half_down` — `Rational#round` native, no BigDecimal
+- `Mint.with_rounding(:even)`, `:up`, `:down` — `Rational#round` native, no BigDecimal
 - Thread-local rounding — `Mint.with_rounding(mode) { }`
 
 ### Currency features

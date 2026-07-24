@@ -49,7 +49,7 @@ ITERS = {
 
 MODES = {
   no_rounding: nil,
-  half_down: :half_down
+  half_down: :down
 }.freeze
 
 m1 = 123_456_789.01.dollars

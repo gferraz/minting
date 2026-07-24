@@ -156,7 +156,7 @@ the single funnel for construction, parsing, `copy_with`, `allocate`, and
 set). When the flag is true, `normalize_amount` checks the thread-local
 before each round call; when false, it skips the check entirely. The block
 restores the thread-local mode on exit. Mode is thread-local; the flag is
-global. Supported modes: `:half_up`, `:half_down`, `:half_even`.
+global. Supported modes: `:up`, `:down`, `:even`.
 
 ### Parser
 
@@ -336,7 +336,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/mint/registry/` | `registry.rb`, `registration.rb`, `symbols.rb`, `zeros.rb` — all shared state + `MUTEX` |
 | `lib/minting/currency/registry.rb` | Currency class methods delegating to Registry (resolve, register, for_code, etc.) |
 | `lib/minting/currency/currency.rb` | `Currency` (immutable value object), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
-| `lib/minting/currency/rounding.rb` | rounding constants (`ROUNDINGS`), flag, `current_rounding_mode`, `rounding_mode` |
+| `lib/minting/currency/rounding.rb` | `VALID_ROUNDING_MODES`, flag, `current_rounding_mode`, `rounding_mode` |
 | `lib/minting/mint/parser/parser.rb`, `separators.rb` | `Mint.parse` / `Mint.parse!` |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
