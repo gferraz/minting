@@ -116,9 +116,11 @@ There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 
 ### Two namespaces, one registry
 
-- `Money::Currency` — a `Data.define` value object (`code`, `subunit`,
+- `Money::Currency` — an immutable value object (`code`, `subunit`,
   `symbol`, `priority`, `country`, `name`, `fractional_multiplier`).
-  Immutable. Constructed via `Currency.new(...)` or `Currency.register(...)`.
+  Identity is by `code` only. Constructed via `Currency.new(...)` or
+  `Currency.register(...)`. Rounding logic lives on Currency directly
+  (`currency/rounding.rb`).
 - `Mint::Money` — an immutable value object (frozen on `initialize`) holding
   a `Rational` amount and a `Currency`. All behavior is split into mixins
   required by `money/money.rb`: `arithmetics/`, `format/`, `allocation/`,
@@ -149,14 +151,12 @@ zero amounts to the cached `currency.zero` singleton, so
 the single funnel for construction, parsing, `copy_with`, `allocate`, and
 `split`. The default fast path is `Rational#round` (half-up).
 
-`Mint.with_rounding(mode)` is **lazy-loaded**: the first call requires
-`mint/rounding`, which `remove_method`s `normalize_amount` and redefines it
-to dispatch through `Mint::Rounding.apply`. This adds ~10–35ns per
-money creation/mutation from then on. The fast path is restored only by
-process restart, not by leaving the `with_rounding` block — the block just
-restores the *thread-local mode* (`Thread.current[:minting_rounding_mode]`),
-not the patched method. Mode is thread-local; the patch is global. Supported
-modes: `:half_up`, `:half_down`, `:half_even`.
+`Mint.with_rounding(mode)` sets a thread-local mode and activates
+`Currency.custom_rounding_active?` (a class-level flag, irreversible once
+set). When the flag is true, `normalize_amount` checks the thread-local
+before each round call; when false, it skips the check entirely. The block
+restores the thread-local mode on exit. Mode is thread-local; the flag is
+global. Supported modes: `:half_up`, `:half_down`, `:half_even`.
 
 ### Parser
 
@@ -258,8 +258,7 @@ handles non-numeric steps natively, so the patch is gated by
 
 - `# frozen_string_literal: true` magic comment in every file.
 - Ruby 3.3+ syntax is used freely: endless methods (`def foo = ...`), pattern
-  matching (`in`/`case in`), `Data.define`, anonymous splat/block forwarding
-  (`&`).
+  matching (`in`/`case in`), anonymous splat/block forwarding (`&`).
 - YARD docstrings on public API; `@api private` for internal methods;
   `# :nodoc:` on internal class/module containers.
 - Currency codes must match `/^[A-Z_]+$/` (enforced in `Registry.register`).
@@ -312,10 +311,6 @@ handles non-numeric steps natively, so the patch is gated by
 - **Zero singleton.** `Mint.money(0, 'USD')` returns the cached frozen
   `currency.zero`, not a fresh object. `Money.from` and `Money.from_subunits`
   both do this. Equality and `assert_same` tests rely on it.
-- **`Rounding` patch is global and permanent.** Once `Mint.with_rounding` is
-  called, `Currency#normalize_amount` is patched for the rest of the process.
-  The block only restores the thread-local mode, not the method. The fast
-  path (`amount.to_r.round(subunit)`) is gone after the first call.
 - **`String#to_money` is not the parser.** `'19.99'.to_money('USD')` uses
   `String#to_r`, so `'$19.99'.to_money('USD')` raises. Use `Mint.parse` for
   symbol/code-aware parsing.
@@ -339,9 +334,10 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/mint.rb` | load graph for Mint, Currency, registry, parser, DSL |
 | `lib/minting/mint/mint.rb` | `Mint.money`, `Mint.with_rounding`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
 | `lib/minting/mint/registry/` | `registry.rb`, `registration.rb`, `symbols.rb`, `zeros.rb` — all shared state + `MUTEX` |
-| `lib/minting/currency/currency.rb` | `Currency` (`Data.define`), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
+| `lib/minting/currency/registry.rb` | Currency class methods delegating to Registry (resolve, register, for_code, etc.) |
+| `lib/minting/currency/currency.rb` | `Currency` (immutable value object), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
+| `lib/minting/currency/rounding.rb` | rounding constants (`ROUNDINGS`), flag, `current_rounding_mode`, `rounding_mode` |
 | `lib/minting/mint/parser/parser.rb`, `separators.rb` | `Mint.parse` / `Mint.parse!` |
-| `lib/minting/mint/rounding.rb` | lazy rounding-mode module + global `normalize_amount` patch |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
 | `lib/minting/mint/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |

@@ -6,7 +6,7 @@ begin
   require 'simplecov'
   SimpleCov.coverage_dir 'tmp/simplecov'
   SimpleCov.start do
-    add_filter 'test/'
+    skip 'test/'
   end
 rescue LoadError
   puts 'SimpleCov not available - skipping coverage'

@@ -9,20 +9,18 @@ module Mint
     # Restores the previous mode (or default) when the block exits, even on
     # exception.
     #
-    # Rounding-mode support is loaded lazily on first call. Once loaded,
-    # +Currency#normalize_amount+ is patched to dispatch through the
-    # rounding module, adding ~10–35&ns of overhead to every money creation
-    # or mutation. When rounding modes are never used (the common case),
-    # the fast path incurs zero overhead.
+    # Rounding-mode support is activated on first call. Once activated,
+    # +Currency#normalize_amount+ dispatches through +Currency.rounding_mode+,
+    # adding ~10–35&ns of overhead to every money creation or mutation.
+    # When rounding modes are never used (the common case), the fast path
+    # incurs zero overhead.
     #
-    # @param mode [Symbol] one of: +:half_up+, +:half_down+, +:floor+,
-    #   +:ceil+, +:truncate+, +:down+
+    # @param mode [Symbol] one of: +:half_up+, +:half_down+, +:half_even+
     # @yield block to execute with the rounding mode active
     # @raise [ArgumentError] if +mode+ is not a recognised rounding mode
     def self.with_rounding(mode, &)
-      require_relative '../mint/rounding' unless defined?(Mint::Rounding)
-      Mint::Currency.activate_custom_rounding!
-      Mint::Rounding.with_mode(mode, &)
+      Currency.activate_custom_rounding!
+      Currency.rounding_mode(mode, &)
     end
   end
 end
