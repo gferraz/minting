@@ -21,6 +21,7 @@ module Mint
     # @raise [ArgumentError] if +mode+ is not a recognised rounding mode
     def self.with_rounding(mode, &)
       require_relative '../mint/rounding' unless defined?(Mint::Rounding)
+      Mint::Currency.activate_custom_rounding!
       Mint::Rounding.with_mode(mode, &)
     end
   end
