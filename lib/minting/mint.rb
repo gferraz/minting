@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require_relative 'currency/currency'
+require_relative 'currency/registry'
+require_relative 'currency/rounding'
 
 require_relative 'mint/dsl/numeric'
 require_relative 'mint/dsl/range'

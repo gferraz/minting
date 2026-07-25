@@ -10,8 +10,6 @@ module Mint
     # @api private
     ROUNDING_THREAD_KEY = :minting_rounding_mode
 
-    @custom_rounding_active = false
-
     # @return [Boolean] whether a custom rounding mode has been activated
     # @api private
     def self.custom_rounding_active? = @custom_rounding_active
@@ -36,8 +34,7 @@ module Mint
     # @raise [ArgumentError] on unknown mode
     def self.rounding_mode(mode)
       unless VALID_ROUNDING_MODES.include?(mode)
-        raise ArgumentError,
-              "Unknown rounding mode: #{mode} (expected :up, :down, or :even)"
+        raise ArgumentError, "Unknown rounding mode: #{mode} (expected :up, :down, or :even)"
       end
 
       prev = Thread.current[ROUNDING_THREAD_KEY]

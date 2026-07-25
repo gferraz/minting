@@ -15,20 +15,12 @@ module Mint
     # @return [String] ISO 4217 currency code (e.g., "USD", "EUR")
     attr_reader :code
 
-    # @return [Integer] Number of decimal places (0 for JPY, 2 for USD, 3 for IQD)
-    attr_reader :subunit
-
-    # @return [String, nil] Display symbol (e.g., "$", "€", "R$")
-    attr_reader :symbol
-
-    # @return [Integer] Parser precedence for symbol detection
-    attr_reader :priority
-
     # @return [String, nil] Associated country code
     attr_reader :country
 
-    # @return [String, nil] Currency name
-    attr_reader :name
+    # @return [String, nil] A longer, code-prefixed variant to distinguish
+    #   currencies that share the same primary symbol (e.g. "US$" for USD, "C$" for CAD).
+    attr_reader :disambiguate_symbol
 
     # @return [Integer] 10^subunit, used for fractional conversions
     attr_reader :fractional_multiplier
@@ -36,9 +28,17 @@ module Mint
     # @return [Rational] Smallest representable amount (1/fractional_multiplier)
     attr_reader :minimum_amount
 
-    # @return [String, nil] A longer, code-prefixed variant to distinguish
-    #   currencies that share the same primary symbol (e.g. "US$" for USD, "C$" for CAD).
-    attr_reader :disambiguate_symbol
+    # @return [String, nil] Currency name
+    attr_reader :name
+
+    # @return [Integer] Parser precedence for symbol detection
+    attr_reader :priority
+
+    # @return [Integer] Number of decimal places (0 for JPY, 2 for USD, 3 for IQD)
+    attr_reader :subunit
+
+    # @return [String, nil] Display symbol (e.g., "$", "€", "R$")
+    attr_reader :symbol
 
     # @param code [String] ISO 4217 currency code
     # @param symbol [String] Display symbol
@@ -49,16 +49,31 @@ module Mint
     def initialize(code:, symbol:, subunit: 0, priority: 0, country: nil, name: nil,
                    disambiguate_symbol: nil)
       @code = code
-      @subunit = subunit.to_i
-      @symbol = symbol && symbol.empty? ? nil : symbol
-      @priority = priority.to_i
       @country = country
       @name = name
+      @priority = priority.to_i
+      @subunit = subunit.to_i
+      @symbol = symbol&.empty? ? nil : symbol
+
       @fractional_multiplier = 10**@subunit
       @minimum_amount = Rational(1, @fractional_multiplier)
       @disambiguate_symbol = [code, @symbol].include?(disambiguate_symbol) ? nil : disambiguate_symbol
       freeze
     end
+
+    # Two Currency objects are equal if they share the same ISO code.
+    def ==(other) = other.is_a?(self.class) && code == other.code
+
+    # @return [String, nil] disambiguate_symbol or code/symbol fallback
+    def dsymbol = disambiguate_symbol || (Registry.symbol_shared?(symbol) ? code : symbol)
+
+    # Currency identity is by code — two objects with the same code are +eql?+
+    # regardless of other attributes. This makes Currency usable as a Hash key
+    # where lookup is by currency identity (ISO code).
+    def eql?(other) = other.is_a?(Currency) && code == other.code
+
+    # @return [Integer] stable hash based on currency code
+    def hash = code.hash
 
     # @return [String] debug representation
     def inspect = "<Currency:(#{code} #{symbol} #{subunit} #{name})>"
@@ -76,11 +91,10 @@ module Mint
     # @see Mint::Rounding.apply Custom rounding modes via {Money.with_rounding}
     def normalize_amount(amount)
       if Currency.custom_rounding_active?
-        mode = Thread.current[Currency::ROUNDING_THREAD_KEY]
-        return amount.to_r.round(subunit, half: mode) if mode
+        amount.to_r.round(subunit, half: Thread.current[Currency::ROUNDING_THREAD_KEY])
+      else
+        amount.to_r.round(subunit)
       end
-
-      amount.to_r.round(subunit)
     end
 
     # Returns the cached frozen zero-Money for this currency.
@@ -89,22 +103,5 @@ module Mint
     # @example
     #   Money::Currency.for_code('USD').zero  #=> [USD 0.00]
     def zero = Registry.zero_for(self)
-
-    # @return [String, nil] disambiguate_symbol or code/symbol fallback
-    def dsymbol = disambiguate_symbol || (Registry.symbol_shared?(symbol) ? code : symbol)
-
-    # Two Currency objects are equal if they share the same ISO code.
-    def ==(other) = other.is_a?(self.class) && code == other.code
-
-    # Currency identity is by code — two objects with the same code are +eql?+
-    # regardless of other attributes. This makes Currency usable as a Hash key
-    # where lookup is by currency identity (ISO code).
-    def eql?(other) = other.is_a?(self.class) && code == other.code
-
-    # @return [Integer] stable hash based on currency code
-    def hash = code.hash
   end
-
-  require_relative 'registry'
-  require_relative 'rounding'
 end
