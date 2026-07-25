@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [v2.1.0](https://github.com/gferraz/minting/releases/tag/v2.1.0) (2026-07-25)
 
 ### Breaking Changes
 - Rounding mode symbols renamed to match `Rational#round` `half:` parameter: `:half_up` → `:up`, `:half_down` → `:down`, `:half_even` → `:even`. The `ROUNDINGS` mapping hash has been removed from `Currency`.

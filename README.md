@@ -12,7 +12,7 @@
 
 
 
-> **Status:** Minting 2.0 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
+> **Status:** Minting 2.1 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
 
 ```ruby
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
@@ -57,6 +57,11 @@ shares = total.allocate([1, 2, 3]) # => [16.67, 33.33, 50.00]
 parts = total.split(3) # => [33.34, 33.33, 33.33]
 ```
 
+## What's New in 2.1
+
+### Breaking Changes
+- Rounding mode symbols renamed to match `Rational#round` `half:` parameter: `:half_up` → `:up`, `:half_down` → `:down`, `:half_even` → `:even`
+
 ## What's New in 2.0
 
 ### Breaking Changes
@@ -93,6 +98,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 
 - [Quickstart](#quickstart)
 - [Why Minting](#why-minting)
+- [What's New in 2.1](#whats-new-in-21)
 - [What's New in 2.0](#whats-new-in-20)
 - [How it compares](#how-it-compares)
 - [Installation](#installation)
@@ -268,7 +274,7 @@ Notes:
 
 ```ruby
 # All registered currencies (150+ ISO 4217 + custom)
-Money::Currency.registered_currencies.size                 #=> 154
+Money::Currency.registered_currencies.size                 #=> 164
 Money::Currency.registered_currencies.each { |code, c| puts "#{code}: #{c.name}" }
 
 # Built-in ISO 4217 currencies (before custom registrations)

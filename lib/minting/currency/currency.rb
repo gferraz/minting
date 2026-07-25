@@ -53,7 +53,7 @@ module Mint
       @name = name
       @priority = priority.to_i
       @subunit = subunit.to_i
-      @symbol = symbol&.empty? ? nil : symbol
+      @symbol = symbol.nil? || symbol.empty? ? nil : symbol
 
       @fractional_multiplier = 10**@subunit
       @minimum_amount = Rational(1, @fractional_multiplier)
@@ -82,13 +82,13 @@ module Mint
     #
     # @param amount [Numeric] the monetary amount to normalize
     # @return [Rational] the amount converted to +Rational+ and rounded to
-    #   the currency's subunit precision (half-up by default)
+    #   the currency's subunit precision (up by default)
     # @example
     #   usd = Money::Currency.for_code('USD')
     #   usd.normalize_amount(10.567)  #=> (10567/1000)
     #   usd.normalize_amount("5.25")  #=> (21/4)
     #
-    # @see Mint::Rounding.apply Custom rounding modes via {Money.with_rounding}
+    # @see Money.with_rounding Custom rounding modes via {Money.with_rounding}
     def normalize_amount(amount)
       if Currency.custom_rounding_active?
         amount.to_r.round(subunit, half: Thread.current[Currency::ROUNDING_THREAD_KEY])
