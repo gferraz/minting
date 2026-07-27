@@ -12,7 +12,7 @@ module Mint
     # @return [BigDecimal] the decimal representation of the money amount
     # @example
     #   Money.from(9.99, 'USD').to_d  #=> 0.999e1
-    def to_d = amount.to_d 0
+    def to_d = BigDecimal(amount, 0)
 
     # Converts the monetary amount to a standard float.
     # Note: Using float conversion loses precision guarantees.

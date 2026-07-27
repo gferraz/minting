@@ -12,5 +12,6 @@ class MoneyConversionTest < Minitest::Test
   def test_bigdecimal_conversion
     assert_equal '9.99'.to_d,           Money.from(9.99, 'USD').to_d
     assert_equal '123_456_789.01'.to_d, Money.from(123_456_789.01, 'USD').to_d
+    assert_equal 10.to_d, Money.from(10.0, 'JPY').to_d
   end
 end
