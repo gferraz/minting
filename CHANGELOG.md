@@ -1,5 +1,11 @@
 # Changelog
 
+
+## [v2.1.1](https://github.com/gferraz/minting/releases/tag/v2.1.0) (2026-07-28)
+
+# Fixes
+- replace `to_d(precision)` to `BigDecimal(number, precision)` to avoid incompatible argument in ruby 4
+
 ## [v2.1.0](https://github.com/gferraz/minting/releases/tag/v2.1.0) (2026-07-25)
 
 ### Breaking Changes
