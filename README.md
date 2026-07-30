@@ -57,22 +57,7 @@ shares = total.allocate([1, 2, 3]) # => [16.67, 33.33, 50.00]
 parts = total.split(3) # => [33.34, 33.33, 33.33]
 ```
 
-## What's New in 2.1
-
-### Breaking Changes
-- Rounding mode symbols renamed to match `Rational#round` `half:` parameter: `:half_up` → `:up`, `:half_down` → `:down`, `:half_even` → `:even`
-
-## What's New in 2.0
-
-### Breaking Changes
-- `Mint.parse` and `Mint.parse!` removed — use `Money.parse` and `Money.parse!`
-- `Mint.with_rounding` removed — use `Money.with_rounding`
-- `Mint.world_currencies` removed — use `Currency.world_currencies`
-- `Money#mint` removed — use `Money#copy_with`
-- `Money::Currency` is the canonical name to access the `Currency` class
-- `minting/mint/aliases` abbreviated to `minting/aliases`
-- `Money#format` `formatter_class:` kwarg removed — `Formatter` is now the sole formatter implementation
-- `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+## What's new since 2.0
 
 ### New Features
 - **Crypto currency support**: Opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
@@ -88,6 +73,17 @@ parts = total.split(3) # => [33.34, 33.33, 33.33]
 - `Money#fractional` now returns a signed value matching the amount's sign (previously always positive for negative amounts). The invariant `integral * multiplier + fractional == subunits` now holds for all amounts.
 - `Money#initialize` now calls `.to_r` on the amount, guaranteeing `@amount` is always a `Rational`. Fixes a hash/`eql?` contract violation for zero-subunit currencies and an `ArgumentError` in `Integer#to_d`.
 
+### Breaking Changes
+- `Money#clamp` no longer accepts `Numeric` bounds — only `Money` or `nil`. Previously `price.clamp(0, 100)` was silently accepted; now it raises `ArgumentError`. Use `price.clamp(0.dollars, 100.dollars)` instead. This prevents accidental misuse where a bare number is passed as a variable.
+- Rounding mode symbols renamed to match `Rational#round` `half:` parameter: `:half_up` → `:up`, `:half_down` → `:down`, `:half_even` → `:even`
+- `Mint.parse` and `Mint.parse!` removed — use `Money.parse` and `Money.parse!`
+- `Mint.with_rounding` removed — use `Money.with_rounding`
+- `Mint.world_currencies` removed — use `Currency.world_currencies`
+- `Money#mint` removed — use `Money#copy_with`
+- `Money::Currency` is the canonical name to access the `Currency` class
+- `Money#format` `formatter_class:` kwarg removed — `Formatter` is now the sole formatter implementation
+- `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
+
 ### Removed
 - `Money::Formatter2` — removed; `Formatter` is the sole implementation
 - `Money#to_json` and `Money.from_json` — moved to `attribute-money` companion gem
@@ -98,8 +94,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 
 - [Quickstart](#quickstart)
 - [Why Minting](#why-minting)
-- [What's New in 2.1](#whats-new-in-21)
-- [What's New in 2.0](#whats-new-in-20)
+- [What's since in 2.0](#whats-new-in-20)
 - [How it compares](#how-it-compares)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -187,9 +182,10 @@ Money.from(10, 'USD') == 10                    #=> false
 price = Money.from(50, 'USD')
 min_price = Money.from(75, 'USD')
 
-price.clamp(0, 100)          #=> [USD 50.00]  (returns self, no new object)
-price.clamp(0, 25)           #=> [USD 25.00]  (clamped to max)
-price.clamp(min_price, 100)  #=> [USD 75.00]  (clamped to min, Money or Numeric bounds both work)
+price.clamp(price, Money.from(100, 'USD'))  #=> [USD 50.00]  (returns self, no new object)
+price.clamp(0.dollars, 25.dollars)           #=> [USD 25.00]  (clamped to max)
+price.clamp(min_price, 100.dollars)          #=> [USD 75.00]  (clamped to min)
+
 ```
 
 ### Formatting

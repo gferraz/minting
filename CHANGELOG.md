@@ -1,6 +1,12 @@
 # Changelog
 
 
+## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-07-29)
+
+### Breaking Changes
+- `Money#clamp` no longer accepts `Numeric` bounds — only `Money` or `nil` are allowed. Previously `price.clamp(0, 100)` silently accepted bare numbers; now it raises `ArgumentError`. Use `price.clamp(0.dollars, 100.dollars)` instead. This prevents accidental misuse where a numeric variable is passed in place of a Money object. (`lib/minting/money/clamp.rb:48`)
+
+
 ## [v2.1.1](https://github.com/gferraz/minting/releases/tag/v2.1.0) (2026-07-28)
 
 # Fixes
