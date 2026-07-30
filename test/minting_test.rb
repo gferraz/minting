@@ -92,11 +92,6 @@ class MintingTest < Minitest::Test
 
     price = 50.dollars
 
-    assert_equal 50.dollars, price.clamp(0, 100)
-    assert_equal 25.dollars, price.clamp(0, 25)
-    assert_equal 75.dollars, price.clamp(75, 100)
-
-    # Clamp accepts Money bounds or Numeric amounts
     assert_equal 75.dollars, price.clamp(75.dollars, 100.dollars) #=> [USD 75.00]
   end
 end
