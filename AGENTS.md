@@ -11,7 +11,7 @@ opt-in alias (see below).
 
 ## Release readiness & publicization
 
-- The project is approaching a stable 2.0 release. Prioritize compatibility,
+- The project reached 2.0 stable release. Prioritize compatibility,
 documentation accuracy, and clean release notes over speculative API changes.
 - Keep `README.md`, `CHANGELOG.md`, and `ROADMAP.md` in sync. README examples
 are exercised by `test/minting_test.rb#test_readme_usage` and should reflect
