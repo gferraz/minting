@@ -24,6 +24,8 @@ covers the vast majority of real-world usage.
 | Configurable leftover distribution | `allocate(ratios, :roundrobin)` / `:roundrobin_reverse` / `:nearest` | ❌ Not planned | — |
 | Cross-currency arithmetic | Auto-converts via `exchange_to` when bank has rates | ❌ Not planned — raises `TypeError` on mismatch | — |
 | `convert_currency(rate, target)` | `money.convert_currency(exchange_rate, "JPY")` | ❌ Not planned | — |
+| `Enumerable` extension for `Money` | `[money1, money2].sum` (no built-in) | ❌ Not planned — collection helpers belong in app layer or companion gem | — |
+| `Comparable#between?` with non-zero numeric bounds | `between?(1, 10)` raises `TypeError` (only `0` is allowed) | ❌ Not planned — `<=>` intentionally rejects non-zero scalars | — |
 
 ### P2-B Exchange rates & bank infrastructure
 
