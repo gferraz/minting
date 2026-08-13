@@ -18,7 +18,9 @@ module Mint
       @crypto_currencies || CRYPTO_MUTEX.synchronize do
         @crypto_currencies ||= begin
           path = File.join(File.expand_path('../../data', __dir__), 'crypto-currencies.yaml')
-          YAML.load_file(path).map { |entry| Currency.new(**entry.transform_keys(&:to_sym)) }.freeze
+          YAML.safe_load_file(path, aliases: false)
+              .map { |entry| Currency.new(**entry.transform_keys(&:to_sym)) }
+              .freeze
         end
       end
     end

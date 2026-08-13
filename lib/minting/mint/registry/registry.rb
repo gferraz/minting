@@ -16,7 +16,7 @@ module Mint
 
     # Preload world currencies from YAML file during module load.
     path = File.join(File.expand_path('../../data', __dir__), 'world-currencies.yaml')
-    @world_currencies = YAML.load_file(path).to_h do |entry|
+    @world_currencies = YAML.safe_load_file(path, aliases: false).to_h do |entry|
       [entry['code'], Currency.new(**entry.transform_keys(&:to_sym))]
     end
     @currencies = @world_currencies.freeze.dup.freeze
