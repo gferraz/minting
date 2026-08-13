@@ -139,7 +139,7 @@ module Mint
       def valid_numeric_syntax?(numeric)
         unsigned = numeric.delete_prefix('-').delete_prefix('+')
         unsigned.match?(/\A\d+\z/) ||
-        unsigned.match?(/\A\d+[.,]\d+\z/) ||
+          unsigned.match?(/\A\d+[.,]\d+\z/) ||
           unsigned.match?(/\A\d+(?:,\d{3})+\.\d+\z/) ||
           unsigned.match?(/\A\d+(?:\.\d{3})+,\d+\z/) ||
           unsigned.match?(/\A\d+(?:,\d{3})+\z/) ||

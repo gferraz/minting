@@ -130,6 +130,28 @@ class MoneyParseTest < Minitest::Test
     assert_raises(ArgumentError) { Money.parse!('1--2', 'USD') }
   end
 
+  def test_valid_numeric_syntax
+    valid_inputs = {
+      '1234' => 'integer',
+      '-1234' => 'signed integer',
+      '+1.23' => 'period decimal',
+      '1,23' => 'comma decimal',
+      '1,234.56' => 'comma-grouped period decimal',
+      '1.234,56' => 'period-grouped comma decimal',
+      '1,234,567' => 'comma-grouped integer',
+      '1.234.567' => 'period-grouped integer'
+    }
+    invalid_inputs = %w[. 1. .1 1.2.3 1,23,456 1.23.456 1,234.56,78]
+
+    valid_inputs.each do |input, description|
+      assert Money.send(:valid_numeric_syntax?, input), "expected #{description} to be valid: #{input.inspect}"
+    end
+
+    invalid_inputs.each do |input|
+      refute Money.send(:valid_numeric_syntax?, input), "expected #{input.inspect} to be invalid"
+    end
+  end
+
   def test_parse_returns_money_on_success
     assert_equal Money.from(19.99, 'USD'), Money.parse('19.99', 'USD')
   end
