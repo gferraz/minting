@@ -6,16 +6,16 @@ Guidance for AI coding agents working in the `minting` Ruby gem.
 
 `minting` is a money-handling gem for Ruby (>= 3.3). Amounts are stored as
 `Rational` and rounded to the currency subunit — no floating-point anywhere.
-The gem is namespaced under `Mint`; top-level `Money`/`Currency` are an
-opt-in alias (see below).
+The gem is namespaced under `Mint`. `require 'minting'` auto-binds top-level
+`Money`; top-level `Currency` remains opt-in (see below).
 
 ## Release readiness & publicization
 
 - The project reached 2.0 stable release. Prioritize compatibility,
 documentation accuracy, and clean release notes over speculative API changes.
-- Keep `README.md`, `CHANGELOG.md`, and `ROADMAP.md` in sync. README examples
-are exercised by `test/minting_test.rb#test_readme_usage` and should reflect
-public behavior.
+- Keep `README.md`, `CHANGELOG.md`, and `ROADMAP.md` in sync. The core README
+examples are covered by `test/minting_test.rb#test_readme_usage`; verify any
+changed README example directly as well.
 - Add every public-facing change to `CHANGELOG.md` under `## [Unreleased]`.
 - Preserve key public API contracts: `Mint::Money`, `Money::Currency`, `Mint`
 helpers, `Money#format`, and the `Money#to_s` no-args compatibility rule.
@@ -93,9 +93,9 @@ Notes:
 `lib/minting.rb` requires `minting/mint` and `minting/version`, then auto-binds
 `::Money = Mint::Money` (warn-and-skip if already defined).
 `lib/minting/mint.rb` wires the rest: `Currency`, the DSL refinements
-(`mint/dsl/numeric`, `range`, `string`), `i18n`, `Mint` module, parser +
-separators, registry, and finally `money/money` (which itself requires all
-`money/*` mixins).
+(`mint/dsl/numeric`, `range`, `string`), `i18n`, `Mint` module, registry, and
+finally `money/money` (which itself requires all `money/*` mixins, including
+the parser).
 
 ### Top-level constants: `Money` auto-bound, `Currency` opt-in
 
@@ -107,12 +107,12 @@ first), it warns and skips — use `Mint::Money` in that case. This is a
 
 `Currency` is **not** auto-bound, because application domain models are
 commonly named `Currency` (e.g. a Rails model). Opt in via
-`require 'minting/mint/aliases'`, which binds `Currency = Money::Currency`
+`require 'minting/aliases'`, which binds `Currency = Money::Currency`
 with the same warn-and-skip guard.
 
 There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 (removed in v2.0). The only opt-in path for `Currency` is
-`require 'minting/mint/aliases'`.
+`require 'minting/aliases'`.
 
 ### Two namespaces, one registry
 
@@ -151,7 +151,7 @@ zero amounts to the cached `currency.zero` singleton, so
 the single funnel for construction, parsing, `copy_with`, `allocate`, and
 `split`. The default fast path is `Rational#round` (half-up).
 
-`Mint.with_rounding(mode)` sets a thread-local mode and activates
+`Money.with_rounding(mode)` sets a thread-local mode and activates
 `Currency.custom_rounding_active?` (a class-level flag, irreversible once
 set). When the flag is true, `normalize_amount` checks the thread-local
 before each round call; when false, it skips the check entirely. The block
@@ -160,9 +160,9 @@ global. Supported modes: `:up`, `:down`, `:even`.
 
 ### Parser
 
-`Mint.parse` / `Mint.parse!` live on the `Mint` module itself
-(`mint/parser/parser.rb`, `mint/parser/separators.rb`) via `extend self`.
-`Mint::Money.parse` delegates to `Mint.parse`.
+`Money.parse` / `Money.parse!` live in `money/parse.rb`. `parse` returns
+`nil` for invalid input; `parse!` raises `ArgumentError`. The numeric portion
+is validated strictly, so malformed strings do not leak `Rational` errors.
 
 Currency detection order in `parse_currency`:
 1. Scan all uppercase `\b[A-Z_]+\b` words, return the first registered code.
@@ -186,26 +186,24 @@ suffix and negate the amount.
 
 ### Formatting
 
-`Money#to_formatted_s(preset = nil, format:, decimal:, thousand:, width:)`
-is the core; `to_s` and `to_fs` are aliases with no args. As of v1.9.3,
-`to_s` **takes no arguments** — pass format args to `to_formatted_s` /
-`to_fs`. The README examples using `money.to_s(format: ...)` are out of date
-for v1.9.3+; use `to_formatted_s` or `to_fs` in new code and tests.
+`Money#format(template = nil, decimal:, thousand:, width:, locale:)` is the
+core; `to_fs` is its alias. `to_s` takes **no arguments** and uses the default
+formatting fast path; call `format` or `to_fs` for custom output.
 
 Format strings use `Kernel.format` named-reference syntax:
 `%<symbol>s`, `%<amount>f`, `%<amount>d`, `%<currency>s`, `%<integral>d`,
 `%<fractional>d`. The `%<amount>f` specifier has the currency's subunit
 precision **injected at runtime** (e.g. `%<amount>f` → `%<amount>.2f` for
-USD) by a gsub in `format/formatting.rb`. For zero-subunit currencies (JPY),
-`%<fractional>d` specifiers are stripped entirely.
+USD) by a gsub in `format/formatter.rb`. For zero-subunit currencies (JPY),
+`%<fractional>d` receives zero.
 
 `format` can also be a Hash with `:positive`, `:negative`, `:zero` keys for
 per-sign templates (used by the `:accounting` preset). Missing keys fall back
 to `%<symbol>s%<amount>f`; unknown keys raise `ArgumentError`.
 
-Named presets (`Money::PRESETS`): `:amount`, `:accounting`, `:european`,
-`:currency`. Passing a preset as the first arg expands it; explicit kwargs
-override the preset.
+Compiled formatters are retained in a thread-safe, copy-on-write cache capped
+at 256 configurations. Once full, new configurations are compiled for the
+call but not retained. Do not assume `Formatter.cache` is mutable.
 
 `Mint.locale_backend=` (a callable or Hash returning
 `{ decimal:, thousand:, format: }`) supplies defaults when the corresponding
@@ -278,9 +276,11 @@ handles non-numeric steps natively, so the patch is gated by
 
 - Minitest, no RSpec. Test classes subclass `Minitest::Test`; benchmarks
   subclass `Minitest::Benchmark`.
-- `test/minting_test.rb#test_readme_usage` exercises README examples — if you
-  change README code or core behavior, keep this test in sync. It's the
-  contract between the README and the implementation.
+- `test/minting_test.rb#test_readme_usage` covers core README examples. Keep
+  it in sync with changed public behavior, and run changed examples directly.
+- `test/financial_invariants_test.rb` uses a fixed seed to generate money
+  values and validates split/allocation conservation, subunit round trips,
+  supported format/parse round trips, and malformed parsing.
 - `using Mint` at the top of a test file enables the refinements for all
   tests in that file.
 - Tests register custom currencies (e.g. `BRL_FUEL` in `money_format_test.rb`)
@@ -293,13 +293,13 @@ handles non-numeric steps natively, so the patch is gated by
 
 ## Gotchas
 
-- **`to_s` takes no args since v1.9.3.** Use `to_formatted_s` (or `to_fs`)
-  for format/decimal/thousand/width. Calling `to_s(format: ...)` raises
+- **`to_s` takes no args.** Use `format` (or `to_fs`) for
+  template/decimal/thousand/width/locale options. Calling `to_s(format: ...)` raises
   `ArgumentError: wrong number of arguments`.
 - **`Money` is auto-bound at require time.** `require 'minting'` sets
   `::Money = Mint::Money`. If `::Money` is already defined (e.g. the `money`
   gem loaded first), it warns and skips. `Currency` is **not** auto-bound —
-  use `require 'minting/mint/aliases'` to opt in. There is no
+  use `require 'minting/aliases'` to opt in. There is no
   `Mint.use_top_level_constants!` (removed in v2.0) and no `lib/minting/dsl.rb`.
 - **Money-gem co-loading requires order.** If both minting and the `money`
   gem are loaded in the same process (e.g. competitive benchmarks),
@@ -312,7 +312,7 @@ handles non-numeric steps natively, so the patch is gated by
   `currency.zero`, not a fresh object. `Money.from` and `Money.from_subunits`
   both do this. Equality and `assert_same` tests rely on it.
 - **`String#to_money` is not the parser.** `'19.99'.to_money('USD')` uses
-  `String#to_r`, so `'$19.99'.to_money('USD')` raises. Use `Mint.parse` for
+  `String#to_r`, so `'$19.99'.to_money('USD')` raises. Use `Money.parse` for
   symbol/code-aware parsing.
 - **`Registry.currencies` is frozen.** Mutating it raises. `register`
   rebuilds the hash via `merge` and freezes the new one.
@@ -322,7 +322,7 @@ handles non-numeric steps natively, so the patch is gated by
   once.
 - **`bench:check` is Ruby-4-only.** The runner no-ops on Ruby < 4.x. CI runs
   it on both 3.3 and 4.0, but it only meaningfully gates on 4.0.
-- **CI Ruby versions:** 3.3 and 4.0. `.tool-versions` pins 4.0.5 for local
+- **CI Ruby versions:** 3.3 and 4.0. `.tool-versions` pins 4.0.6 for local
   dev. The `Range#step` Money patch is only active on < 4.0, so behavior
   differs across the matrix for that one feature.
 
@@ -332,35 +332,36 @@ handles non-numeric steps natively, so the patch is gated by
 |------|------|
 | `lib/minting.rb` | entry point (requires `mint/mint`, `version`) |
 | `lib/minting/mint.rb` | load graph for Mint, Currency, registry, parser, DSL |
-| `lib/minting/mint/mint.rb` | `Mint.money`, `Mint.with_rounding`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
+| `lib/minting/mint/mint.rb` | `Mint.money`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
 | `lib/minting/mint/registry/` | `registry.rb`, `registration.rb`, `symbols.rb`, `zeros.rb` — all shared state + `MUTEX` |
 | `lib/minting/currency/registry.rb` | Currency class methods delegating to Registry (resolve, register, for_code, etc.) |
 | `lib/minting/currency/currency.rb` | `Currency` (immutable value object), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
 | `lib/minting/currency/rounding.rb` | `VALID_ROUNDING_MODES`, flag, `current_rounding_mode`, `rounding_mode` |
-| `lib/minting/mint/parser/parser.rb`, `separators.rb` | `Mint.parse` / `Mint.parse!` |
+| `lib/minting/money/parse.rb` | `Money.parse` / `Money.parse!` |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
-| `lib/minting/mint/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
+| `lib/minting/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
 | `lib/minting/money/money.rb` | `Money` core; requires all `money/*` mixins |
 | `lib/minting/money/constructors.rb` | `from`, `from_subunits`, `no_currency`, `parse`, `copy_with`, `zero`, deprecated `create`/`mint` |
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |
 | `lib/minting/money/comparable.rb` | `==`, `eql?`, `<=>`, `same_currency?`, `zero?` — see Equality section |
 | `lib/minting/money/coercion.rb` | `coerce` + private `CoercedNumber` |
-| `lib/minting/money/format/` | `formatting.rb` (template engine), `to_s.rb` (`to_formatted_s`/`to_s`/`to_fs`, `PRESETS`) |
+| `lib/minting/money/format/` | `format.rb` (`format`/`to_fs`), `formatter.rb` (compiled formatter cache), `to_s.rb` |
 | `lib/minting/money/allocation/` | `allocation.rb` (`allocate`), `split.rb` (`split`, `allocate_left_over`) |
-| `lib/minting/money/clamp.rb`, `conversion.rb` | `clamp`, conversions (`to_d`/`to_f`/`to_i`/`to_r`/`to_json`/`to_hash`/`to_html`) |
-| `lib/minting/data/world-currencies.yaml` | 150+ ISO-4217 currencies, loaded lazily by `Registry.world_currencies` |
+| `lib/minting/money/clamp.rb`, `conversion.rb` | `clamp`, conversions (`to_d`/`to_f`/`to_i`/`to_r`/`to_hash`/`to_html`) |
+| `lib/minting/data/world-currencies.yaml` | Built-in ISO-4217 currencies, preloaded at gem initialization |
 | `test/test_helper.rb` | SimpleCov + minitest/autorun + requires `minting` |
 | `test/minting_test.rb#test_readme_usage` | README contract test — keep in sync with README |
 | `bench/check/runner.rb` | core bench runner (Ruby 4.x only) |
 | `bin/bench_check` | `bench:check` gate script (threshold 0.80x baseline by default) |
 
-## Deprecated APIs (don't use in new code)
+## Removed APIs (do not restore for compatibility)
 
-- `Mint::Money.create` → use `Mint::Money.from` (warns).
-- `Money#mint(new_amount)` → use `#copy_with(amount:)` (warns, removal in v2).
-- `Money.from_fraction` / `#fractional=` → renamed to `from_subunits` /
-  `#subunits` in v1.9.0 (breaking).
+- `Mint.parse` / `Mint.parse!` → use `Money.parse` / `Money.parse!`.
+- `Mint.with_rounding` → use `Money.with_rounding`.
+- `Mint.world_currencies` → use `Currency.world_currencies`.
+- `Money#mint` → use `#copy_with(amount:)`.
+- `Money.from_fraction` / `#fractional=` → use `from_subunits` / `#subunits`.
 
 ## When making changes
 
