@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'monitor'
+
 module Mint
   class Money
     # Compiles and caches formatter lambdas for a fixed combination of format
@@ -12,9 +14,22 @@ module Mint
     class Formatter
       extend FormatterValidator
 
-      def self.cache = @cache ||= {}
+      # Keep enough compiled configurations for typical application presets and
+      # locales without retaining every caller-provided template indefinitely.
+      CACHE_LIMIT = 256
+      CACHE_MUTEX = Monitor.new
 
-      # Returns a cached {Formatter} for the given configuration.
+      private_constant :CACHE_MUTEX
+
+      @cache = {}.freeze
+
+      class << self
+        attr_reader :cache
+      end
+
+      # Returns a cached {Formatter} for the given configuration. The cache is
+      # thread-safe and bounded by {CACHE_LIMIT}; once full, new configurations
+      # are compiled without being retained.
       # @param format [Hash{Symbol => String}] per-sign templates
       # @param decimal [String] decimal separator
       # @param thousand [String, false] thousands delimiter (+false+ disables)
@@ -23,10 +38,17 @@ module Mint
         formatter = cache[key]
         return formatter if formatter
 
-        validate_format!(format)
-        validate_separators!(decimal:, thousand:)
+        CACHE_MUTEX.synchronize do
+          formatter = cache[key]
+          return formatter if formatter
 
-        cache[key] = new(format, decimal, thousand)
+          validate_format!(format)
+          validate_separators!(decimal:, thousand:)
+
+          formatter = new(format, decimal, thousand)
+          @cache = cache.merge(key => formatter).freeze unless cache.size >= CACHE_LIMIT
+          formatter
+        end
       end
 
       def initialize(format, decimal, thousand)

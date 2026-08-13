@@ -7,6 +7,10 @@
   `nil`, rather than accepting unrelated text or leaking `ArgumentError` from
   `Rational`. `Money.parse!` continues to raise for invalid input.
 
+### Internal
+- Bound the thread-safe compiled formatter cache to 256 configurations,
+  preventing unbounded retention of dynamic format templates.
+
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-07-29)
 
 ### Breaking Changes

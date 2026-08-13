@@ -3,6 +3,15 @@
 class MoneyFormatTest < Minitest::Test
   FUEL = Money::Currency.register(code: 'BRL_FUEL', subunit: 3, symbol: 'R$')
 
+  def setup
+    @formatter_cache_snapshot = Money::Formatter.cache
+    Money::Formatter.instance_variable_set(:@cache, {}.freeze)
+  end
+
+  def teardown
+    Money::Formatter.instance_variable_set(:@cache, @formatter_cache_snapshot)
+  end
+
   def usd_9_99 = Money.from(9.99, 'USD')
   def usd_123_456_789_01 = Money.from(123_456_789.01, 'USD')
 
@@ -12,6 +21,19 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '$9.99',    usd_9_99.to_fs('%<symbol>s%<amount>f')
     assert_equal '$+9.99',   usd_9_99.to_fs('%<symbol>s%<amount>+f')
     assert_equal '-9.99',    (-usd_9_99).to_fs('%<amount>f')
+  end
+
+  def test_formatter_cache_stops_retaining_new_entries_when_full
+    formats = Array.new(Money::Formatter::CACHE_LIMIT) { |index| "format-#{index}-%<amount>f" }
+
+    formats.each { |format| Money::Formatter.for({ positive: format }, '.', ',') }
+    Money::Formatter.for({ positive: 'overflow-%<amount>f' }, '.', ',')
+
+    cache = Money::Formatter.cache
+
+    assert_equal Money::Formatter::CACHE_LIMIT, cache.size
+    assert cache.key?([{ positive: formats.first }, '.', ','])
+    refute cache.key?([{ positive: 'overflow-%<amount>f' }, '.', ','])
   end
 
   def test_more_numeric_simple_format
