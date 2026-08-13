@@ -46,7 +46,7 @@ module Mint
     # @private
     def normalize_boundary(boundary)
       case boundary
-      in NilClass                           then boundary
+      in NilClass                          then boundary
       in Money if same_currency?(boundary) then boundary.amount
       in Money                             then raise ArgumentError, "Boundary currency must be: #{currency_code}"
       else                                 raise ArgumentError, "Boundary must be Money or nil: #{boundary}"
