@@ -10,6 +10,8 @@
 ### Internal
 - Bound the thread-safe compiled formatter cache to 256 configurations,
   preventing unbounded retention of dynamic format templates.
+- Add deterministic generated tests for monetary conservation, subunit and
+  formatting round-trips, and malformed parsing.
 
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-07-29)
 
