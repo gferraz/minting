@@ -1,5 +1,11 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixes
+- `Money.parse` now rejects malformed numeric input consistently by returning
+  `nil`, rather than accepting unrelated text or leaking `ArgumentError` from
+  `Rational`. `Money.parse!` continues to raise for invalid input.
 
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-07-29)
 

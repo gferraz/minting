@@ -21,9 +21,11 @@ class MoneyClampTest < Minitest::Test
 
   def test_clamp_at_boundary_returns_self
     at_min = 0.dollars
+
     assert_same at_min, at_min.clamp(0.dollars, 10.dollars)
 
     at_max = 10.dollars
+
     assert_same at_max, at_max.clamp(0.dollars, 10.dollars)
   end
 

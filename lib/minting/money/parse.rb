@@ -27,7 +27,7 @@ module Mint
       currency = parse_currency(input, currency)
       return nil unless currency
 
-      amount = parse_amount(input)
+      amount = parse_amount(input, currency)
       return nil unless amount
 
       amount = currency.normalize_amount(amount)
@@ -53,7 +53,7 @@ module Mint
       currency = parse_currency(input, currency)
       raise ArgumentError, "Currency [#{currency}] not found" unless currency
 
-      amount = parse_amount(input)
+      amount = parse_amount(input, currency)
       raise ArgumentError, "Could not parse [#{input}]" unless amount
 
       amount = currency.normalize_amount(amount)
@@ -63,16 +63,28 @@ module Mint
     class << self
       private
 
-      # Extracts a numeric value from input that should only contain an amount.
-      def parse_amount(input)
+      # Extracts one valid numeric value, allowing surrounding currency markers
+      # and uppercase annotation words (for example, "MAX 10.00 USD").
+      def parse_amount(input, currency)
         accounting_negative = input.start_with?('(') && input.end_with?(')')
+        return nil if (input.include?('(') || input.include?(')')) && !accounting_negative
 
-        numeric_input = input.gsub(/[^\d.,-]/, '')
+        numeric_input = accounting_negative ? input[1...-1] : input
+        numeric_input = remove_currency_markers(numeric_input, currency)
+        numeric_input = numeric_input.gsub(/\b[A-Z_]+\b/, ' ').delete('[]').strip
+        numeric_input.sub!(/\A([+-])\s+/, '\\1')
+        return nil unless numeric_input.match?(/\A[+-]?\d[\d.,]*\z/)
+
         numeric = parse_separators(numeric_input)
         return nil unless numeric
 
         amount = Rational(numeric)
         accounting_negative ? -amount : amount
+      end
+
+      def remove_currency_markers(input, currency)
+        markers = [currency.symbol, currency.disambiguate_symbol].compact.uniq
+        markers.reduce(input) { |result, marker| result.gsub(marker, ' ') }
       end
 
       # Extracts currency from a string by matching ISO code or symbol.
@@ -95,6 +107,7 @@ module Mint
       # Converts locale-specific decimal/thousand separators into a plain decimal string.
       def parse_separators(numeric)
         return nil unless numeric.match?(/\d/)
+        return nil unless valid_numeric_syntax?(numeric)
 
         case classify_separators(numeric)
         when :decimal_period   then numeric
@@ -121,6 +134,16 @@ module Mint
         in [p, c] if p > 0 && c > 0     then :mixed
         else                                 :thousands
         end
+      end
+
+      def valid_numeric_syntax?(numeric)
+        unsigned = numeric.delete_prefix('-').delete_prefix('+')
+        unsigned.match?(/\A\d+\z/) ||
+        unsigned.match?(/\A\d+[.,]\d+\z/) ||
+          unsigned.match?(/\A\d+(?:,\d{3})+\.\d+\z/) ||
+          unsigned.match?(/\A\d+(?:\.\d{3})+,\d+\z/) ||
+          unsigned.match?(/\A\d+(?:,\d{3})+\z/) ||
+          unsigned.match?(/\A\d+(?:\.\d{3})+\z/)
       end
     end
   end

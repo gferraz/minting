@@ -122,6 +122,14 @@ class MoneyParseTest < Minitest::Test
     assert_nil Money.parse('10', 'ZZZ')
   end
 
+  def test_parse_rejects_malformed_amounts_without_raising
+    %w[abc1def2 USD12oops 1.2.3 1--2 --1 1-2].each do |input|
+      assert_nil Money.parse(input, 'USD'), "expected #{input.inspect} to be rejected"
+    end
+
+    assert_raises(ArgumentError) { Money.parse!('1--2', 'USD') }
+  end
+
   def test_parse_returns_money_on_success
     assert_equal Money.from(19.99, 'USD'), Money.parse('19.99', 'USD')
   end
