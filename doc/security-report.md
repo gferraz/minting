@@ -2,12 +2,15 @@
 
 **Date**: 2026-07-29  
 **Project**: minting Ruby gem  
-**Version**: 2.0 release
+**Version reviewed**: 2.0 release
 **Author**: devin, model SWE 1.6
 
 ## Executive Summary
 
-This review identified **2 security vulnerabilities** (1 medium, 1 low) and **3 memory leak concerns** (1 high, 1 medium, 1 low-medium) in the minting gem. The codebase demonstrates good practices with thread-safe registry operations, proper object freezing, and input validation. The primary concerns are around unbounded caching in long-running processes and unsafe YAML loading.
+This is a historical review of the 2.0 release. The codebase demonstrated good
+practices with thread-safe registry operations, proper object freezing, and
+input validation. The formatter-cache finding below was remediated on
+2026-08-13; the YAML-loading recommendation remains open.
 
 ## Security Vulnerabilities
 
@@ -48,11 +51,12 @@ YAML.safe_load(File.read(path), permitted_classes: [Symbol])
 
 ## Memory Leaks
 
-### 1. Unbounded Formatter Cache (High Risk)
+### 1. Formatter Cache Growth (High Risk at time of review) — Resolved 2026-08-13
 
 **Location**: `lib/minting/money/format/formatter.rb:15`
 
-**Issue**: The formatter cache grows unbounded with each unique `[format, decimal, thousand]` combination:
+**Original issue**: The formatter cache grew unbounded with each unique
+`[format, decimal, thousand]` combination.
 
 ```ruby
 def self.cache = @cache ||= {}
@@ -60,10 +64,9 @@ def self.cache = @cache ||= {}
 
 **Risk**: In long-running processes (e.g., web servers) with user-supplied format strings, this could lead to significant memory growth over time.
 
-**Recommendation**: Implement cache size limits or LRU eviction:
-```ruby
-def self.cache = @cache ||= LRUHash.new(max_size: 1000)
-```
+**Resolution**: The cache is now thread-safe, copy-on-write, and capped at 256
+retained configurations. When full, new configurations are compiled for the
+current call but are not retained.
 
 ### 2. Thread-Local Storage Not Cleaned (Medium Risk)
 
@@ -116,7 +119,7 @@ end
 
 ### High Priority
 1. Replace `YAML.load_file` with `YAML.safe_load` in registry files
-2. Implement formatter cache size limits or LRU eviction
+2. ~~Implement formatter cache size limits or LRU eviction~~ (resolved)
 
 ### Medium Priority
 3. Document thread-local storage behavior for thread pool environments
@@ -128,4 +131,7 @@ end
 
 ## Conclusion
 
-The minting gem demonstrates good security practices with proper thread safety, immutability, and input validation. The main concerns are around unbounded caching in long-running processes and the unsafe YAML loading. Addressing the high-priority recommendations would significantly improve the security posture and memory efficiency of the library in production environments.
+The minting gem demonstrates good security practices with proper thread safety,
+immutability, and input validation. Formatter-cache growth has been addressed;
+the remaining primary recommendation is replacing `YAML.load_file` with a
+safe-loading approach.

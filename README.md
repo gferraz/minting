@@ -94,7 +94,7 @@ Amounts are stored as `Rational`, so there's no floating-point drift — `0.1 + 
 
 - [Quickstart](#quickstart)
 - [Why Minting](#why-minting)
-- [What's since in 2.0](#whats-new-in-20)
+- [What's new since 2.0](#whats-new-since-20)
 - [How it compares](#how-it-compares)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -262,6 +262,11 @@ Notes:
 - Pass a currency code when the string has no symbol or code.
 - `1,234` means 1234, not 1.234, and `1,23` means 1.23, not 123.
 - `1,234.00` is unambiguous (thousands + decimal).
+- Parsing is separator-positional rather than locale-aware. For currencies
+  with three decimal places, a single comma followed by three digits is read
+  as a thousands separator: `Money.parse('KWD 861,949')` means 861949 KWD.
+  Use a period decimal (`KWD 861.949`) or both separators (`KWD 1.234,567`)
+  when the intended value has three fractional digits.
 - Accounting negatives like `($1.23)` or `(USD 10.00)` are supported — the parser detects parentheses and negates the amount.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
 - The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Money.parse("MAX 10.00 USD")` yields `[USD 10.00]`.
@@ -269,12 +274,12 @@ Notes:
 ### Currency lookup
 
 ```ruby
-# All registered currencies (150+ ISO 4217 + custom)
+# All registered currencies (currently 164 built-in ISO 4217 + custom)
 Money::Currency.registered_currencies.size                 #=> 164
 Money::Currency.registered_currencies.each { |code, c| puts "#{code}: #{c.name}" }
 
 # Built-in ISO 4217 currencies (before custom registrations)
-Money::Currency.world_currencies.size    #=> 154
+Money::Currency.world_currencies.size    #=> 164
 
 # By ISO code (direct hash lookup, string only)
 Money::Currency.for_code('USD')        #=> #<Currency code="USD" ...>
@@ -382,7 +387,9 @@ Money.with_rounding(:even) { Money.from(1.015, 'USD') }   #=> [USD 1.02]
 Money.with_rounding(:up)   { Money.from(1.005, 'USD') }   #=> [USD 1.01]
 ```
 
-Modes: `:up` (default), `:down`, `:even`. Applies to construction, parsing, `change`, `split`, and `allocate`. Restores the previous mode when the block exits, even on exception.
+Modes: `:up` (default), `:down`, `:even`. Applies to construction, parsing,
+`copy_with`, `split`, and `allocate`. Restores the previous mode when the block
+exits, even on exception.
 
 > **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:up`) with zero dispatch overhead. The first call to `Money.with_rounding` activates the rounding dispatch in `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
 

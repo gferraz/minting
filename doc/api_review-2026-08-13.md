@@ -28,7 +28,23 @@ Ruby 4 benchmark regression gate, and `bundle-audit` were run during review.
 
 ## Findings and recommendations
 
-### P1 — Make `Money.parse` reject malformed input reliably
+## Follow-up status — 2026-08-13
+
+The first three findings below have been implemented after this review:
+
+- **P1 parser hardening:** `Money.parse` now rejects malformed numeric input
+  by returning `nil`, and `Money.parse!` raises `ArgumentError`. Regression
+  tests cover malformed forms and the numeric validation grammar.
+- **P2 formatter cache:** compiled formatters are stored in a thread-safe,
+  copy-on-write cache capped at 256 configurations. Once full, new
+  configurations are compiled without being retained.
+- **P2 generated invariants:** deterministic generated tests cover split and
+  allocation conservation, subunit round trips, supported format/parse round
+  trips, and malformed parsing.
+
+The original findings are retained below as historical context.
+
+### Resolved P1 — Make `Money.parse` reject malformed input reliably
 
 `Money.parse` documents a nil-returning contract for invalid input, but the
 current parser can both accept malformed text and leak `ArgumentError`.
@@ -60,7 +76,7 @@ Recommended change:
 
 Relevant implementation: `lib/minting/money/parse.rb`.
 
-### P2 — Bound the formatter cache
+### Resolved P2 — Bound the formatter cache
 
 `Money::Formatter.cache` is an unbounded class-level hash keyed by template
 and separator values. Since `Money#format` accepts arbitrary caller-provided
@@ -76,7 +92,7 @@ Recommended change:
 
 Relevant implementation: `lib/minting/money/format/formatter.rb`.
 
-### P2 — Add invariant and generative tests
+### Resolved P2 — Add invariant and generative tests
 
 The existing example-driven test suite is strong. Financial logic would benefit
 from generated inputs to protect its key invariants across signs, subunit
@@ -118,11 +134,9 @@ community contributions become a focus.
 
 ## Suggested sequence
 
-1. Harden `Money.parse` and add focused regression tests.
-2. Add generated invariant tests for parsing, allocation, split, and rounding.
-3. Decide and implement a bounded formatter-cache policy.
-4. Refresh `doc/agents/AGENTS.md`.
-5. Introduce RBS gradually, starting with core public classes.
+1. Introduce RBS gradually, starting with core public classes.
+2. Keep README and active maintenance guidance synchronized with API changes.
+3. Add public project-health files.
 
 ## No source changes in this review
 
