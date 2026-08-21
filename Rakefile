@@ -13,12 +13,7 @@ Rake::TestTask.new(:test) do |t|
   t.ruby_opts << '-rtest_helper.rb'
 end
 
-Rake::TestTask.new('bench:all') do |t|
-  t.libs = %w[lib bench]
-  t.pattern = 'bench/{core,memory,regression}/*_benchmark.rb'
-end
-
-Rake::TestTask.new('bench:core') do |t|
+Rake::TestTask.new('bench:parse') do |t|
   t.libs = %w[lib bench]
   t.pattern = 'bench/core/parse_benchmark.rb'
 end
@@ -49,7 +44,7 @@ desc 'Run core benchmarks and update the baseline'
 task 'bench:baseline' do
   platform = RUBY_PLATFORM
   baseline = "bench/check/results/baseline-#{platform}.json"
-  sh "bundle exec ruby bench/check/runner.rb #{baseline}"
+  ruby "bench/check/runner.rb #{baseline}"
   puts "Baseline updated for #{platform}."
 end
 
