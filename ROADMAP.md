@@ -70,7 +70,7 @@ covers the vast majority of real-world usage.
 | Feature | Money gem | Minting | Priority |
 |---------|-----------|---------|----------|
 | Infinite precision | `Money.default_infinite_precision = true` (keep fractions beyond cents) | ❌ Not planned | — |
-| Cash rounding | `money.to_nearest_cash_value` (e.g. CHF to nearest 0.05) | ❌ Not planned | — |
+| Cash rounding | `money.to_nearest_cash_value` (e.g. CHF to nearest 0.05) | Planned | Low |
 | Refinement-based rounding | `using Mint::Rounding` to opt-in, zero overhead when unused | Planned | Medium |
 
 ### P2-F Richer Currency class
