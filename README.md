@@ -207,6 +207,7 @@ price.format('%<amount>d')            #=> "9"
 price.format('%<symbol>s%<amount>f')  #=> "$9.99"
 price.format('%<symbol>s%<amount>+f') #=> "$+9.99"
 (-price).format('%<amount>f')         #=> "-9.99"
+(-price).format('%<sign>s%<symbol>s%<magnitude>f') #=> "-$9.99"
 
 # Format with padding
 price_in_euros = Money.from(12.34, 'EUR')
@@ -388,6 +389,18 @@ Money.from(9.99, 'BRL').format  #=> "R$9,99"
 ## API notes
 
 **Exact amounts** — Amounts are stored as `Rational` and rounded to the currency subunit.
+
+**Sign and magnitude placeholders** — `%<amount>` retains its sign.
+`%<magnitude>` always renders the absolute value, while `%<sign>` renders `+`
+for positive values, `-` for negative values, and an empty string for zero.
+Use a width of `1` to reserve the sign column for zero values:
+
+```ruby
+format = '%<sign>1s%<symbol>s%<magnitude>f'
+Money.from(12.34, 'BRL').format(format, decimal: ',')  #=> "+R$12,34"
+Money.from(-12.34, 'BRL').format(format, decimal: ',') #=> "-R$12,34"
+Money.from(0, 'BRL').format(format, decimal: ',')      #=> " R$0,00"
+```
 
 **Rounding modes** — Wrap operations in `Money.with_rounding(mode)` to change how amounts are rounded to the subunit:
 

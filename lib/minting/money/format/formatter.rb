@@ -75,11 +75,21 @@ module Mint
         display_amount = @has_negative_template && amount < 0 ? -amount : amount
         integral = display_amount.to_i
 
+        sign = if amount.negative?
+                 '-'
+               elsif amount.positive?
+                 '+'
+               else
+                 ''
+               end
+
         result = Kernel.format(template,
                                currency: currency.code,
                                dsymbol: @needs_dsymbol && currency.dsymbol,
                                symbol: currency.symbol,
                                amount: display_amount,
+                               magnitude: amount.abs,
+                               sign:,
                                integral: integral,
                                fractional: @needs_fractional ? money.fractional.abs : 0)
         apply_separators(result, integral)
@@ -103,13 +113,14 @@ module Mint
       def compile
         @templates = { -1 => @format[:negative], 0 => @format[:zero], 1 => @format[:positive] || Money::DEFAULT_FORMAT }
         @templates.compact!
-        # Inject subunit precision into %<amount>f specs that lack an explicit
-        # precision. Matches "%<amount>f" or "%+10<amount>f" (with optional
-        # flags/width before the named ref) and appends a placeholder for the
-        # currency subunit digits — e.g. "%<amount>f" → "%<amount>\uE000f".
+        # Inject subunit precision into amount and magnitude f specs that lack
+        # an explicit precision. Matches "%<amount>f" or "%<magnitude>f" and
+        # appends a placeholder for the currency subunit digits.
         # The placeholder is later replaced with the actual subunit count at
         # format time (e.g. "\uE000" → "2" for USD, "0" for JPY).
-        @templates.transform_values! { |f| f.gsub(/%<amount>(\s*\+?\d*)f/, "%<amount>\\1.#{SUBUNIT_PLACEHOLDER}f") }
+        @templates.transform_values! do |f|
+          f.gsub(/%<(amount|magnitude)>(\s*\+?\d*)f/, "%<\\1>\\2.#{SUBUNIT_PLACEHOLDER}f")
+        end
         @has_negative_template = @templates.key?(-1)
 
         joined = @templates.values.join
@@ -117,7 +128,9 @@ module Mint
         @needs_dsymbol = joined.include?('%<dsymbol>')
 
         @needs_thousand_substitution = @thousand && !@thousand.empty? &&
-                                       (joined.include?('%<amount>') || joined.include?('%<integral>'))
+                                       (joined.include?('%<amount>') ||
+                                        joined.include?('%<magnitude>') ||
+                                        joined.include?('%<integral>'))
         @thousand_replacement = "\\1#{@thousand}" if @needs_thousand_substitution
 
         @has_placeholder = joined.include?(SUBUNIT_PLACEHOLDER)

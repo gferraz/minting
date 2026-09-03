@@ -7,7 +7,10 @@ module Mint
     # and decimal separator.
     #
     # @param template [String, Hash, nil] Either a format string with placeholders
-    #   (%<symbol>s, %<amount>f, %<currency>s, %<integral>d, %<fractional>d, %<dsymbol>s),
+    #   (%<symbol>s, %<amount>f, %<magnitude>f, %<sign>s, %<currency>s,
+    #   %<integral>d, %<fractional>d, %<dsymbol>s),
+    #   `%<amount>` is signed; `%<magnitude>` is always non-negative; and
+    #   `%<sign>` is `+`, `-`, or an empty string for zero.
     #   or a Hash with per-sign keys (:positive, :negative, :zero) each
     #   holding a format string. A Hash is convenient for sign-aware formats
     #   such as accounting parentheses:
@@ -44,6 +47,7 @@ module Mint
     #   money.format('%<currency>s %<amount>f')                 #=> "USD 1234.56"
     #   money.format('%<amount>f %<symbol>s')                   #=> "1234.56 $"
     #   money.format('%<symbol>s%<amount>+f')                   #=> "$+1234.56"
+    #   money.format('%<sign>s%<symbol>s%<magnitude>f')          #=> "+$1234.56"
     #
     # @example Integral & fractional parts
     #   money.format('%<integral>d.%<fractional>02d')            #=> "1234.56"

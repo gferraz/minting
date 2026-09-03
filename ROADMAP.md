@@ -23,6 +23,7 @@ Prioritized follow-up items from the API review:
 - [x] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
 - [x] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.
 - [x] Align `doc/agents/AGENTS.md` and README claims with implementation, especially `String#to_money`, floating-point wording, and the actual benchmark task names.
+- [x] Add `%<sign>s` and `%<magnitude>f` placeholders for explicit sign placement and absolute-value formatting.
 
 ## Not planned (unless demand rises)
 

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Features
+- Added `%<sign>s` and `%<magnitude>f` format placeholders for explicit sign
+  placement and absolute-value formatting.
+
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-09-03)
 
 ### Features

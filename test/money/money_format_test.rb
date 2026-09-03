@@ -254,6 +254,20 @@ class MoneyFormatTest < Minitest::Test
     assert_equal '(50.25)', negative.abs.format('(%<amount>f)')
   end
 
+  def test_sign_and_magnitude_placeholders
+    positive = Money.from(1234.56, 'USD')
+    negative = Money.from(-1234.56, 'USD')
+    zero = Money.from(0, 'USD')
+
+    format = '%<sign>s%<symbol>s%<magnitude>f'
+
+    assert_equal '+$1,234.56', positive.format(format)
+    assert_equal '-$1,234.56', negative.format(format)
+    assert_equal '$0.00', zero.format(format)
+    assert_equal ' $0.00', zero.format('%<sign>1s%<symbol>s%<magnitude>f')
+    assert_equal '$1,234.56+', positive.format('%<symbol>s%<magnitude>f%<sign>s')
+  end
+
   def test_hash_format_with_all_signs
     money = Money.from(1234.56, 'USD')
     loss  = Money.from(-1234.56, 'USD')
