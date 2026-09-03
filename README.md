@@ -484,7 +484,7 @@ older supported Rubies.
 
 
 
-**Registered currencies** — `Money::Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
+**Registered currencies** — `Money::Currency.register(code:, subunit:, symbol:, priority:, country:, name:, disambiguate_symbol:)` adds custom currencies. `country`, `name`, and `disambiguate_symbol` are optional metadata fields; `disambiguate_symbol` is also used by `%<dsymbol>s` and symbol parsing. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/world-currencies.yaml` and are preloaded at gem initialization.
 

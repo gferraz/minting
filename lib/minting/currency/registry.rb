@@ -32,11 +32,15 @@ module Mint
   # @param subunit [Integer] the decimal subunit precision, defaults to 0
   # @param symbol [String] the display symbol
   # @param priority [Integer] parser precedence priority
+  # @param country [String, nil] associated country code
+  # @param name [String, nil] currency name
+  # @param disambiguate_symbol [String, nil] symbol variant for disambiguation
   # @return [Currency] the newly registered Currency instance
   # @raise [ArgumentError] if the code contains invalid characters
   # @raise [KeyError] if the currency code is already registered
-  def Currency.register(code:, subunit: 0, symbol: '', priority: 0)
-    Registry.register(code:, subunit:, symbol:, priority:)
+  def Currency.register(code:, subunit: 0, symbol: '', priority: 0, country: nil, name: nil,
+                        disambiguate_symbol: nil)
+    Registry.register(code:, subunit:, symbol:, priority:, country:, name:, disambiguate_symbol:)
   end
 
   # Registers all built-in crypto currencies at once.

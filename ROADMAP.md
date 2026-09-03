@@ -18,7 +18,7 @@ Prioritized follow-up items from the API review:
 - [x] Document that `Money.parse` treats its currency argument as a default: an embedded code or symbol takes precedence.
 - [x] Make parsed zero values use the cached zero-money singleton used by constructors.
 - [x] Establish `Money.from` as the canonical construction API; retain `dollars`, `euros`, and `reais` as convenience shortcuts. Deprecate redundant `Mint.money` and `Numeric#mint` entry points.
-- [ ] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration, or document why registered custom currencies do not support them (deferred).
+- [x] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration.
 - [x] Make `Currency.world_currencies` explicitly public; it returns the frozen built-in ISO-4217 currency hash.
 - [x] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
 - [x] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.

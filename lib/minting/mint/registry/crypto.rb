@@ -42,7 +42,8 @@ module Mint
 
       codes.map do |code|
         c = entries[index[code]]
-        Currency.register(code:, subunit: c.subunit, symbol: c.symbol, priority: c.priority)
+        Currency.register(code:, subunit: c.subunit, symbol: c.symbol, priority: c.priority,
+                          country: c.country, name: c.name, disambiguate_symbol: c.disambiguate_symbol)
       end
     end
 
@@ -54,7 +55,8 @@ module Mint
     # @return [Array<Currency>] the newly registered Currency objects
     def self.register_all_crypto
       crypto_currencies.map do |c|
-        Currency.register(code: c.code, subunit: c.subunit, symbol: c.symbol, priority: c.priority)
+        Currency.register(code: c.code, subunit: c.subunit, symbol: c.symbol, priority: c.priority,
+                          country: c.country, name: c.name, disambiguate_symbol: c.disambiguate_symbol)
       end
     end
   end

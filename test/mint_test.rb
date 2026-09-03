@@ -28,6 +28,16 @@ class MintTest < Minitest::Test
     assert_equal Money::Currency.for_code('SGX'), sgx
   end
 
+  def test_register_accepts_currency_metadata
+    currency = Money::Currency.register(code: 'META', subunit: 2, symbol: 'M$', priority: 10,
+                                        country: 'MET', name: 'Metadata Dollar',
+                                        disambiguate_symbol: 'META$')
+
+    assert_equal 'MET', currency.country
+    assert_equal 'Metadata Dollar', currency.name
+    assert_equal 'META$', currency.disambiguate_symbol
+  end
+
   def test_zero
     assert_equal Money.from(0, 'USD'), Money::Currency.zero('USD')
     assert_equal Money.from(0, 'BRL'), Money::Currency.zero('BRL')
