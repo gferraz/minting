@@ -72,7 +72,10 @@ module Mint
 
         template = templates[amount <=> 0] || templates[1]
 
-        display_amount = @has_negative_template && amount < 0 ? -amount : amount
+        magnitude = amount.abs
+
+        display_amount = @has_negative_template ? magnitude : amount
+
         integral = display_amount.to_i
 
         sign = if amount.negative?
@@ -88,7 +91,7 @@ module Mint
                                dsymbol: @needs_dsymbol && currency.dsymbol,
                                symbol: currency.symbol,
                                amount: display_amount,
-                               magnitude: amount.abs,
+                               magnitude:,
                                sign:,
                                integral: integral,
                                fractional: @needs_fractional ? money.fractional.abs : 0)
