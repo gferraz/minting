@@ -29,7 +29,18 @@ class AliasesTest < Minitest::Test
     require 'minting/aliases'
 
     assert Object.const_defined?(:Currency)
-    assert_equal Money::Currency, Currency
+    assert_equal Mint::Currency, Currency
+  end
+
+  def test_aliases_uses_mint_currency_when_another_money_is_defined
+    remove_const(:Currency)
+    other_money = Module.new
+    other_money.const_set(:Currency, :other_currency)
+    replace_const(:Money, other_money)
+
+    load_aliases_file
+
+    assert_equal Mint::Currency, Currency
   end
 
   def test_aliases_warns_when_currency_already_defined
@@ -45,6 +56,11 @@ class AliasesTest < Minitest::Test
 
   def remove_const(name)
     Object.send(:remove_const, name) if Object.const_defined?(name)
+  end
+
+  def replace_const(name, value)
+    remove_const(name)
+    Object.const_set(name, value)
   end
 
   def restore_const(name, was_defined, value)

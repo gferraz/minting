@@ -105,7 +105,7 @@ first), it warns and skips — use `Mint::Money` in that case. This is a
 
 `Currency` is **not** auto-bound, because application domain models are
 commonly named `Currency` (e.g. a Rails model). Opt in via
-`require 'minting/aliases'`, which binds `Currency = Money::Currency`
+`require 'minting/aliases'`, which binds `Currency = Mint::Currency`
 with the same warn-and-skip guard.
 
 There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
@@ -137,11 +137,12 @@ There is **no `lib/minting/dsl.rb`** and **no `Mint.use_top_level_constants!`**
 returns `nil` on miss; `Currency.resolve!(obj)` raises `Mint::UnknownCurrency`.
 `Mint::UnknownCurrency < ArgumentError`, so existing `rescue ArgumentError`
 handlers still work — new code can `rescue Mint::UnknownCurrency` for the
-specific case. `Mint.money` and `Money.from` always go through `resolve!`, so
+specific case. `Money.from` always goes through `resolve!`, so
 unknown codes raise rather than returning nil. `Money.from` also short-circuits
 zero amounts to the cached `currency.zero` singleton, so
-`Mint.money(0, 'USD')` is the same frozen object across calls — don't assume
-`Money.new` is the only path.
+`Money.from(0, 'USD')` is the same frozen object across calls — don't assume
+`Money.new` is the only path. `Mint.money` is a deprecated wrapper around
+`Money.from`.
 
 ### Amount normalization
 
@@ -219,7 +220,7 @@ Two distinct notions of equality:
   currency to match exactly — **zero is NOT cross-currency equal under
   `eql?`**. `hash = [amount, currency_code].hash`.
 
-So `Mint.money(0,'USD') == Mint.money(0,'EUR')` is true, but `.eql?` is
+So `Money.from(0,'USD') == Money.from(0,'EUR')` is true, but `.eql?` is
 false and their hashes differ. The `<=>` operator raises `TypeError` when
 comparing non-zero Moneys of different currencies, and when comparing a
 non-zero Money to a non-zero Numeric. Only `0` is comparable to Money across
@@ -237,13 +238,12 @@ distribute the residual (`amount - parts.sum`) by adding/subtracting
 This means the first slots carry the rounding error — documented behavior,
 pinned by tests. `allocate_left_over` mutates the `amounts` array in place.
 
-### DSL / refinements
+### DSL / core extensions
 
-`Mint` refines `Numeric` (`10.dollars`, `10.reais`, `10.euros`,
-`n.to_money(currency)`) and `String` (`'19.99'.to_money('USD')` — note this
-calls `to_r` on the string, it does **not** run the full parser, so symbols
-and codes in the string are ignored). Refinements require `using Mint` in
-the scope; tests typically put `using Mint` at the top of the test class.
+Loading `minting` adds helpers to `Numeric` (`10.dollars`, `10.reais`, `10.euros`,
+`n.to_money(currency)`) and `String` (`'19.99'.to_money('USD')`).
+`String#to_money` delegates to `Money.parse`, so symbols and codes in the
+string are recognized; its currency argument is only a fallback.
 
 `Range#step` with a `Money` step is patched via `Range.prepend(
 Mint::RangeStepPatch)` **only on Ruby < 4.0** (`mint/dsl/range.rb`). Ruby 4.0+
@@ -306,12 +306,11 @@ handles non-numeric steps natively, so the patch is gated by
   The competitive benchmark helpers (`competitive/money/benchmark_helper.rb`,
   `competitive/shopify/benchmark_helper.rb`) require `money_setup`/
   `shopify_setup` before `benchmark_helper` for this reason.
-- **Zero singleton.** `Mint.money(0, 'USD')` returns the cached frozen
+- **Zero singleton.** `Money.from(0, 'USD')` returns the cached frozen
   `currency.zero`, not a fresh object. `Money.from` and `Money.from_subunits`
   both do this. Equality and `assert_same` tests rely on it.
-- **`String#to_money` is not the parser.** `'19.99'.to_money('USD')` uses
-  `String#to_r`, so `'$19.99'.to_money('USD')` raises. Use `Money.parse` for
-  symbol/code-aware parsing.
+- **`String#to_money` delegates to the parser.** It recognizes currency
+  symbols and codes, and its optional currency argument is only a fallback.
 - **`Registry.currencies` is frozen.** Mutating it raises. `register`
   rebuilds the hash via `merge` and freezes the new one.
 - **Competitive benchmark groups.** `money` and `shopify-money` are in
@@ -330,7 +329,7 @@ handles non-numeric steps natively, so the patch is gated by
 |------|------|
 | `lib/minting.rb` | entry point (requires `mint/mint`, `version`) |
 | `lib/minting/mint.rb` | load graph for Mint, Currency, registry, parser, DSL |
-| `lib/minting/mint/mint.rb` | `Mint.money`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
+| `lib/minting/mint/mint.rb` | deprecated `Mint.money`, `Mint::UnknownCurrency` (`< ArgumentError`, raised by `Currency.resolve!`) |
 | `lib/minting/mint/registry/` | `registry.rb`, `registration.rb`, `symbols.rb`, `zeros.rb` — all shared state + `MUTEX` |
 | `lib/minting/currency/registry.rb` | Currency class methods delegating to Registry (resolve, register, for_code, etc.) |
 | `lib/minting/currency/currency.rb` | `Currency` (immutable value object), `resolve`/`resolve!`/`register`/`for_code`/`for_symbol`/`zero` |
@@ -338,7 +337,7 @@ handles non-numeric steps natively, so the patch is gated by
 | `lib/minting/money/parse.rb` | `Money.parse` / `Money.parse!` |
 | `lib/minting/mint/i18n.rb` | `Mint.locale_backend` + `resolve_locale_for` |
 | `lib/minting/mint/dsl/` | `numeric`, `string`, `range` refinements (`top_level.rb` removed in v2.0) |
-| `lib/minting/aliases.rb` | opt-in `Currency = Money::Currency` (warn-and-skip if already defined) |
+| `lib/minting/aliases.rb` | opt-in `Currency = Mint::Currency` (warn-and-skip if already defined) |
 | `lib/minting/money/money.rb` | `Money` core; requires all `money/*` mixins |
 | `lib/minting/money/constructors.rb` | `from`, `from_subunits`, `no_currency`, `parse`, `copy_with`, `zero`, deprecated `create`/`mint` |
 | `lib/minting/money/arithmetics/` | `methods.rb` (`abs`, `negative?`, `positive?`, `succ`), `operators.rb` (`+`, `-`, `-@`, `*`, `/`, `**`) |

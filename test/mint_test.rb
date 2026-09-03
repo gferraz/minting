@@ -10,6 +10,18 @@ class MintTest < Minitest::Test
     assert_equal ten_reais, ten_reais.copy_with(amount: 9.999)
   end
 
+  def test_mint_money_is_deprecated
+    assert_output('', /DEPRECATION: Mint\.money is deprecated/) do
+      assert_equal Money.from(10, 'USD'), Mint.money(10, 'USD')
+    end
+  end
+
+  def test_numeric_mint_is_deprecated
+    assert_output('', /DEPRECATION: Numeric#mint is deprecated/) do
+      assert_equal Money.from(10, 'USD'), 10.mint('USD')
+    end
+  end
+
   def test_register
     sgx = Money::Currency.register(code: 'SGX', subunit: 2, symbol: '^')
 

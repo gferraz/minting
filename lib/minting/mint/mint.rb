@@ -11,6 +11,8 @@ module Mint
 
   # Creates a new {Money} instance with the given amount and currency code.
   #
+  # @deprecated Use {Money.from} instead.
+  #
   # @param amount [Numeric] the financial value
   # @param currency_code [String, Currency, Money, nil] Currency code, object,
   #   Money whose currency to reuse, or +nil+. Passed through
@@ -20,5 +22,8 @@ module Mint
   # @raise [ArgumentError] if the amount is not a Numeric
   # @raise [Mint::UnknownCurrency] if the currency code is not registered.
   #   +Mint::UnknownCurrency+ inherits from +ArgumentError+.
-  def self.money(amount, currency_code) = Money.from(amount, currency_code)
+  def self.money(amount, currency_code)
+    warn 'DEPRECATION: Mint.money is deprecated; use Money.from instead.', uplevel: 1
+    Money.from(amount, currency_code)
+  end
 end

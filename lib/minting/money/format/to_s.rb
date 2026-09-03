@@ -29,7 +29,8 @@ module Mint
     def to_s
       return format unless Mint.locale_backend.nil?
 
-      subunit = currency.subunitz      sign = amount.negative? ? '-' : ''
+      subunit = currency.subunit
+      sign = amount.negative? ? '-' : ''
       major = integral.abs.to_s
       major.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
       if subunit > 0

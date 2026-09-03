@@ -8,7 +8,8 @@ module Mint
     # Returns +nil+ when the input is invalid or currency cannot be determined.
     #
     # @param input [String] Amount input, optionally including a currency symbol or code
-    # @param currency [String, Symbol, Currency, nil] ISO code when not present in +input+
+    # @param currency [String, Currency, nil] default currency when none is present in +input+
+    #   An embedded currency code or symbol takes precedence over this argument.
     # @return [Money, nil]
     #
     # @example With explicit currency
@@ -31,13 +32,14 @@ module Mint
       return nil unless amount
 
       amount = currency.normalize_amount(amount)
-      new(amount, currency)
+      amount.zero? ? currency.zero : new(amount, currency)
     end
 
     # Like {.parse} but raises on failure.
     #
     # @param input [String] Amount input, optionally including a currency symbol or code
-    # @param currency [String, Symbol, Currency, nil] ISO code when not present in +input+
+    # @param currency [String, Currency, nil] default currency when none is present in +input+
+    #   An embedded currency code or symbol takes precedence over this argument.
     # @return [Money]
     # @raise [ArgumentError] when +input+ is invalid or currency cannot be determined
     #
@@ -57,7 +59,7 @@ module Mint
       raise ArgumentError, "Could not parse [#{input}]" unless amount
 
       amount = currency.normalize_amount(amount)
-      new(amount, currency)
+      amount.zero? ? currency.zero : new(amount, currency)
     end
 
     class << self

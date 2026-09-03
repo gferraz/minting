@@ -151,6 +151,11 @@ gem 'minting'
 
 ### Creating & comparing money
 
+`Money.from` is the canonical constructor. The older `Mint.money` factory and
+`Numeric#mint` shortcut are deprecated; use `Money.from` and `Numeric#to_money`
+instead. Named shortcuts such as `dollars`, `euros`, and `reais` remain
+available.
+
 ```ruby
 require 'minting'
 
@@ -260,6 +265,7 @@ Money.parse('USD 1,234.56')     #=> [USD 1234.56]
 
 Notes:
 - Pass a currency code when the string has no symbol or code.
+- The optional currency argument is a default, not an override: a code or symbol embedded in the string takes precedence (`Money.parse('10 EUR', 'USD')` returns EUR).
 - `1,234` means 1234, not 1.234, and `1,23` means 1.23, not 123.
 - `1,234.00` is unambiguous (thousands + decimal).
 - Parsing is separator-positional rather than locale-aware. For currencies
@@ -311,7 +317,7 @@ Minting ships with opt-in definitions for ~25 popular crypto currencies (BTC, ET
 Currency.register_crypto('BTC', 'ETH', 'SOL')
 
 Money.parse("0.01 BTC")    #=> [BTC 0.01000000]
-Mint.money(1, 'ETH')      #=> [ETH 1.000000000000000000]
+Money.from(1, 'ETH')      #=> [ETH 1.000000000000000000]
 ```
 
 `Currency.crypto_currencies` lists all available definitions without registering:
@@ -347,11 +353,11 @@ LOCALE_DATA = {
 
 Mint.locale_backend = ->(locale) { LOCALE_DATA[locale.to_s] || {} }
 
-Mint.money(1234.56, 'USD').format(locale: :en)  #=> "$1,234.56"
-Mint.money(9.99, 'BRL').format(locale: 'pt')    #=> "R$9,99"
-Mint.money(9.99, 'EUR').format(locale: :de)     #=> "9,99 EUR"
-Mint.money(9.99, 'EUR').format(locale: 'fr')    #=> "9,99 €"
-Mint.money(9.99, 'USD').format(locale: :ja)     #=> "$9.99"
+Money.from(1234.56, 'USD').format(locale: :en)  #=> "$1,234.56"
+Money.from(9.99, 'BRL').format(locale: 'pt')    #=> "R$9,99"
+Money.from(9.99, 'EUR').format(locale: :de)     #=> "9,99 EUR"
+Money.from(9.99, 'EUR').format(locale: 'fr')    #=> "9,99 €"
+Money.from(9.99, 'USD').format(locale: :ja)     #=> "$9.99"
 ```
 
 Pass `locale:` as a keyword to `format` / `to_fs`. Accepts both symbols (`:en`, `:'pt-BR'`) and strings (`'pt-BR'`, `'en-US'`) — passed through as-is, matching Rails' `I18n.locale` convention. The backend returns a hash with `:decimal`, `:thousand`, and optionally `:format` (defaults to `'%<symbol>s%<amount>f'`). String and symbol keys are interchangeable. Return `{}` or `nil` for unknown locales — defaults apply.
@@ -372,7 +378,7 @@ Arity-0 callables (`-> { ... }`) are called without arguments and work unchanged
 
 ```ruby
 Mint.locale_backend = -> { { decimal: ',', thousand: '.' } }
-Mint.money(9.99, 'BRL').format  #=> "R$9,99"
+Money.from(9.99, 'BRL').format  #=> "R$9,99"
 ```
 
 ## API notes

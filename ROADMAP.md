@@ -11,14 +11,14 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 
 Prioritized follow-up items from the API review:
 
-- [ ] Fix `Money#to_s` losing the minus sign for negative fractional amounts below one unit, e.g. `Money.from(-0.99, 'USD').to_s`.
-- [ ] Resolve the namespace conflict in `minting/aliases`: it should never alias `Currency` from another gem's top-level `Money` constant.
-- [ ] Decide whether the Numeric/String helpers should remain global core extensions or become explicitly loaded refinements.
+- [x] Fix `Money#to_s` losing the minus sign for negative fractional amounts below one unit, e.g. `Money.from(-0.99, 'USD').to_s`.
+- [x] Resolve the namespace conflict in `minting/aliases`: it now aliases `Currency` to `Mint::Currency`, regardless of another gem's top-level `Money` constant.
+- [x] Keep the Numeric/String helpers as global core extensions for now.
 - [ ] Make supported currency identifier types consistent. Symbols are documented in several signatures but rejected by `Currency.resolve`.
-- [ ] Clarify or change `Money.parse` behavior when an embedded currency conflicts with the explicit currency argument; document which source wins or reject mismatches.
-- [ ] Decide whether parsed zero values should preserve the cached zero-money singleton used by constructors.
-- [ ] Establish and document one canonical construction API among `Money.from`, `Mint.money`, `to_money`, and the convenience aliases.
-- [ ] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration, or document why registered custom currencies do not support them.
+- [x] Document that `Money.parse` treats its currency argument as a default: an embedded code or symbol takes precedence.
+- [x] Make parsed zero values use the cached zero-money singleton used by constructors.
+- [x] Establish `Money.from` as the canonical construction API; retain `dollars`, `euros`, and `reais` as convenience shortcuts. Deprecate redundant `Mint.money` and `Numeric#mint` entry points.
+- [ ] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration, or document why registered custom currencies do not support them (deferred).
 - [ ] Resolve the public/private contradiction for `Currency.world_currencies`.
 - [ ] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
 - [ ] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.
@@ -178,6 +178,6 @@ All expressible via `Kernel.format`-style templates:
 
 - Immutable value objects - `Money` frozen on initialize 
 - Thread-safe registry - `Monitor` + copy-on-write hash replacement 
-- Range stepping - `(1..10).step(Mint.money(1, 'USD'))` 
+- Range stepping - `(1..10).step(Money.from(1, 'USD'))`
 - 80+% test coverage - SimpleCov-verified 
 - 0 RuboCop offenses - Clean on `lib/`

@@ -51,6 +51,13 @@ class MoneyParseTest < Minitest::Test
     assert_equal Money.from(0, 'USD'), Money.parse('($0.00)')
   end
 
+  def test_parse_zero_uses_currency_zero_singleton
+    zero = Money.zero('USD')
+
+    assert_same zero, Money.parse('$0.00')
+    assert_same zero, Money.parse!('0.00', 'USD')
+  end
+
   def test_parse_symbol_registered_after_symbol_index_is_cached
     Money.parse('$1')
     currency = Money::Currency.register(code: 'PT_ST', subunit: 2, symbol: 'T$', priority: 2000)

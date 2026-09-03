@@ -17,5 +17,10 @@ class Numeric
 
   alias dollar dollars
   alias euro euros
-  alias mint to_money
+
+  # @deprecated Use +to_money+ instead.
+  def mint(currency)
+    warn 'DEPRECATION: Numeric#mint is deprecated; use #to_money instead.', uplevel: 1
+    to_money(currency)
+  end
 end

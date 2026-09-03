@@ -7,6 +7,10 @@
   `nil`, rather than accepting unrelated text or leaking `ArgumentError` from
   `Rational`. `Money.parse!` continues to raise for invalid input.
 
+### Deprecations
+- `Mint.money` is deprecated; use `Money.from` instead.
+- `Numeric#mint` is deprecated; use `Numeric#to_money` instead.
+
 ### Internal
 - Bound the thread-safe compiled formatter cache to 256 configurations,
   preventing unbounded retention of dynamic format templates.
