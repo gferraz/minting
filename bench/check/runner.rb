@@ -30,7 +30,6 @@ ITERS = {
 
   comparison: 500_000,
   formatting: 100_000,
-  preset_format: 100_000,
   format_default: 100_000,
   format_amount_currency: 100_000,
   format_dsymbol: 100_000,
@@ -44,7 +43,7 @@ ITERS = {
   parsing: 100_000,
   split: 100_000,
   allocate: 100_000,
-  from_hash: 100_000,
+  from_hash: 100_000
 }.freeze
 
 MODES = {
@@ -54,12 +53,11 @@ MODES = {
 
 m1 = 123_456_789.01.dollars
 m2 = -67.89.dollars
-m0 = Money.from(0, 'USD')
+m0 = 0.dollars
 split_money = 100.dollars
-parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500']
+parse_inputs = ['$19.99', 'USD 1,234.56', '19,99 €', '¥1500'].freeze
 parse_count = parse_inputs.size
-from_hash_input = { currency: 'USD', amount: '123.45' }
-
+from_hash_input = { currency: 'USD', amount: '123.45' }.freeze
 
 bench_block = lambda do |name, n|
   case name
@@ -74,24 +72,23 @@ bench_block = lambda do |name, n|
   when :ratio          then n.times { m1 / m2 }
   when :comparison     then n.times { m1 == m2 }
 
-  when :formatting            then n.times { m2.format('%<dsymbol>s %<amount>f %<currency>s') }
-  when :preset_format         then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
-  when :format_default        then n.times { m1.format }
+  when :formatting             then n.times { m2.format('%<dsymbol>s %<amount>f %<currency>s') }
+  when :format_default         then n.times { m1.format }
   when :format_amount_currency then n.times { m2.format('%<amount>f %<currency>s') }
-  when :format_dsymbol        then n.times { m2.format('%<dsymbol>s %<amount>f') }
-  when :format_integral_frac  then n.times { m1.format('%<integral>d.%<fractional>02d') }
-  when :format_full           then n.times { m2.format('%<symbol>s%<amount>f (%<currency>s)') }
-  when :format_thousand       then n.times { m1.format(thousand: ',') }
-  when :format_decimal_comma  then n.times { m2.format(decimal: ',', thousand: '.') }
-  when :format_negative_hash  then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
-  when :format_zero_template  then n.times { m0.format({ zero: '--' }) }
-  when :to_s           then n.times { m1.to_s }
-  when :parsing        then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
-  when :split          then n.times { split_money.split(12) }
-  when :allocate       then n.times { split_money.allocate((1..24).to_a) }
-  when :from_hash      then n.times { Mint::Money.from_hash(from_hash_input) }
+  when :format_dsymbol         then n.times { m2.format('%<dsymbol>s %<amount>f') }
+  when :format_integral_frac   then n.times { m1.format('%<integral>d.%<fractional>02d') }
+  when :format_full            then n.times { m2.format('%<symbol>s%<amount>f (%<currency>s)') }
+  when :format_thousand        then n.times { m1.format(thousand: ',') }
+  when :format_decimal_comma   then n.times { m2.format(decimal: ',', thousand: '.') }
+  when :format_negative_hash   then n.times { m2.format({ negative: '(%<symbol>s%<amount>f)' }) }
+  when :format_zero_template   then n.times { m0.format({ zero: '--' }) }
+  when :to_s                   then n.times { m1.to_s }
+  when :parsing                then (n / parse_count).times { parse_inputs.each { |s| Money.parse(s) } }
+  when :split                  then n.times { split_money.split(12) }
+  when :allocate               then n.times { split_money.allocate((1..24).to_a) }
+  when :from_hash              then n.times { Mint::Money.from_hash(from_hash_input) }
 
-  else raise ArgumentError, "Invalid benchmark key"
+  else raise ArgumentError, 'Invalid benchmark key'
 
   end
 end

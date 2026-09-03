@@ -81,11 +81,10 @@ class CompetitiveFormattingBenchmark < Minitest::Test
   def test_json_formatting_methods
     with_bench('String Formatting: Minting vs Money Gem') do
       @test_amounts.each do |amount|
-        mint_money = Mint::Money.from(amount, 'USD')
-        money = Money.from_amount(amount, 'USD')
+        Mint::Money.from(amount, 'USD')
+        Money.from_amount(amount, 'USD')
 
         puts "\nAmount: #{amount}"
-
       end
     end
   end

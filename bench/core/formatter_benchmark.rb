@@ -14,7 +14,7 @@ class FormatterBenchmark < Minitest::Test
     integral_frac: { positive: '%<integral>d.%<fractional>02d' }
   }.freeze
 
-  DECIMAL_COMMA = { positive: '%<symbol>s%<amount>f' }
+  DECIMAL_COMMA = { positive: '%<symbol>s%<amount>f' }.freeze
 
   def setup
     @usd = Money.from(1234.56, 'USD')

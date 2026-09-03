@@ -125,6 +125,6 @@ module BenchmarkHelper
   end
 
   module_function :test_amounts, :random_amounts, :random_amount, :diff,
-                   :run_object_space_profile, :run_gc_stat, :with_bench, :measure_object_space,
-                   :measure_memory_usage, :measure_allocations, :measure_gc_stats
+                  :run_object_space_profile, :run_gc_stat, :with_bench, :measure_object_space,
+                  :measure_memory_usage, :measure_allocations, :measure_gc_stats
 end

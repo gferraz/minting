@@ -128,9 +128,9 @@ class LocaleBackendTest < Minitest::Test
     Mint.locale_backend = lambda { |locale|
       call_count += 1
       case locale
-      when :en  then { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' }
-      when :de  then { decimal: ',', thousand: '.', format: '%<amount>f %<currency>s' }
-      when :br  then { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' }
+      when :en then { decimal: '.', thousand: ',', format: '%<symbol>s%<amount>f' }
+      when :de then { decimal: ',', thousand: '.', format: '%<amount>f %<currency>s' }
+      when :br then { decimal: ',', thousand: '.', format: '%<symbol>s%<amount>f' }
       else {}
       end
     }
