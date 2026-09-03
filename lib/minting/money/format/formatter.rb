@@ -52,12 +52,11 @@ module Mint
       end
 
       def initialize(format, decimal, thousand)
-        @format = format
         @decimal = decimal
-        @thousand = thousand
-        compile
+        compile(format:, thousand:)
       end
 
+      SIGNS = { -1 => '-', 0 => '', 1 => '+' }.freeze
       SUBUNIT_PLACEHOLDER = "\uE000"
       # Matches a digit followed by groups of exactly 3 digits that terminate
       # at a non-digit or end-of-string. Used to insert thousand separators.
@@ -70,21 +69,13 @@ module Mint
 
         templates = @has_placeholder ? @templates_by_subunit[currency.subunit] : @templates
 
-        template = templates[amount <=> 0] || templates[1]
+        cmp = amount <=> 0
+        template = templates[cmp] || templates[1]
+        sign = SIGNS[cmp]
 
         magnitude = amount.abs
-
         display_amount = @has_negative_template ? magnitude : amount
-
         integral = display_amount.to_i
-
-        sign = if amount.negative?
-                 '-'
-               elsif amount.positive?
-                 '+'
-               else
-                 ''
-               end
 
         result = Kernel.format(template,
                                currency: currency.code,
@@ -113,9 +104,10 @@ module Mint
         result
       end
 
-      def compile
-        @templates = { -1 => @format[:negative], 0 => @format[:zero], 1 => @format[:positive] || Money::DEFAULT_FORMAT }
+      def compile(format:, thousand:)
+        @templates = { -1 => format[:negative], 0 => format[:zero], 1 => format[:positive] || Money::DEFAULT_FORMAT }
         @templates.compact!
+
         # Inject subunit precision into amount and magnitude f specs that lack
         # an explicit precision. Matches "%<amount>f" or "%<magnitude>f" and
         # appends a placeholder for the currency subunit digits.
@@ -125,16 +117,14 @@ module Mint
           f.gsub(/%<(amount|magnitude)>(\s*\+?\d*)f/, "%<\\1>\\2.#{SUBUNIT_PLACEHOLDER}f")
         end
         @has_negative_template = @templates.key?(-1)
-
         joined = @templates.values.join
         @needs_fractional = joined.include?('%<fractional>')
         @needs_dsymbol = joined.include?('%<dsymbol>')
-
-        @needs_thousand_substitution = @thousand && !@thousand.empty? &&
+        @needs_thousand_substitution = thousand && !thousand.empty? &&
                                        (joined.include?('%<amount>') ||
                                         joined.include?('%<magnitude>') ||
                                         joined.include?('%<integral>'))
-        @thousand_replacement = "\\1#{@thousand}" if @needs_thousand_substitution
+        @thousand_replacement = "\\1#{thousand}" if @needs_thousand_substitution
 
         @has_placeholder = joined.include?(SUBUNIT_PLACEHOLDER)
         return unless @has_placeholder
