@@ -57,6 +57,9 @@ module Mint
     # @example Round-trip
     #   m = Money.from(134120, "BRL")
     #   Money.from_hash(m.to_hash) == m  #=> true
+    #
+    # JSON and Rails `as_json` integration are provided by the
+    # +money_attribute+ companion gem rather than the core Minting gem.
     def self.from_hash(hash)
       currency = Currency.resolve!(hash[:currency] || hash['currency'])
       amount = currency.normalize_amount(Rational(hash[:amount] || hash['amount']))

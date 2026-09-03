@@ -191,7 +191,10 @@ formatting fast path; call `format` or `to_fs` for custom output.
 
 Format strings use `Kernel.format` named-reference syntax:
 `%<symbol>s`, `%<amount>f`, `%<amount>d`, `%<currency>s`, `%<integral>d`,
-`%<fractional>d`. The `%<amount>f` specifier has the currency's subunit
+`%<fractional>d`. `%<amount>` is signed, `%<magnitude>` and `%<fractional>` are
+non-negative, and `%<sign>` exposes `+`, `-`, or an empty string for zero. Use
+`%<sign>` for explicit sign placement, especially for amounts between -1 and 1.
+The `%<amount>f` and `%<magnitude>f` specifiers have the currency's subunit
 precision **injected at runtime** (e.g. `%<amount>f` → `%<amount>.2f` for
 USD) by a gsub in `format/formatter.rb`. For zero-subunit currencies (JPY),
 `%<fractional>d` receives zero.
@@ -203,6 +206,9 @@ to `%<symbol>s%<amount>f`; unknown keys raise `ArgumentError`.
 Compiled formatters are retained in a thread-safe, copy-on-write cache capped
 at 256 configurations. Once full, new configurations are compiled for the
 call but not retained. Do not assume `Formatter.cache` is mutable.
+
+Minting's core serialization API is `to_hash`/`from_hash`; JSON and Rails
+`as_json` integration are provided by the `money_attribute` companion gem.
 
 `Mint.locale_backend=` (a callable or Hash returning
 `{ decimal:, thousand:, format: }`) supplies defaults when the corresponding

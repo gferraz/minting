@@ -52,7 +52,8 @@ module Mint
 
     alias to_i integral
 
-    # Returns the fractional part of the amount.
+    # Returns the signed fractional part of the amount. Formatting templates
+    # expose this value as a magnitude through `%<fractional>d`.
     # @example
     #   Money.from(1234.56, 'USD').fractional  #=> 56
     #   Money.from(1000, 'JPY').fractional     #=> 0

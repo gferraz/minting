@@ -119,7 +119,7 @@ What it's become along the way:
 
 - **Exact by construction** — amounts are `Rational` internally, rounded to the currency's subunit only when needed. No silent precision loss from repeated arithmetic.
 - **No Rails dependency** — Minting is a plain Ruby gem. Use it in a script, a Sinatra app, a background job runner, or a Rails app — your choice, not the gem's.
-- **Formatting that doesn't fight you** — `Kernel.format`-style templates, named presets (`:accounting`, `:european`), per-sign formats (parentheses for negatives), and a pluggable locale hook.
+- **Formatting that doesn't fight you** — `Kernel.format`-style templates, per-sign formats (parentheses for negatives), explicit sign and magnitude placeholders, and a pluggable locale hook.
 - **Built for real-world currency handling** — 150+ ISO-4217 currencies, correct subunit handling (JPY has none, KWD has three), proportional allocation/split that doesn't lose cents to rounding.
 - **Measured, not assumed, performance** — see the [Performance Guide](bench/BENCHMARKS.md) for actual benchmarks rather than claims.
 - **Rails-ready without being Rails-only** — pair with the companion [MoneyAttribute](https://github.com/gferraz/money-attribute) gem for `ActiveRecord` type casting, validators, and form helpers.
@@ -221,6 +221,8 @@ price_in_euros.format('%<symbol>2s%<amount>+10f')    #=> " €    +12.34"
 price.format('%<integral>d %<fractional>d/100')        #=> "9 99/100"
 Money.from(0.99, 'USD').format('%<integral>d dollars and %<fractional>02d cents')
 #=> "0 dollars and 99 cents"
+(-Money.from(0.99, 'USD')).format('%<sign>s%<integral>d.%<fractional>02d')
+#=> "-0.99"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
 loss = Money.from(-1234.56, 'USD')
@@ -457,17 +459,19 @@ price.clamp(Money.from(8, 'USD')..Money.from(12, 'USD')) #=> [USD 10.00]
 **Allocation** — `split(n)` requires a positive integer. `allocate(ratios)`
 requires a non-empty list whose total is non-zero. Both preserve the original
 amount after subunit rounding; any leftover smallest units go to the first
-slots. Ratios may be negative, but use them only when that distribution is
-intentional.
+slots. Ratios may be negative and produce signed allocations, but use them only
+when that distribution is intentional:
 
 ```ruby
 Money.from(10, 'USD').split(3)       #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
 Money.from(10, 'USD').allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
+Money.from(10, 'USD').allocate([-1, 2])   #=> [[USD -10.00], [USD 20.00]]
 ```
 
 **Conversions and serialization** — `to_r` is exact, `to_d` returns a
 BigDecimal, and `to_f` can lose precision. `to_hash` and `from_hash` provide a
-string-safe round trip:
+string-safe round trip. JSON and Rails `as_json` integration belong to the
+`money_attribute` companion gem, not the core Minting gem:
 
 ```ruby
 money = Money.from(9.99, 'USD')

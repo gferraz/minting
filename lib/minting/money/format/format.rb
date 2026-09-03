@@ -9,8 +9,10 @@ module Mint
     # @param template [String, Hash, nil] Either a format string with placeholders
     #   (%<symbol>s, %<amount>f, %<magnitude>f, %<sign>s, %<currency>s,
     #   %<integral>d, %<fractional>d, %<dsymbol>s),
-    #   `%<amount>` is signed; `%<magnitude>` is always non-negative; and
-    #   `%<sign>` is `+`, `-`, or an empty string for zero.
+    #   `%<amount>` is signed; `%<magnitude>` is always non-negative; `%<fractional>`
+    #   is the non-negative fractional component; and `%<sign>` is `+`, `-`, or
+    #   an empty string for zero. Use `%<sign>` when the sign needs explicit
+    #   placement, especially for amounts between -1 and 1.
     #   or a Hash with per-sign keys (:positive, :negative, :zero) each
     #   holding a format string. A Hash is convenient for sign-aware formats
     #   such as accounting parentheses:
@@ -54,6 +56,9 @@ module Mint
     #   price = Money.from(0.99, 'USD')
     #   price.format('%<integral>d dollars and %<fractional>02d cents')
     #   #=> "0 dollars and 99 cents"
+    #   loss = Money.from(-0.99, 'USD')
+    #   loss.format('%<sign>s%<integral>d.%<fractional>02d')
+    #   #=> "-0.99"
     #
     # @example Per-sign Hash format (accounting parentheses)
     #   loss = Money.from(-1234.56, 'USD')
