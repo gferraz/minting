@@ -246,6 +246,7 @@ class MoneyFormatTest < Minitest::Test
 
     # Negative formatting variations
     assert_equal '€-50.25', negative.to_s
+    assert_equal '$-0.99', Money.from(-0.99, 'USD').to_s
     assert_equal '-50.25', negative.format('%<amount>f')
 
     # Accounting style parentheses for negative

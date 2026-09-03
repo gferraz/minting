@@ -29,14 +29,14 @@ module Mint
     def to_s
       return format unless Mint.locale_backend.nil?
 
-      subunit = currency.subunit
-      major = integral.to_s
+      subunit = currency.subunitz      sign = amount.negative? ? '-' : ''
+      major = integral.abs.to_s
       major.gsub!(THOUSAND_RE, '\1,') if amount.abs >= 1000
       if subunit > 0
         minor = fractional.abs.to_s.rjust(subunit, '0')
-        "#{currency.symbol}#{major}.#{minor}"
+        "#{currency.symbol}#{sign}#{major}.#{minor}"
       else
-        "#{currency.symbol}#{major}"
+        "#{currency.symbol}#{sign}#{major}"
       end
     end
   end
