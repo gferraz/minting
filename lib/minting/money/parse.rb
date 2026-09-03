@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'parse/separator_parser'
+
 module Mint
   # :nodoc:
   class Money
@@ -10,6 +12,11 @@ module Mint
     # @param input [String] Amount input, optionally including a currency symbol or code
     # @param currency [String, Currency, nil] default currency when none is present in +input+
     #   An embedded currency code or symbol takes precedence over this argument.
+    #   The positional form is deprecated; use +default_currency:+ instead.
+    # @param decimal [String, nil] decimal separator used by the input source.
+    #   When omitted, it is inferred from +thousand:+ or separator positions.
+    # @param thousand [String, nil] thousands separator used by the input source.
+    #   When omitted, it is inferred from +decimal:+ or separator positions.
     # @return [Money, nil]
     #
     # @example With explicit currency
@@ -19,16 +26,23 @@ module Mint
     # @example With symbol or code in the string
     #   Money.parse('$19.99')            #=> [USD 19.99]
     #   Money.parse('USD 1,234.56')    #=> [USD 1234.56]
-    def self.parse(input, currency = nil)
+    #   Money.parse('123,456', 'EUR', decimal: ',') #=> [EUR 123.46]
+    #   Money.parse('123,456', 'USD', thousand: ',') #=> [USD 123456.00]
+    # @deprecated Pass the fallback currency as +default_currency:+.
+    def self.parse(input, positional_currency = nil, default_currency: nil, decimal: nil, thousand: nil)
+      if positional_currency
+        warn 'DEPRECATION: Money.parse positional currency is deprecated; use default_currency: instead.', uplevel: 1
+      end
       return nil unless input.is_a?(String)
 
       input = input.strip
       return nil if input.empty?
 
+      currency = default_currency || positional_currency
       currency = parse_currency(input, currency)
       return nil unless currency
 
-      amount = parse_amount(input, currency)
+      amount = parse_amount(input, currency, decimal:, thousand:)
       return nil unless amount
 
       amount = currency.normalize_amount(amount)
@@ -40,22 +54,32 @@ module Mint
     # @param input [String] Amount input, optionally including a currency symbol or code
     # @param currency [String, Currency, nil] default currency when none is present in +input+
     #   An embedded currency code or symbol takes precedence over this argument.
+    #   The positional form is deprecated; use +default_currency:+ instead.
+    # @param decimal [String, nil] decimal separator used by the input source.
+    #   When omitted, it is inferred from +thousand:+ or separator positions.
+    # @param thousand [String, nil] thousands separator used by the input source.
+    #   When omitted, it is inferred from +decimal:+ or separator positions.
     # @return [Money]
     # @raise [ArgumentError] when +input+ is invalid or currency cannot be determined
     #
     # @example
     #   Money.parse!('19.99', 'USD')    #=> [USD 19.99]
     #   Money.parse!('garbage', 'USD')  #=> ArgumentError
-    def self.parse!(input, currency = nil)
+    # @deprecated Pass the fallback currency as +default_currency:+.
+    def self.parse!(input, positional_currency = nil, default_currency: nil, decimal: nil, thousand: nil)
+      if positional_currency
+        warn 'DEPRECATION: Money.parse! positional currency is deprecated; use default_currency: instead.', uplevel: 1
+      end
       raise ArgumentError, 'input must be a String' unless input.is_a?(String)
 
       input = input.strip
       raise ArgumentError, 'input cannot be empty' if input.empty?
 
+      currency = default_currency || positional_currency
       currency = parse_currency(input, currency)
       raise ArgumentError, "Currency [#{currency}] not found" unless currency
 
-      amount = parse_amount(input, currency)
+      amount = parse_amount(input, currency, decimal:, thousand:)
       raise ArgumentError, "Could not parse [#{input}]" unless amount
 
       amount = currency.normalize_amount(amount)
@@ -67,7 +91,7 @@ module Mint
 
       # Extracts one valid numeric value, allowing surrounding currency markers
       # and uppercase annotation words (for example, "MAX 10.00 USD").
-      def parse_amount(input, currency)
+      def parse_amount(input, currency, decimal: nil, thousand: nil)
         accounting_negative = input.start_with?('(') && input.end_with?(')')
         return nil if (input.include?('(') || input.include?(')')) && !accounting_negative
 
@@ -77,7 +101,7 @@ module Mint
         numeric_input.sub!(/\A([+-])\s+/, '\\1')
         return nil unless numeric_input.match?(/\A[+-]?\d[\d.,]*\z/)
 
-        numeric = parse_separators(numeric_input)
+        numeric = parse_separators(numeric_input, decimal:, thousand:)
         return nil unless numeric
 
         amount = Rational(numeric)
@@ -106,8 +130,15 @@ module Mint
         Currency.resolve(currency)
       end
 
-      # Converts locale-specific decimal/thousand separators into a plain decimal string.
-      def parse_separators(numeric)
+      # Converts decimal/thousand separators into a plain decimal string.
+      # An explicit decimal separator resolves otherwise ambiguous values.
+      def parse_separators(numeric, decimal: nil, thousand: nil)
+        return SeparatorParser.parse(numeric, decimal, thousand) if decimal || thousand
+
+        parse_heuristic_separators(numeric)
+      end
+
+      def parse_heuristic_separators(numeric)
         return nil unless numeric.match?(/\d/)
         return nil unless valid_numeric_syntax?(numeric)
 

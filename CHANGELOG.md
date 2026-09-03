@@ -8,6 +8,10 @@
 - Custom currency registration now accepts `country`, `name`, and
   `disambiguate_symbol` metadata.
 
+### Deprecations
+- The positional currency argument to `Money.parse` and `Money.parse!` is
+  deprecated; use `default_currency:` instead.
+
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-09-03)
 
 ### Features

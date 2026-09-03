@@ -6,5 +6,5 @@ class String
   #
   # @param currency [String, Currency] default currency when self has no currency marker
   # @return [Money]
-  def to_money(currency = nil) = Mint::Money.parse(self, currency)
+  def to_money(currency = nil) = Mint::Money.parse(self, default_currency: currency)
 end

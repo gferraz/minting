@@ -272,7 +272,7 @@ Money.parse('USD 1,234.56')     #=> [USD 1234.56]
 
 Notes:
 - Pass a currency code when the string has no symbol or code.
-- The optional currency argument is a default, not an override: a code or symbol embedded in the string takes precedence (`Money.parse('10 EUR', 'USD')` returns EUR).
+- The optional `default_currency:` argument is a default, not an override: a code or symbol embedded in the string takes precedence (`Money.parse('10 EUR', default_currency: 'USD')` returns EUR). The positional currency argument is deprecated.
 - `1,234` means 1234, not 1.234, and `1,23` means 1.23, not 123.
 - `1,234.00` is unambiguous (thousands + decimal).
 - Parsing is separator-positional rather than locale-aware. For currencies
@@ -280,6 +280,16 @@ Notes:
   as a thousands separator: `Money.parse('KWD 861,949')` means 861949 KWD.
   Use a period decimal (`KWD 861.949`) or both separators (`KWD 1.234,567`)
   when the intended value has three fractional digits.
+- Pass the input source's decimal separator explicitly when a single separator
+  followed by three digits is ambiguous: `Money.parse('123,456', 'EUR',
+  decimal: ',')` means `123.456`, while `decimal: '.'` means `123456`. The
+  default currency can be passed positionally or as `default_currency: 'EUR'`. When
+  the input is an integer with grouping, pass `thousand:` explicitly instead:
+  `Money.parse('123,456', 'USD', thousand: ',')` means `123456`. When both
+  options are supplied, they define the roles independently, so a decimal
+  separator that is absent from the input is also valid:
+  `Money.parse('123,456', 'USD', decimal: ':', thousand: ',')` means `123456`.
+  When both options are omitted, the positional rules above remain in effect.
 - Accounting negatives like `($1.23)` or `(USD 10.00)` are supported — the parser detects parentheses and negates the amount.
 - Ambiguous symbols like `$` resolve by currency priority (currently USD).
 - The parser scans all uppercase words for registered codes, so spurious non-currency words before the real code are correctly ignored: `Money.parse("MAX 10.00 USD")` yields `[USD 10.00]`.

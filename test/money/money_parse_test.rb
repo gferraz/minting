@@ -2,57 +2,71 @@
 
 class MoneyParseTest < Minitest::Test
   def test_parse_with_explicit_currency
-    assert_equal Money.from(19.99, 'USD'), Mint::Money.parse('19.99', 'USD')
-    assert_equal Money.from(1234.56, 'EUR'), Mint::Money.parse('1.234,56', 'EUR')
-    assert_equal Money.from(-1010.5, 'BRL'), Mint::Money.parse('-1.010,50', 'BRL')
-    assert_equal Money.from(-1_123_010.5, 'BRL'), Mint::Money.parse('-1,123,010.50', 'BRL')
-    assert_equal Money.from(19.99, 'BRL'), Mint::Money.parse('19.99 BRL', 'USD')
-    assert_equal Money.from(19.99, 'EUR'), Mint::Money.parse('19.99 EUR', 'USD')
+    assert_equal 19.99.dollars, Mint::Money.parse('19.99', 'USD')
+    assert_equal 1234.56.euros, Mint::Money.parse('1.234,56', 'EUR')
+    assert_equal(-1010.50.reais, Mint::Money.parse('-1.010,50', 'BRL'))
+    assert_equal(-1_123_010.50.reais, Mint::Money.parse('-1,123,010.50', 'BRL'))
+    assert_equal 19.99.reais, Mint::Money.parse('19.99 BRL', 'USD')
+    assert_equal 19.99.euros, Mint::Money.parse('19.99 EUR', 'USD')
+  end
+
+  def test_parse_accepts_currency_as_keyword
+    assert_equal 19.99.dollars, Money.parse('19.99', default_currency: 'USD')
+    assert_equal 19.99.dollars, Money.parse!('19.99', default_currency: 'USD')
+  end
+
+  def test_parse_warns_for_positional_currency
+    assert_output('', /DEPRECATION: Money\.parse positional currency is deprecated/) do
+      assert_equal 19.99.dollars, Money.parse('19.99', 'USD')
+    end
+    assert_output('', /DEPRECATION: Money\.parse! positional currency is deprecated/) do
+      assert_equal 19.99.dollars, Money.parse!('19.99', 'USD')
+    end
   end
 
   def test_parse_with_explicit_currency_object_or_symbol
-    assert_equal Money.from(19.99, 'USD'), Money.parse('19.99', 'USD')
-    assert_equal Money.from(19.99, 'USD'), Money.parse('19.99', Money::Currency.for_code('USD'))
+    assert_equal 19.99.dollars, Money.parse('19.99', 'USD')
+    assert_equal 19.99.dollars, Money.parse('19.99', Money::Currency.for_code('USD'))
   end
 
   def test_parse_trims_whitespace
-    assert_equal Money.from(19.99, 'USD'), Money.parse(" \t\n$19.99 \n")
+    assert_equal 19.99.dollars, Money.parse(" \t\n$19.99 \n")
   end
 
   def test_parse_with_symbol
-    assert_equal Money.from(19.99, 'USD'), Money.parse('$19.99')
-    assert_equal Money.from(-19.99, 'USD'), Money.parse('-19.99 $')
-    assert_equal Money.from(12.34, 'EUR'), Money.parse('12,34 €')
+    assert_equal 19.99.dollars, Money.parse('$19.99')
+    assert_equal(-19.99.dollars, Money.parse('-19.99 $'))
+    assert_equal 12.34.euros, Money.parse('12,34 €')
     assert_equal Money.from(1500, 'JPY'), Money.parse('¥1500')
     assert_equal Money.from(2500, 'GBP'), Money.parse('£2,500.00')
     assert_equal Money.from(2500, 'XAF'), Money.parse('FCFA2,500.00')
   end
 
   def test_parse_with_code
-    assert_equal Money.from(1234.56, 'USD'), Money.parse('USD 1,234.56')
-    assert_equal Money.from(10, 'BRL'), Money.parse('BRL 10')
-    assert_equal Money.from(1234.56, 'USD'), Money.parse('1,234.56 USD')
-    assert_equal Money.from(-1.25, 'USD'), Money.parse('-USD 1.25')
+    assert_equal 1234.56.dollars, Money.parse('USD 1,234.56')
+    assert_equal 10.reais, Money.parse('BRL 10')
+    assert_equal 1234.56.dollars, Money.parse('1,234.56 USD')
+    assert_equal(-1.25.dollars, Money.parse('-USD 1.25'))
   end
 
   def test_parse_accounting_negative
-    assert_equal Money.from(-19.99, 'USD'), Money.parse('($19.99)')
-    assert_equal Money.from(-10.00, 'USD'), Money.parse('(USD 10.00)')
-    assert_equal Money.from(-12.34, 'EUR'), Money.parse('(12,34 €)')
-    assert_equal Money.from(-5.00, 'USD'),  Money.parse('(5.00)', 'USD')
+    assert_equal(-19.99.dollars, Money.parse('($19.99)'))
+    assert_equal(-10.dollars, Money.parse('(USD 10.00)'))
+    assert_equal(-12.34.euros, Money.parse('(12,34 €)'))
+    assert_equal(-5.00.dollars, Money.parse('(5.00)', 'USD'))
   end
 
   def test_parse_accounting_negative_with_spaces
-    assert_equal Money.from(-19.99, 'USD'), Money.parse('( $19.99 )')
-    assert_equal Money.from(-10.00, 'USD'), Money.parse('( USD 10.00 )')
+    assert_equal(-19.99.dollars, Money.parse('( $19.99 )'))
+    assert_equal(-10.00.dollars, Money.parse('( USD 10.00 )'))
   end
 
   def test_parse_accounting_negative_zero
-    assert_equal Money.from(0, 'USD'), Money.parse('($0.00)')
+    assert_equal 0.dollars, Money.parse('($0.00)')
   end
 
   def test_parse_zero_uses_currency_zero_singleton
-    zero = Money.zero('USD')
+    zero = 0.dollars
 
     assert_same zero, Money.parse('$0.00')
     assert_same zero, Money.parse!('0.00', 'USD')
@@ -67,21 +81,39 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_us_thousands
-    assert_equal Money.from(1_234_567.89, 'USD'), Money.parse('$1,234,567.89')
-    assert_equal Money.from(1_234_567.00, 'USD'), Money.parse('$1,234,567')
-    assert_equal Money.from(1_234_567.11, 'USD'), Money.parse('$1,234,567.11098')
-    assert_equal Money.from(1_234_567.11, 'USD'), Money.parse('$1.234.567,11098')
+    assert_equal 1_234_567.89.dollars, Money.parse('$1,234,567.89')
+    assert_equal 1_234_567.dollars, Money.parse('$1,234,567')
+    assert_equal 1_234_567.11.dollars, Money.parse('$1,234,567.11098')
+    assert_equal 1_234_567.11.dollars, Money.parse('$1.234.567,11098')
   end
 
   def test_parse_separator_variants
-    assert_equal Money.from(1.20, 'USD'), Money.parse('1,2', 'USD')
-    assert_equal Money.from(1.23, 'USD'), Money.parse('1,23', 'USD')
-    assert_equal Money.from(1234, 'USD'), Money.parse('1,234', 'USD')
-    assert_equal Money.from(1.23, 'USD'), Money.parse('1,2345', 'USD')
+    assert_equal 1.20.dollars, Money.parse('1,2', 'USD')
+    assert_equal 1.23.dollars, Money.parse('1,23', 'USD')
+    assert_equal 1234.dollars, Money.parse('1,234', 'USD')
+    assert_equal 1.23.dollars, Money.parse('1,2345', 'USD')
 
-    assert_equal Money.from(1234.56, 'USD'), Money.parse('1,234.56', 'USD')
-    assert_equal Money.from(1234.56, 'USD'), Money.parse('1.234,56', 'USD')
-    assert_equal Money.from(1_234_567, 'USD'), Money.parse('1.234.567', 'USD')
+    assert_equal 1234.56.dollars, Money.parse('1,234.56', 'USD')
+    assert_equal 1234.56.dollars, Money.parse('1.234,56', 'USD')
+    assert_equal 1_234_567.dollars, Money.parse('1.234.567', 'USD')
+  end
+
+  def test_parse_explicit_decimal_separator_resolves_ambiguous_values
+    assert_equal 123_456.dollars, Money.parse('123,456', 'USD', decimal: '.')
+    assert_equal 123.456.euros, Money.parse('123,456', 'EUR', decimal: ',')
+    assert_equal 123_456.dollars, Money.parse('123,456', 'USD', thousand: ',')
+    assert_equal 1234.56.euros, Money.parse('1.234,56', 'EUR', decimal: ',')
+    assert_equal 1234.56.dollars, Money.parse('1,234.56', 'USD', decimal: '.')
+  end
+
+  def test_parse_explicit_decimal_rejects_incompatible_grouping
+    assert_nil Money.parse('1,234.56', 'EUR', decimal: ',')
+    assert_nil Money.parse('1.234,56', 'USD', decimal: '.')
+    assert_nil Money.parse('1234.567', 'EUR', decimal: ',')
+    assert_nil Money.parse('123,456', 'EUR', decimal: ':')
+    assert_raises(ArgumentError) { Money.parse!('123,456', 'USD', decimal: ':') }
+    assert_equal 123_456.dollars, Money.parse!('123,456', 'USD', decimal: '.', thousand: ',')
+    assert_equal 123_456.dollars, Money.parse!('123,456', 'USD', decimal: ':', thousand: ',')
   end
 
   def test_parse_alphabetic_symbols_require_word_boundary
@@ -160,6 +192,6 @@ class MoneyParseTest < Minitest::Test
   end
 
   def test_parse_returns_money_on_success
-    assert_equal Money.from(19.99, 'USD'), Money.parse('19.99', 'USD')
+    assert_equal 19.99.dollars, Money.parse('19.99', 'USD')
   end
 end
