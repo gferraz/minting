@@ -9,11 +9,10 @@ module Mint
     # Restores the previous mode (or default) when the block exits, even on
     # exception.
     #
-    # Rounding-mode support is activated on first call. Once activated,
-    # +Currency#normalize_amount+ dispatches through +Currency.rounding_mode+,
-    # adding ~10–35&ns of overhead to every money creation or mutation.
-    # When rounding modes are never used (the common case), the fast path
-    # incurs zero overhead.
+    # Rounding-mode support is activated on first call. Before activation,
+    # +Currency#normalize_amount+ uses a direct +Rational#round+ fast path with
+    # no thread-local lookup. Once activated, normalization reads the
+    # thread-local mode so custom rounding remains isolated per thread.
     #
     # @param mode [Symbol] one of: +:up+, +:down+, +:even+
     # @yield block to execute with the rounding mode active

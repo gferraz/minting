@@ -4,6 +4,14 @@
 module Mint
   # :nodoc:
   class Currency
+    # Replaces the default normalization method after custom rounding is first
+    # requested, keeping the default path free of dispatch and thread checks.
+    module CustomRounding
+      def normalize_amount(amount)
+        amount.to_r.round(subunit, half: Thread.current[Currency::ROUNDING_THREAD_KEY] || :up)
+      end
+    end
+
     # @api private
     VALID_ROUNDING_MODES = %i[up down even].freeze
 
@@ -17,7 +25,12 @@ module Mint
     # Activates the custom rounding dispatch path in {#normalize_amount}.
     # Once called, this cannot be reversed for the lifetime of the process.
     # @api private
-    def self.activate_custom_rounding! = @custom_rounding_active = true
+    def self.activate_custom_rounding!
+      return if @custom_rounding_active
+
+      @custom_rounding_active = true
+      prepend(CustomRounding)
+    end
 
     # Returns the currently active rounding mode, falling back to +:up+.
     # @api private

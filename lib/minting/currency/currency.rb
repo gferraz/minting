@@ -89,13 +89,7 @@ module Mint
     #   usd.normalize_amount("5.25")  #=> (21/4)
     #
     # @see Money.with_rounding Custom rounding modes via {Money.with_rounding}
-    def normalize_amount(amount)
-      if Currency.custom_rounding_active?
-        amount.to_r.round(subunit, half: Thread.current[Currency::ROUNDING_THREAD_KEY])
-      else
-        amount.to_r.round(subunit)
-      end
-    end
+    def normalize_amount(amount) = amount.to_r.round(subunit)
 
     # Returns the cached frozen zero-Money for this currency.
     #
