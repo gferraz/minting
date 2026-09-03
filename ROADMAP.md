@@ -7,6 +7,23 @@ Prioritized gaps, features, and parity goals for the Minting gem.
 - 🔶 = partial / moved to companion gem
 - ❌ = not planned (revisit if demand rises)
 
+## API clarity and usefulness
+
+Prioritized follow-up items from the API review:
+
+- [ ] Fix `Money#to_s` losing the minus sign for negative fractional amounts below one unit, e.g. `Money.from(-0.99, 'USD').to_s`.
+- [ ] Resolve the namespace conflict in `minting/aliases`: it should never alias `Currency` from another gem's top-level `Money` constant.
+- [ ] Decide whether the Numeric/String helpers should remain global core extensions or become explicitly loaded refinements.
+- [ ] Make supported currency identifier types consistent. Symbols are documented in several signatures but rejected by `Currency.resolve`.
+- [ ] Clarify or change `Money.parse` behavior when an embedded currency conflicts with the explicit currency argument; document which source wins or reject mismatches.
+- [ ] Decide whether parsed zero values should preserve the cached zero-money singleton used by constructors.
+- [ ] Establish and document one canonical construction API among `Money.from`, `Mint.money`, `to_money`, and the convenience aliases.
+- [ ] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration, or document why registered custom currencies do not support them.
+- [ ] Resolve the public/private contradiction for `Currency.world_currencies`.
+- [ ] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
+- [ ] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.
+- [ ] Align `doc/agents/AGENTS.md` and README claims with implementation, especially `String#to_money`, floating-point wording, and the actual benchmark task names.
+
 ## Not planned (unless demand rises)
 
 Everything below is intentionally out of scope for the low-level minting gem.

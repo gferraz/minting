@@ -59,15 +59,13 @@ Benchmarks are Minitest-based (require `benchmark/ips`) and live under
 ops against `bench/check/results/baseline-<platform>.json`.
 
 ```bash
-bundle exec rake bench:all                # core + memory + regression + competitive/money
-bundle exec rake bench:core
-bundle exec rake bench:memory
-bundle exec rake bench:regression
-bundle exec rake bench:check              # CI gate — fails if ops drop below 0.80x of baseline
-bundle exec rake bench:baseline           # regenerate the platform baseline (run before committing a perf improvement)
-bundle exec rake bench:competitive        # Minting vs the `money` gem (needs `money` group installed)
-bundle exec rake bench:competitive:shopify# vs `shopify-money` (uses BUNDLE_WITHOUT=money_bench)
-bundle exec rake bench:competitive:all    # both
+bundle exec rake bench:parse               # parser benchmark
+bundle exec rake bench:memory              # memory benchmark
+bundle exec rake bench:regression          # regression benchmark
+bundle exec rake bench:check               # compare core ops with the platform baseline
+bundle exec rake bench:baseline            # regenerate the platform baseline
+bundle exec rake bench:against:money       # compare with the `money` gem
+bundle exec rake bench:against:shopify     # compare with `shopify-money`
 ```
 
 Notes:
@@ -262,8 +260,8 @@ handles non-numeric steps natively, so the patch is gated by
 - Currency codes must match `/^[A-Z_]+$/` (enforced in `Registry.register`).
   Custom codes with underscores are allowed (the test suite registers
   `BRL_FUEL`).
-- RuboCop line length max 120. `Metrics/AbcSize` max 25, `MethodLength` max
-  30, `ParameterLists` max 6, `CyclomaticComplexity` max 11. Several cops
+- RuboCop line length max 120. `Metrics/AbcSize` max 30, `MethodLength` max
+  30, `ParameterLists` max 7, `CyclomaticComplexity` max 11. Several cops
   are disabled in test files (see `.rubocop.yml`).
 - `ThreadSafety/ClassInstanceVariable` and
   `ThreadSafety/ClassAndModuleAttributes` are **disabled** — the registry
@@ -368,7 +366,7 @@ handles non-numeric steps natively, so the patch is gated by
 - Run the specific test file first (`ruby -Ilib:test -r ./test/test_helper.rb
   test/...`), then `bundle exec rake` for the full suite.
 - After touching numeric/rounding/constructor behavior, run the relevant
-  benchmark too (`rake bench:core`, or `rake bench:check` against the
+  benchmark too (`rake bench:parse`, or `rake bench:check` against the
   baseline). If you improve perf, regenerate the baseline with
   `rake bench:baseline` on the target platform.
 - Keep `test_readme_usage` and the README in sync.
