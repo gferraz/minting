@@ -14,15 +14,15 @@ Prioritized follow-up items from the API review:
 - [x] Fix `Money#to_s` losing the minus sign for negative fractional amounts below one unit, e.g. `Money.from(-0.99, 'USD').to_s`.
 - [x] Resolve the namespace conflict in `minting/aliases`: it now aliases `Currency` to `Mint::Currency`, regardless of another gem's top-level `Money` constant.
 - [x] Keep the Numeric/String helpers as global core extensions for now.
-- [ ] Make supported currency identifier types consistent. Symbols are documented in several signatures but rejected by `Currency.resolve`.
+- [x] Keep currency identifiers limited to `String` or `Currency` objects; remove unsupported Symbol claims from public documentation.
 - [x] Document that `Money.parse` treats its currency argument as a default: an embedded code or symbol takes precedence.
 - [x] Make parsed zero values use the cached zero-money singleton used by constructors.
 - [x] Establish `Money.from` as the canonical construction API; retain `dollars`, `euros`, and `reais` as convenience shortcuts. Deprecate redundant `Mint.money` and `Numeric#mint` entry points.
 - [ ] Expose `country`, `name`, and `disambiguate_symbol` through custom currency registration, or document why registered custom currencies do not support them (deferred).
-- [ ] Resolve the public/private contradiction for `Currency.world_currencies`.
-- [ ] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
-- [ ] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.
-- [ ] Align `doc/agents/AGENTS.md` and README claims with implementation, especially `String#to_money`, floating-point wording, and the actual benchmark task names.
+- [x] Make `Currency.world_currencies` explicitly public; it returns the frozen built-in ISO-4217 currency hash.
+- [x] Correct README examples and loading instructions, including the undefined `loss` example and crypto examples that use `Currency` without loading `minting/aliases`.
+- [x] Document important workflows and edge cases: `parse` versus `parse!`, conversions, division, range clamping, allocation constraints, `to_f` precision loss, and Ruby-version-specific range behavior.
+- [x] Align `doc/agents/AGENTS.md` and README claims with implementation, especially `String#to_money`, floating-point wording, and the actual benchmark task names.
 
 ## Not planned (unless demand rises)
 

@@ -44,7 +44,7 @@ module Mint
     #
     # @param subunits [Integer] the amount expressed in the currency's
     #   smallest unit (e.g. cents). Must be an Integer to preserve exactness.
-    # @param currency [String, Symbol, Currency] the currency identifier
+    # @param currency [String, Currency] the currency identifier
     # @return [Money] the resulting Money instance
     # @raise [ArgumentError] if +subunits+ is not an Integer
     # @raise [Mint::UnknownCurrency] if +currency+ is not registered

@@ -124,11 +124,8 @@ module Mint
   # @raise [Mint::UnknownCurrency] if the currency can't be resolved
   def Currency.zero(currency) = Registry.zero_for(Currency.resolve!(currency))
 
-  # --- @api private ---
-
   # Returns the frozen hash of all built-in ISO 4217 world currencies.
   #
   # @return [Hash{String => Currency}] ISO-4217 world currencies mapped by code
-  # @api private
   def Currency.world_currencies = Registry.world_currencies
 end

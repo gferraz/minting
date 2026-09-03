@@ -256,6 +256,7 @@ handles non-numeric steps natively, so the patch is gated by
 - Ruby 3.3+ syntax is used freely: endless methods (`def foo = ...`), pattern
   matching (`in`/`case in`), anonymous splat/block forwarding (`&`).
 - YARD docstrings on public API; `@api private` for internal methods;
+  `Currency.world_currencies` is public despite delegating to the internal registry;
   `# :nodoc:` on internal class/module containers.
 - Currency codes must match `/^[A-Z_]+$/` (enforced in `Registry.register`).
   Custom codes with underscores are allowed (the test suite registers

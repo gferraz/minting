@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-09-03)
+
+### Features
+- `Currency.world_currencies` is a public API for accessing the frozen built-in ISO-4217 currency definitions.
+
 ### Fixes
 - `Money.parse` now rejects malformed numeric input consistently by returning
   `nil`, rather than accepting unrelated text or leaking `ArgumentError` from
@@ -16,8 +21,6 @@
   preventing unbounded retention of dynamic format templates.
 - Add deterministic generated tests for monetary conservation, subunit and
   formatting round-trips, and malformed parsing.
-
-## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-07-29)
 
 ### Breaking Changes
 - `Money#clamp` no longer accepts `Numeric` bounds — only `Money` or `nil` are allowed. Previously `price.clamp(0, 100)` silently accepted bare numbers; now it raises `ArgumentError`. Use `price.clamp(0.dollars, 100.dollars)` instead. This prevents accidental misuse where a numeric variable is passed in place of a Money object. (`lib/minting/money/clamp.rb:48`)

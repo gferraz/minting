@@ -11,7 +11,7 @@ class Numeric
   # @return [Money] self interpreted as EUR
   def euros = Mint::Money.from(self, 'EUR')
 
-  # @param currency [String, Symbol, Currency] target currency
+  # @param currency [String, Currency] target currency
   # @return [Money] self interpreted as the given currency
   def to_money(currency) = Mint::Money.from(self, currency)
 

@@ -12,7 +12,7 @@
 
 
 
-> **Status:** Minting 2.1 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
+> **Status:** Minting 2.2 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
 
 ```ruby
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
@@ -60,7 +60,7 @@ parts = total.split(3) # => [33.34, 33.33, 33.33]
 ## What's new since 2.0
 
 ### New Features
-- **Crypto currency support**: Opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Currency.register_crypto('BTC', 'ETH')` to register, or `Currency.crypto_currencies` to inspect available definitions.
+- **Crypto currency support**: Opt-in YAML-backed definitions for ~25 popular coins (BTC, ETH, SOL, ...). Use `Money::Currency.register_crypto('BTC', 'ETH')` to register, or `Money::Currency.crypto_currencies` to inspect available definitions.
 - `Currency.registered_currencies` — public access to all registered currencies (frozen hash)
 - `Money.from_hash(hash)` — deserializer symmetric with `to_hash`, accepts `{ currency:, amount: }`
 - `Money#integral` — returns the whole-unit part of the amount (complement to `#fractional`). `#to_i` is now an alias of `#integral`.
@@ -156,6 +156,9 @@ gem 'minting'
 instead. Named shortcuts such as `dollars`, `euros`, and `reais` remain
 available.
 
+Currency arguments accept currency code strings or `Currency` objects. Symbols
+such as `:USD` are not supported.
+
 ```ruby
 require 'minting'
 
@@ -219,6 +222,7 @@ Money.from(0.99, 'USD').format('%<integral>d dollars and %<fractional>02d cents'
 #=> "0 dollars and 99 cents"
 
 # Per-sign Hash format (e.g. accounting parentheses for losses)
+loss = Money.from(-1234.56, 'USD')
 loss.format( { negative: '(%<symbol>s%<amount>f)' })  #=> "($1,234.56)"
 Money.from(0, 'BRL').format( { zero: '--' })          #=> "--"
 fmt = { positive: '%<symbol>s%<amount>f', negative: '(%<symbol>s%<amount>f)', zero: '--' }
@@ -314,16 +318,16 @@ Money::Currency.resolve!(Product.new) # raises Mint::UnknownCurrency if code is 
 Minting ships with opt-in definitions for ~25 popular crypto currencies (BTC, ETH, SOL, ...). They are not registered by default — use `register_crypto` to enable them:
 
 ```ruby
-Currency.register_crypto('BTC', 'ETH', 'SOL')
+Money::Currency.register_crypto('BTC', 'ETH', 'SOL')
 
 Money.parse("0.01 BTC")    #=> [BTC 0.01000000]
 Money.from(1, 'ETH')      #=> [ETH 1.000000000000000000]
 ```
 
-`Currency.crypto_currencies` lists all available definitions without registering:
+`Money::Currency.crypto_currencies` lists all available definitions without registering:
 
 ```ruby
-Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
+Money::Currency.crypto_currencies.each { |c| puts "#{c.code}: #{c.name}" }
 # BTC: Bitcoin
 # ETH: Ethereum
 # SOL: Solana
@@ -399,17 +403,79 @@ exits, even on exception.
 
 > **Performance note:** Rounding-mode support is not loaded by default — `require 'minting'` uses the fastest possible rounding (equivalent to `:up`) with zero dispatch overhead. The first call to `Money.with_rounding` activates the rounding dispatch in `Currency#normalize_amount`, adding ~10–35 ns per money creation or mutation. If your application never uses custom rounding modes, there is **no performance cost**.
 
-**Division** — `money / 5` returns new `Money`; `money / other_money` returns a numeric ratio, not money.
+### Common API workflows
+
+**Parsing failures** — `Money.parse` returns `nil` for invalid input or an
+unresolved currency. `Money.parse!` raises `ArgumentError` instead:
+
+```ruby
+Money.parse('bad', 'USD')       #=> nil
+Money.parse!('bad', 'USD')      #=> raises ArgumentError
+```
+
+The optional currency argument is a default. Embedded currency information wins:
+
+```ruby
+Money.parse('10', 'USD')        #=> [USD 10.00]
+Money.parse('10 EUR', 'USD')    #=> [EUR 10.00]
+```
+
+**Arithmetic and division** — Money can be added or subtracted only with the
+same currency. Multiplication and scalar division return Money; dividing by
+same-currency Money returns a numeric ratio. Non-zero cross-currency operations
+and reverse numeric division raise `TypeError`.
+
+```ruby
+price = Money.from(10, 'USD')
+price + Money.from(2, 'USD')   #=> [USD 12.00]
+price * 1.5                    #=> [USD 15.00]
+price / 2                      #=> [USD 5.00]
+price / Money.from(5, 'USD')   #=> (2/1)
+```
+
+**Clamping** — Bounds must be Money objects in the same currency or `nil`.
+An inclusive Range can be passed as the only argument:
+
+```ruby
+price.clamp(Money.from(0, 'USD'), Money.from(8, 'USD')) #=> [USD 8.00]
+price.clamp(Money.from(8, 'USD')..Money.from(12, 'USD')) #=> [USD 10.00]
+```
+
+**Allocation** — `split(n)` requires a positive integer. `allocate(ratios)`
+requires a non-empty list whose total is non-zero. Both preserve the original
+amount after subunit rounding; any leftover smallest units go to the first
+slots. Ratios may be negative, but use them only when that distribution is
+intentional.
+
+```ruby
+Money.from(10, 'USD').split(3)       #=> [[USD 3.34], [USD 3.33], [USD 3.33]]
+Money.from(10, 'USD').allocate([1, 2, 3]) #=> [[USD 1.67], [USD 3.33], [USD 5.00]]
+```
+
+**Conversions and serialization** — `to_r` is exact, `to_d` returns a
+BigDecimal, and `to_f` can lose precision. `to_hash` and `from_hash` provide a
+string-safe round trip:
+
+```ruby
+money = Money.from(9.99, 'USD')
+money.to_r                         #=> (999/100)
+money.to_f                         #=> 9.99
+Money.from_hash(money.to_hash)     #=> [USD 9.99]
+```
+
+**Money ranges** — Money ranges use `succ` and a Money step. Ruby 4.0 supports
+non-numeric steps natively; Minting patches `Range#step` for Money only on
+older supported Rubies.
 
 **Zero equality** — Any zero amount is considered equal across currencies and to numeric zero (`Money.from(0, 'USD') == Money.from(0, 'EUR')` is intentionally `true`). Non-zero amounts must match currency and value.
 
 
 
-**Registered currencies** — `Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
+**Registered currencies** — `Money::Currency.register(code:, subunit:, symbol:, priority:)` adds custom currencies. Only registered codes and symbols are recognized by the parser or searches. You don't need to register a currency to use it with most features.
 
 **Built-in currencies** — 150+ ISO-4217 world currencies ship in `lib/minting/data/world-currencies.yaml` and are preloaded at gem initialization.
 
-## Optional top-level `Money` (opt-out) and `Currency` (opt-in)
+## Top-level aliases
 
 By default, `require "minting"` exposes `Mint::Money` as the top-level `Money` constant, so you can write `Money.from(10, "USD")` directly:
 ```ruby
