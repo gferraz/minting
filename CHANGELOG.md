@@ -2,15 +2,23 @@
 
 ## [Unreleased]
 
+## [v2.3.0](https://github.com/gferraz/minting/releases/tag/v2.3.0) (2026-09-03)
+
 ### Features
 - Added `%<sign>s` and `%<magnitude>f` format placeholders for explicit sign
   placement and absolute-value formatting.
 - Custom currency registration now accepts `country`, `name`, and
   `disambiguate_symbol` metadata.
+- `Money.parse` and `Money.parse!` accept explicit `decimal:` and `thousand:`
+  separators for unambiguous parsing of source-specific numeric input.
 
 ### Deprecations
 - The positional currency argument to `Money.parse` and `Money.parse!` is
   deprecated; use `default_currency:` instead.
+
+### Performance
+- The default amount-normalization path no longer checks rounding thread state;
+  custom rounding dispatch activates only when `Money.with_rounding` is used.
 
 ## [v2.2.0](https://github.com/gferraz/minting/releases/tag/v2.2.0) (2026-09-03)
 

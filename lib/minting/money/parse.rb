@@ -10,7 +10,9 @@ module Mint
     # Returns +nil+ when the input is invalid or currency cannot be determined.
     #
     # @param input [String] Amount input, optionally including a currency symbol or code
-    # @param currency [String, Currency, nil] default currency when none is present in +input+
+    # @param positional_currency [String, Currency, nil] deprecated positional
+    #   fallback currency when none is present in +input+
+    # @param default_currency [String, Currency, nil] fallback currency when none is present in +input+
     #   An embedded currency code or symbol takes precedence over this argument.
     #   The positional form is deprecated; use +default_currency:+ instead.
     # @param decimal [String, nil] decimal separator used by the input source.
@@ -52,7 +54,9 @@ module Mint
     # Like {.parse} but raises on failure.
     #
     # @param input [String] Amount input, optionally including a currency symbol or code
-    # @param currency [String, Currency, nil] default currency when none is present in +input+
+    # @param positional_currency [String, Currency, nil] deprecated positional
+    #   fallback currency when none is present in +input+
+    # @param default_currency [String, Currency, nil] fallback currency when none is present in +input+
     #   An embedded currency code or symbol takes precedence over this argument.
     #   The positional form is deprecated; use +default_currency:+ instead.
     # @param decimal [String, nil] decimal separator used by the input source.

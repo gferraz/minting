@@ -12,7 +12,7 @@
 
 
 
-> **Status:** Minting 2.2 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
+> **Status:** Minting 2.3 is released. The core API (`Money`, `Currency`, formatting, parsing) is stable.
 
 ```ruby
 price = Money.from(19.99, 'USD')       #=> [USD 19.99]
